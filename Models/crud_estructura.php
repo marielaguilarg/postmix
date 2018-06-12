@@ -18,7 +18,18 @@ class Estructura extends Conexion{
 		$stmt->close();
 	}
 
-	
+	    public function getDescripcionNivel($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT * FROM $tabla WHERE mee_numnivel = :id");
+		$stmt->bindParam(":id", $datosModel, PDO::PARAM_INT);
+		
+		$stmt-> execute();
+
+		$rse= $stmt->fetch();
+               
+                 $val= $rse["mee_descripcionnivelesp"];
+                
+                return $val;
+	}
 
 }
 
