@@ -36,7 +36,20 @@ class Datosncin extends Conexion{
 
 		return $stmt->fetchAll();
 		$stmt->close();
-	}
+	}	
+ public function nombreNivel5($id,$tabla) {
+
+            $sql = "SELECT n5_id, n5_nombre FROM $tabla where n5_id:id ";
+
+            $res = Conexion::conectar()-> prepare($sql);
+            $res->bindParam("id",$id,PDO::PARAM_INT);
+            $res->fetchAll();
+            foreach ($res as $row) {
+              $nombre = $row["n5_nombre"];
+            }
+             return $nombre;
+        }
+
 
 
 

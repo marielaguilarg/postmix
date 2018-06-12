@@ -107,6 +107,36 @@ public function registroFranquiciaModel($datosModel, $tabla){
 
 
 
+    public function nombreFranquicia($cuenta, $franq,$cliente,$servicio) {
+
+    $sql = "SELECT
+ca_franquiciascuenta.fc_idfranquiciacta,
+ca_franquiciascuenta.cli_idcliente,
+ca_franquiciascuenta.ser_claveservicio,
+ca_franquiciascuenta.cue_clavecuenta,
+ca_franquiciascuenta.cue_tipomercado,
+ca_franquiciascuenta.cf_descripcion
+FROM
+ca_franquiciascuenta
+where ca_franquiciascuenta.fc_idfranquiciacta=:franq and
+ca_franquiciascuenta.cli_idcliente=:cliente and
+ca_franquiciascuenta.ser_claveservicio=:servicio and
+ca_franquiciascuenta.cue_clavecuenta=:cuenta";
+
+    $res = Conexion::conectar()->prepare($sql);
+    $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
+    $res-> bindParam(":franq", $franq, PDO::PARAM_INT);
+    $res-> bindParam(":cliente", $cliente, PDO::PARAM_INT);
+    $res-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
+    foreach ($res as $row) {
+        $nombre = $row["cf_descripcion"];
+    }
+   
+
+    return $nombre;
+}
+
+
 
 }
 

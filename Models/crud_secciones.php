@@ -44,7 +44,7 @@ public function editaSeccionModel($datosModel, $servicioModel, $tabla){
 	}
 
 public function actualizarSeccionModel($datosModel, $tabla){
-
+    
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET sec_descripcionesp=:desesp,sec_descripcioning=:desing, sec_nomsecesp= :nomesp, sec_nomsecing=:noming, sec_ordsecind=:ordensec,sec_indagua=:indmues WHERE ser_claveservicio=:idser and sec_numseccion=:idsec");
 
 		
@@ -363,8 +363,50 @@ public function vistaCuentasPonderacionModel($numcta,  $tabla){
 	
 		$stmt->close();
 	}
+        
+        public function buscaSeccionIndi($vidiomau){
+    $sql="SELECT
+cue_reactivosestandardetalle.ser_claveservicio,
+cue_reactivosestandardetalle.sec_numseccion AS seccion,
+cue_reactivosestandardetalle.red_estandar,
+cue_reactivosestandardetalle.red_parametroesp,
+cue_reactivosestandardetalle.red_parametroing,
+cue_secciones.sec_descripcionesp,
+cue_secciones.sec_descripcioning,
+cue_secciones.sec_nomsecesp,
+cue_secciones.sec_nomsecing
+FROM
+cue_reactivosestandardetalle
+Inner Join cue_secciones ON cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion AND cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio
+WHERE
+cue_reactivosestandardetalle.red_indicador =  '-1' AND
+cue_reactivosestandardetalle.ser_claveservicio =  '1'
+GROUP BY
+cue_reactivosestandardetalle.ser_claveservicio,
+cue_reactivosestandardetalle.sec_numseccion
+order by sec_ordsecind";
+   
+     $res = Conexion::ejecutarQuerysp($sql);
+       if ($vidiomau == 1) {
+        $nomcampo = "sec_nomsecesp";
+    } else {
+        $nomcampo = "sec_nomsecing";
+    }
+    foreach($res as $row) {
 
-	public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabla){
+        $nombre = $row[$nomcampo];
+        $numero=$row["seccion"];
+       
+         $seccion=array($numero,$nombre); //creo arreglo
+        $secciones[]=$seccion;
+      
+    }
+  
+ 
+    return $secciones;
+    
+}
+public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabla){
 		
         $stmt=Conexion::conectar()->prepare("SELECT  sd_clavecuenta, sd_ponderacion, sd_fechainicio, sd_fechafinal FROM cue_seccionesdetalles where sec_numseccion =:numsec and ser_claveservicio=:numser and sd_clavecuenta=:numcuen  and sd_fechainicio<=now() and  sd_fechafinal>=now()");
 
@@ -377,6 +419,8 @@ public function vistaCuentasPonderacionModel($numcta,  $tabla){
 		return $stmt->fetchall();
 		$stmt->close();
     }
+
+
 
 
 }

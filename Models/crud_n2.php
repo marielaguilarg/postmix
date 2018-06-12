@@ -24,7 +24,20 @@ class Datosndos extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetch();
-	}
+	}  
+
+   public function nombreNivel2($id,$tabla) {
+
+            $sql = "SELECT n2_id, n2_nombre FROM $tabla where n2_id:id ";
+
+            $res = Conexion::conectar()-> prepare($sql);
+            $res->bindParam("id",$id,PDO::PARAM_INT);
+            $res->fetchAll();
+            foreach ($res as $row) {
+              $nombre = $row["n2_nombre"];
+            }
+             return $nombre;
+            }
 
 }
 
