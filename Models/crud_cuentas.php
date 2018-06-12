@@ -18,6 +18,14 @@ class DatosCuenta extends Conexion{
 		return $stmt->fetchAll();
 	}
 	
+        public function vistaCuentasxcliente($idcliente,$tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla where cue_idcliente=:id_cliente ;");
+		$stmt->bindParam("id_cliente", $idcliente,PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetchAll();
+	}
+	
 
 	public function listaClientesModel($tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT cli_id, cli_nombre FROM $tabla ");
@@ -107,7 +115,32 @@ class DatosCuenta extends Conexion{
 		$stmt->close();	
 	}
 
+function nombreCuenta($cuenta) {
 
+    $sql = "SELECT
+ca_cuentas.cli_idcliente,
+ca_cuentas.ser_claveservicio,
+ca_cuentas.cue_clavecuenta,
+ca_cuentas.cue_descripcion,
+ca_cuentas.cue_tipomercado,
+ca_cuentas.cue_siglas,
+ca_cuentas.cue_lugar
+FROM
+ca_cuentas
+where ca_cuentas.cli_idcliente=100 and
+ca_cuentas.ser_claveservicio=1";
+
+    $sql.=" and cue_clavecuenta=:cuenta";
+    $sql.=" order by ca_cuentas.cue_clavecuenta";
+    
+    $res = Conexion::conectar()->prepare($sql);
+    $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
+    foreach ($res as $row) {
+        $nombre = $row["cue_descripcion"];
+    }
+   
+    return $nombre;
+}
 	
 
 
