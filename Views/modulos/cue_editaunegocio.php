@@ -5,14 +5,17 @@
       <h1> Punto de venta &nbsp; </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Nuevo punto de venta</li>
+        <li class="active">Edita Punto de venta</li>
       </ol>
     </section>
 
     <!-- Main content -->
     <section class="content container-fluid">
      <?php $nuevoUnegocioContoller=new unegocioController();
-    
+     $id=filter_input(INPUT_GET,"referencia",FILTER_SANITIZE_NUMBER_INT);
+     if($id!="")
+          $nuevoUnegocioContoller->vistaEditaUnegocio();
+     else
                         $nuevoUnegocioContoller->vistaNuevoUnegocio();
                     ?>
       
@@ -23,22 +26,26 @@
              <div class="box-body">
                  <form role="form" method="post">
                 <!-- Datos iniciales alta de punto de venta -->
+                 
                 <div class="form-group col-md-12">
                   <label>NOMBRE</label>
-                  <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" >
-                  <input type="text" class="form-control" name="desuneg" id="desuneg" >
+                    <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $nuevoUnegocioContoller->getCuenta();?>" >
+              
+                  <input type="hidden" class="form-control" name="idpv" id="idpv" value="<?php echo $id?>">
+               
+                  <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $nuevoUnegocioContoller->getDesuneg(); ?>">
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>
-                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" >
+                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" value="<?php echo $nuevoUnegocioContoller->getIdpepsi();?>">
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID CUENTA</label>
-                  <input type="text" class="form-control" name="idcta" id="idcta" >
+                  <input type="text" class="form-control" name="idcta" id="idcta" value="<?php echo $nuevoUnegocioContoller->getIdcta();?>">
                 </div>
                 <div class="form-group col-md-4">
                   <label>NUD</label>
-                  <input type="text" class="form-control" name="idnud" id="idnud" >
+                  <input type="text" class="form-control" name="idnud" id="idnud" value="<?php echo $nuevoUnegocioContoller->getIdnud();?>">
                 </div>
                 <div class="form-group col-md-6">
                
@@ -85,8 +92,10 @@
                         data-target="niv-3"
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
-                        data-default-label="Seleccione una compañía" disabled>
-                    <option value="">Seleccione una opción</option>
+                        data-default-label="Seleccione una opción" >
+                  <?php foreach($nuevoUnegocioContoller->getListanivel2() as $nivel2){
+                     echo $nivel2 ;
+                  }?>
                    
                   </select>
                 </div>
@@ -98,8 +107,10 @@
                         data-target="niv-4"
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
-                        data-default-label="Seleccione una unidad de negocio" disabled>
-                    <option value="">Seleccione una opción</option>
+                        data-default-label="Seleccione una opción" >
+                      <?php foreach($nuevoUnegocioContoller->getListanivel3() as $nivel3){
+                     echo $nivel3 ;
+                  }?>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
@@ -110,8 +121,10 @@
                         data-target="niv-5"
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
-                        data-default-label="Seleccione un embotellador" disabled>
-                 
+                        data-default-label="Seleccione una opción">
+                     <?php foreach($nuevoUnegocioContoller->getListanivel4() as $nivel4){
+                     echo $nivel4 ;
+                  }?>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
@@ -122,8 +135,10 @@
                         data-target="niv-6"
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
-                        data-default-label="Seleccione una región">
-                
+                        data-default-label="Seleccione una opción">
+                    <?php foreach($nuevoUnegocioContoller->getListanivel5() as $nivel5){
+                     echo $nivel5 ;
+                  }?>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
@@ -135,7 +150,9 @@
                         data-url=""
                         data-replacement="container1"
                         data-default-label="Seleccione una opción">
-                  
+                      <?php foreach($nuevoUnegocioContoller->getListanivel6() as $nivel6){
+                     echo $nivel6 ;
+                  }?>
                   </select>
                 </div>
                 
@@ -146,39 +163,39 @@
                 </div>
                <div class="form-group col-md-12">
                   <label>CALLE</label>
-                  <input type="text" class="form-control" name="calle" id="calle" >
+                  <input type="text" class="form-control" name="calle" id="calle" value="<?php echo $nuevoUnegocioContoller->getCalle();?>">
                 </div>
                 
                <div class="form-group col-md-3">
                   <label>NUM. EXTERIOR</label>
-                  <input type="text" class="form-control" name="numext" id="numext" >
+                  <input type="text" class="form-control" name="numext" id="numext" value="<?php echo $nuevoUnegocioContoller->getNumext()?>">
                 </div>
                 
                 
                 <div class="form-group col-md-3">
                   <label>NUM. INTERIOR</label>
-                  <input type="text" class="form-control" name="numint" id="numint" >
+                  <input type="text" class="form-control" name="numint" id="numint" value="<?php echo $nuevoUnegocioContoller->getNumint();?>">
                 </div>
 				
                 <div class="form-group col-md-3">
                   <label>MANZANA</label>
-                  <input type="text" class="form-control" name="mz" id="mz" >
+                  <input type="text" class="form-control" name="mz" id="mz" value="<?php echo $nuevoUnegocioContoller->getMz();?>">
                 </div>
                 <div class="form-group col-md-3">
                   <label>LOTE</label>
-                  <input type="text" class="form-control" name="lt" id="lt">
+                  <input type="text" class="form-control" name="lt" id="lt" value="<?php echo $nuevoUnegocioContoller->getLt()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>COLONIA</label>
-                  <input type="text" class="form-control" name="col" id="col" >
+                  <input type="text" class="form-control" name="col" id="col" value="<?php echo $nuevoUnegocioContoller->getCol()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>DELEGACIÓN</label>
-                  <input type="text" class="form-control" name="del" id="del" >
+                  <input type="text" class="form-control" name="del" id="del" value="<?php echo $nuevoUnegocioContoller->getDel()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>CIUDAD</label>
-                  <input type="text" class="form-control" name="une_dir_municipio" id="une_dir_municipio" >
+                  <input type="text" class="form-control" name="une_dir_municipio" id="une_dir_municipio" value="<?php echo $nuevoUnegocioContoller->getMun()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>ESTADO</label>
@@ -191,15 +208,15 @@
                 </div>
                 <div class="form-group col-md-3">
                   <label>C.P.</label>
-                  <input type="text" class="form-control" name="une_dir_cp" id="une_dir_cp" >
+                  <input type="text" class="form-control" name="une_dir_cp" id="une_dir_cp" value="<?php echo $nuevoUnegocioContoller->getCp()?>">
                 </div>
                 <div class="form-group col-md-9">
                   <label>REFERENCIA</label>
-                  <input type="text" class="form-control" name="une_dir_referencia" id="une_dir_referencia" >
+                  <input type="text" class="form-control" name="une_dir_referencia" id="une_dir_referencia" value="<?php echo $nuevoUnegocioContoller->getRef()?>">
                 </div>
                  <div class="form-group col-md-6">
                   <label>TELÉFONO</label>
-                  <input type="text" class="form-control" name="une_dir_telefono" id="une_dir_telefono" >
+                  <input type="text" class="form-control" name="une_dir_telefono" id="une_dir_telefono" value="<?php echo $nuevoUnegocioContoller->getTel()?>">
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
