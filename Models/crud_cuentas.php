@@ -16,6 +16,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetchAll();
+		$stmt->close();
 	}
 	
 
@@ -25,6 +26,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetchAll();
+		$stmt->close();
 	}
 
 	public function registroCuentaModel($datosModel, $tabla){
@@ -45,7 +47,7 @@ class DatosCuenta extends Conexion{
 
 		 	return "error";
 		 }
-
+		 $stmt->close();
 
 	}
 
@@ -59,6 +61,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetch();
+		$stmt->close();
 	}
 	
 	public function actualizarCuentaModel($datosModel, $tabla){

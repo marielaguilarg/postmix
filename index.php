@@ -19,6 +19,7 @@ require_once "Controllers/abiertaController.php";
 require_once "Controllers/generalController.php";
 require_once "Controllers/productoController.php";
 require_once "Controllers/enlacesController.php";
+require_once "Controllers/usuarioController.php";
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
@@ -41,9 +42,23 @@ require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
 require_once "Models/crud_enlaces.php";
+require_once "Models/crud_usuario.php";
+
+if (isset($_GET["salir"])) {
+	$nuevo =new UsuarioController();
+	$nuevo->Destruye_Sesion();
+}
+
 
 $mvc =new MvcController();
-$mvc -> plantilla();
+session_start();
+if (isset($_SESSION['Usuario'])) {
+	$mvc -> plantilla();
+} else {
+	
+	$mvc -> inicio();
+}
+
 
 
 

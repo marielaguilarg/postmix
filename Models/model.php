@@ -47,8 +47,11 @@ class EnlacesPaginas{
 			$enlacesModel == "rlistaunegocio" ||
 			$enlacesModel == "runegociodetalle" ||
 			$enlacesModel == "runegociocomp" ||
+			$enlacesModel == "editarep" ||
 
-			
+			#AQUI INICIA LA SECCION DE SEGURIDAD
+			$enlacesModel == "login" ||			
+
 			#AQUI INICIA SECCION CATALOGOS
 			$enlacesModel == "listan1" ||
 			$enlacesModel == "listan2" ||

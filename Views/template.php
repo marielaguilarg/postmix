@@ -20,7 +20,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
-
+<script src='https://www.google.com/recaptcha/api.js'></script>    
 <script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 <script defer type="text/javascript" src="./javascript.js"></script>
@@ -33,7 +33,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-
+  
   <!-- Google Font -->
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -93,17 +93,30 @@ desired effect
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="dist/img/mariel-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Mariel Aguilar</span>
+              <img src="views/dist/img/avatar.png" class="user-image" >
+              <span class="hidden-xs">
+              <?php
+              $datini=UsuarioController::Obten_NomUsuario();
+                echo $datini;               
+                 ?> 
+
+              </span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="dist/img/mariel-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="views/dist/img/avatar.png" class="img-circle" alt="User Image">
 
                 <p>
-                  Mariel Aguilar
-                  <small>Web Developer</small>
+                <?php
+                  $datini=UsuarioController::Obten_NomUsuario();
+                  echo $datini;
+
+                  $cargo=UsuarioController::Obten_Cargo();
+                  echo "<small>".$cargo."</small>";               
+                 ?>
+                  
+                  
                 </p>
               </li>
               
@@ -115,7 +128,7 @@ desired effect
                   <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Salir</a>
+                  <a href=index.php?salir=1 class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>

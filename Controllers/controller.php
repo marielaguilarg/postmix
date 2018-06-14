@@ -5,8 +5,13 @@ class MvcController{
 	#llamada a template
 
 	public function plantilla(){
+ 		include "views/template.php";
+	}
 
-		include "views/template.php";
+	public function inicio(){
+
+		
+		include "views/modulos/cue_login.php";
 	}
 
     # interaccion del usuario
