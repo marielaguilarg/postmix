@@ -20,6 +20,7 @@ require_once "Controllers/generalController.php";
 require_once "Controllers/productoController.php";
 require_once "Controllers/enlacesController.php";
 require_once "Controllers/usuarioController.php";
+require_once "Controllers/ReporteController.php";
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
@@ -43,6 +44,8 @@ require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
 require_once "Models/crud_enlaces.php";
 require_once "Models/crud_usuario.php";
+require_once "Models/crud_solicitudes.php";
+require_once "Models/crud_reporte.php";
 
 if (isset($_GET["salir"])) {
 	$nuevo =new UsuarioController();

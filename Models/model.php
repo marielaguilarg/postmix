@@ -71,6 +71,11 @@ class EnlacesPaginas{
 			$module ="views/modulos/cue_subnivel.php";	
 		}
 
+		else if($enlacesModel == 'rsn'){
+			// aqui meteremos todas las secciones del cuestionario
+			$module ="views/modulos/cue_reporte.php";	
+		}
+
 		else if($enlacesModel == "index"){
 
 			$module = "views/modulos/enlaces.php";
