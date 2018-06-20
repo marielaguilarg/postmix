@@ -15,7 +15,7 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
-                        $enlacesModel == "editaunegocio" ||
+		        $enlacesModel == "editaunegocio" ||
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
 			$enlacesModel == "editaseccion" ||
@@ -48,8 +48,11 @@ class EnlacesPaginas{
 			$enlacesModel == "rlistaunegocio" ||
 			$enlacesModel == "runegociodetalle" ||
 			$enlacesModel == "runegociocomp" ||
+			$enlacesModel == "editarep" ||
 
-			
+			#AQUI INICIA LA SECCION DE SEGURIDAD
+			$enlacesModel == "login" ||			
+
 			#AQUI INICIA SECCION CATALOGOS
 			$enlacesModel == "listan1" ||
 			$enlacesModel == "listan2" ||
@@ -59,7 +62,8 @@ class EnlacesPaginas{
 			$enlacesModel == "listan6" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
-			$enlacesModel == "nuevacuenta" 	||
+			$enlacesModel == "nuevacuenta" || 
+				   
 			$enlacesModel == "indgraficaindicador" ||
                        $enlacesModel == "indestadisticares"  ||
                        $enlacesModel == "indindicadoresgrid"  ||
@@ -71,6 +75,11 @@ class EnlacesPaginas{
 		else if($enlacesModel == 'sn'){
 			// aqui meteremos todas las secciones del cuestionario
 			$module ="views/modulos/cue_subnivel.php";	
+		}
+
+		else if($enlacesModel == 'rsn'){
+			// aqui meteremos todas las secciones del cuestionario
+			$module ="views/modulos/cue_reporte.php";	
 		}
 
 		else if($enlacesModel == "index"){
