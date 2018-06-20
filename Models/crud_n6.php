@@ -28,13 +28,14 @@ class Datosnsei extends Conexion{
 		$stmt->close();
 	} 
 
-  public function nombreNivel3($id,$tabla) {
+  public function nombreNivel6($id,$tabla) {
 
-            $sql = "SELECT n6_id, n6_nombre FROM $tabla where n6_id:id ";
+            $sql = "SELECT n6_id, n6_nombre FROM $tabla where n6_id=:id ";
 
-            $res = Conexion::conectar()-> prepare($sql);
-            $res->bindParam("id",$id,PDO::PARAM_INT);
-            $res->fetchAll();
+           $stmt = Conexion::conectar()-> prepare($sql);
+            $stmt->bindParam(":id",$id,PDO::PARAM_INT);
+            $stmt->execute();
+            $res=$stmt->fetchAll();
             foreach ($res as $row) {
               $nombre = $row["n6_nombre"];
             }

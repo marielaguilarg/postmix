@@ -30,11 +30,15 @@ class Datosnuno extends Conexion{
 
  public function nombreNivel1($id,$tabla) {
 
-            $sql = "SELECT n1_id, n1_nombre FROM $tabla where n1_id:id ";
+            $sql = "SELECT n1_id, n1_nombre FROM $tabla where n1_id=:id ";
 
-            $res = Conexion::conectar()-> prepare($sql);
-            $res->bindParam("id",$id,PDO::PARAM_INT);
-            $res->fetchAll();
+            $stmt = Conexion::conectar()-> prepare($sql);
+            $stmt->bindParam(":id",$id,PDO::PARAM_INT);
+            $stmt->execute();
+            $res=$stmt->fetchAll();
+           
+            
+          
             foreach ($res as $row) {
                $nombre = $row["n1_nombre"];
             }

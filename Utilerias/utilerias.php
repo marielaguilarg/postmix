@@ -55,7 +55,7 @@ function cambiaMesGIng($mesas) {
 }
 
 
-//llega máximo de 30
+//llega mï¿½ximo de 30
 function cortarPalabra($cadena){
   // echo strlen($cadena);
     if(strlen($cadena)>15){ //corto
@@ -79,7 +79,7 @@ function cortarPalabra($cadena){
                 break;
             }
         }
-        //el renglon 2 sería el resto de la cadena
+        //el renglon 2 serï¿½a el resto de la cadena
         $reng2=substr($cadena,$long);
         $cadena=$reng1."\r".$reng2;
         
@@ -91,8 +91,8 @@ function cortarPalabra($cadena){
         return $cadena;
 }
   function fecha_res($fecha) {
-     
-      preg_match("([0-9]{1,2}).([0-9]{1,4})", $fecha, $mifecha);
+    
+      preg_match("/([0-9]{1,2}).([0-9]{1,4})/", $fecha, $mifecha);
 
             switch ($mifecha [1]) {
                 case "01" :
@@ -135,82 +135,8 @@ function cortarPalabra($cadena){
             $lafecha = strtoupper($strMes) . "-" . $mifecha [2];
             return $lafecha;
         }
-        function obtienedato($cadreferencia,$numdato){
- /*calculo de numero de servicio que se encuentra en la poscion 2 */
-$lonref=strlen($cadreferencia);
-   if ($lonref!=0) {
-		$datoact=1;
-		$ncardato=0;
-//		$numdato=2;
-		$numpos=0;
-		$londato=0;
-		$band=0;
-		while ($numpos<$lonref) {
-		   $caract=substr($cadreferencia,$numpos,1);
-		   if ($datoact==$numdato){
-		      if ($caract!=".") {
-			     if ($band==0){
-				    $datoini=$numpos;
-					$band=1;
-				 }		 
-			     $londato=$londato+1;
-			  }else{
-			  	 $datoact=$datoact+1;
-			  }	 
-		   }else{ 
-		       if ($caract==".") {
-			      if ($band==0){
-		             $datoact=$datoact+1;
-					}else{
-					break;
-					} 
-				}  
-			} 
-			$numpos=$numpos+1;
-			
-		}
-		return $datoini;
-   } 
-   }
+     
    
-   
-   function obtienelon($cadreferencia,$numdato){
- /*calculo de numero de servicio que se encuentra en la poscion 2 */
-$lonref=strlen($cadreferencia);
-   if ($lonref!=0) {
-		$datoact=1;
-		$ncardato=0;
-//		$numdato=2;
-		$numpos=0;
-		$londato=0;
-		$band=0;
-		while ($numpos<$lonref) {
-		   $caract=substr($cadreferencia,$numpos,1);
-		   if ($datoact==$numdato){
-		      if ($caract!=".") {
-			     if ($band==0){
-				    $datoini=$numpos;
-					$band=1;
-				 }		 
-			     $londato=$londato+1;
-			  }else{
-			  	 $datoact=$datoact+1;
-			  }	 
-		   }else{ 
-		       if ($caract==".") {
-			      if ($band==0){
-		             $datoact=$datoact+1;
-					}else{
-					break;
-					} 
-				}  
-			} 
-			$numpos=$numpos+1;
-			
-		}
-		return $londato;
-   } 
-   }
    
    function mysql_fecha($fecha)	//pasa la fecha de d/m/a?o a formato a?o/m/d
    {
@@ -286,4 +212,8 @@ function llenaListBoxSel($SQL,$html,$option,$select,$expansor,$opcion_sel) {
     return  $op ;
 }
 
+function redondear($valor) {
+$float_redondeado=round($valor*1000)/1000;
+return $float_redondeado;
+}
 }

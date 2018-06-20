@@ -363,49 +363,41 @@ public function vistaCuentasPonderacionModel($numcta,  $tabla){
 	
 		$stmt->close();
 	}
-        
-        public function buscaSeccionIndi($vidiomau){
-    $sql="SELECT
-cue_reactivosestandardetalle.ser_claveservicio,
-cue_reactivosestandardetalle.sec_numseccion AS seccion,
-cue_reactivosestandardetalle.red_estandar,
-cue_reactivosestandardetalle.red_parametroesp,
-cue_reactivosestandardetalle.red_parametroing,
+     function nombreSeccionIdioma($seccion,$servicio, $vidiomau) {
+   
+    $sql = "SELECT
 cue_secciones.sec_descripcionesp,
 cue_secciones.sec_descripcioning,
 cue_secciones.sec_nomsecesp,
-cue_secciones.sec_nomsecing
+cue_secciones.sec_nomsecing,
+cue_secciones.sec_nomsecind,
+cue_secciones.sec_numseccion,
+cue_secciones.ser_claveservicio
 FROM
-cue_reactivosestandardetalle
-Inner Join cue_secciones ON cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion AND cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio
+cue_secciones
 WHERE
-cue_reactivosestandardetalle.red_indicador =  '-1' AND
-cue_reactivosestandardetalle.ser_claveservicio =  '1'
-GROUP BY
-cue_reactivosestandardetalle.ser_claveservicio,
-cue_reactivosestandardetalle.sec_numseccion
-order by sec_ordsecind";
+cue_secciones.ser_claveservicio =:servicio AND
+cue_secciones.sec_numseccion =  :seccion";
+    
+    $st =Conexion::conectar()->prepare($sql);
+    $st->bindParam(":servicio", $servicio, PDO::PARAM_INT);
+   $st->bindParam(":seccion", $seccion, PDO::PARAM_INT);
+   $st->execute();
+    $rs=$st->fetchAll();
    
-     $res = Conexion::ejecutarQuerysp($sql);
-       if ($vidiomau == 1) {
+    if ($vidiomau == 1) {
+        $nomcampo = "sec_nomsecind";
         $nomcampo = "sec_nomsecesp";
     } else {
         $nomcampo = "sec_nomsecing";
     }
-    foreach($res as $row) {
-
-        $nombre = $row[$nomcampo];
-        $numero=$row["seccion"];
-       
-         $seccion=array($numero,$nombre); //creo arreglo
-        $secciones[]=$seccion;
-      
+    foreach ($rs as $row) {
+        $arr = $row[$nomcampo] ;
     }
-  
- 
-    return $secciones;
-    
-}
+
+    return $arr;
+}   
+       
 public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabla){
 		
         $stmt=Conexion::conectar()->prepare("SELECT  sd_clavecuenta, sd_ponderacion, sd_fechainicio, sd_fechafinal FROM cue_seccionesdetalles where sec_numseccion =:numsec and ser_claveservicio=:numser and sd_clavecuenta=:numcuen  and sd_fechainicio<=now() and  sd_fechafinal>=now()");

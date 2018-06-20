@@ -23,7 +23,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
-<script defer type="text/javascript" src="./javascript.js"></script>
+
 
   <link rel="stylesheet" href="views/dist/css/skins/skin-blue.min.css">
 

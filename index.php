@@ -19,6 +19,12 @@ require_once "Controllers/abiertaController.php";
 require_once "Controllers/generalController.php";
 require_once "Controllers/productoController.php";
 require_once "Controllers/enlacesController.php";
+require_once "Controllers/indpostmix/estadisticasController.php";
+require_once "Controllers/indpostmix/graficaIndicadorController.php";
+require_once "Controllers/indpostmix/resumenResultadosController.php";
+require_once "Controllers/indpostmix/generadorGraficas.php";
+require_once "Controllers/indpostmix/TablaEstadistica.php";
+require_once "Controllers/indpostmix/tablaDinamicaController.php";
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
@@ -41,6 +47,13 @@ require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
 require_once "Models/crud_enlaces.php";
+
+// ******************************************
+require_once "Models/uNegocio.php";
+require_once "Models/Nivel.php";
+require_once "Models/crud_usuario.php";
+require_once "Models/crud_estado.php";
+require_once "Models/crud_catalogoDetalle.php";
 
 $mvc =new MvcController();
 $mvc -> plantilla();

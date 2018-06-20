@@ -26,7 +26,8 @@
                 <div class="form-group col-md-12">
                   <label>NOMBRE</label>
                   <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" >
-                  <input type="text" class="form-control" name="desuneg" id="desuneg" >
+                  <input type="text" class="form-control" name="desuneg" id="desuneg" required>
+                
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>

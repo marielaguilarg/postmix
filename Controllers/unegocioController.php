@@ -413,18 +413,18 @@ if(isset($datosController["idpv"]))
 else
 $respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
 
-//            if ($respuesta == "success") {
-//
-//                //echo '<script> windows.location= "index.php?action=ok" </script>';
-//                echo "
-//          <script type='text/javascript'>
-//              window.location.href='index.php?action=ok';
-//              </script>
-//                ";
-//                //header("location:index.php?action=ok");
-//            } else {
-//                echo '<script> windows.location= "index.php?index.php" </script>';
-//            }
+            if ($respuesta == "success") {
+
+                //echo '<script> windows.location= "index.php?action=ok" </script>';
+                echo "
+          <script type='text/javascript'>
+              window.location.href='index.php?action=ok';
+              </script>
+                ";
+                //header("location:index.php?action=ok");
+            } else {
+                echo '<script> windows.location= "index.php?index.php" </script>';
+            }
 }
 }
 

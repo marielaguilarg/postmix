@@ -30,6 +30,8 @@ class Estructura extends Conexion{
                 
                 return $val;
 	}
+        
+        
 
 }
 

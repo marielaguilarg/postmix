@@ -15,6 +15,7 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
+                        $enlacesModel == "editaunegocio" ||
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
 			$enlacesModel == "editaseccion" ||
@@ -58,7 +59,11 @@ class EnlacesPaginas{
 			$enlacesModel == "listan6" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
-			$enlacesModel == "nuevacuenta" 
+			$enlacesModel == "nuevacuenta" 	||
+			$enlacesModel == "indgraficaindicador" ||
+                       $enlacesModel == "indestadisticares"  ||
+                       $enlacesModel == "indindicadoresgrid"  ||
+                       $enlacesModel == "indcumplimientoestabl" 
 			){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";

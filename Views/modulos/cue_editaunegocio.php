@@ -24,7 +24,7 @@
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-                 <form role="form" method="post">
+                 <form role="form" method="post" >
                 <!-- Datos iniciales alta de punto de venta -->
                  
                 <div class="form-group col-md-12">
@@ -33,7 +33,8 @@
               
                   <input type="hidden" class="form-control" name="idpv" id="idpv" value="<?php echo $id?>">
                
-                  <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $nuevoUnegocioContoller->getDesuneg(); ?>">
+                  <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $nuevoUnegocioContoller->getDesuneg(); ?>" required>
+                  
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>

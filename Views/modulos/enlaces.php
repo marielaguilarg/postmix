@@ -76,8 +76,17 @@
                     </span>
                   </a>
             <ul class="treeview-menu">
-                    <li><a href="index.php?action=listaunegocio"><i class="fa fa-circle-o"></i> Todas los puntos</a></li>
-                    <li><a href="index.php?action=nuevaunegocio"><i class="fa fa-circle-o"></i> Agregar Punto de Venta</a></li>
+                    <li><a href="index.php?action=listaunegocio"><i class="fa fa-circle-o"></i> Todos los puntos</a></li>
+                    
+                    
+                    <li class="treeview"><a href="#" ><i class="fa fa-circle-o"></i> Agregar Punto de Venta 
+                      <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span></a>
+                         <ul class="treeview-menu">
+                    <?php unegocioController::listaClientesCuentas();?>
+                         </ul>
+                        </li>
                   </ul>
                 </li>
 
