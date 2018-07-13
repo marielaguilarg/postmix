@@ -25,6 +25,7 @@ require_once "Controllers/indpostmix/resumenResultadosController.php";
 require_once "Controllers/indpostmix/generadorGraficas.php";
 require_once "Controllers/indpostmix/TablaEstadistica.php";
 require_once "Controllers/indpostmix/tablaDinamicaController.php";
+require_once "Controllers/indpostmix/buscapvController.php";
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
