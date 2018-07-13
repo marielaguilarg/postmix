@@ -198,12 +198,24 @@ function llenaListBoxSel($SQL,$html,$option,$select,$expansor,$opcion_sel) {
     mysql_free_result($SQLmcu);
     return $html;
 }
-   function creaOpcionesSel($SQL_TEM, $seleccion) {
+   function crearOpcionesSel($SQL_TEM,$parametros, $seleccion) {
 
-    $RS_SQM_TE = @mysql_query($SQL_TEM);
+    $RS_SQM_TE = Conexion::ejecutarQuery($SQL_TEM,$parametros);
 
 
-    while ($registro = @mysql_fetch_row($RS_SQM_TE)) {
+    foreach ($RS_SQM_TE as $registro ) {
+    if($registro[0]==$seleccion)
+     $op.= "<option value='" . $registro[0] . "'selected='selected' >" . $registro[1] . "</option>";
+    else
+        $op.= "<option value='" . $registro[0] . "' >" . $registro[1] . "</option>";
+    }
+    return  $op ;
+}
+
+ function crearOpcionesSelCad($RS_SQM_TE, $seleccion) {
+
+   
+    foreach ($RS_SQM_TE as $registro ) {
     if($registro[0]==$seleccion)
      $op.= "<option value='" . $registro[0] . "'selected='selected' >" . $registro[1] . "</option>";
     else
@@ -216,4 +228,98 @@ function redondear($valor) {
 $float_redondeado=round($valor*1000)/1000;
 return $float_redondeado;
 }
+
+
+  public function crearOpcionesNivel($nivel,$id,$select) {
+switch($nivel){
+    case 2:
+
+$res = Datosndos::vistandosModel($id, "ca_nivel2");
+        break;
+    case 3:
+$res = Datosntres::vistantresModel($id, "ca_nivel3");
+        break;
+    case 4:
+$res = Datosncua::vistancuaModel($id, "ca_nivel4");
+
+
+        break;
+    case 5:
+$res = Datosncin::vistancinModel($id, "ca_nivel5");
+        break;
+case 6:
+$res = Datosnsei::vistanseiModel($id, "ca_nivel6");
+    break;
+    default:
+        $res = Datosnuno::vistaN1Model( "ca_nivel1");
+
+}
+
+$lista=null;
+foreach ($res as $registro) {
+                    if($select== $registro [0])
+                         $lista[]= "<option value='" . $registro [0] . "' selected>" . $registro [1] . "</option>";
+                    else
+                          $lista[]=  "<option value='" . $registro [0] . "'>" . $registro [1] . "</option>";
+                   
+                   
+                }
+                return $lista;
+                
+          
+}
+function crearSelect($nombresel,$RS_SQM_TE,$select2){
+     
+         $listanivel[] = "<select class='form-control' name='$nombresel' id='$nombresel' onChange='cargaContenido(this.id)'>
+                               <option value=''>- ".strtoupper(T_("Todos"))." -</option>";
+            
+            foreach ($RS_SQM_TE as $registro) {
+      
+                if($select2== $registro [0])
+                     $listanivel[] = "<option value='" . $registro [0] . "' selected>" . $registro [1] . "</option>";
+                else
+                     $listanivel[] = "<option value='" . $registro [0] . "'>" . $registro [1] . "</option>";
+                
+              
+            }
+             $listanivel[] ="</select>";
+             return $listanivel;
+}
+
+//funcion que crea y llena un nuevo select a partir deu una consulta
+function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
+    $cad = '<select class="form-control" name="'.$nomselect.'" id="'.$nomselect.'" onchange="'.$funcionOC.'">' .
+            "<option value=''>- ".T_("TODOS")." -</option>";
+
+    
+        if(sizeof($RS_SQM_TE)>2)
+          {  if($_SESSION["idiomaus"]==2) {
+             
+//              die();
+                foreach ($RS_SQM_TE as $registro ) {
+                   if($preseleccion==$registro[0])
+                        $op.= "<option value='" . $registro[0] . "' selected >" . $registro[2] . "</option>";
+                   else
+                       $op.= "<option value='" . $registro[0] . "' selected >" . $registro[2] . "</option>";
+                }
+
+            }
+            else {
+
+                 foreach ($RS_SQM_TE as $registro ) {
+
+                  if($preseleccion==$registro[0])
+                    $op.= "<option value='" . $registro[0] . "' selected >" . $registro[1] . "</option>";
+                  else
+                      $op.= "<option value='" . $registro[0] . "' >" . $registro[1] . "</option>"; 
+                }
+            }
+          }
+
+
+    
+    return $cad . $op . "</select>";
+}
+
+
 }
