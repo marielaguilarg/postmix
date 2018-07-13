@@ -15,6 +15,7 @@ private $nombrenivel4;
 private $nombrenivel5;
 private $nombrenivel6;
 private $listaFranquicias;
+private $listaCuentas;
 private $listaEstatus;
 private $listaEstados;
 private $idpv;
@@ -37,6 +38,7 @@ private $ref;
 private $tel;
 private $numpunto;
 private $cuenta;
+
 
 public function vistaunegocioController() {
 $page_size = 10;
@@ -498,11 +500,11 @@ $nuctar = substr($idref, $datini, $londat);
 // busca estructura para alimentar variables
 
 $this->nombrenivel1 = Estructura::getDescripcionNivel(1, "cnfg_estructura");
-$this->nombrenivel1 = Estructura::getDescripcionNivel(2, "cnfg_estructura");
-$this->nombrenivel1 = Estructura::getDescripcionNivel(3, "cnfg_estructura");
-$this->nombrenivel1 = Estructura::getDescripcionNivel(4, "cnfg_estructura");
-$this->nombrenivel1 = Estructura::getDescripcionNivel(5, "cnfg_estructura");
-$this->nombrenivel1 = Estructura::getDescripcionNivel(6, "cnfg_estructura");
+$this->nombrenivel2 = Estructura::getDescripcionNivel(2, "cnfg_estructura");
+$this->nombrenivel3 = Estructura::getDescripcionNivel(3, "cnfg_estructura");
+$this->nombrenivel4 = Estructura::getDescripcionNivel(4, "cnfg_estructura");
+$this->nombrenivel5 = Estructura::getDescripcionNivel(5, "cnfg_estructura");
+$this->nombrenivel6 = Estructura::getDescripcionNivel(6, "cnfg_estructura");
 
 
 $sqlr = "select * from ca_unegocios where concat(cli_idcliente,ser_claveservicio,cue_clavecuenta,'.',une_claveunegocio)='" . $idref . "';";
@@ -600,13 +602,13 @@ $this->listanivel6=$this->selectNivelController(6,$this->clanivel5,$this->claniv
 
 public function selectNivelJsonController() {
 foreach ($_GET as $nombre_campo => $valor) {
-$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+$asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo,FILTER_SANITIZE_STRING) . "';";
 eval($asignacion);
 }
 //$nivel = filter_input(INPUT_GET, "ni", FILTER_SANITIZE_SPECIAL_CHARS);
 $res = Datosnuno::vistan1Model("ca_nivel1");
 $nivel = 1;
-if ($clanivel1) {
+if (isset($clanivel1)) {
 $res = Datosndos::vistandosModel($clanivel1, "ca_nivel2");
 $nivel = 2;
 } if (isset($clanivel2)) {
@@ -652,7 +654,7 @@ case 6:
 $res = Datosnsei::vistanseiModel($id, "ca_nivel6");
     break;
     default:
-        $res = Datosnuno::vistanunoModel($id, "ca_nivel1");
+        $res = Datosnuno::vistaN1Model( "ca_nivel1");
 
 }
 
@@ -691,6 +693,8 @@ public function listaClientesCuentas(){
 
                       
 }
+
+
 
 function getListanivel1() {
 return $this->listanivel1;
@@ -963,6 +967,22 @@ function getCuenta() {
     return $this->cuenta;
 }
 
+
+function getNombreSeccion() {
+    return $this->nombreSeccion;
+}
+
+function getTitulopagina() {
+    return $this->titulopagina;
+}
+
+function getListaCuentas() {
+    return $this->listaCuentas;
+}
+
+function setListaCuentas($listaCuentas) {
+    $this->listaCuentas = $listaCuentas;
+}
 
 
 
