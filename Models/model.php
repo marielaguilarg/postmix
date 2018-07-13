@@ -63,11 +63,14 @@ class EnlacesPaginas{
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
 			$enlacesModel == "nuevacuenta" || 
-				   
+			#AQUI INICIA SECCION INDICADORES   
 			$enlacesModel == "indgraficaindicador" ||
+                        $enlacesModel == "indgraficaindicadorgr" ||
                        $enlacesModel == "indestadisticares"  ||
                        $enlacesModel == "indindicadoresgrid"  ||
-                       $enlacesModel == "indcumplimientoestabl" 
+                       $enlacesModel == "indcumplimientoestabl" ||
+                       $enlacesModel == "indindicadores" ||
+                            $enlacesModel == "indbuscapv" 
 			){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";

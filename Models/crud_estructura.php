@@ -31,6 +31,32 @@ class Estructura extends Conexion{
                 return $val;
 	}
         
+          function nombreNivel($nivel, $vidiomau) {
+
+        $sql = "SELECT
+cnfg_estructura.mee_numnivel,
+cnfg_estructura.mee_descripcionnivelesp,
+cnfg_estructura.mee_descripcionniveling
+FROM
+cnfg_estructura
+where cnfg_estructura.mee_numnivel=$nivel";
+
+        $res = Conexion::ejecutarQuerysp($sql);
+        $i = 0;
+
+        if ($vidiomau == 1) {
+            $nomcampo = "mee_descripcionnivelesp";
+        } else {
+            $nomcampo = "mee_descripcionniveling";
+        }
+        foreach ($res as $row) {
+
+            $nombre = $row[$nomcampo];
+        }
+
+        return $nombre;
+    }
+        
         
 
 }

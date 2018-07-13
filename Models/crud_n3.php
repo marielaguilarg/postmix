@@ -12,7 +12,7 @@ class Datosntres extends Conexion{
 		$stmt-> bindParam(":idn2", $datosModel, PDO::PARAM_INT);
 		
 		$stmt-> execute();
-
+                
 		return $stmt->fetchAll();
 	}
 
@@ -25,7 +25,18 @@ class Datosntres extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetch();
+	}	  
+public function vistatresModel($datosModel,$idn3,$tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT n3_id, n3_nombre FROM $tabla WHERE n3_idn2=:idn2 and n3_id=:idn3");
+		$stmt-> bindParam(":idn2", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":idn3", $idn3, PDO::PARAM_INT);
+		
+
+		$stmt-> execute();
+
+		return $stmt->fetchAll();
 	}
+
 	 public function nombreNivel3($id,$tabla) {
 
             $sql = "SELECT n3_id, n3_nombre FROM $tabla where n3_id=:id ";

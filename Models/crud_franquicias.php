@@ -107,7 +107,7 @@ public function registroFranquiciaModel($datosModel, $tabla){
 
 
 
-    public function nombreFranquicia($cuenta, $franq,$cliente,$servicio) {
+    public function nombreFranquicia($cuenta, $franq,$cliente) {
 
     $sql = "SELECT
 ca_franquiciascuenta.fc_idfranquiciacta,
@@ -120,14 +120,13 @@ FROM
 ca_franquiciascuenta
 where ca_franquiciascuenta.fc_idfranquiciacta=:franq and
 ca_franquiciascuenta.cli_idcliente=:cliente and
-ca_franquiciascuenta.ser_claveservicio=:servicio and
 ca_franquiciascuenta.cue_clavecuenta=:cuenta";
 
     $res = Conexion::conectar()->prepare($sql);
     $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
     $res-> bindParam(":franq", $franq, PDO::PARAM_INT);
     $res-> bindParam(":cliente", $cliente, PDO::PARAM_INT);
-    $res-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
+ 
     foreach ($res as $row) {
         $nombre = $row["cf_descripcion"];
     }
@@ -136,8 +135,73 @@ ca_franquiciascuenta.cue_clavecuenta=:cuenta";
     return $nombre;
 }
 
+public function franquiciasxNivel($VarNivel2,$referencianivel,$servicio,$cliente,$cuenta){
+   $sql_fran="SELECT ca_franquiciascuenta.fc_idfranquiciacta, ca_franquiciascuenta.cf_descripcion
+FROM
+ca_unegocios
+Inner Join ca_franquiciascuenta ON ca_unegocios.fc_idfranquiciacta = ca_franquiciascuenta.fc_idfranquiciacta ";
 
+                $filtro="";
+                // busco por nivel
+                  $aux=explode(".", $referencianivel);
+                switch ($VarNivel2) {
+                     case 6: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
+ca_unegocios.une_cla_pais=$aux[2] and
+ca_unegocios.une_cla_zona=$aux[3] and
+ca_unegocios.une_cla_estado=$aux[4] and
+ca_unegocios.une_cla_ciudad=$aux[5] and
+ca_unegocios.une_cla_franquicia=$aux[6] ";
+                                break;
+                            case 5: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
+ca_unegocios.une_cla_pais=$aux[2] and
+ca_unegocios.une_cla_zona=$aux[3] and
+ca_unegocios.une_cla_estado=$aux[4] and
+ca_unegocios.une_cla_ciudad=$aux[5] ";
+                                break;
+                            case 4: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
+ca_unegocios.une_cla_pais=$aux[2] and
+ca_unegocios.une_cla_zona=$aux[3] and
+ca_unegocios.une_cla_estado=$aux[4] ";
+                                break;
+                            case 3: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
+ca_unegocios.une_cla_pais=$aux[2] and
+ca_unegocios.une_cla_zona=$aux[3] ";
+                                break;
+                            case 2: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
+ca_unegocios.une_cla_pais=$aux[2]";
+                                break;
+                            case 1: $filtro = "ca_unegocios.une_cla_region=$aux[1]";
+                                break;
+                }
+                $sql_fran.="where ".$filtro. " and `ca_franquiciascuenta`.`cli_idcliente`=:cliente and
 
+`ca_franquiciascuenta`.`cue_clavecuenta`=:opcionSeleccionadaCuenta
+                group by ca_franquiciascuenta.fc_idfranquiciacta;";
+                $parametros=array("cliente"=>$cliente,
+                    
+                    "opcionSeleccionadaCuenta"=>$cuenta);
+                    
+               $res= Conexion::ejecutarQury($sql_fran,$parametros);
+               return $res;
+
+}
+
+public function franquiciasxCuentaCli($cliente,$cuenta){
+      $sql="SELECT
+`ca_franquiciascuenta`.`fc_idfranquiciacta`,
+`ca_franquiciascuenta`.`cf_descripcion`
+FROM `ca_franquiciascuenta` where
+`ca_franquiciascuenta`.`cli_idcliente`=:scli and
+
+`ca_franquiciascuenta`.`cue_clavecuenta`=:opcionSeleccionadaCuenta;";
+      
+      $parametros=array("scli"=>$cliente,
+                    
+                    "opcionSeleccionadaCuenta"=>$cuenta);
+      $res= Conexion::ejecutarquery($sql,$parametros);
+      
+      return $res;
+}
 }
 
 ?>	
