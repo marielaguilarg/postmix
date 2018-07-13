@@ -1,5 +1,5 @@
- <?php $nuevoUnegocioContoller=new unegocioController();
-                        $nuevoUnegocioContoller->vistaNuevoUnegocio();
+ <?php $unegocioContoller=new unegocioController();
+                        $unegocioContoller->vistaNuevoUnegocio();
                     ?>﻿
 <section class="content-header">
       <h1> Punto de venta &nbsp; </h1>
@@ -11,9 +11,9 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-     <?php $nuevoUnegocioContoller=new unegocioController();
+     <?php $unegocioContoller=new unegocioController();
     
-                        $nuevoUnegocioContoller->vistaNuevoUnegocio();
+                        $unegocioContoller->vistaNuevoUnegocio();
                     ?>
       
         <div class="row">
@@ -46,7 +46,7 @@
                   <label>FRANQUICIA</label>
                   <select class="form-control" name="franqcuenta">
                     <option value="">Seleccione una opción</option>
-                  <?php foreach($nuevoUnegocioContoller->getListaFranquicias() as $franqui){
+                  <?php foreach($unegocioContoller->getListaFranquicias() as $franqui){
                      echo $franqui ;
                   }?>
                   </select>
@@ -55,7 +55,7 @@
                   <label>ESTATUS</label>
                   <select class="form-control" name="estatus">
                        <option value="">Seleccione una opción</option>
-                   <?php foreach($nuevoUnegocioContoller->getListaEstatus() as $estatus){
+                   <?php foreach($unegocioContoller->getListaEstatus() as $estatus){
                      echo $estatus ;
                   }?>
                   </select>
@@ -74,7 +74,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1">
                        <option value="">Seleccione una opción</option>
-                     <?php foreach($nuevoUnegocioContoller->getListanivel1() as $nivel1){
+                     <?php foreach($unegocioContoller->getListanivel1() as $nivel1){
                      echo $nivel1 ;
                   }?>
                   </select>
@@ -185,7 +185,7 @@
                   <label>ESTADO</label>
                   <select class="form-control" name="une_dir_estado" id="une_dir_estado">
                       <option>Seleccione una opción</option>
-                      <?php foreach($nuevoUnegocioContoller->getListaEstados() as $estado){
+                      <?php foreach($unegocioContoller->getListaEstados() as $estado){
                           echo $estado;
                       }?>
                   </select>
@@ -212,7 +212,7 @@
             </div>
        <?php
 
-$nuevoUnegocioContoller ->registroUnegocioController();
+$unegocioContoller ->registroUnegocioController();
 ?>
         </div>
 	 </section>

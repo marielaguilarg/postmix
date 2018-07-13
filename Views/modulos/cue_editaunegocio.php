@@ -1,5 +1,5 @@
- <?php $nuevoUnegocioContoller=new unegocioController();
-                        $nuevoUnegocioContoller->vistaNuevoUnegocio();
+ <?php $unegocioContoller=new unegocioController();
+                        $unegocioContoller->vistaNuevoUnegocio();
                     ?>﻿
 <section class="content-header">
       <h1> Punto de venta &nbsp; </h1>
@@ -11,12 +11,12 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-     <?php $nuevoUnegocioContoller=new unegocioController();
+     <?php $unegocioContoller=new unegocioController();
      $id=filter_input(INPUT_GET,"referencia",FILTER_SANITIZE_NUMBER_INT);
      if($id!="")
-          $nuevoUnegocioContoller->vistaEditaUnegocio();
+          $unegocioContoller->vistaEditaUnegocio();
      else
-                        $nuevoUnegocioContoller->vistaNuevoUnegocio();
+                        $unegocioContoller->vistaNuevoUnegocio();
                     ?>
       
         <div class="row">
@@ -29,31 +29,31 @@
                  
                 <div class="form-group col-md-12">
                   <label>NOMBRE</label>
-                    <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $nuevoUnegocioContoller->getCuenta();?>" >
+                    <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $unegocioContoller->getCuenta();?>" >
               
                   <input type="hidden" class="form-control" name="idpv" id="idpv" value="<?php echo $id?>">
                
-                  <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $nuevoUnegocioContoller->getDesuneg(); ?>" required>
+                  <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $unegocioContoller->getDesuneg(); ?>" required>
                   
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>
-                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" value="<?php echo $nuevoUnegocioContoller->getIdpepsi();?>">
+                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" value="<?php echo $unegocioContoller->getIdpepsi();?>">
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID CUENTA</label>
-                  <input type="text" class="form-control" name="idcta" id="idcta" value="<?php echo $nuevoUnegocioContoller->getIdcta();?>">
+                  <input type="text" class="form-control" name="idcta" id="idcta" value="<?php echo $unegocioContoller->getIdcta();?>">
                 </div>
                 <div class="form-group col-md-4">
                   <label>NUD</label>
-                  <input type="text" class="form-control" name="idnud" id="idnud" value="<?php echo $nuevoUnegocioContoller->getIdnud();?>">
+                  <input type="text" class="form-control" name="idnud" id="idnud" value="<?php echo $unegocioContoller->getIdnud();?>">
                 </div>
                 <div class="form-group col-md-6">
                
                   <label>FRANQUICIA</label>
                   <select class="form-control" name="franqcuenta">
                     <option value="">Seleccione una opción</option>
-                  <?php foreach($nuevoUnegocioContoller->getListaFranquicias() as $franqui){
+                  <?php foreach($unegocioContoller->getListaFranquicias() as $franqui){
                      echo $franqui ;
                   }?>
                   </select>
@@ -62,7 +62,7 @@
                   <label>ESTATUS</label>
                   <select class="form-control" name="estatus">
                        <option value="">Seleccione una opción</option>
-                   <?php foreach($nuevoUnegocioContoller->getListaEstatus() as $estatus){
+                   <?php foreach($unegocioContoller->getListaEstatus() as $estatus){
                      echo $estatus ;
                   }?>
                   </select>
@@ -81,7 +81,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1">
                        <option value="">Seleccione una opción</option>
-                     <?php foreach($nuevoUnegocioContoller->getListanivel1() as $nivel1){
+                     <?php foreach($unegocioContoller->getListanivel1() as $nivel1){
                      echo $nivel1 ;
                   }?>
                   </select>
@@ -94,7 +94,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
                         data-default-label="Seleccione una opción" >
-                  <?php foreach($nuevoUnegocioContoller->getListanivel2() as $nivel2){
+                  <?php foreach($unegocioContoller->getListanivel2() as $nivel2){
                      echo $nivel2 ;
                   }?>
                    
@@ -109,7 +109,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
                         data-default-label="Seleccione una opción" >
-                      <?php foreach($nuevoUnegocioContoller->getListanivel3() as $nivel3){
+                      <?php foreach($unegocioContoller->getListanivel3() as $nivel3){
                      echo $nivel3 ;
                   }?>
                   </select>
@@ -123,7 +123,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
                         data-default-label="Seleccione una opción">
-                     <?php foreach($nuevoUnegocioContoller->getListanivel4() as $nivel4){
+                     <?php foreach($unegocioContoller->getListanivel4() as $nivel4){
                      echo $nivel4 ;
                   }?>
                   </select>
@@ -137,7 +137,7 @@
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
                         data-default-label="Seleccione una opción">
-                    <?php foreach($nuevoUnegocioContoller->getListanivel5() as $nivel5){
+                    <?php foreach($unegocioContoller->getListanivel5() as $nivel5){
                      echo $nivel5 ;
                   }?>
                   </select>
@@ -148,10 +148,10 @@
                         data-group="niv-1"
                         data-id="niv-6"
                          data-final
-                        data-url=""
+                      
                         data-replacement="container1"
                         data-default-label="Seleccione una opción">
-                      <?php foreach($nuevoUnegocioContoller->getListanivel6() as $nivel6){
+                      <?php foreach($unegocioContoller->getListanivel6() as $nivel6){
                      echo $nivel6 ;
                   }?>
                   </select>
@@ -164,60 +164,60 @@
                 </div>
                <div class="form-group col-md-12">
                   <label>CALLE</label>
-                  <input type="text" class="form-control" name="calle" id="calle" value="<?php echo $nuevoUnegocioContoller->getCalle();?>">
+                  <input type="text" class="form-control" name="calle" id="calle" value="<?php echo $unegocioContoller->getCalle();?>">
                 </div>
                 
                <div class="form-group col-md-3">
                   <label>NUM. EXTERIOR</label>
-                  <input type="text" class="form-control" name="numext" id="numext" value="<?php echo $nuevoUnegocioContoller->getNumext()?>">
+                  <input type="text" class="form-control" name="numext" id="numext" value="<?php echo $unegocioContoller->getNumext()?>">
                 </div>
                 
                 
                 <div class="form-group col-md-3">
                   <label>NUM. INTERIOR</label>
-                  <input type="text" class="form-control" name="numint" id="numint" value="<?php echo $nuevoUnegocioContoller->getNumint();?>">
+                  <input type="text" class="form-control" name="numint" id="numint" value="<?php echo $unegocioContoller->getNumint();?>">
                 </div>
 				
                 <div class="form-group col-md-3">
                   <label>MANZANA</label>
-                  <input type="text" class="form-control" name="mz" id="mz" value="<?php echo $nuevoUnegocioContoller->getMz();?>">
+                  <input type="text" class="form-control" name="mz" id="mz" value="<?php echo $unegocioContoller->getMz();?>">
                 </div>
                 <div class="form-group col-md-3">
                   <label>LOTE</label>
-                  <input type="text" class="form-control" name="lt" id="lt" value="<?php echo $nuevoUnegocioContoller->getLt()?>">
+                  <input type="text" class="form-control" name="lt" id="lt" value="<?php echo $unegocioContoller->getLt()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>COLONIA</label>
-                  <input type="text" class="form-control" name="col" id="col" value="<?php echo $nuevoUnegocioContoller->getCol()?>">
+                  <input type="text" class="form-control" name="col" id="col" value="<?php echo $unegocioContoller->getCol()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>DELEGACIÓN</label>
-                  <input type="text" class="form-control" name="del" id="del" value="<?php echo $nuevoUnegocioContoller->getDel()?>">
+                  <input type="text" class="form-control" name="del" id="del" value="<?php echo $unegocioContoller->getDel()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>CIUDAD</label>
-                  <input type="text" class="form-control" name="une_dir_municipio" id="une_dir_municipio" value="<?php echo $nuevoUnegocioContoller->getMun()?>">
+                  <input type="text" class="form-control" name="une_dir_municipio" id="une_dir_municipio" value="<?php echo $unegocioContoller->getMun()?>">
                 </div>
                 <div class="form-group col-md-6">
                   <label>ESTADO</label>
                   <select class="form-control" name="une_dir_estado" id="une_dir_estado">
                       <option>Seleccione una opción</option>
-                      <?php foreach($nuevoUnegocioContoller->getListaEstados() as $estado){
+                      <?php foreach($unegocioContoller->getListaEstados() as $estado){
                           echo $estado;
                       }?>
                   </select>
                 </div>
                 <div class="form-group col-md-3">
                   <label>C.P.</label>
-                  <input type="text" class="form-control" name="une_dir_cp" id="une_dir_cp" value="<?php echo $nuevoUnegocioContoller->getCp()?>">
+                  <input type="text" class="form-control" name="une_dir_cp" id="une_dir_cp" value="<?php echo $unegocioContoller->getCp()?>">
                 </div>
                 <div class="form-group col-md-9">
                   <label>REFERENCIA</label>
-                  <input type="text" class="form-control" name="une_dir_referencia" id="une_dir_referencia" value="<?php echo $nuevoUnegocioContoller->getRef()?>">
+                  <input type="text" class="form-control" name="une_dir_referencia" id="une_dir_referencia" value="<?php echo $unegocioContoller->getRef()?>">
                 </div>
                  <div class="form-group col-md-6">
                   <label>TELÉFONO</label>
-                  <input type="text" class="form-control" name="une_dir_telefono" id="une_dir_telefono" value="<?php echo $nuevoUnegocioContoller->getTel()?>">
+                  <input type="text" class="form-control" name="une_dir_telefono" id="une_dir_telefono" value="<?php echo $unegocioContoller->getTel()?>">
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
@@ -229,7 +229,7 @@
             </div>
        <?php
 
-$nuevoUnegocioContoller ->registroUnegocioController();
+$unegocioContoller ->registroUnegocioController();
 ?>
         </div>
 	 </section>

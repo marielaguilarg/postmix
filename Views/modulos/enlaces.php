@@ -127,9 +127,23 @@
             <li><a href="#"><i class="fa fa-circle-o"></i> Reg. Resultados
 </a></li>
           </ul>
-        </li>
-<li><a href="#"><i class="fa fa-film"></i> <span>Cinemex</span></a></li>
-<li><a href="#"><i class="fa fa-bar-chart"></i> <span>Indicadores Postmix</span></a></li>
+        </li> 
+        <li><a href="#"><i class="fa fa-film"></i> <span>Cinemex</span></a></li>
+ <li class="treeview">
+              <a href="#"><em class="fa fa-bar-chart"></em> Indicadores Postmix
+                <span class="pull-right-container">
+                  <em class="fa fa-angle-left pull-right"></em>
+                </span>
+              </a>
+
+      <ul class="treeview-menu">
+            <li><a href="index.php?action=indgraficaindicadorgr"><i class="fa fa-circle-o"></i> Estadísticas</a></li>
+               <li><a href="index.php?action=indindicadores"><i class="fa fa-circle-o"></i> Indicadores</a></li>
+                     <li><a href="#"><i class="fa fa-circle-o"></i> Punto de venta</a></li>
+                           <li><a href="#"><i class="fa fa-circle-o"> Base de datos</i></a></li>
+                               <li><a href="#"><i class="fa fa-circle-o"> Certificación</i></a></li>
+                           
+      </ul></li>
  <li class="treeview">
           <a href="#">
             <i class="fa fa-book"></i>
