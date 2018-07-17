@@ -1,8 +1,8 @@
 <!-- Content Header (Page header) -->
 <?php
 $graficaIndicador = new GraficaIndicadorController();
-$menu = new Navegacion();
-$menu->cargarFiltros(1, 100);
+//$menu = new Navegacion();
+//$menu->cargarFiltros(1, 100);
 
 $graficaIndicador->vistaGraficaIndicadores();
 ?>
@@ -292,7 +292,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
                                     data-target="niv-4"
                                     data-url="getNivelUnegocio.php?"
                                     data-replacement="container1"
-                                    data-default-label="Seleccione una unidad de negocio" >
+                                    data-default-label="-TODOS-" >
                                 <option value="">-TODOS-</option>
                                 <?php
                                 echo $graficaIndicador->getListanivel3();
@@ -307,7 +307,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
                                     data-target="niv-5"
                                     data-url="getNivelUnegocio.php?"
                                     data-replacement="container1"
-                                    data-default-label="Seleccione un embotellador" disabled>
+                                    data-default-label="-TODOS-" disabled>
                                 <option value="">-TODOS-</option>
 <?php
 echo $graficaIndicador->getListanivel4();
@@ -322,7 +322,7 @@ echo $graficaIndicador->getListanivel4();
                                     data-target="niv-6"
                                     data-url="getNivelUnegocio.php?"
                                     data-replacement="container1"
-                                    data-default-label="Seleccione una región">
+                                    data-default-label="-TODOS-">
                                 <option value="">-TODOS-</option>
 <?php
 echo $graficaIndicador->getListanivel5();
@@ -343,7 +343,7 @@ echo $graficaIndicador->getListanivel5();
                                     data-final
                                     data-url=""
                                     data-replacement="container1"
-                                    data-default-label="Seleccione una opción">
+                                    data-default-label="-TODOS-">
                                 <option value="">-TODOS-</option>
 <?php
 echo $graficaIndicador->getListanivel6();
