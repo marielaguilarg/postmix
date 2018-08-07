@@ -53,7 +53,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
                 //separo los niveles
                 $aux=explode(".", $nivel);
                        
-                       $consultaCuenta=DatosCuenta::cuentasxNivel($VarNivel2,$aux,$scli,$opcionSeleccionadaCuenta);
+                       $consultaCuenta=DatosCuenta::cuentasxNiveltm($VarNivel2,$aux,$scli,$opcionSeleccionadaCuenta);
                 }
                 else
                    
