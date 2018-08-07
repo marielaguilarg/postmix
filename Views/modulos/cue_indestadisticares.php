@@ -1,7 +1,7 @@
 
 <?php 
 $estadisticasController=new EstadisticasController;
-$estadisticasController->generarBusquedaRes();
+$estadisticasController->vistaIndEstadisticaRes();
         
         ?>
 <style >
@@ -13,12 +13,12 @@ $estadisticasController->generarBusquedaRes();
 }
 </style>
 
-  <script src="Views/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
-          <script src="Views/anychart8.2.1/js/anychart-exports.min.js"></script>
-          <script src="Views/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
-            <script src="Views/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
-              <script src="Views/anychart8.2.1/js/anychart-ui.min.js"></script>
-                <script src="Views/anychart8.2.1/js/anychart-table.min.js"></script>
+  <script src="../js/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
+          <script src="../js/anychart8.2.1/js/anychart-exports.min.js"></script>
+          <script src="../js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
+            <script src="../js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
+              <script src="../js/anychart8.2.1/js/anychart-ui.min.js"></script>
+                <script src="../js/anychart8.2.1/js/anychart-table.min.js"></script>
           <script type="text/javascript">
 anychart.onDocumentReady(function () {
           anychart.data.loadJsonFile("<?php echo $estadisticasController->getGraficaaplica(); ?>", function (data) {
@@ -110,7 +110,7 @@ function MuestraOculta(opcion)
 	{
 
 		document.getElementById('promedio').style.display='none';
-		//document.getElementById('promedio2').style.display='none';
+		document.getElementById('promedio2').style.display='none';
 		 document.getElementById('graficas2').style.display='none';
 		
 	}
@@ -157,99 +157,282 @@ function abrirVentana()
               echo "<br>".$estadisticasController->getFiltrosSel()->getNombre_nivel();
               echo "<br>".$estadisticasController->getFiltrosSel()->getNombre_franquicia();?></h1>
       <ol class="breadcrumb">
-        <li><a href="#"><em class="fa fa-dashboard"></em> GRAFICA</a></li>
-        <li class="active"><a href="index.php?action=indindicadoresgrid">TABLA DINAMICA</a></li>
-          <li class="active">ESTADISTICAS</li>
+           <?php Navegacion::desplegarNavegacion();?>
       </ol>
     </section>
 
 <section class="content container-fluid">
 
-<div class="container">
-    <div class="row">
- 
-            <div class="box box-info">
-              
-         <table class="lineaTabla" align="center" border="0" cellpadding="0" cellspacing="0" height="15" width="100%">
-              <tbody><tr>
-                <td align="center"  width="69%">
-				<!--<div style=" width:273px">-->
-	        <table  border="0" cellpadding="0" cellspacing="0"  width="100%">
-                  <tbody><tr>
-                    <td class="subtit_graf" align="center" height="20" width="139"><?php echo T_("TOTAL DE RESULTADOS")?></td> 
-                   <!-- se vuelve din�mico este campo
-                    -->
-                   <?php echo $estadisticasController->getLb_tamanio_muestra(); ?>
-                    <td class="subtit_graf" align="center" width="100"><?php echo T_("ESTANDAR")?></td> 
-                    <td class="subtit_graf" align="center" width="98"><?php echo T_("CUMPLEN")?></td>
-                    <td class="subtit_graf" align="center"  width="134"><?php echo T_("NO CUMPLEN")?></td>
-					</tr>
-					
-					  <tr>
-                                              <td class="datos_graf" align="center" height="19"><?php echo $estadisticasController->getEstadisticas()->getTotalresultados(); ?></td>
-					<!-- <td class="datos_graf" align="center">--><?php echo $estadisticasController->getEstadisticas()->getTamano_muestra(); ?>
-                    <td class="datos_graf"><?php echo $estadisticasController->getEstadisticas()->getEstandar(); ?></td>
-		<?php 
-                echo  '<td class="datos_graf"><a href="'.$estadisticasController->getLigasi() .'" onclick="return guardarLiga(this, \'CUMPLEN\');" ><span class="liga_esp">'.$estadisticasController->getEstadisticas()->getCumplen().'</span></a></td>
-                    		
-                    <td class="datos_graf"><a href="'.$estadisticasController->getLigano().'" onclick="return guardarLiga(this, \'NO CUMPLEN\');"><span class="liga_esp">'.$estadisticasController->getEstadisticas()->getNoCumplen().'</span></a></td>
-                  </tr>
-                </tbody></table></td><td width="31%">
-					<div id="promedio">
-					<table align="center" bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
-					<tbody><tr>
-                    <td class="subtit_graf" height="50%" width="50%">'.T_("PROMEDIO").'</td>
-                    <td class="subtit_graf" align="center" width="50%">'.T_("DESVIACION ESTANDAR").'</td>
-					</tr><tr height="50%">
-					
-                    <td class="datos_graf">'.$estadisticasController->getEstadisticas()->getPromedio().'</td>
-				
-                    <td class="datos_graf">'.$estadisticasController->getEstadisticas()->getDesviacion_estandar().'</td>
-					</tr></tbody></table>
-					</div>
-					
-				</td>
-              </tr>
-            </tbody></table>	
-        
-       
-        
-            <div><span class="SubtituloGraf" ><br />'.$estadisticasController->getNombreSeccion().'</span><br /><label>'.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR").'</label></div>
-          
-           <div id="container"></div>
-            
-         <div><span class="SubtituloGraf"><br />'.$estadisticasController->getNombreSeccion().'</span>
-            <br />  
-           <label> '.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR MES").'</label></div>'
-                        . '<div id="container2"></div>';
-         //  $estadisticasController->getGraficanivelcumpl().'</div>
-              
-          echo 
-        '<div id="graficas2"  > 
      
-              <div><span class="SubtituloGraf">'.$estadisticasController->getNombreSeccion().'</span><br />
-                <label>'.T_("VALOR PROMEDIO MENSUAL").'</label></div>
-           
-             <div id="graficagen"></div>
-              
-          
-              <div><span class="SubtituloGraf">'.$estadisticasController->getNombreSeccion()."</span><br><label>".T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO").'</label></div>
-          
-             <div id="graficafrec"></div>
-          
+  <div class="box box-default">
+               <!-- /.box-header -->
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table no-margin">
+                   <tbody>
+                  <tr>
+                    <td style="font-weight: bold;"><?php echo T_("TOTAL DE RESULTADOS")?></td>
+ 					<td>
+                      <div class="sparkbar pull-right" data-height="20"><?php echo $estadisticasController->getEstadisticas()->getTotalresultados(); ?></div>
+                    </td>
+                  </tr>
+			                  </tbody>
+                </table>
+              </div>
+			   <!-- se vuelve din�mico este campo
+                    -->
+                 
+                  <!-- <td class="datos_graf" align="center">--><?php echo $estadisticasController->getEstadisticas()->getTamano_muestra(); ?>
+                 
+		
+			<div class="table-responsive">
+                <table class="table no-margin">
+                   <tbody>
+                  <tr>
+                    <td style="font-weight: bold"><?php echo T_("ESTANDAR")?></td>                  
+                    <td>
+                      <div class="sparkbar pull-right" data-height="20"><?php echo $estadisticasController->getEstadisticas()->getEstandar(); ?><</div>
+                    </td>
+                  </tr>
+			</tbody>
+                </table>
+				</div>
+			<div class="table-responsive">
+                <table class="table no-margin">
+                   <tbody>
+				    <tr>
+                    <td style="font-weight: bold"><?php echo T_("CUMPLEN")?> </td>                
+                    <td>
+                      <div class="sparkbar pull-right" data-height="20"><?php echo '<a href="'.$estadisticasController->getLigasi() .'" onclick="return guardarLiga(this, \'CUMPLEN\');" >'.$estadisticasController->getEstadisticas()->getCumplen().'</a>';?></div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-md-6">
+				<div class="table-responsive">
+                <table class="table no-margin">
+                   <tbody>
+                  <tr>
+                    <td style="font-weight: bold"><?php echo T_("NO CUMPLEN")?></td><td>
+					<?php 
+                echo  '<div class="sparkbar pull-right" data-height="20"> <a href="'.$estadisticasController->getLigano().'" onclick="return guardarLiga(this, \'NO CUMPLEN\');"><span class="liga_esp">'.$estadisticasController->getEstadisticas()->getNoCumplen().'</span></a></div>';?>
+               
+                    
+                    </td>
+                  </tr>
+					</tbody>
+                </table>
+				</div>
+				<?php echo '
+				<div class="table-responsive" id="promedio">
+                <table class="table no-margin">
+                   <tbody>
+                  <tr>
+                    <td style="font-weight: bold">'.T_("PROMEDIO").'<br></td>
+					<td>
+                      <div class="sparkbar pull-right" data-height="20">'.$estadisticasController->getEstadisticas()->getPromedio().'</div>
+                    </td>
+                  </tr>
+				</tbody>
+                </table>
+				</div>
+				<div class="table-responsive" id="promedio2">
+                <table class="table no-margin">
+                   <tbody>
+					<tr>
+                    <td style="font-weight: bold">'.T_("DESVIACION ESTANDAR").'</td>
+                    
+                   
+                    <td>
+                      <div class="sparkbar pull-right" data-height="20">'.$estadisticasController->getEstadisticas()->getDesviacion_estandar().'</div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div> ';?>
+            </div>
+            <!-- /.col -->
           </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+        
+      </div>
+	
+      <!-- /.row -->
+ <?php echo ' <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+        
+           '.$estadisticasController->getNombreSeccion().'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                  </div>
+            </div>
+              <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="text-center"> <strong>'.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR").'</strong></p>
+                  
+					                   
+                     <div id="container"></div>
+               
+                  <!-- /.chart-responsive -->
+
+                </div>
+ 
+              </div>
+              <!-- /.row -->
+            </div>
+               <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+        <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                  </div>
+            </div>
+              <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="text-center"> <strong>'.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR MES").'</strong></p>
+               
+					                   
+                    <div id="container2"></div>
+                 
+                 
+
+                </div>
+ 
+              </div>
+              <!-- /.row -->
+            </div>
+               <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+           <div class="row" id="graficas2">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                  </div>
+            </div>
+              <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="text-center"> <strong>'.T_("VALOR PROMEDIO MENSUAL").'</strong></p>
+                
+					                   
+                    <div id="graficagen"></div>
+                 
+                </div>
+ 
+              </div>
+              <!-- /.row -->
+            </div>
+               <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+          <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                  </div>
+            </div>
+              <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="text-center"> <strong>'.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO").'</strong></p>
+                  <div class="chart">
+					                   
+                    <div id="graficafrec"></div>
+                  </div>
+                  <!-- /.chart-responsive -->
+
+                </div>
+ 
+              </div>
+              <!-- /.row -->
+            </div>
+               <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->';
+  if($estadisticasController->getTit_cumplaj()!=""){
       
-            <div ><label><span class="SubtituloGraf">'.$estadisticasController->getTit_cumplaj().'</span></div>
-         
-           <div id="graficacumplaj"></div>';
+       echo '<div class="row" >
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">'.$estadisticasController->getTit_cumplaj().'</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                  </div>
+            </div>
+              <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                   <div class="chart">
+					                   
+                    <div id="graficacumplaj"></div>
+                  </div>
+                  <!-- /.chart-responsive -->
+
+                </div>
+ 
+              </div>
+              <!-- /.row -->
+            </div>
+               <!-- ./box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>';
+  }
+            
        
-        
         ?>
+          <!-- /.row -->
         
         
-        
-                    </div>
-    </div>
+                 
             
     </div>
 </section>

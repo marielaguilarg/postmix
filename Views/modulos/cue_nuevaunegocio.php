@@ -123,7 +123,7 @@
                         data-target="niv-6"
                         data-url="getNivelUnegocio.php?"
                         data-replacement="container1"
-                        data-default-label="Seleccione una región">
+                        data-default-label="Seleccione una región" disabled>
                 
                   </select>
                 </div>
@@ -135,7 +135,7 @@
                          data-final
                         data-url=""
                         data-replacement="container1"
-                        data-default-label="Seleccione una opción">
+                        data-default-label="Seleccione una opción" disabled >
                   
                   </select>
                 </div>

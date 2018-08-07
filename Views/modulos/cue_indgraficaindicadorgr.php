@@ -14,18 +14,17 @@ $graficaIndicador->vistaGraficaIndicadores();
         padding: 0;
     }
 </style>
-<script src="Views/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
-<script src="Views/anychart8.2.1/js/anychart-exports.min.js"></script>
-<script src="Views/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
-<script src="Views/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
-<script src="Views/anychart8.2.1/js/anychart-ui.min.js"></script>
-<script src="Views/anychart8.2.1/js/anychart-table.min.js"></script>
-<link rel="stylesheet" href="https://cdn.anychart.com/css/8.2.1/anychart-ui.min.css">
+<script src="js/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
+          <script src="js/anychart8.2.1/js/anychart-exports.min.js"></script>
+          <script src="js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
+            <script src="js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
+              <script src="js/anychart8.2.1/js/anychart-ui.min.js"></script>
+                <script src="js/anychart8.2.1/js/anychart-table.min.js"></script>
 
 
 <script type="text/javascript">
     anychart.onDocumentReady(function () {
-
+  
         function drawGauge(value, rango1, rango2, rango3, rango4, url) {
 // create data
             var data = [value];
@@ -138,17 +137,20 @@ $graficaIndicador->vistaGraficaIndicadores();
         }
 
         function dibujarTablaGraf(container, urlDatos, idtabla) {
+        var	preloader = anychart.ui.preloader();
+        	// render preloader to the DOM
+            //	preloader.render();
+//             	  preloader = anychart.ui.preloader();
+//               	// cover only chart container
+             preloader.render(document.getElementById(container));
+              	// show preloader
+              	                  preloader.visible(true);
 // set stage
             var stage = anychart.graphics.create(container);
-            // preloader = anychart.ui.preloader();
-// cover only chart container
-
-            //   preloader.render(document.getElementById(container));
-// show preloader
-            //       preloader.visible(true);
+        
 
             anychart.data.loadJsonFile(urlDatos, function (data) {
-//	
+		
                 var Availability = anychart.data.set(data);
 
 
@@ -199,7 +201,8 @@ $graficaIndicador->vistaGraficaIndicadores();
 
 // set table container and initiate draw
                 table.container(stage).draw();
-                //     preloader.visible(false);
+               
+                     preloader.visible(false);
 
 // Settings for table content
 
@@ -219,31 +222,35 @@ $graficaIndicador->vistaGraficaIndicadores();
                 dibujarTabla(idtabla, data);
 
             });
+        //  preloader.visible(false);
         }
 
         function dibujarTabla(idtabla, datos) {
 
-            var table = $('<table>').addClass('table table-striped');
-            table.append('<thead> <tr>  <th>ATRIBUTO</th> <th >ESTANDAR</th>' +
+            var table = $('<table>').addClass('table no-margin');
+          
+            table.append(' <tr>  <th>ATRIBUTO</th> <th >ESTANDAR</th>' +
                     ' <th  >%</th>' +
-                    ' </tr></thead>');
-
+                    ' </tr>');
+            table.append("<tbody>");
             for (i = 0; i < datos.length; i++) {
                 var row = '<tr><td>' + datos[i][0] + '</td>' +
                         '<td>' + datos[i][1] + '</td>' +
                         '<td>' + datos[i][2] + '</td></tr>';
                 table.append(row);
             }
-
+		
             $('#' + idtabla).append(table);
         }
+    
+            
 <?php
 $i = 0;
 foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
     echo 'dibujarTablaGraf("container' . ($i) . '","' . $seccionind->getUrlDatos() . '","tabla' . ($i++) . '");';
 }
 ?>
-
+   
     });
 
 </script>
@@ -265,7 +272,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
     <h1> <?php echo $graficaIndicador->getPeriodo() ?></h1>
     <h1> <?php echo $graficaIndicador->getNombre_nivel() ?></h1>
     <ol class="breadcrumb">
-        <li><a href="#"><em class="fa fa-dashboard"></em> GRAFICA</a></li>
+        <?php Navegacion::desplegarNavegacion();?>
 
     </ol>
 </section>
@@ -273,7 +280,9 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
 <!-- Main content -->
 <section class="content container-fluid">
     <!----- Filtros ----->
-    <div class="box box-info"  >
+    <div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info"  >
         <div class="box-header with-border">
             <h3 class="box-title">Filtros</h3>
         </div>
@@ -281,75 +290,33 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
             <form name="form1" action="index.php?action=indgraficaindicadorgr" method="post" >
                 <div class="row" >
                     <div class="col-sm-4 border-right filtros" >
+  
+    <input name="alertanav" type="hidden" id="alertanav" value="<?php echo $graficaIndicador->getAlertanav(); ?>"  >
+    <input name="opcionuni" type="hidden" id="opcionuni" value="<?php echo $graficaIndicador->getOpcionuni(); ?>"  >
 
 
                         <!-- /.form-group -->
-                        <div class="form-group ">
-                            <label>EMBOTELLADOR</label>
-                            <select class="form-control" name="clanivel3" 
-                                    data-group="niv-1"
-                                    data-id="niv-3"
-                                    data-target="niv-4"
-                                    data-url="getNivelUnegocio.php?"
-                                    data-replacement="container1"
-                                    data-default-label="-TODOS-" >
-                                <option value="">-TODOS-</option>
+                        
                                 <?php
+                             
+                                echo $graficaIndicador->getListanivel2();
                                 echo $graficaIndicador->getListanivel3();
                                 ?>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label>REGIÓN</label>
-                            <select class="form-control" name="clanivel4" 
-                                    data-group="niv-1"
-                                    data-id="niv-4"
-                                    data-target="niv-5"
-                                    data-url="getNivelUnegocio.php?"
-                                    data-replacement="container1"
-                                    data-default-label="-TODOS-" disabled>
-                                <option value="">-TODOS-</option>
+                        
 <?php
 echo $graficaIndicador->getListanivel4();
 ?>
-                            </select>
-                        </div>
-                        <div class="form-group ">
-                            <label>ESTADO</label>
-                            <select class="form-control" name="clanivel5" 
-                                    data-group="niv-1"
-                                    data-id="niv-5"
-                                    data-target="niv-6"
-                                    data-url="getNivelUnegocio.php?"
-                                    data-replacement="container1"
-                                    data-default-label="-TODOS-">
-                                <option value="">-TODOS-</option>
+                   
+                      
 <?php
 echo $graficaIndicador->getListanivel5();
 ?>
-                            </select>
-                        </div>
-
-                        <!-- /.form-group -->
                     </div>
-                    <!-- /.col -->
-                    <div class="col-md-4">
-
-                        <div class="form-group">
-                            <label>CIUDAD</label>
-                            <select class="form-control" name="clanivel6" 
-                                    data-group="niv-1"
-                                    data-id="niv-6"
-                                    data-final
-                                    data-url=""
-                                    data-replacement="container1"
-                                    data-default-label="-TODOS-">
-                                <option value="">-TODOS-</option>
+        <div class="col-sm-4 border-right"  >                 
 <?php
 echo $graficaIndicador->getListanivel6();
 ?>
-                            </select>
-                        </div>
+                        
                         <div class="form-group">
 
 
@@ -365,7 +332,7 @@ echo $graficaIndicador->getListanivel6();
                     <div class="col-sm-4 border-right"  >
                         <div class="form-group">
                             <label>Mes</label>
-                            <select class="form-control" name="mes" id="mes" required>
+                            <select class="form-control" name="mes_solo" id="mes" required>
                                 <option value="" selected>Seleccione el mes</option>
 <?php echo $graficaIndicador->getOpciones_mes(); ?>
                             </select>
@@ -374,13 +341,15 @@ echo $graficaIndicador->getListanivel6();
 
 
                         <div class="form-group" >
-                            <label>&nbsp</label>
+                            <label>&nbsp;</label>
                             <button type="submit" class="btn btn-info pull-right">Filtrar</button>
                         </div>
                     </div>
+           </div>
             </form>
         </div>
     </div>
+</div>
 </div>
 
 <div class="row">
@@ -397,7 +366,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
-                        <div class="btn-group">
+                     <!--    <div class="btn-group">
                             <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-wrench"></i></button>
                             <ul class="dropdown-menu" role="menu">
@@ -407,7 +376,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
                                 <li class="divider"></li>
                                 <li><a href="#">Separated link</a></li>
                             </ul>
-                        </div>
+                        </div>-->
 
                     </div>
                 </div>
@@ -438,21 +407,7 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
        
     </div>
 </div>
-<form id="form1" name="form1" method="post" action="">
-
-
-
-    <input name="fechainicio" type="hidden" id="fechainicio" value="{mes_indice}"  >
-    <input type='hidden' name='select3' value="<?php echo $graficaIndicador->getNivel03(); ?>">
-    <input type='hidden' name='select4' value='<?php echo $graficaIndicador->getNivel04(); ?>'>
-    <input type='hidden' name='select5' value="<?php echo $graficaIndicador->getNivel05(); ?>">
-    <input type='hidden' name='select6' value="<?php echo $graficaIndicador->getNivel06(); ?>">
-    <input name="text" type="hidden" id="numsecc" value="<?php echo $graficaIndicador->getNumsecc(); ?>"  >
-    <input name="alertanav" type="hidden" id="alertanav" value="<?php echo $graficaIndicador->getAlertanav(); ?>"  >
-    <input name="opcionuni" type="hidden" id="opcionuni" value="<?php echo $graficaIndicador->getOpcionuni(); ?>"  >
-
-
-</form>
+</section>
 
 <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="js/jquery.cascading-drop-down.js"></script>
