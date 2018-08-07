@@ -135,7 +135,7 @@ ca_franquiciascuenta.cue_clavecuenta=:cuenta";
     return $nombre;
 }
 
-public function franquiciasxNivel($VarNivel2,$referencianivel,$servicio,$cliente,$cuenta){
+public function franquiciasxNivel($VarNivel2,$referencianivel,$cliente,$cuenta){
    $sql_fran="SELECT ca_franquiciascuenta.fc_idfranquiciacta, ca_franquiciascuenta.cf_descripcion
 FROM
 ca_unegocios

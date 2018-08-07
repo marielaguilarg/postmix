@@ -712,10 +712,10 @@ order by sec_ordsecind";
      $stmt->bindParam(":servicio", $servicio, PDO::PARAM_INT);
      $stmt->execute();
     
-       if ($vidiomau == 1) {
-     $nomcampo = "sec_nomsecesp";
+       if ($vidiomau == 2) {
+     $nomcampo = "sec_nomsecing";
     } else {
-        $nomcampo = "sec_nomsecing";
+        $nomcampo = "sec_nomsecesp";
     }
     $res=$stmt->fetchAll();
     foreach ($res as $row) {
@@ -731,7 +731,7 @@ order by sec_ordsecind";
     
 }
     
-    function buscaSubSeccionIndi($seccion, $vidiomau){
+    function buscaSubSeccionIndi($seccion, $vidiomau,$servicio){
     $sql="SELECT
 cue_reactivosestandardetalle.ser_claveservicio,
 concat(cue_reactivosestandardetalle.sec_numseccion,'.',
@@ -747,17 +747,18 @@ FROM
 cue_reactivosestandardetalle
 WHERE
 cue_reactivosestandardetalle.red_indicador =  '-1' AND
-cue_reactivosestandardetalle.ser_claveservicio =  '1'
+cue_reactivosestandardetalle.ser_claveservicio = :servicio
 and cue_reactivosestandardetalle.sec_numseccion=:seccion";
    
    
      $stmt = Conexion::conectar()-> prepare($sql);
      $stmt->bindParam(":seccion", $seccion, PDO::PARAM_INT);
+      $stmt->bindParam(":servicio", $seccion, PDO::PARAM_INT);
      $stmt->execute();
-       if ($vidiomau == 1) {
-        $nomcampo = "red_parametroesp";
-    } else {
+       if ($vidiomau == 2) {
         $nomcampo = "red_parametroing";
+    } else {
+        $nomcampo = "red_parametroesp";
     }
     $res=$stmt->fetchAll();
     foreach ($res as $row) {
@@ -810,10 +811,10 @@ cue_reactivosestandardetalle.red_numcaracteristica2)=:seccion";
     // $stmt->debugDumpParams();
        $res=$stmt->fetchAll();
      //  die();
-      if ($vidiomau == 1) {
-        $nomcampo = "red_parametroesp";
-    } else {
+      if ($vidiomau == 2) {
         $nomcampo = "red_parametroing";
+    } else {
+        $nomcampo = "red_parametroesp";
     }
     foreach ($res as $row) {
         $arr =array($row["referencia"], $row[$nomcampo] , $row["red_estandar"]);
@@ -860,6 +861,291 @@ WHERE (`ser_claveservicio` =:servicio
   
      return $arr;
 }
+
+//devuelve la referencia de los atributos
+function ConsultaAtributos($idservicio, $referencia) {
+    /* 502 */
+    $sql = "SELECT
+cue_reactivosestandardetalle.sec_numseccion,
+cue_reactivosestandardetalle.r_numreactivo,
+cue_reactivosestandardetalle.re_numcomponente,
+
+cue_reactivosestandardetalle.red_numcaracteristica2
+from cue_reactivosestandardetalle inner join cue_reactivosestandar on cue_reactivosestandar.ser_claveservicio=cue_reactivosestandardetalle.ser_claveservicio and cue_reactivosestandar.sec_numseccion=cue_reactivosestandardetalle.sec_numseccion
+and cue_reactivosestandar.r_numreactivo=cue_reactivosestandardetalle.r_numreactivo and cue_reactivosestandar.re_numcomponente=cue_reactivosestandardetalle.re_numcomponente 
+and cue_reactivosestandar.re_numcaracteristica=cue_reactivosestandardetalle.re_numcaracteristica and cue_reactivosestandar.re_numcomponente2=cue_reactivosestandardetalle.re_numcomponente2
+where red_grafica=-1
+ and concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente)=:referencia 
+     and cue_reactivosestandar.ser_claveservicio=:servicio ;";
+      $stmt = Conexion::conectar()-> prepare($sql);
+     $stmt->bindParam(":referencia", $referencia, PDO::PARAM_STR);
+      $stmt->bindParam(":servicio", $idservicio, PDO::PARAM_INT);
+       $stmt->execute();
+   
+       $res=$stmt->fetchAll(); 
+
+    $i = 0;
+   
+    foreach ($res as $row) {
+        $secciones [$i++] = $row [0] . '.' . $row [1] . '.' . $row [2] . '.' . $row [3];
+    }
+    return $secciones;
+}
+
+//referencia es la seccion.componente
+//lista el numero de reporte
+function CumplimientoEstandar($vservicio, $referencia, $reporte) {
+  
+
+    $query = "SELECT sum(If(re_tipoevaluacion=1,If(ide_numrenglon=1,ide_aceptado,0),ide_aceptado)) as aceptado,
+cue_reactivosestandardetalle.red_estandar, red_parametroesp, red_parametroing,red_clavecatalogo,ide_valorreal,  ide_numcaracteristica3,
+red_tipodato,red_valormin
+			    FROM cue_reactivosestandar
+		  Inner Join cue_reactivosestandardetalle 
+		  		  ON cue_reactivosestandar.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio 
+				 AND cue_reactivosestandar.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion 
+				 AND cue_reactivosestandar.r_numreactivo = cue_reactivosestandardetalle.r_numreactivo 
+				 AND cue_reactivosestandar.re_numcomponente = cue_reactivosestandardetalle.re_numcomponente 
+				 AND cue_reactivosestandar.re_numcaracteristica = cue_reactivosestandardetalle.re_numcaracteristica 
+				 AND cue_reactivosestandar.re_numcomponente2 = cue_reactivosestandardetalle.re_numcomponente2 
+		  Inner Join ins_detalleestandar 
+		          ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio 
+				 AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion 
+				 AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo 
+				 AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente 
+				 AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1 
+				 AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2 
+				 AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3 
+			   WHERE ins_detalleestandar.ide_numreporte = :reporte  and cue_reactivosestandardetalle.ser_claveservicio=:vservicio
+			     AND  red_grafica=-1  and concat(ins_detalleestandar.ide_numseccion,'.',ide_numreactivo ,'.',ins_detalleestandar.ide_numcomponente,'.',ins_detalleestandar.ide_numcaracteristica3 )=:referencia";
+
+    $query .= " group by ins_detalleestandar.ide_numseccion,ide_numreactivo ,ins_detalleestandar.ide_numcomponente, ide_numcaracteristica3
+			ORDER BY cue_reactivosestandardetalle.re_numcomponente2 ASC, 
+			         ins_detalleestandar.ide_numcaracteristica3 ASC,
+					 ins_detalleestandar.ide_numrenglon ASC;";
+    // echo "<br>".$query;
+   $stmt = Conexion::conectar()-> prepare($query);
+
+    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+    $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> execute();
+//$stmt->debugDumpParams();
+        
+    $result=$stmt->fetchAll();
+    foreach($result as $row) {
+
+        if ($_SESSION["idiomaus"] == 2)
+            $res[0] = $row ['red_parametroing'];
+        else
+            $res[0] = $row ['red_parametroesp'];
+// si el estandar es de catalogo lo busco en el catalogo
+        if ($row["red_tipodato"] == "C") {
+            
+                    $res[1] = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$row["red_clavecatalogo"],$row["red_valormin"]);
+            
+           
+        }
+        else
+            $res[1] = $row['red_estandar'];
+        if ($row ["aceptado"] == -1)
+            $res[2] = "paloma";
+        else
+            $res[2] = "tache";
+
+        $res[3] = $referencia;
+    }
+  
+    return $res;
+}
+
+function CumplimientoProporcion($vservicio, $referencia, $reporte,$caract) {
+
+    
+    $query = "SELECT sum(if(ide_aceptado<0,100,0))/sum(1) as aceptado,
+cue_reactivosestandardetalle.red_estandar, red_parametroesp, red_parametroing,red_clavecatalogo,ide_valorreal,  ide_numcaracteristica3
+			    FROM cue_reactivosestandar
+		  Inner Join cue_reactivosestandardetalle 
+		  		  ON cue_reactivosestandar.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio 
+				 AND cue_reactivosestandar.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion 
+				 AND cue_reactivosestandar.r_numreactivo = cue_reactivosestandardetalle.r_numreactivo 
+				 AND cue_reactivosestandar.re_numcomponente = cue_reactivosestandardetalle.re_numcomponente 
+				 AND cue_reactivosestandar.re_numcaracteristica = cue_reactivosestandardetalle.re_numcaracteristica 
+				 AND cue_reactivosestandar.re_numcomponente2 = cue_reactivosestandardetalle.re_numcomponente2 
+		  Inner Join ins_detalleestandar 
+		          ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio
+				 AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion 
+				 AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo 
+				 AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente 
+				 AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1 
+				 AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2 
+				 AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3 
+			   WHERE ins_detalleestandar.ide_numreporte =  :reporte and cue_reactivosestandardetalle.ser_claveservicio=:vservicio
+			     AND  red_grafica=-1  and concat(ins_detalleestandar.ide_numseccion,'.',ide_numreactivo ,'.',
+                             ins_detalleestandar.ide_numcomponente,'.',ins_detalleestandar.ide_numcaracteristica3 )=:referencia";
+    //condicion para una seccion en especifico
+    if ($caract != "")
+        $query .= " and ins_detalleestandar.ide_numcaracteristica3=".$caract;
+
+    $query .= " group by ins_detalleestandar.ide_numseccion,ide_numreactivo ,ins_detalleestandar.ide_numcomponente, ide_numcaracteristica3
+			ORDER BY cue_reactivosestandardetalle.re_numcomponente2 ASC, 
+			         ins_detalleestandar.ide_numcaracteristica3 ASC,
+					 ins_detalleestandar.ide_numrenglon ASC;";
+    //echo "<br>".$query;
+    $stmt = Conexion::conectar()-> prepare($query);
+
+    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+    $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> execute();
+
+    $result=$stmt->fetchAll();
+    foreach($result as $row_cal_b ) {
+        if ($_SESSION["idiomaus"] == 2)
+            $res[0] = $row_cal_b ['red_parametroing'];
+        else
+            $res[0] = $row_cal_b ['red_parametroesp'];
+
+        $res[1] = $row_cal_b ['red_estandar'];
+
+        if ($row_cal_b ["aceptado"] >= 80)
+            $res[2] = "paloma";
+        else
+            $res[2] = "tache";
+        $res[3] = $referencia;
+    }
+
+    return $res;
+}
+function consultaDetalleEstandarxval($vservicio,  $reporte,$caract3,$seccion,$componente,$reactivo,$opcion) {
+    
+    
+    $query ="SELECT
+    `ide_claveservicio`,
+  `ide_numreporte`,
+  `ide_numseccion`,
+  `ide_numreactivo`,
+  `ide_numcomponente`,
+  `ide_numcaracteristica1`,
+  `ide_numcaracteristica2`,
+  `ide_numcaracteristica3`,
+  `ide_valorreal`,
+  `ide_ponderacion`,
+  `ide_aceptado`,
+  `ide_comentario`,
+  `ide_numrenglon`,
+  `ide_numcolarc`,
+  `ide_idmuestra`
+    FROM ins_detalleestandar
+    WHERE ins_detalleestandar.ide_numcaracteristica3 = :caract3 AND ins_detalleestandar.ide_numseccion = :seccion
+    AND ins_detalleestandar.ide_numcomponente = :componente AND ins_detalleestandar.ide_claveservicio = :servicio
+    AND ins_detalleestandar.ide_numreactivo =:reactivo AND ins_detalleestandar.ide_numreporte =:reporte
+    AND ins_detalleestandar.ide_valorreal=:opcion";
+  
+        $stmt = Conexion::conectar()-> prepare($query);
+        
+        $stmt-> bindParam(":caract3", $caract3, PDO::PARAM_INT);
+        $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+        $stmt-> bindParam(":servicio", $vservicio, PDO::PARAM_INT);
+        $stmt-> bindParam(":seccion", $seccion, PDO::PARAM_INT);
+        $stmt-> bindParam(":componente",$componente , PDO::PARAM_INT);
+        $stmt-> bindParam(":reactivo", $reactivo, PDO::PARAM_INT);
+        $stmt-> bindParam(":opcion", $opcion, PDO::PARAM_INT);
+        $stmt-> execute();
+        
+        $result=$stmt->fetchAll();
+       
+        
+        return $result;
+}
+function consultaDetalleEstandar($vservicio,  $reporte,$caract3,$seccion,$componente,$reactivo,$renglon) {
+    
+    
+    $query ="SELECT
+    `ide_claveservicio`,
+  `ide_numreporte`,
+  `ide_numseccion`,
+  `ide_numreactivo`,
+  `ide_numcomponente`,
+  `ide_numcaracteristica1`,
+  `ide_numcaracteristica2`,
+  `ide_numcaracteristica3`,
+  `ide_valorreal`,
+  `ide_ponderacion`,
+  `ide_aceptado`,
+  `ide_comentario`,
+  `ide_numrenglon`,
+  `ide_numcolarc`,
+  `ide_idmuestra`
+    FROM ins_detalleestandar
+    WHERE ins_detalleestandar.ide_numcaracteristica3 = :caract3 AND ins_detalleestandar.ide_numseccion = :seccion
+    AND ins_detalleestandar.ide_numcomponente = :componente AND ins_detalleestandar.ide_claveservicio = :servicio
+    AND ins_detalleestandar.ide_numreactivo =:reactivo AND ins_detalleestandar.ide_numreporte =:reporte
+    AND ins_detalleestandar.ide_numrenglon=:opcion";
+    
+    $stmt = Conexion::conectar()-> prepare($query);
+    
+    $stmt-> bindParam(":caract3", $caract3, PDO::PARAM_INT);
+    $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":servicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> bindParam(":seccion", $seccion, PDO::PARAM_INT);
+    $stmt-> bindParam(":componente",$componente , PDO::PARAM_INT);
+    $stmt-> bindParam(":reactivo", $reactivo, PDO::PARAM_INT);
+    $stmt-> bindParam(":opcion", $renglon, PDO::PARAM_INT);
+    $stmt-> execute();
+    
+    $result=$stmt->fetchAll();
+    
+    
+    return $result;
+}
+
+public function getReactivoEstandarn1($servicio, $referencia, $tabla){
+    $sqlcu = "SELECT *
+		          FROM ".$tabla."
+				 WHERE `cue_reactivosestandar`.`ser_claveservicio` = :idser 
+				   AND concat(sec_numseccion,'.', r_numreactivo) =:refer";
+    $stmt = Conexion::conectar()-> prepare($sqlcu);
+    
+    $stmt-> bindParam(":idserv", $servicio, PDO::PARAM_INT);
+    $stmt-> bindParam(":refer", $referencia, PDO::PARAM_INT);
+    
+    $stmt-> execute();
+    
+    return $stmt->fetchAll();
+}
+
+public function getReactivoEstandarn2($servicio, $referencia, $tabla){
+    $sqlcu = "SELECT *
+		             FROM `cue_reactivosestandar`
+					WHERE `cue_reactivosestandar`.`ser_claveservicio` =:idser
+					  AND concat(sec_numseccion,'.',r_numreactivo,'.',re_numcaracteristica,'.',re_numcomponente2) =  :secc ";
+    
+    $stmt = Conexion::conectar()-> prepare($sqlcu);
+    
+    $stmt-> bindParam(":idserv", $servicio, PDO::PARAM_INT);
+    $stmt-> bindParam(":secc", $referencia, PDO::PARAM_INT);
+    
+    $stmt-> execute();
+    
+    return $stmt->fetchAll();
+}
+
+public function getReactivoEstandarn3($servicio, $referencia, $tabla){
+    $sqlcu = "SELECT *
+		             FROM `cue_reactivosestandar`
+					WHERE `cue_reactivosestandar`.`ser_claveservicio` = :idser 
+					  AND concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica) = :secc";
+    $stmt = Conexion::conectar()-> prepare($sqlcu);
+    
+    $stmt-> bindParam(":idserv", $servicio, PDO::PARAM_INT);
+    $stmt-> bindParam(":secc", $referencia, PDO::PARAM_INT);
+    
+    $stmt-> execute();
+    
+    return $stmt->fetchAll();
+}
+
 
 
 }

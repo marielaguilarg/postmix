@@ -122,7 +122,22 @@ class DatosGenerales extends Conexion{
 
 	}
 
+        public function getDatosReporteUnegocio($numrep,$vservicio)  {
+            $sql_titulo = "SELECT * 
+FROM ins_generales
+Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
+WHERE ins_generales.i_numreporte =:numrep   and ins_generales.i_claveservicio=:vservicio";
+        //echo $sql_titulo;
+          
+            $stmt=DatosGenerales::conectar()->prepare($sql_titulo);
 
+            $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+	     $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+              $stmt-> execute();
+//$stmt->debugDumpParams();
+            $result=$stmt->fetch();
+            return $result;
+        }
 
 
 }

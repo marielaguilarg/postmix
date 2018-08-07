@@ -73,6 +73,66 @@ class DatosProducto extends Conexion{
 			$stmt->close();
 
 	}
+	
+	function getDetalleProducto($vservicio, $seccion, $reporte) {
+	    
+	    $SQL_FJARABER = "SELECT *
+	 		   FROM ins_detalleproducto
+			  WHERE ins_detalleproducto.ip_claveservicio = :idser
+			    AND ip_numseccion =:idnumseccion
+				AND ip_numreporte =:numrep";
+	    //echo $SQL_FJARABER;
+	    $stmt = Conexion::conectar()-> prepare($SQL_FJARABER);
+	    
+	    $stmt-> bindParam(":referencia", $seccion, PDO::PARAM_STR);
+	    $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+	    $stmt-> bindParam(":servicio", $vservicio, PDO::PARAM_INT);
+	    $stmt-> execute();
+	    
+	    $result=$stmt->fetchall();
+	  
+	    return $result;
+	}
+	
+        
+          function CumplimientoProducto($vservicio, $referencia, $reporte) {
+   
+    $SQL_FJARABER = "SELECT
+(((SUM(if(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0)))*100)/(SUM(`ins_detalleproducto`.`ip_numcajas`))) as NIVELACEPTACION,
+				    cue_secciones.sec_descripcionesp,
+cue_secciones.sec_descripcioning
+FROM
+ins_generales
+Inner Join ins_detalleproducto ON ins_generales.i_claveservicio = ins_detalleproducto.ip_claveservicio AND ins_generales.i_numreporte = ins_detalleproducto.ip_numreporte
+Inner Join cue_secciones ON ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
+WHERE `ins_generales`.`i_numreporte` = :reporte and ins_generales.i_claveservicio=:servicio
+				     AND  ins_detalleproducto.ip_numseccion =:referencia
+					 AND ins_detalleproducto.ip_sinetiqueta=0
+GROUP BY  `ins_detalleproducto`.`ip_numreporte`, `ins_detalleproducto`.`ip_numseccion`";
+//echo $SQL_FJARABER;
+   $stmt = Conexion::conectar()-> prepare($SQL_FJARABER);
+
+    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+    $stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":servicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> execute();
+
+    $result=$stmt->fetchall();
+    foreach ($result as $ROW_FJARABE) {
+
+        if ($_SESSION["idiomaus"] == 2)
+            $res[0] = $ROW_FJARABE ["sec_descripcioning"];
+        else
+            $res[0] = $ROW_FJARABE ["sec_descripcionesp"];
+        $res[1] = "< 10 " . T_("semanas");
+        if ($ROW_FJARABE ['NIVELACEPTACION'] >= 80)
+            $res[2] = "tache";
+        else
+            $res[2] = "paloma";
+        $res[3] = $referencia;
+    }
+    return $res;
+}
 
 
 }

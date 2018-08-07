@@ -385,11 +385,12 @@ cue_secciones.sec_numseccion =  :seccion";
    $st->execute();
     $rs=$st->fetchAll();
    
-    if ($vidiomau == 1) {
+    if ($vidiomau == 2) {
+        $nomcampo = "sec_nomsecing";
+    } else {
+       
         $nomcampo = "sec_nomsecind";
         $nomcampo = "sec_nomsecesp";
-    } else {
-        $nomcampo = "sec_nomsecing";
     }
     foreach ($rs as $row) {
         $arr = $row[$nomcampo] ;

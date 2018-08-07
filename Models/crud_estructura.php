@@ -44,10 +44,10 @@ where cnfg_estructura.mee_numnivel=$nivel";
         $res = Conexion::ejecutarQuerysp($sql);
         $i = 0;
 
-        if ($vidiomau == 1) {
-            $nomcampo = "mee_descripcionnivelesp";
-        } else {
+        if ($vidiomau == 2) {
             $nomcampo = "mee_descripcionniveling";
+        } else {
+            $nomcampo = "mee_descripcionnivelesp";
         }
         foreach ($res as $row) {
 

@@ -12,7 +12,7 @@ class Datosncin extends Conexion{
 		$stmt-> bindParam(":idn", $datosModel, PDO::PARAM_INT);
 		
 		$stmt-> execute();
-
+    
 		return $stmt->fetchAll();
 		$stmt->close();
 	}

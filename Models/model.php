@@ -65,12 +65,18 @@ class EnlacesPaginas{
 			$enlacesModel == "nuevacuenta" || 
 			#AQUI INICIA SECCION INDICADORES   
 			$enlacesModel == "indgraficaindicador" ||
-                        $enlacesModel == "indgraficaindicadorgr" ||
-                       $enlacesModel == "indestadisticares"  ||
-                       $enlacesModel == "indindicadoresgrid"  ||
-                       $enlacesModel == "indcumplimientoestabl" ||
-                       $enlacesModel == "indindicadores" ||
-                            $enlacesModel == "indbuscapv" 
+            $enlacesModel == "indgraficaindicadorgr" ||
+            $enlacesModel == "indestadisticares"  ||
+            $enlacesModel == "indindicadoresgrid"  ||
+            $enlacesModel == "indcumplimientoestabl" ||
+            $enlacesModel == "indindicadores" ||
+            $enlacesModel == "indbuscapv" ||
+            $enlacesModel == "indhistorialreportes"  ||
+            $enlacesModel == "indresultadosxrep"|| 
+		    $enlacesModel == "indrepdiario" ||
+		    $enlacesModel == "indrepxperiodo"  ||
+		    $enlacesModel == "indhistoricoxpv" 
+                                
 			){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";
