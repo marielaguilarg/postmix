@@ -158,6 +158,30 @@ function cortarPalabra($cadena){
 	
    }
 
+  function formato_fecha($fechacad) {
+            if ("$fechacad" != "") { //<-- verifico que el campo fecha no est� vac�o
+                $fechacad = str_replace("-01-", 'Ene', $fechacad);
+                $fechacad = str_replace("-02-", 'Feb', $fechacad);
+                $fechacad = str_replace("-03-", 'Mar', $fechacad);
+                $fechacad = str_replace("-04-", 'Abr', $fechacad);
+                $fechacad = str_replace("-05-", 'May', $fechacad);
+                $fechacad = str_replace("-06-", 'Jun', $fechacad);
+                $fechacad = str_replace("-07-", 'Jul', $fechacad);
+                $fechacad = str_replace("-08-", 'Ago', $fechacad);
+                $fechacad = str_replace("-09-", 'Sep', $fechacad);
+                $fechacad = str_replace("-10-", 'Oct', $fechacad);
+                $fechacad = str_replace("-11-", 'Nov', $fechacad);
+                $fechacad = str_replace("-12-", 'Dic', $fechacad);
+                if (preg_match("([0-9]{4})([A-Za-z -]{3})([0-9]{2})", $fechacad, $res)) {
+                    $aux = "{$res[3]}-{$res[2]}-{$res[1]}";
+                    return strtoupper($aux);
+
+                    //$html->asignar('FechaVisita',$aux);
+                    //echo $aux;
+                }
+            }
+        }
+
    
 
 
@@ -321,5 +345,29 @@ function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
     return $cad . $op . "</select>";
 }
 
+public function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo){
+      $texto="";
+    if(is_array($opciones)){
+      
+        foreach($opciones as $op){
+        $texto.=$op." ";
+        }
+    } else {
+    $texto=$opciones;    
+    }
+    return ' <div class="form-group ">
+                            <label>'.$nombreNivel.'</label>
+                            <select class="form-control cascada" name="clanivel'.$nivel.'" id="select'.$nivel.'"
+                                    data-group="niv-1"
+                                    data-id="niv-'.$nivel.'"
+                                    data-target="niv-'.($nivel+1).'"
+                                    data-url="getNivelUnegocio.php?"
+                                    data-replacement="container1"
+                                    data-default-label="-TODOS-" '.$activo.'>
+                                <option value="">-TODOS-</option>
+'.$texto.'
+                            </select>
+                        </div>';
+}
 
 }
