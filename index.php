@@ -22,10 +22,13 @@ require_once "Controllers/enlacesController.php";
 require_once "Controllers/indpostmix/estadisticasController.php";
 require_once "Controllers/indpostmix/graficaIndicadorController.php";
 require_once "Controllers/indpostmix/resumenResultadosController.php";
+require_once "Controllers/indpostmix/resumenResxRepController.php";
 require_once "Controllers/indpostmix/generadorGraficas.php";
 require_once "Controllers/indpostmix/TablaEstadistica.php";
 require_once "Controllers/indpostmix/tablaDinamicaController.php";
 require_once "Controllers/indpostmix/buscapvController.php";
+require_once "Controllers/indpostmix/historialReportesController.php";
+require_once "Controllers/indpostmix/basePostmixController.php";
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
@@ -55,6 +58,7 @@ require_once "Models/Nivel.php";
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_estado.php";
 require_once "Models/crud_catalogoDetalle.php";
+require_once "Models/crud_imagenDetalle.php";
 
 $mvc =new MvcController();
 $mvc -> plantilla();
