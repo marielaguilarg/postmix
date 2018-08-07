@@ -1,5 +1,8 @@
 <?php
 class abiertaController{
+    
+   
+    
 
 	public function vistaabiertaController(){
 		//lee numero de seccion y numero de servicio
@@ -1235,6 +1238,7 @@ public function registrarAbiertaController(){
 		} // if
 	} // function
 
+	
 
 
 
