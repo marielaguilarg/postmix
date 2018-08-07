@@ -19,19 +19,14 @@ class ResumenResultadosController {
 
     
   
-    public function inicializar(){
-          $this->tit_secciones = array(T_('CALIDAD DE LA BEBIDA'), T_('CALIDAD DEL AGUA'), T_('PRESIONES DE OPERACION'), T_('BUENOS HABITOS DE MANUFACTURA'));
-      
-    }
+    
 
   
     public function vistaResumenResultados() {
         
-        $consutacontrl=new EstadisticasController();
-        $consutacontrl->generarBusquedaRes();
-
+      
         foreach ($_POST as $nombre_campo => $valor) {
-            $asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo,FILTER_SANITIZE_STRING) . "';";
             eval($asignacion);
         }
         if ($_GET) {
@@ -41,7 +36,11 @@ class ResumenResultadosController {
                 //error_log("variable $key_get viene desde $ _GET"); 
             }
         }
-        $usuario_act = $_SESSION["Usuario"]=2;
+        if($action=="indindicadores")
+        {$consutacontrl=new GenerarBusquedaController;
+        $consutacontrl->generarBusquedaRes();}
+
+        $usuario_act = $_SESSION["Usuario"];
 
         // genera info gr14fica
         //separamos los componentes de la seccion para hacer las consultas
@@ -85,7 +84,7 @@ class ResumenResultadosController {
             $sql_titulo = "SELECT * 
     FROM ins_generales
     Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-    Inner Join ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_clavecuenta
+    Inner Join ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
     WHERE ins_generales.i_unenumpunto = :ptv    and ins_generales.i_claveservicio=:vserviciou 
         and concat(ca_unegocios.cue_clavecuenta,'.',`fc_idfranquiciacta`)=:fily";
             $parametros = array("ptv" => $ptv, "vserviciou" => $this->vservicio, "fily" => $fily);
@@ -95,7 +94,6 @@ class ResumenResultadosController {
 
                 $nomunegocio = $row_rs_sql_titulo ["une_descripcion"];
                 /*                 * *** FUNCION QUE CONVIERTE FECHA ******** */
-
 
                 $idcuen = $row_rs_sql_titulo ["i_clavecuenta"];
 
@@ -107,8 +105,9 @@ class ResumenResultadosController {
         }
            $this->filtros_indi = new ConsultaIndicadores;
     $this->filtros_indi->setNombre_franquicia($nomunegocio);
+     $this->ptv=$ptv;
      //  $html->asignar("INFOAREA2", $nomunegocio);
-        if ($_GET["action"] == "indindicadores") {
+        if ($action== "indindicadores") {
 
             $gfilx = $filx;
             $gfiluni = $filuni;
@@ -171,7 +170,7 @@ class ResumenResultadosController {
 
 
             if ($fily["cta"] != "")
-                $nomcta = DatosCuenta::nombreCuenta($fily["cta"]);
+                $nomcta = DatosCuenta::nombreCuenta($fily["cta"],$this->vcliente);
             if ($fily["fra"] != "")
                 $nomfra = "-" . DatosFranquicia::nombreFranquicia($fily["cta"], $fily["fra"]);
 
@@ -181,7 +180,7 @@ class ResumenResultadosController {
                 $sql_titulo = "SELECT * 
     FROM ins_generales
     Inner Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
-    Inner Join ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_clavecuenta
+    Inner Join ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
     WHERE ins_generales.i_unenumpunto = :ptv    and ins_generales`.i_claveservicio=:vserviciou
         and concat(ca_unegocios.cue_clavecuenta,'.',`fc_idfranquiciacta`)=:referencia";
                 $parametros = array("ptv" => $this->ptv, "referencia" => $fily["cta"] . "." . $fily["fra"]);
@@ -210,7 +209,8 @@ class ResumenResultadosController {
             $this->filtros_indi->setNombre_seccion(T_("INDICADORES"));
           //  $mesletra = Utilerias::cambiaMesGIng($fechaasig_i) . "-" . Utilerias::cambiaMesGIng($fechaasig_fin);
             $this->filtros_indi->setNombre_nivel($lugar);
-            $this->filtros_indi->setPeriodo( $consutacontrl->getFiltrosSel()->getPeriodo());
+            if($consutacontrl!=null)
+                $this->filtros_indi->setPeriodo( $consutacontrl->getFiltrosSel()->getPeriodo());
         }
 
 
@@ -249,34 +249,40 @@ class ResumenResultadosController {
         }
     }
 
+    function creaTabla($num, $resultados) {
+    //include('class.NokTemplate.php');
+    /*
+      $html->cargar ( 'spanel', 'MENresultadoseccion.htm' );
+      $html->definirBloque ( 'Panelsec', 'spanel' );
+      $html->definirBloque ( 'tlista', 'spanel' ); */
+
+    $tit_secciones = array(T_('CALIDAD DE LA BEBIDA'), T_('CALIDAD DEL AGUA'), T_('PRESIONES DE OPERACION'), T_('BUENOS HABITOS DE MANUFACTURA'));
+
+    $tabla=' <div class="box-header">
+              <h3 class="box-title">' . $tit_secciones [$num - 1] . '</h3>
+            </div>
+            <!-- /.box-header -->
+  <div class="box-body table-responsive no-padding">
+<table class="table table-striped table-hover" >
+	
+	  <tr>
+        <th   >' . T_("ATRIBUTO") . '</th>
+       
+        <th >' . T_("ESTANDAR") . '</th>
+     
+        <th style="valign:center"  >' . T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR") . '<br> (%)</th>
+		
+      </tr>';
+    $tabla .= $resultados . " </table></div>";
+    return $tabla;
+}
     /*     * ***************** crea la tabla para cada seccion ********************************** */
 
     function ConsultaSeccion($usuario, $secciones, $tipo) {
-        //include('class.NokTemplate.php');
-        /*
-          $html->cargar ( 'spanel', 'MENresultadoseccion.htm' );
-          $html->definirBloque ( 'Panelsec', 'spanel' );
-          $html->definirBloque ( 'tlista', 'spanel' ); */
-     
-     
-     
+      
         static $num = 1;
-       
-        $tabla = '
-	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-striped" >
-	<tr>
-        <th width="54%"  colspan="3">  ' . $this->tit_secciones [$num - 1] . ' </th>
-      </tr>
-	  <tr>
-        <th width="' . $ancho1 . '"  >' . T_("ATRIBUTO") . '</th>
-       
-        <th width="' . $ancho2 . '" >' . T_("ESTANDAR") . '</th>
-     
-        <th width="' . $ancho3 . '" >' . T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR") . '<br> (%)</th>
-		
-      </tr>';
-
-        $num++;
+      
+         $num++;
         $cont = 0;
 
         foreach ($secciones as $sec) {
@@ -310,22 +316,23 @@ class ResumenResultadosController {
             // clase para ocultar filas
             if ($cont > 4) {
                 $fila_oculta = 'class="los_demas"  id="fila_inv' . $num . '" name="fila_inv' . $num . '"';
-                $liga = '<tr bgcolor="#FFFFFF"><td align="right" colspan="3">
+                $liga = '<tr ><td align="right" colspan="3">
                 <a style="text-decoration:underline; font-size:9px; color:#0066FF" href="javascript: MostrarFilas(\'fila_inv' . $num . '\',\'ln_desp' . $num . '\') " id="ln_desp' . $num . '">' . T_("desplegar lista completa") . '</a></td></tr>';
             } else {
                 $fila_oculta = '';
                 $liga = "";
             }
-            $tabla .= ' <tr ' . $fila_oculta . '>
-        <td  width="54%">
+            $resultados.= ' <tr ' . $fila_oculta . '>
+        <td >
               <a href="index.php?action=indestadisticares&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '">' . $res [0] . '</a></td>
       
-        <td  width="20%">  <a href="index.php?action=indestadisticares&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '">' . $res [1] . '</a></td>
+        <td >  <a href="index.php?action=indestadisticares&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '">' . $res [1] . '</a></td>
   
-        <td >
-        <a href="index.php?action=indestadisticares&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '"><span class="liga_esp">' . $res [2] . '</span></a></td> </tr>';
+        <td style="font-weight: bold;">
+        <a href="index.php?action=indestadisticares&admin=1&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '"><span class="liga_esp">' . $res [2] . '</span></a></td> </tr>';
+          
         }
-        $tabla .= $liga . " </table>";
+          $tabla.= $this->creaTabla($num, $resultados.$liga);
         return $tabla;
     }
 

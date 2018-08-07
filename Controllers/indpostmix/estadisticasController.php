@@ -1,6 +1,7 @@
 <?php
-
+    @session_start();
 include "navegacion.php";
+include "generarBusquedaController.php";
 $maxte=ini_get('max_execution_time');
 ini_set('max_execution_time',400);
 class EstadisticasController {
@@ -11,13 +12,13 @@ class EstadisticasController {
     private $estadisticas;
     private $ligasi;
     private $ligano;
-    private $lb_tamanio_muestra;
+    private $lb_tamano_muestra;
     private $graficaaplica;
     private $graficanivelcumpl;
     private $graficagen;
     private $graficafrec;
     private $graf_cumplaj;
-    private $mensaje_error;
+   
     private $vserviciou;
     private $vclienteu;
     private $tit_frec;
@@ -26,18 +27,24 @@ class EstadisticasController {
     private $listaEstablecimientos;
     private $notaEstabl;
     private $tit_cumplaj;
+    private $busqueda;
 
-    public function vistaIndEstadisticaRes($select1, $select2, $select3, $select4, $select5, $select6) {
-
-        @session_start();
+    public function vistaIndEstadisticaRes() {
+        if ($_GET) {
+            $keys_get = array_keys($_GET);
+            foreach ($keys_get as $key_get) {
+                $$key_get = filter_input(INPUT_GET, $key_get, FILTER_SANITIZE_SPECIAL_CHARS);
+                //error_log("variable $key_get viene desde $ _GET");
+            }
+        }
+        if($admin!=1)
+        { $this->busqueda=new GenerarBusquedaController;
+        $this->busqueda->generarBusquedaRes();
+        }
 //echo $_SESSION["Usuario"];
 
 
-
-
-
-
-        $Usuario = $_SESSION ["usuarioconsulta"];
+        $Usuario = $_SESSION ["Usuario"];
 
 
         $tit_secciones = array(T_('CALIDAD DE LA BEBIDA'), T_('CALIDAD DEL AGUA'), T_('PRESIONES DE OPERACION'), T_('BUENOS HABITOS DE MANUFACTURA'));
@@ -45,15 +52,9 @@ class EstadisticasController {
 
         $vidiomau = $_SESSION["idiomaus"];
         $_SESSION["uidioma"] = $vidiomau;
-
-
-        if ($_GET) {
-            $keys_get = array_keys($_GET);
-            foreach ($keys_get as $key_get) {
-                $$key_get = filter_input(INPUT_GET, $key_get, FILTER_SANITIZE_SPECIAL_CHARS);
-                //error_log("variable $key_get viene desde $ _GET"); 
-            }
-        }
+        $this->vserviciou=$_SESSION["servicioind"];
+        $this->vclienteu=$_SESSION["clienteind"];
+       
 
 // validacion para saber si es desde disposivo movil para mostrara otra pagina
 //$html->definirBloque('listaNav', 'wpanel');
@@ -88,23 +89,23 @@ class EstadisticasController {
 
 
 
-        if ($admin == "graficares") {// vengo de consulta resultados
+        if ($admin==1) {// vengo de consulta resultados
             // var_dump($_SESSION);
             $gfilx = $_SESSION["ffilx"];
             $gfily = $_SESSION["ffily"];
             $gfiluni = $_SESSION["ffiluni"];
             $aux = explode(".", $gfilx);
             $auxuni = explode(".", $gfiluni);
-
+//die($gfiluni);
             $select1 = $auxuni[0];
-            $select2 = $auxuni[1];
-            $select3 = $auxuni[2];
+             $select2 = $auxuni[1];
+             $select3 = $auxuni[2];
 
-            $select4 = $aux[0];
+             $select4 = $aux[0];
 
-            $select5 = $aux[1];
+             $select5 = $aux[1];
 
-            $select6 = $aux[2];
+             $select6 = $aux[2];
             $auxy = explode(".", $gfily);
 
             $cuenta = $auxy[0];
@@ -115,47 +116,13 @@ class EstadisticasController {
         }
 
 
-        if (isset($select2) && $select2 != "0" && $select2 != "") {
-            $vuni = ($this->buscaNivel(2, $select2));
-        }
-        if (isset($select3) && $select3 != "0" && $select3 != "") {
-            $vzona = "-" . ($this->buscaNivel(3, $select3));
-        }
-        if (isset($select4) && $select4 != "0" && $select4 != "") {
-            $vregion = "-" . ($this->buscaNivel(4, $select4));
-        }
-
-//$html->asignar('vregion', buscaNivel($select1.".".$select2.".".$select3.".".$select4));
-        if ($select5 != "" && $select5 != "0")
-            $vciudad = "- " . ($this->buscaNivel(5, $select5));
-
-        //$html->asignar('vciudad',buscaNivel($select1.".".$select2.".".$select3.".".$select4.".".$select5));
-        if ($select6 != "" && $select6 != "0")
-            $v_nivel6 = "- " . ($this->buscaNivel(6, $select6));
-
-        // $html->asignar('v_nivel6', buscaNivel($select1.".".$select2.".".$select3.".".$select4.".".$select5.".".$select6));
-        $vcuenta = ($this->buscaCuenta($cuenta));
-//$html->asignar('vcuenta', buscaCuenta(100, 1, $cuenta));
-        if (isset($franquiciacta) && $franquiciacta != "") {
-
-            $vfranquicia = "- " . (DatosFranquicia::buscaFranquicia($franquiciacta, $this->vclienteu, $this->vserviciou, $cuenta));
-            //$html->asignar('vfranquicia', buscaFranquicia($franquiciacta));
-        }
-        if (isset($unidadnegocio) && $unidadnegocio != "")
-            $ptv = $unidadnegocio;
-
-
-
-        $this->filtrosSel->setNombre_nivel($vuni . " " . $vzona . " " . $vregion . " " . $vciudad . " " . $v_nivel6);
-        $this->filtrosSel->setNombre_franquicia($vcuenta . " " . $vfranquicia);
-        //   $_SESSION["fperiodo"] = $periodo;
-        $_SESSION["finfoarea"] = $vuni . " " . $vzona . " " . $vregion . " " . $vciudad . " " . $v_nivel6;
+       
 
 // si es m�s de un establecimiento ver tama�o de muestra
 
-        if ($ptv == "") {
-            $this->lb_tamanio_muestra=' <td class="subtit_graf" align="center"  height="20" width="141"  >'.T_("Tamaño de la muestra").'</td>';
-}
+//        if ($ptv == "") {
+//            $this->lb_tamanio_muestra='';
+//}
         $numseccion = $seco;
 //   echo $numseccion;
 //echo $subseccion;
@@ -194,25 +161,16 @@ class EstadisticasController {
 
 
 
+        $this->filtrosSel = new ConsultaIndicadores();
 
-
-        if (isset($ptv)) {
-            $unidadnegocio = $ptv;
-
-            $nomunegocio = DatosUnegocio::nombrePV($cuenta, $franquiciacta, $unidadnegocio);
-            //  $html->asignar('ptoventa', 'Punto Venta: <span class="NuevoEtiqueta"> ' . $row_neg ["une_descripcion"] . "</span>");
-            $this->filtrosSel->setNivel($nomunegocio);
-
-            $_SESSION["finfoarea"] = $nomunegocio;
-        }
-
+      
         $resseccion = DatosSeccion::editaSeccionModel($numseccion, $this->vserviciou, "cue_secciones");
 
 
-        if ($vidiomau == 1) {
-            $nomseccion = $resseccion ["sec_descripcionesp"];
-        } else {
+        if ($vidiomau == 2) {
             $nomseccion = $resseccion ["sec_descripcioning"];
+        } else {
+            $nomseccion = $resseccion ["sec_descripcionesp"];
         }
         $tiposec = $resseccion ["sec_tiposeccion"];
 
@@ -223,18 +181,29 @@ class EstadisticasController {
         if ($numseccion == 2)
             $tiposec = 'E';
 
-        if ($vidiomau == 1) {
-            $this->titulopag = "<div align='left'>ESTADISTICAS</div>";
+        if ($vidiomau == 2) {
+            $this->titulopag = "<div align='left'>STATISTICS</div>";
         } else {
 
-            $this->titulopag = "<div align='left'>STATISTICS</div>";
+            $this->titulopag = "<div align='left'>ESTADISTICAS</div>";
         }
         $numop = $subseccion;
 //el nombre del componente pasa a genera estadistica
 //if ($numop != '') //si hay datos muestra la grafica
 //{
 //echo "hola  ".$numop;
-        $this->generarEstadisticas($tiposec, $numop, $mes, $filx, $fily);
+        $this->generarEstadisticas($tiposec, $numop, $mes, $filx, $fily,$ptv);
+          if (isset($ptv)) {
+            $unidadnegocio = $ptv;
+
+            $nomunegocio = DatosUnegocio::nombrePV( $unidadnegocio);
+            //  $html->asignar('ptoventa', 'Punto Venta: <span class="NuevoEtiqueta"> ' . $row_neg ["une_descripcion"] . "</span>");
+           
+            $this->filtrosSel->setNombre_nivel($nomunegocio);
+
+            $_SESSION["finfoarea"] = $nomunegocio;
+        }
+      
         /*
           } else
           echo "error"; */
@@ -265,7 +234,7 @@ class EstadisticasController {
         //    $html->asignar('NAVEGACION2', desplegarNavegacion());
     }
 
-    public function vistaIndEstadistica() {
+  /*  public function vistaIndEstadistica() {
 
 
         $cuenta = filter_input(INPUT_GET, 'cta', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -370,7 +339,7 @@ class EstadisticasController {
         /* ----------------------
          * agrego barra de ubicacion
          */
-        $_SESSION["fper"] = $per;
+    /*    $_SESSION["fper"] = $per;
 
 
         if ($cuenta != 0) {
@@ -445,21 +414,21 @@ class EstadisticasController {
         // echo $rutaact;
         agregarRuta("c", $rutaact, T_("ESTADISTICAS"));
     }
-
+    */
     public function vistaCumplimientoEstabl($cump, $subseccionl, $tiposec) {
-        $this->vserviciou = 1;
-        $this->vclienteu = 100;
+        $this->vserviciou = $_SESSION["servicioind"];
+        $this->vclienteu = $_SESSION["clienteind"];
 //guardofiltro
         $_SESSION["frefer"] = $subseccionl;
 
 
-        $usuario_act = $_SESSION ["usuarioconsulta"];
+        $usuario_act = $_SESSION ["Usuario"];
 //obtengo numero de seccion
         $aux_sec = explode(".", $subseccionl);
         $numseccion = $aux_sec[0];
 //incluyo encabezado
 
-        $vidiomau = $_SESSION["uidioma"];
+        $vidiomau = $_SESSION["idiomaus"];
         $tit_secciones = array(T_('CALIDAD DE LA BEBIDA'), T_('CALIDAD DEL AGUA'), T_('PRESIONES DE OPERACION'), T_('BUENOS HABITOS DE MANUFACTURA'));
         $mes = $_SESSION["fmes"];
 
@@ -473,7 +442,7 @@ class EstadisticasController {
         $periodo = $_SESSION["fperiodo"];
 //
 
-        $this->filtrosSel = new ConsultaIndicadores;
+      
         //   $nomseccion = $tit_secciones[$_GET["tit"] - 2];
 //$html->asignar ( 'nomseccion', $nomseccion );
 // excepcion para cambiar el tipo de seccion de la seccion 2
@@ -517,7 +486,7 @@ AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.re
 Inner Join ins_generales ON ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte and ins_detalleestandar.ide_claveservicio=ins_generales.i_claveservicio
 Inner Join tmp_estadistica ON ins_generales.i_numreporte = tmp_estadistica.numreporte
 Inner Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
-Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 
             where cue_reactivosestandardetalle.red_grafica=-1 and  concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente
@@ -546,7 +515,7 @@ AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.re
 Inner Join ins_generales ON ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte and ins_detalleestandar.ide_claveservicio=ins_generales.i_claveservicio
 Inner Join tmp_estadistica ON ins_generales.i_numreporte = tmp_estadistica.numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
  INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 
             where cue_reactivosestandardetalle.red_grafica=-1 and  
@@ -593,7 +562,7 @@ Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_cla
 Inner Join tmp_estadistica ON ins_detalle.id_numreporte = tmp_estadistica.numreporte
 Inner Join ins_generales ON ins_detalle.id_numreporte = ins_generales.i_numreporte AND ins_detalle.id_claveservicio = ins_generales.i_claveservicio
 Inner Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id 
-Inner Join ca_nivel3 ON  ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 
 where 
@@ -618,7 +587,7 @@ Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_cla
 Inner Join tmp_estadistica ON ins_detalle.id_numreporte = tmp_estadistica.numreporte
 Inner Join ins_generales ON ins_detalle.id_numreporte = ins_generales.i_numreporte AND ins_detalle.id_claveservicio = ins_generales.i_claveservicio
 Inner Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id  
-Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 
 where 
@@ -641,7 +610,7 @@ ins_detalleproducto
 Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
 Inner Join ins_generales ON ins_detalleproducto.ip_claveservicio = ins_generales.i_claveservicio AND ins_detalleproducto.ip_numreporte = ins_generales.i_numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion1 
@@ -660,7 +629,7 @@ ins_detalleproducto
 Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
 Inner Join ins_generales ON ins_detalleproducto.ip_claveservicio = ins_generales.i_claveservicio AND ins_detalleproducto.ip_numreporte = ins_generales.i_numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion1 
@@ -727,12 +696,12 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
                 $this->titulo2 = $lb_ESTABLECIMIENTOS_QUEC . ": <span style=\"color:#FF6600\" >" . $estandar . "</span>";
             } else
                 $this->titulo2 = $lb_ESTABLECIMIENTOS_QUEC . ":  <span style=\"color:#FF6600\" >" . $rowu["estandar"] . "</span>";
-            if ($vidiomau == 1) {
+            if ($vidiomau == 2) {
                 //  $html->asignar ( 'nomcomp', $rowu ["descesp"] );
-                $nomcomp = $rowu ["descesp"];
+                $nomcomp = $rowu ["descing"];
             } else {
                 //$html->asignar ( 'nomcomp', $rowu ["descing"] );
-                $nomcomp = $rowu ["descing"];
+                $nomcomp = $rowu ["descesp"];
             } // fin de idioma
             $establecimiento = new EstablecimientoCumple;
             if ($contl % 2 == 0) {
@@ -778,7 +747,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
 
             $contl++;
         }
-        $this->filtrosSel = new ConsultaIndicadores();
+      $this->filtrosSel=new ConsultaIndicadores();
         if ($tiposec == 'V')
 
         //  $html->asignar ( 'nomcomp', nombreSeccion($subseccionl, $vidiomau) );
@@ -787,10 +756,10 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
         $this->filtrosSel->setPeriodo($periodo);
         $this->filtrosSel->setNombre_nivel($_SESSION["finfoarea"]);
 //busco nombre de la seccion
-        // borrarRutaActual("c");
+         Navegacion::borrarRutaActual("cumpl");
         $rutaact = $_SERVER['REQUEST_URI'];
         // echo $rutaact;
-        // agregarRuta("c", $rutaact, T_("ESTADISTICAS"));
+        Navegacion::agregarRuta("cumpl", $rutaact, $lb_ESTABLECIMIENTOS_QUEC);
     }
 
 //agregamos ordenacion
@@ -1049,281 +1018,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0 and une_estatus=1";
         return $total;
     }
 
-    public function generarBusquedaRes() {
-        try {
-            if ($_GET) {
-                $keys_post = array_keys($_GET);
-                foreach ($keys_post as $key_post) {
-                    $$key_post = filter_input(INPUT_GET, $key_post, FILTER_SANITIZE_SPECIAL_CHARS);
-                    //error_log("variable $key_post viene desde $ _POST");
-                }
-            }
-            $historico = $_SESSION["historico"];
-              
-            $this->filtrosSel = new ConsultaIndicadores;
-            $this->vserviciou = $_SESSION["servicioind"];
-            $this->vclienteu = 100;
-// crear periodo de acuerdo a mes asig y periodo
-            $mesasig = $mes;
-            $aux = explode('.', $mes);
-            $mes = $aux[0];
-            $fmes_consulta = $aux[1] . "-" . $aux[0] . "-01";
-            $mes_consulta_ant = ($aux[1] - 1) . "-" . $aux[0] . "-01";
-            $peraux = explode(".", $per); //llega periodo si es x mes 6 o12 meses
-
-            if (!strpos($per, ".")) {
-                if ($per == 1) //mes
-                    $peraux[0] = 1;
-                else
-                if ($per == 2) //6meses
-                    $peraux[1] = 1;
-                else
-                if ($per == 3) //12 meses
-                    $peraux[2] = 1;
-            }
-
-            if ($peraux[0] == 1) { //mes actual
-                $fechaasig_i = $mesasig;
-                $fechaasig_fin = $mesasig;
-            } else
-            if ($peraux[1] == 1) {
-                if ($mes - 6 >= 0) { // calculo para los 6m
-                    $z = $mes - 6 + 1;
-
-                    $fechaasig_i = $z . "." . $aux[1];
-                } else {
-                    $z = 7 + $mes;
-
-                    $fechaasig_i = $z . "." . ($aux[1] - 1);
-                }
-                $fechaasig_fin = $mesasig;
-            } else
-            if ($peraux[2] == 1) {
-                // $fechaasig_i = ($aux[0]+1) . ".". ($aux[1] - 1) ;
-
-                $fecha_cambiada = mktime(0, 0, 0, $aux[0] - 11, '01', $aux[1]);
-
-
-//die($fecha);//Devuelve: 01/12/2003
-
-                $fechaasig_i = date("m.Y", $fecha_cambiada);
-                $fechaasig_fin = $mesasig;
-            } else {
-                // $fechaasig_i = $mesasig;
-                //if($admin!="grafica2")  $peraux[2]=1;
-                $fecha_cambiada = mktime(0, 0, 0, $aux[0] - 11, '01', $aux[1]);
-
-
-//die($fecha);//Devuelve: 01/12/2003
-
-                $fechaasig_i = date("m.Y", $fecha_cambiada);
-                $fechaasig_fin = $mesasig;
-            }
-            if ($action == "indindicadores") {
-                // $fechaasig_i = ($aux[0]+1) . ".". ($aux[1] - 1) ;
-
-                $fecha_cambiada = mktime(0, 0, 0, $aux[0] - 11, '01', $aux[1]);
-
-
-//die($fecha);//Devuelve: 01/12/2003
-
-                $fechaasig_i = date("m.Y", $fecha_cambiada);
-               //   die($fechaasig_i);
-                $fechaasig_fin = $mesasig;
-            }
-
-// filtros de nivel y cta
-            $gfilx = $filx;
-            $gfiluni = $filuni;
-            $gfily = $fily;
-            $aux = explode(".", $gfilx);
-
-
-
-            $select4 = $aux[0];
-
-            $select5 = $aux[1];
-
-            $select6 = $aux[2];
-            $auxy = explode(".", $gfily);
-
-            $cuenta = $auxy[0];
-
-            $franquiciacta = $auxy[1];
-            $unidadnegocio = $auxy[2];
-            $auxuni = explode(".", $gfiluni);
-            $select1 = $auxuni[0];
-            $select2 = $auxuni[1];
-            $select3 = $auxuni[2];
-
-//arma la fecha de inicio
-//reinicio variables de sesion para filtros
-            $_SESSION["ffrancuenta"] = "";
-            $_SESSION["fcuenta"] = "";
-            $_SESSION["fperiodo"] = "";
-            $_SESSION["fpuntov"] = "";
-            $_SESSION["fnumrep"] = "";
-            $_SESSION["ftipomerc"] = "";
-            $_SESSION["funidadneg"] = "";
-            $_SESSION["ffranquicia"] = "";
-            $_SESSION["fregion"] = "";
-            $_SESSION["fzona"] = "";
-            $_SESSION["fcedis"] = "";
-            $_SESSION["prin"] = "";
-            if (isset($ptv) && $ptv != "")
-                $unidadnegocio = $ptv;
-            $Usuario = $_SESSION["Usuario"];
-
-            
-            $sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
-//	echo "<br>3".$sql_porcuenta;
-            $parametros = array("Usuario" => $Usuario);
-            $rs_sql_us = Conexion::ejecutarQuery($sql_del_us, $parametros);
-
-            /* creo consulta  generica */
-            $sql_porcuenta = "insert into tmp_estadistica (usuario, numreporte,mes_asignacion)
-select :Usuario, ins_generales.i_numreporte, str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y')
-from (ins_generales inner join ca_unegocios on  
- ins_generales.i_unenumpunto=ca_unegocios.une_id)
-inner join ca_cuentas on  ca_cuentas.cue_id=ca_unegocios.cue_clavecuenta
-where    ins_generales.i_claveservicio=:vserviciou";
-            $parametros = array("vserviciou" => $this->vserviciou, "Usuario" => $Usuario);
-            if ($cuenta != 0) {
-                $sql_porcuenta .= " AND ca_unegocios.cue_clavecuenta=:cuenta  ";
-                $parametros["cuenta"] = $cuenta;
-            }
-
-            if ($franquiciacta != 0) {
-                $sql_porcuenta .= " AND fc_idfranquiciacta=:franquiciacta";
-                $parametros["franquiciacta"] = $franquiciacta;
-                //busco nombre de la franquicia para guardarlo
-
-                $_SESSION["ffrancuenta"] = DatosFranquicia::nombreFranquicia($cuenta, $franquiciacta, $this->vclienteu, $this->vserviciou);
-            }
-
-            if ($unidadnegocio != 0) {
-                $sql_porcuenta .= " and ins_generales.i_unenumpunto=:unidadnegocio";
-                $parametros["unidadnegocio"] = $unidadnegocio;
-            }
-// validamos los niveles de la estructura
-
-
-            if ($select1 != 0) {
-                $sql_porcuenta .= " AND une_cla_region=:select1 ";
-                $parametros["select1"] = $select1;
-            }
-            if ($select2 != 0) {
-                $sql_porcuenta .= " AND une_cla_pais=:select2  ";
-                $parametros["select2"] = $select2;
-                $_SESSION["funidadneg"] = $this->buscaNivel(2, $select2);
-            }
-            if ($select3 != 0) {
-                $sql_porcuenta .= " AND une_cla_zona=:select3  ";
-                $parametros["select3"] = $select3;
-                $_SESSION["ffranquicia"] = $this->buscaNivel(3, $select3);
-            }
-            if ($select4 != 0) {
-                $sql_porcuenta .= " AND une_cla_estado=:select4";
-                $parametros["select4"] = $select4;
-                $_SESSION["fregion"] = $this->buscaNivel(4, $select4);
-            }
-            if ($select5 != 0) {
-                $sql_porcuenta .= " AND une_cla_ciudad=:select5  ";
-                $parametros["select5"] = $select5;
-                $_SESSION["fzona"] = $this->buscaNivel(5, $select5);
-            }
-            if ($select6 != 0) {
-                $sql_porcuenta .= " AND une_cla_franquicia=:select6  ";
-                $parametros["select6"] = $select6;
-                $_SESSION["fcedis"] = $this->buscaNivel(6, $select6);
-            }
-
-//modificacion del filtro de fecha se usa mes de asignacion
-            if ($fechaasig_i != "") {
-                //$fechainicioc = mod_fecha($fechainicio);
-                $sql_porcuenta .= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaasig_i),'%d.%m.%Y')";
-                $parametros["fechaasig_i"] = $fechaasig_i;
-            }
-            if ($fechaasig_fin != "") {
-                //$fechfinc = mod_fecha($fechafin);
-                $sql_porcuenta .= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechaasig_fin ),'%d.%m.%Y')";
-                $parametros["fechaasig_fin"] = $fechaasig_fin;
-            }
-
-            $sql_porcuenta .= " ORDER BY i_numreporte";
-
-
-////inserta reportes en la tabla temporal tmp_estadistica
-            try {
-                Conexion::ejecutarInsert($sql_porcuenta, $parametros);
-            } catch (Exception $ex) {
-                echo $ex;
-            }
-
-//valido si hay mas de un reporte
-            $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
-//echo $sqlt;
-            $parametros2 = array("Usuario" => $Usuario);
-            $rs = Conexion::ejecutarQuery($sqlt, $parametros2);
-            $num_reg = sizeof($rs);
-            /*             * ******************************************************************* */
-//guardo los filtros como var de sesion
-
-            $periodo = Utilerias::fecha_res($fechaasig_i) . ' ' . T_("a") . ' ' . Utilerias::fecha_res($fechaasig_fin);
-
-            $this->filtrosSel->setPeriodo($periodo);
-
-            $_SESSION["fperiodo"] = $periodo;
-            $_SESSION["fcuenta"] = $cuenta;
-            $_SESSION["fpuntov"] = $unidadnegocio;
-            $_SESSION["fnumrep"] = $num_reg;
-
-            $_SESSION["ffilx"] = $gfilx;/** filtros de niveles */
-            $_SESSION["ffily"] = $gfily;  /* filtros de cuentas */
-            $_SESSION["ffiluni"] = $gfiluni;
-
-//var_dump($_SESSION);
-//$_SESSION["fcompania"] =buscaNivel($select1;
-
-            /*             * ******************************************************************** */
-
-            if ($action == "indestadisticares") {
-//            // include('MENindencabezacons.php');
-                $this->vistaIndEstadisticaRes($select1, $select2, $select3, $select4, $select5, $select6);
-            } else
-
-            if ($action == "indindicadores") {
-
-
-                //include("MENindbarramenuresumen.php");
-            } else {
-
-                if ($num_reg >= 2) {  // pasa al resumen
-//             include ('MENencabezacons.php');
-//        include ("MENresumenresultados.php");
-                    header("Location: MENindprincipal.php?op=mindi&admin=res&mes=" . $mesasig . "&ptv=" . $unidadnegocio . "&fily=" . $cuenta . "." . $franquiciacta);
-                } else if ($num_reg == 1) {//si es uno envia al punto de venta
-                    if ($row = mysql_fetch_array($rs))
-                        header("Location: MENindprincipal.php?op=mindi&admin=datos&numrep=" . $row["numreporte"] . "&cser=" . $this->vserviciou . "&ccli=" . $this->vclienteu . "&mes=" . $mesasig);
-                }
-                else {
-                    // envia mensaje de error
-                    //echo "hay menos de dos reportes";
-                    //include ("MENprincipal.php?op=Acuenta&error=1");
-
-                    $msg = T_("LAS OPCIONES QUE SELECCIONO NO DEVUELVEN NINGUN RESULTADO, POR FAVOR SELECCIONE OTRAS");
-                    $msg2 = '<table width="100%" border="0"  align="center" bgcolor="#ffffff" >' .
-                            '<tr><td height="30px"></td></tr><tr><td class="infocuadro" align="center">' . $msg . '</td></tr><tr><td height="30px"></td></tr>
-                    <tr><td align="center"><a href="javascript:history.back();">&lt;&lt;  ' . T_("Regresar") . '  </a> </td></tr></table>';
-                    //echo $msg2;
-                    $html->asignar('CONTENIDO', $msg2);
-                }
-            }
-        } catch (Exception $ex) {
-            echo "Error en estadisticasController " . $ex;
-        }
-    }
-
+    
     function validaRegionCuenta() {
         $result = 0;
         $usuario = $_SESSION["usuario"];
@@ -1357,14 +1052,14 @@ cnfg_usuarios.cus_servicio=1";
                 $niv2 = $row["cus_nivel2"];
                 $niv3 = $row["cus_nivel3"];
             }
-            $result = $nivCons . "�" . $niv1 . "�" . $niv2 . "�" . $niv3 . "�" . $niv4 . "�" . $niv5 . "�" . $niv6;
+            $result = $nivCons . "¬" . $niv1 . "¬" . $niv2 . "¬" . $niv3 . "¬" . $niv4 . "¬" . $niv5 . "¬" . $niv6;
         }
         return $result;
     }
 
-    public function generarEstadisticas($tiposec, $numop, $mes_asig, $filx, $fily) {
+    public function generarEstadisticas($tiposec, $numop, $mes_asig, $filx, $fily,$ptv) {
         set_time_limit(360);
-        $usuario_act = $_SESSION ["usuarioconsulta"];
+        $usuario_act = $_SESSION ["Usuario"];
 
         $ancho = 600;
         $alto = 300;
@@ -1444,8 +1139,9 @@ tmp_estadistica.mes_asignacion ASC;	";
         }
 //echo $tiposec."--".$this->vserviciou;
         $parametros = array("vserviciou" => $this->vserviciou, "numop" => $numop, "usuario_act" => $usuario_act);
+      
         $result = Conexion::ejecutarQuery($sqlt, $parametros);
-
+         
         $this->estadisticas = new ResumenResultado;
         foreach ($result as $rowt) {
             $this->estadisticas->setTotalresultados($rowt ["total"]);
@@ -1501,16 +1197,23 @@ tmp_estadistica.mes_asignacion ASC;";
             $this->estadisticas->setTipo_seccion($rowt ["tipografica"]);
             $tipografica = $rowt ["tipografica"];
             // echo $rowt["tipografica"]; 
-
-            if ($vidiomau == 1) {
+            if($this->busqueda){
+             $this->filtrosSel=$this->busqueda->getFiltrosSel();
+            }
+            else $this->filtrosSel=new ConsultaIndicadores;;
+            if ($vidiomau == 2) {
+                $this->estadisticas->setAtributo($rowt ["descing"]);
+                
+                $this->filtrosSel->setNombre_seccion($rowt ["descesp"]);
+                $nom_componente = $rowt ["descing"];
+              
+            } else {
+               
                 $this->estadisticas->setAtributo($rowt ["descesp"]);
                 $this->filtrosSel->setNombre_seccion($rowt ["descesp"]);
                 $nom_componente = $rowt ["descesp"];
-            } else {
-                $this->estadisticas->setAtributo($rowt ["descing"]);
-                $this->filtrosSel->setNombre_seccion($rowt ["descesp"]);
-                $nom_componente = $rowt ["descing"];
             } // fin de idioma
+            
             if ($tiposec == "V")
                 $this->tit_cumplaj= '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("EDAD PROMEDIO POR PRODUCTO");
         }
@@ -1518,9 +1221,21 @@ tmp_estadistica.mes_asignacion ASC;";
 
 //busco tama�o de la muestra
         $tamanio = $this->tamanioMuestra($mes_asig, $filx, $fily, $usuario_act, $numop, $tiposec);
+        
         if ( $ptv == "") {
-
-           $this->estadisticas->setTamano_muestra(' <td class="datos_graf" align="center">'. $tamanio .'</td>');
+            $cad='<div class="table-responsive">
+                <table class="table no-margin">
+                   <tbody>
+                  <tr>
+                    <td style="font-weight: bold">'.T_("TAMAÑO DE LA MUESTRA").'</td>                  
+                    <td>
+                      <div class="sparkbar pull-right" data-height="20">'. $tamanio .'</div>
+                    </td>
+                  </tr>
+			</tbody>
+                </table>
+				</div>';
+           $this->estadisticas->setTamano_muestra($cad);
 
         }
 //echo $usuario_act;

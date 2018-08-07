@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE | E_NOTICE);
+//error_reporting(E_ERROR | E_PARSE | E_NOTICE);
 require '../../Models/conexion.php';
 require_once('../../libs/php-gettext-1.0.11/gettext.inc');
 require '../../Utilerias/inimultilenguaje.php';
@@ -12,14 +12,14 @@ set_time_limit(400);
 
 
 //$subseccion=$numop;
-$usuario_act=$_SESSION["usuarioconsulta"];
-$grupo = $_SESSION["grupous"];
+
+$grupo = $_SESSION["GrupoUs"];
 /*elimino barra de ubicacion */
-$usuario=$_SESSION["usuario"];
+$usuario=$_SESSION["Usuario"];
 $coloresgraf=array("#5cd65c","#ff1a1a","#6600ff","#ffff66","#ff4d4d"," #00e6e6"," #ff9900");
  
 $seccion = filter_input(INPUT_GET,"sec",FILTER_SANITIZE_NUMBER_INT);
-$nivel = filter_input(INPUT_GET,"niv",FILTER_SANITIZE_NUMBER_INT);
+//$nivel = filter_input(INPUT_GET,"niv",FILTER_SANITIZE_NUMBER_INT);
 
 $gfilx=filter_input(INPUT_GET,"filx",FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -34,7 +34,7 @@ $aux = explode(".", $gfilx);
 
 $filx = array();
 
-$filx["reg"] = $aux[0];
+$filx["edo"] = $aux[0];
 
 $filx["ciu"] = $aux[1];
 $filx["niv6"] = $aux[2];
@@ -47,11 +47,12 @@ $fily["cta"] = $auxy[0];
 $fily["fra"] = $auxy[1];
 $fily["pv"] = $auxy[2];
 $auxuni=explode(".",$gfiluni);
+
 $filuni=array();
 $filuni["reg"]=$auxuni[0];
 $filuni["uni"]=$auxuni[1];
 $filuni["zon"]=$auxuni[2];
-$filuni["edo"]=$auxuni[3];
+
 $zona=$filuni["zon"];
 $mes_asig=filter_input(INPUT_GET,"mes",FILTER_SANITIZE_SPECIAL_CHARS);
 $mes_consulta=$mes_asig;
@@ -108,13 +109,15 @@ INNER JOIN ca_nivel4 ON ca_unegocios.une_cla_estado = ca_nivel4.n4_id
 INNER JOIN ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
 WHERE ins_generales.i_claveservicio=$servicio  ";
  if(isset($filuni["reg"])&&$filuni["reg"]!="")
-  $sqlt.=" and  une_cla_region=".$filuni["reg"];
+ { $sqlt.=" and  une_cla_region=".$filuni["reg"];
+ $nivel=1;}
  if(isset($filuni["uni"])&&$filuni["uni"]!="")
-  $sqlt.=" and une_cla_pais=".$filuni["uni"];
+ {$sqlt.=" and une_cla_pais=".$filuni["uni"];
+ $nivel=2;}
  if(isset($zona)&&$zona!="")
-  $sqlt.=" and une_cla_zona=".$zona;
- if(isset($filuni["edo"])&&$filuni["edo"]!="")
-  $sqlt.=" and une_cla_estado=".$filuni["edo"];
+ { $sqlt.=" and une_cla_zona=".$zona;
+ $nivel=3;}
+
 
 $sqlt.=" and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <='$fmes_consulta' 
 and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >='$mes_consulta_ant'
@@ -125,12 +128,16 @@ AND `red_indicador`=-1";
 
    if(isset($fily["cta"])&&$fily["cta"]!="")
   $sqlt.=" and ca_unegocios.cue_clavecuenta=".$fily["cta"];
-if(isset($filx["reg"])&&$filx["reg"]!="")
-    $sqlt.=" and ca_unegocios.une_cla_estado=".$filx["reg"];
+if(isset($filx["edo"])&&$filx["edo"]!="")
+{  $sqlt.=" and ca_unegocios.une_cla_estado=".$filx["edo"];
+$nivel=4;}
+
 if(isset($filx["ciu"])&&$filx["ciu"]!="")
-   $sqlt.=" and ca_unegocios.une_cla_ciudad=".$filx["ciu"];
+{   $sqlt.=" and ca_unegocios.une_cla_ciudad=".$filx["ciu"];
+$nivel=5;}
 if(isset($filx["niv6"])&&$filx["niv6"]!="")
-    $sqlt.=" and ca_unegocios.une_cla_franquicia=".$filx["niv6"];
+{   $sqlt.=" and ca_unegocios.une_cla_franquicia=".$filx["niv6"];
+$nivel=6;}
 if(isset($fily["fra"])&&$fily["fra"]!="")
     $sqlt.=" and ca_unegocios.fc_idfranquiciacta=".$fily["fra"];
 if(isset($fily["pv"])&&$fily["pv"]!="")
@@ -171,6 +178,7 @@ else
 
 	
 }
+$nivel=$nivel+1;
 //var_dump($refer);
 if($banok){
     $gf=new GeneradorGraficas;
