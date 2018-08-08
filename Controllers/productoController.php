@@ -198,5 +198,185 @@ class ProductoController{
 	
 	
 
+	public function reporteProductoController(){
+
+		$nrep = $_GET["nrep"];
+		$sec = $_GET["sec"];
+		$sv=$_GET["sv"];
+
+		$datosController= array("sec"=>$sec,
+	                            "sv"=>$sv,
+	                            "nrep"=>$nrep,
+	                               ); 
+	      
+	echo '
+
+    <!-- Main content -->
+    <section class="content container-fluid">';
+
+
+
+	$respuesta = DatosProducto::vistaRepProductosModel($datosController, "ins_detalleproducto");
+
+		foreach($respuesta as $row => $item){
+	echo '
+      <!----- Inicia contenido ----->
+       
+        <div class="col-md-4" >
+          <div class="box box-info" >
+            <div class="box-header with-border">
+              <h3 class="box-title"></h3>
+
+              <div class="box-tools pull-right">
+               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+
+            <div class="box-body">
+             <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
+			<div class="col-sm-6 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">No.</h5>
+                    <span class="description-text-2">'.$item["ip_numrenglon"].'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+            <div class="col-sm-6">
+                  <div class="description-block">
+                    <h5 class="description-text">No. de sistema</h5>
+                    <span class="description-text-2">'.$item["ip_numsistema"].'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+				</div>
+              <div class="row" style="border-bottom: #F4F4F4 Solid 1px; padding: 10px 0 10px 0">
+              	  <div class="col-sm-12">
+                    <ul class="nav nav-stacked">
+                      <li><strong>Producto  :    ';
+                      	# busca el nombre del producto
+                      $datosController= array("idcat"=>2,
+	                            "idop"=>$item["ip_descripcionproducto"],
+	                               ); 
+	    
+					   $respProd = DatosProducto::nombreOpProducto($datosController, "ca_catalogosdetalle");
+					  	
+                        echo $respProd["cad_descripcionesp"];
+                       echo '</strong> </li>
+                    </ul>
+                </div>
+              </div>
+              <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
+			<div class="col-sm-6 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">Cajas</h5>
+                    <span class="description-text-2">'.$item["ip_numcajas"].'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+            <div class="col-sm-6">
+                  <div class="description-block">
+                    <h5 class="description-text">Condicion</h5>
+                    <span class="description-text-2">';
+                    if ($item["ip_condicion"]=="V"){
+                    	echo "VIGENTE";
+                    } else if ($item["ip_condicion"]=="C"){
+                    	echo "CADUCO";
+                    }	
+                    echo '</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+				</div>
+              <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
+			<div class="col-sm-6 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">Fecha de produccion</h5>
+                    <span class="description-text-2">';
+
+					$fecprod=SubnivelController::cambiaf_a_normal($item["ip_fechaproduccion"]);
+
+                     echo $fecprod.'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+            <div class="col-sm-6 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">Fecha de caducidad</h5>
+                    <span class="description-text-2">';
+                    $feccad=SubnivelController::cambiaf_a_normal($item["ip_fechacaducidad"]);
+                    echo $feccad.'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+				</div>
+				<div class="row">
+			<div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">Edad dias</h5>
+                    <span class="description-text-2">'.$item["ip_edaddias"].'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+            <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                    <h5 class="description-text">Semanas</h5>
+                    <span class="description-text-2">'.$item["ip_semana"].'</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+            <div class="col-sm-4">
+                  <div class="description-block">
+                    <h5 class="description-text">Estatus</h5>
+                    <span class="description-text-2">';
+					if ($item["ip_estatus"]=="I"){
+                    	echo "INSTALADO";
+                    } else if ($item["ip_condicion"]=="A"){
+                    	echo "ALMACENADO";
+                    }	
+                    echo '</span>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+				</div>
+              
+               <div class="row" >
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                   
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                 <button type="button" class="btn btn-block btn-info"><i class="fa fa-trash"></i></button>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div>
+              
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+       ';
+
+	} // foreach
+echo '</section>';
+}
+
+
 }
 ?>	

@@ -1,45 +1,29 @@
+
 <?php
 class MvcController{
-
-
 	#llamada a template
-
 	public function plantilla(){
  		include "views/template.php";
 	}
-
 	public function inicio(){
-
 		
 		include "views/modulos/cue_login.php";
 	}
-
     # interaccion del usuario
-
     public function enlacesPaginasController(){
-
     	if(isset($_GET["action"])){
-
 		
 			$enlacesController = $_GET["action"];
     	}	
-
     	else {
-
     	$enlacesController= "index";	
     	}
-
-
     	$respuesta = EnlacesPaginas::enlacesPaginasModel($enlacesController);
-
     	include $respuesta;	
     }
-
 	#registro de usuarios
     #-----------
-
     public function registroUsuarioController(){
-
     	if (isset($_POST["nombrecliente"])){	
     	
 	    	$datosController=array("nombrecliente"=>$_POST["nombrecliente"]);
@@ -47,28 +31,22 @@ class MvcController{
 	    	
 	    	$respuesta = Datos::registroUsuarioModel($datosController, "ca_clientes");
 	    	
-	    	if($respuesta== "success"){
-
-          echo '<script> windows.location= "index.php?action=ok" </script>';
-          //header("location:index.php?action=ok");
-        }
-
-        else {
-          echo '<script> windows.location= "index.php?index.php" </script>';  
-
-        }
+	    	       // if($respuesta=="success"){
+            echo "
+            <script type='text/javascript'>
+              window.location.href='index.php?action=listacliente'
+                </script>
+                  ";
+        //} else {
+        //  echo "error";
+        //}
     	}
     }
-
     	#vista clientes
-
 		public function vistaClientesController(){
 			
 			$respuesta =Datos::vistaClientesModel("ca_clientes");
-
 			foreach($respuesta as $row => $item){
-
-
 			echo '
 		        <div class="col-md-4" >
 		          <div class="box box-info" >
@@ -120,14 +98,11 @@ class MvcController{
 		       </div>
 		      
 		   
-
 			 
 		    <!-- /.content -->
 		';
 		}
-
 	}	
-
 	public function editarClienteController(){
 		
 		$datosController = $_GET["id"];
@@ -135,34 +110,26 @@ class MvcController{
 	    	
 			echo '<input type="hidden" name="ideditar" value="'.$respuesta["cli_id"].'">
 				 <input name="nombreeditar" id="nombreeditar" class="form-control" value="'.$respuesta["cli_nombre"].'">';	
-
-
 	}	
-
 	public function actualizarClienteController(){
 		
 		if(isset($_POST["nombreeditar"])){
-
             $datosController= array("id"=>$_POST["ideditar"],
             			"nombre"=>$_POST["nombreeditar"]); 
-
          	$respuesta = Datos::actualizarClienteModel($datosController, "ca_clientes");
          //&&	$liga='';
 	    	if($respuesta=="success"){
-				//header('location:index.php?action=listacliente');
-	    		 echo "cambio efectuado";
-	    	
+				  echo "
+            	<script type='text/javascript'>
+                window.location.href='index.php?action=listacliente'
+                </script>
+                  ";
 			
 	    	} else {
 	    		echo "error";
 	    	}
 		}
-
-
-
 	}	
-
-
 public function borrarClienteController(){
 		
 		if(isset($_GET["idb"])){
@@ -178,12 +145,6 @@ public function borrarClienteController(){
 		    		echo "error";
 		    	}
 		}		    		
-
 	}	
-
-
-
 }
-
-
 ?>

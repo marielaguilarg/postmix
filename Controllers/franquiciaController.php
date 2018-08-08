@@ -17,7 +17,7 @@ public function listaCuentasController(){
 
   public function vistaFranquiciaController(){
         
-        $respuesta =DatosFranquicia::vistaFranquiciasModel("ca_franquicias");
+        $respuesta =DatosFranquicia::vistaFranquiciasModel("ca_franquiciascuenta");
 
         foreach($respuesta as $row => $item){
 
@@ -26,7 +26,7 @@ public function listaCuentasController(){
             <div class="col-md-4" >
               <div class="box box-info" >
                 <div class="box-header with-border">
-                  <h3 class="box-title">No. '.$item["fra_id"].'</h3>
+                  <h3 class="box-title">No. '.$item["fc_idfranquiciacta"].'</h3>
                   <div class="box-tools pull-right">
                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
@@ -39,7 +39,7 @@ public function listaCuentasController(){
                   <div class="arrow">
                   	  <div class="box-footer no-padding">
                         <ul class="nav nav-stacked">
-                          <li><a href="index.php?action=editafranquicia&id='.$item["fra_id"].'"><strong>'.$item["fra_descripcion"].'</strong></a></li>
+                          <li><a href="index.php?action=editafranquicia&id='.$item["fc_idfranquiciacta"].'"><strong>'.$item["cf_descripcion"].'</strong></a></li>
                         </ul>
                     </div>
                   </div>
@@ -61,7 +61,7 @@ public function listaCuentasController(){
                     <div class="col-sm-4">
                       <div class="description-block">
                      
-                      <button type="button" class="btn btn-block btn-info" ><a  href="index.php?action=listafranquicia&idb='.$item["fra_id"].'"><i class="fa fa-trash-o"></i></a></button>
+                      <button type="button" class="btn btn-block btn-info" ><a  href="index.php?action=listafranquicia&idb='.$item["fc_idfranquiciacta"].'"><i class="fa fa-trash-o"></i></a></button>
                       </div>
                       <!-- /.description-block -->
                     </div>
@@ -89,12 +89,13 @@ public function listaCuentasController(){
                                "fracuen"=>$_POST["fraidcuenta"]
                                     );        
         
-        $respuesta = DatosFranquicia::registroFranquiciaModel($datosController, "ca_franquicias");
+        $respuesta = DatosFranquicia::registroFranquiciaModel($datosController, "ca_franquiciascuenta");
         if($respuesta== "success"){
-         echo "registro exitoso"; 
-        //echo '<script> windows.location= "index.php?action=ok" </script>';
-      
-        //  header("location:index.php?action=ok");
+         echo "
+            <script type='text/javascript'>
+              window.location.href='index.php?action=listafranquicia'
+                </script>
+                  ";
         }
 
         else {
@@ -107,11 +108,11 @@ public function listaCuentasController(){
   public function editarFranquiciaController(){
     
     $datosController = $_GET["id"];
-    $respuesta = DatosFranquicia::editarFranquiciaModel($datosController, "ca_franquicias");
+    $respuesta = DatosFranquicia::editarFranquiciaModel($datosController, "ca_franquiciascuenta");
     $listacuen =DatosFranquicia::listaCuentasModel("ca_cuentas");
     echo '              
-    <input type="hidden" name="idfraeditar" value="'.$respuesta["fra_id"].'">
-     <input name="franombre" id="franombre" class="form-control" value="'.$respuesta["fra_descripcion"].'">
+    <input type="hidden" name="idfraeditar" value="'.$respuesta["fc_idfranquiciacta"].'">
+     <input name="franombre" id="franombre" class="form-control" value="'.$respuesta["cf_descripcion"].'">
           </div>
           <div class="form-group col-md-6">
            <label >Cuenta</label>
@@ -119,7 +120,7 @@ public function listaCuentasController(){
               <option value="">-- Elija la cuenta  --</option>';
 
           foreach($listacuen as $row => $itemf){                 
-            if($itemf["cue_id"] == $respuesta["fra_idcuenta"]){
+            if($itemf["cue_id"] == $respuesta["cue_clavecuenta"]){
               echo '<option value="'.$itemf["cue_id"].'" selected="selected">'.$itemf["cue_descripcion"].'</option>';
             }else{  
               echo '<option value="'.$itemf["cue_id"].'">'.$itemf["cue_descripcion"].'</option>';
@@ -140,13 +141,15 @@ public function listaCuentasController(){
                                     "fraidcuen"=>$_POST["fraidcuenta"]
                                     ); 
 
-          $respuesta = DatosFranquicia::actualizarFranquiciaModel($datosController, "ca_franquicias");
+          $respuesta = DatosFranquicia::actualizarFranquiciaModel($datosController, "ca_franquiciascuenta");
 
         if($respuesta=="success"){
-        #  header("location:index.php?action=cambio");
-        
-          echo '<script> windows.location= "index.php?action=listafranquicia" </script>';
-          echo "cambio efectuado";
+     
+         echo "
+            <script type='text/javascript'>
+              window.location.href='index.php?action=listafranquicia'
+                </script>
+                  ";
         } else {
           echo "error";
         }
@@ -154,20 +157,24 @@ public function listaCuentasController(){
   }
 
 public function borrarFranquiciaController(){
-   // if(isset($_GET["idb"])){
+    if(isset($_GET["idb"])){
       $datosController = $_GET["idb"];
-      $respuesta = DatosFranquicia::borrarFranquiciaModel($datosController, "ca_franquicias");
+
+      $respuesta = DatosFranquicia::borrarFranquiciaModel($datosController, "ca_franquiciascuenta");
     //  echo $respuesta;
         if($respuesta=="success"){
-           echo '<script> windows.location= "index.php?action=listacuenta" </script>';
-          //header('location:index.php?action=listacliente');
-            // echo "cambio efectuado";
-          
+                  echo "
+            <script type='text/javascript'>
+                window.location.href='index.php?action=listafranquicia'
+                </script>
+                  ";
+                  
+
         
           } else {
             echo "error";
           } 
-    //}
+    }
   } 
 
 

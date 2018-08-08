@@ -1,15 +1,14 @@
+
 <?php
 class enlacesController{
-
 	public function listaserviciosController(){
         $respuesta = DatosServicio::vistaServiciosModel("ca_servicios");
-      	
+        var_dump($respuesta);
 		foreach ($respuesta as $row => $item){
      echo '<li class="treeview">
-        <a href="#"><em class="fa fa-circle-o"></em>'.$item["ser_descripcionesp"] .'<sp//an class="pull-right-container">
+        <a href="#"><em class="fa fa-circle-o"></em>'.$item["ser_descripcionesp"] .'<span class="pull-right-container">
                   <em class="fa fa-angle-left pull-right"></em></spam>  
                   </a>
-
         <ul class="treeview-menu">';
          $respcuenta = DatosCuenta::vistaCuentasModel("ca_cuentas");
         foreach($respcuenta as $row => $itemcuen){  
@@ -23,7 +22,6 @@ class enlacesController{
              
       	}  // foreach servicio
     } 
-
   public function listanivelesController(){
       
       $_SESSION['Usuario']="marisol";
@@ -182,5 +180,18 @@ class enlacesController{
         }  // foreach servicio
     } 
 
+  public function listaserviciosCues(){
+    
+      
+        $respcuenta = DatosCuenta::vistaCuentasModel("ca_cuentas");
+       
+        foreach($respcuenta as $row => $itemcuen){  
+            echo '<li>
+            <a href="index.php?action=listaunegocio&idc='.$itemcuen["cue_id"] .'"><em class="fa fa-circle-o"></em>'.$itemcuen["cue_descripcion"] .'</a>
+            </li>';
+            
+        }
+        echo '</ul>        ';
+   }     
 }
 ?>

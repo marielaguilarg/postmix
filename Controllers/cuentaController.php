@@ -112,12 +112,12 @@ class CuentaController{
         if($respuesta== "success"){
 
           //echo '<script> windows.location= "index.php?action=ok" </script>';
-          echo "
-          <script type='text/javascript'>
-              window.location.href='index.php?action=ok';
-              </script>
-                ";
-          //header("location:index.php?action=ok");
+        echo "
+            <script type='text/javascript'>
+                window.location.href='index.php?action=listacuenta'
+                </script>
+                  ";
+                  
         }
 
         else {
@@ -194,7 +194,7 @@ public function editarCuentaController(){
 
  public function actualizarCuentaController(){
       // echo "entre a actualizar cuenta controller";
-    if(isset($_POST["idcueeditar"])){
+    if(isset($_POST["cuedes"])){
 
             $datosController= array("id"=>$_POST["idcueeditar"],
                                     "cuedes"=>$_POST["cuedes"],
@@ -207,11 +207,12 @@ public function editarCuentaController(){
           $respuesta = DatosCuenta::actualizarCuentaModel($datosController, "ca_cuentas");
            //echo $respuesta; 
         if($respuesta=="success"){
-           echo '<script> windows.location= "index.php?action=listacuenta" </script>';
-          
-       //   header("location:index.php?action=listacuenta");
-
-        } else {
+            echo "
+            <script type='text/javascript'>
+                window.location.href='index.php?action=listacuenta'
+                </script>
+                  ";
+              } else {
           echo "error";
         }
     }

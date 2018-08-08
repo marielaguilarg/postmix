@@ -188,7 +188,545 @@ class GeneralController{
    		echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=G"> Cancelar </a></button>';
 	}
 	
+	public function reporteGeneralController(){
+         $sv=$_GET["sv"];
+         $nrep=$_GET["nrep"];
+         $sec=$_GET["sec"];
+         $pv=$_GET["pv"];
+         $idc=$_GET["idc"];
 
-	
+		echo '<section class="content container-fluid">
+
+      <!----- Inicia contenido ----->
+        <div class="row">
+		
+        <div class="col-md-12">
+             <div class="box box-info">
+             <div class="box-body">
+              <form role="form">';
+                # valida si existen datos
+             $existe = DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
+             if ($existe){
+                
+                $registro = DatosGenerales::vistaReporteGenerales($sv, $nrep, "ins_generales");
+                #LEE VARIABLES
+                  $cinsp=$registro["i_claveinspector"];
+                  $fecvis=$registro["i_fechavisita"];
+                  $mesas=$registro["i_mesasignacion"];
+                  $hrent=$registro["i_horaentradavis"];
+                  $horaEn=$registro["HoraEn"];
+                  $horaEn2=$registro["HoraEn2"];
+                  $hrsal=$registro["i_horasalidavis"];
+                  $horaEn5=$registro["HoraEn5"];
+                  $horaEn6=$registro["HoraEn6"];
+                  $horaEn3=$registro["HoraEn3"];
+                  $horaEn4=$registro["HoraEn4"];
+
+                  $respvis=$registro["i_responsablevis"];
+                  $puesresp=$registro["i_puestoresponsablevis"];
+                  $sincobro=$registro["i_sincobro"];
+                  
+                  $repcic=$registro["i_reportecic"];
+                  $numrepcic=$registro["i_numreportecic"];
+                  $finaliza=$registro["i_finalizado"];
+
+                  $corxy=$registro["une_coordenadasxy"];
+                  $fecfin=$registro["i_fechafinalizado"];
+                  $reasigna=$registro["i_reasigna"];
+                  $gpo=$_SESSION["GrupoUs"];
+                  echo '
+                  <div class="form-group col-md-12">
+                  <label>INSPECTOR</label>';
+                  
+                  echo '<select class="form-control" name="insp" id=insp>';
+                  #busca inspector
+                  $catalogo = DatosInspector::listainspectores("ca_inspectores");
+                   foreach ($catalogo as $key => $item) {
+                      if ($item["ins_clave"]==$cinsp) {
+                        echo '<option value='.$item["ins_clave"].' selected>'.$item["ins_nombre"].'</option>';
+                      } else {
+                        echo '<option '.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';
+                      }                   
+                  }  
+
+                   echo ' </select>
+                  </div>
+                  <div class="form-group col-md-12">
+                  <label>MES ASIGNACION</label>';
+                   echo '<select class="form-control" name=mesas id="mesas">';
+                   $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
+                   //$sele="";
+                   foreach ($catalogo as $key => $rowc) {
+                      switch ($rowc["num_mes_asig"]) {
+                     case 1:
+                        $mesnom="ENERO";
+                      break;
+                     case 2:
+                        $mesnom="FEBRERO";
+                      break;
+                     case 3:
+                        $mesnom="MARZO";
+                      break;   
+                     case 4:
+                        $mesnom="ABRIL";
+                      break;   
+                     case 5:
+                        $mesnom="MAYO";
+                      break;   
+                     case 6:
+                        $mesnom="JUNIO";
+                      break;   
+                     case 7:
+                        $mesnom="JULIO";
+                      break;   
+                     case 8:
+                        $mesnom="AGOSTO";
+                      break;   
+                     case 9:
+                        $mesnom="SEPTIEMBRE";
+                      break;   
+                     case 10:
+                        $mesnom="OCTUBRE";
+                      break;   
+                     case 11:
+                        $mesnom="NOVIEMBRE";
+                      break;   
+                     case 12:
+                        $mesnom="DICIEMBRE";
+                      break;
+                     }
+                      if ($mesas==$rowc["num_mes_asig"].".".$rowc["num_per_asig"]){
+                          $sele= "selected='selected'";
+                      }else{
+                        $sele="";
+                      }
+                      echo "<option value=".$rowc["num_mes_asig"].".".$rowc["num_per_asig"]." ".$sele.">".$mesnom."-".$rowc["num_per_asig"]."</option>";                  
+                  } 
+                   echo ' </select>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>RESPONSABLE DEL PUNTO DE VENTA</label>
+                  <input type="text" class="form-control" placeholder="" id="resp" name="resp" value="'.$respvis.'">
+                </div>
+                <div class="form-group col-md-12">
+                  <label>CARGO</label>
+                  <input type="text" class="form-control" placeholder="" id="cargo" name="cargo" value="'.$puesresp.'">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE ENTRADA</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                     if ($j==$horaEn){
+                       echo "<option value='".$j."' selected>".$j."</option>";
+                     }else{
+                       echo "<option value='".$j."'>".$j."</option>";
+                     }     
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn2">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                      if ($j==$horaEn2){
+                         echo "<option value='".$j."' selected>".$j1."</option>";
+                       }else{
+                          echo "<option value='".$j."'>".$j1."</option>";
+                       }     
+                  }
+                    
+                  
+                  echo '</select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE ANALISIS SENSORIAL</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn3">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                     if ($j==$horaEn3){
+                       echo "<option value='".$j."' selected>".$j."</option>";
+                     }else{
+                       echo "<option value='".$j."'>".$j."</option>";
+                     }     
+                    
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn4">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                     if ($j==$horaEn4){
+                        echo "<option value='".$j."' selected>".$j1."</option>";
+                     }else{
+                         echo "<option value='".$j."'>".$j1."</option>";
+                     }  
+                    
+                  }
+                  echo '</select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE SALIDA</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn5">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                    if ($j==$horaEn5){
+                      echo "<option value='".$j."' selected>".$j."</option>";
+                     }else{
+                      echo "<option value='".$j."'>".$j."</option>";
+                     }
+                   
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn5">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                     if ($j==$horaEn6){
+                        echo "<option value='".$j."' selected>".$j1."</option>";
+                       }else{
+                        echo "<option value='".$j."'>".$j."</option>";
+                       }     
+      
+                    
+                  }
+                  echo '</select>
+                </div>
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" name="fechavisita" id="reservation">
+                </div>';  
+                  if ($gpo=='adm'){
+                    echo '<div class="form-group col-md-4">';
+                    if ($reasigna) {
+                        $valreas="checked";
+                    }
+                      else {
+                         $valreas="";
+                    }
+                
+                    echo ' <label >REASIGNACION</label>
+                    <input type="checkbox" name="indsyd" '.$valreas.'/>
+                    </div>
+                    <div class="form-group col-md-4">';
+                    if ($sincobro) {
+                        $valsinc="checked";
+                    }
+                      else {
+                         $valsinc="";
+                    }
+                     echo ' <label >SIN COBRO</label>
+                        <input type="checkbox" name="indsyd" '.$valsinc.'/>
+                    </div>';
+                  }  
+
+                echo '<div class="form-group col-md-4">';
+
+                if ($repcic) {
+                    $valant="checked";
+                }
+                  else {
+                     $valant="";
+                }
+                 
+                echo ' <label >REPORTE CIC</label>
+                    <input type="checkbox" name="REPCIC"  '.$valant.' />
+                </div>
+                <div class="form-group col-md-12">
+                  <label>NO DE REPORTE CIC</label>
+                  <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic" value='.$numrepcic.'>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>COORDENAADAS XY</label>
+                  <input type="text" class="form-control" placeholder="" id="coorxy" name="coorxy" value="'.$corxy.'">
+                </div>
+                <div class="form-group col-md-12">
+                  <label>FECHA EMISION</label>
+                  <input type="text" class="form-control" placeholder="" id="fecemis" name="fecemis" value="'.$fecfin.'">
+                </div>
+                
+                
+                ';                
+
+                if ($finaliza==1) {
+                  echo '
+                         <div class="form-group col-md-12">
+                          <label>FINALIZAR REPORTE  :  FINALIZADO</label>
+                         <input type="button" name="FIN" id="FIN" value="Reactivar" onClick=oCargarre("index.php?op=reac&nrep=1");>
+                         </div>';
+
+
+                }else{
+                  echo '  <div class="form-group col-md-12">
+                          <label>FINALIZAR REPORTE  :  </label>
+                    <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=FG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Finalizar </a></button>';
+                }
+
+          
+             } else {
+              // nuevo
+              echo '
+                <div class="form-group col-md-12">
+                  <label>INSPECTOR</label>';
+                  
+                  echo '<select class="form-control">';
+                  #busca inspector
+                  $catalogo = DatosInspector::listainspectores("ca_inspectores");
+                  echo '<option "">--- Seleccione opcion ---</option>';
+                  foreach ($catalogo as $key => $item) {
+                    echo '<option '.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';                        
+                  }  
+
+                   echo ' </select>
+                </div>     
+                  <div class="form-group col-md-12">
+                  <label>MES ASIGNACION</label>';
+                   echo '<select class="form-control" name=mesas id="mesas">';
+                   echo '<option "">--- Seleccione opcion ---</option>';
+                   $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
+                   //$sele="";
+                   foreach ($catalogo as $key => $rowc) {
+                      switch ($rowc["num_mes_asig"]) {
+                     case 1:
+                        $mesnom="ENERO";
+                      break;
+                     case 2:
+                        $mesnom="FEBRERO";
+                      break;
+                     case 3:
+                        $mesnom="MARZO";
+                      break;   
+                     case 4:
+                        $mesnom="ABRIL";
+                      break;   
+                     case 5:
+                        $mesnom="MAYO";
+                      break;   
+                     case 6:
+                        $mesnom="JUNIO";
+                      break;   
+                     case 7:
+                        $mesnom="JULIO";
+                      break;   
+                     case 8:
+                        $mesnom="AGOSTO";
+                      break;   
+                     case 9:
+                        $mesnom="SEPTIEMBRE";
+                      break;   
+                     case 10:
+                        $mesnom="OCTUBRE";
+                      break;   
+                     case 11:
+                        $mesnom="NOVIEMBRE";
+                      break;   
+                     case 12:
+                        $mesnom="DICIEMBRE";
+                      break;
+                     }
+                      if ($mesas==$rowc["num_mes_asig"].".".$rowc["num_per_asig"]){
+                          $sele= "selected='selected'";
+                      }else{
+                        $sele="";
+                      }
+                      echo "<option value=".$rowc["num_mes_asig"].".".$rowc["num_per_asig"]." ".$sele.">".$mesnom."-".$rowc["num_per_asig"]."</option>";                  
+                  } 
+                   echo ' </select>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>RESPONSABLE DEL PUNTO DE VENTA</label>
+                  <input type="text" class="form-control" placeholder="" id="resp" name="resp" value="'.$respvis.'">
+                </div>
+                <div class="form-group col-md-12">
+                  <label>CARGO</label>
+                  <input type="text" class="form-control" placeholder="" id="cargo" name="cargo" value="'.$puesresp.'">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE ENTRADA</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                    echo "<option value='".$j."'>".$j."</option>";
+                   
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn2">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                    echo "<option value='".$j."'>".$j1."</option>";
+                    
+                  }
+                  echo '</select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE ANALISIS SENSORIAL</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn3">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                    echo "<option value='".$j."'>".$j."</option>";
+                   
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn4">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                    echo "<option value='".$j."'>".$j1."</option>";
+                    
+                  }
+                  echo '</select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>HORA DE SALIDA</label>
+                   <label>Hrs</label>
+                  <select class="form-control"  name="HoraEn4">';
+                  
+                  for($j=1;$j<=24;$j++)
+                  {
+                    echo "<option value='".$j."'>".$j."</option>";
+                   
+                  }
+                 echo '</select>
+                </div>
+
+                 <div class="form-group col-md-6">
+                 <label>Min</label>
+                  <select class="form-control"  name="HoraEn5">';
+                  
+                  for($j=0;$j<=60;$j++)
+                  {
+                      if ($j<10)    {
+                        $j1="0".$j;
+                      }else{
+                        $j1=$j;
+                      }
+                    echo "<option value='".$j."'>".$j1."</option>";
+                    
+                  }
+                  echo '</select>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>FECHA VISITA</label>
+                  <input type="text" class="form-control" placeholder="" id="">
+                  </div>
+                <div class="form-group col-md-4">
+                   <label >REASIGNACION</label>
+                    <input type="checkbox" name="indsyd" />
+                </div>
+                <div class="form-group col-md-4">
+                   <label >SIN COBRO</label>
+                    <input type="checkbox" name="indsyd" />
+                </div><div class="form-group col-md-4">
+                   <label >REPORTE CIC</label>
+                    <input type="checkbox" name="indsyd" />
+                </div>
+                <div class="form-group col-md-12">
+                  <label>NO DE REPORTE CIC</label>
+                  <input type="text" class="form-control" placeholder="" id=resp name=resp>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>COORDENAADAS XY</label>
+                  <input type="text" class="form-control" placeholder="" id=resp name=resp>
+                </div>
+                <div class="form-group  col-md-12">
+                <label>FECHA EMISION:</label>
+
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker">
+                </div>
+                               
+               <div class="form-group col-md-12">
+                  <label>FINALIZAR REPORTE</label>
+                  <input type="text" class="form-control" placeholder="" id="">
+                </div>
+                
+                  ';
+
+             }
+
+                echo '<!-- Datos iniciales alta de punto de venta -->
+                
+                <!-- Clasificación punto de venta -->
+                <br>
+                
+                
+                                <!-- Pie de formulario -->
+                 <div class="box-footer col-md-12">
+                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
+              </div>
+              </form>
+              </div>
+              </div>
+            </div>
+       
+        </div>
+	  <!----- Finaliza contenido ----->
+    </section>';
+ 
+
+
+	}
+
+
 }
 ?>
