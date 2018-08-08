@@ -563,6 +563,217 @@ public function editarPonderaComentController(){
                   
   }
 
+  public function reportePonderaController(){
+
+    # busca datos de la seccion ponderada
+     $ser = $_GET["sv"];
+     $sec = $_GET["sec"];
+     $nrep = $_GET["nrep"];   
+     $pv=$_GET["pv"];
+     $idc=$_GET["idc"];
+     
+      $sumapond=0;
+      $sumanoap=0;
+      echo '
+    <!-- Main content -->
+    <section class="content container-fluid">';
+
+
+    $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
+     
+    foreach($respuesta as $row => $item){
+      echo '
+        <div class="col-md-4" >
+          <div class="box box-info" >
+            <div class="box-header with-border">
+            <h3 class="box-title">No.'. $item["r_numreactivo"].'</h3>
+
+              <div class="box-tools pull-right">
+               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="arrow">
+
+
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked">
+                      <li>'. $item["r_descripcionesp"].'</li>
+                    </ul>
+                </div>';
+
+                  # BUSCA VALOR ANTERIOR DE REACTIVO
+
+                 $datosController= array("sec"=>$sec,
+                              "ser"=>$ser,
+                              "nrep"=>$nrep,
+                              "nreac"=>$item["r_numreactivo"],
+                              );
+                 $respuesta = DatosPond::leeDatosPonderaModel($datosController, "ins_detalle");
+                   echo '<div class="box-footer col-md-6">                 
+                    <ul class="nav nav-stacked">
+                      <li><label>ACEPTADO <input type="checkbox"'; 
+                   
+                   if (isset($respuesta)) {
+                      $numrow=1;
+                      $valcom=$respuesta["id_comentario"];
+                      $pondcta=$respuesta["id_ponderacionreal"];
+                     
+                      if ($respuesta["id_aceptado"]==-1){
+                          $aceptado='checked';
+                      } else{
+                         $aceptado='';
+                      }
+                      if ($respuesta["id_noaplica"]==-1){
+                          $noaplica= 'checked';
+                          $sumanoap=$sumanoap+$pondcta;
+                      } else {
+                        $noaplica= '';
+                        $sumapond=$sumapond+$pondcta;
+                      }
+                      #verifica si hay comentarios agregados
+                      $datosController= array("secreac"=>$sec.'.'.$item["r_numreactivo"],
+                              "ser"=>$ser,
+                              );
+                      
+                      $numcom= DatosPond::verificaComentPonderaModel($datosController, "cue_reactivoscomentarios");
+                      
+                   } else {
+                     $valant="";
+                     $valcom="";
+                     $numrow=0;
+                    }
+
+                       echo $aceptado.'
+                       ></label></li>
+                    </ul>         
+                </div>
+                 <div class="box-footer col-md-6">               
+                    <ul class="nav nav-stacked">
+                      <li><label>NO APLICA <input type="checkbox" ';
+                      echo $noaplica.'
+                      ></label></li>
+                    </ul>                      
+                </div>
+              </div>
+        <div class="row col-sm-12">
+            <div class="box-footer no-padding col-sm-6">
+                    
+                </div>
+        
+      <div class="box-footer no-padding col-sm-6">
+                    
+                </div>
+        </div>      
+               <div class="row" >
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">';
+                     if ($item["r_tiporeactivo"]!="") {
+                        $idreac=$item["r_numreactivo"];
+                        # validar si hay registros en subnivel
+                        switch($item["r_tiporeactivo"]) {
+                        case 'A':
+                        $numcom= DatosAbierta::validasubseccionAbierta($ser, $sec, $idreac, "cue_reactivosabiertosdetalle");
+                        case 'E':
+                        $numcom= DatosEst::validasubseccionEstandar($ser, $sec, $idreac, "cue_reactivosestandardetalle");
+                        }
+                        echo '
+                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$sec.'.'.$idreac.'&ts='.$item["r_tiporeactivo"].'&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'&sv='.$ser.'"> Detalle </a></span></button>';
+                      }
+                      echo '
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">';
+
+                  if ($numcom>=1){
+                   
+                    echo '
+                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">Comentario </a></span></button>';
+                  }
+                  echo '
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+                  <div class="description-block">
+                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaseccion&idb='.$item["sec_numseccion"].'&idser='.$item["ser_claveservicio"].'"><i class="fa fa-image"></i></a></button>
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+              </div> 
+                   </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+    </div>';
+      } //foreach
+
+  }
+
+  public function vistanivelcumplimiento(){
+      $sv = $_GET["sv"];
+      $nsec=$_GET["sec"];
+      $nrep=$_GET["nrep"];
+      
+
+      
+      $respuesta = DatosPond::calculasumapond($sv, $nrep, $nsec, 0,-1, "ins_detalle");
+      if (isset($respuesta["SUMAPONDERACION"])) {
+         $sumapond=$respuesta["SUMAPONDERACION"];
+      }else{ 
+         $sumapond=0;
+      }  // fin del if
+      
+      $respnoap = DatosPond::calculasumanoap($sv, $nrep, $nsec, "ins_detalle");
+      if (isset($respnoap["sumanoap"])) {
+         $sumanoap=$respnoap["sumanoap"];
+      }else{ 
+         $sumanoap=0;
+      }
+      //echo $sumanoap; 
+      $sumacien=100-$sumanoap;
+      $nivelacep=round(($sumapond*100)/$sumacien);
+
+      #busca ponderacion de seccion
+      $respond = DatosPond::ponderaseccion($sv, $nsec, "cue_secciones");
+      if (isset($respond["sec_ponderacion"])) {
+         $pondsec=$respond["sec_ponderacion"];
+      }else{ 
+         $pondsec=0;
+      }
+      #obtiene ponderacion real
+      $valreal=($nivelacep*$pondsec/100);
+      #actualizar la tabla de secciones
+      # validar si ya existe la seccion
+      $datosController= array("numsec"=>$nsec,
+                              "idser"=>$sv,
+                              "numrep"=>$nrep,
+                              "valreal"=>$valreal,
+                              "nivacep"=>$nivelacep,
+                              );
+                 
+      $totregpond = DatosSeccion::RegistrosEnSeccion($sv, $nsec, $nrep, "ins_seccion");
+      if ($totregpond>0){
+          $resp1 = DatosSeccion::actualizaPondSeccion($datosController, "ins_seccion");
+      } else {
+          $resp1 = DatosSeccion::registraPonderaSeccion($datosController, "ins_seccion");
+      }
+      #verificar los registros para las secciones con letra
+
+      echo '<small>    NIVEL DE CUMPLIMIENTO '.$nivelacep.'%</small></h1>'; 
+  } 
+
+
 
 }
 

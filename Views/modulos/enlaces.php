@@ -79,8 +79,10 @@
                             <li><a href="index.php?action=listaunegocio"><i class="fa fa-circle-o"></i> Todos los puntos</a>
                                 <ul class="treeview-menu">
                                     <?php
-                                   // $ingreso = new enlacesController();
-                                    //$ingreso->listaserviciosCues();
+
+                                    $ingreso = new enlacesController();
+                                    $ingreso->listaserviciosCues();
+
                                     ?>
 
                                 </ul>

@@ -25,7 +25,7 @@
                 </div>
                 <div class="form-group col-md-6">
                  <label >NOMBRE EN INGLES</label>
-               <div class="col-sm-10">
+                  <div class="col-sm-10">
                     <input name="nombreing" id="sernombreing" class="form-control" >
                 </div>
                 </div>
@@ -42,7 +42,10 @@
                 </div>
                 <div class="box-footer col-md-12">
                       
-                 
+                 <?php     
+                 $registro = New EstandarController();
+              $registro-> botonRegresaEstController();
+                 ?>
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
               </form>

@@ -67,6 +67,7 @@ var refnivel="";
 for(i=0;i<6;i++){
 //alert(i+"--"+lisNiveles[i]);
 campo=eval("document.form1."+lisNiveles[i]);
+
    refnivel=refnivel+"."+campo.value;
 }
 	// Si el usuario eligio la opcion "Elige", no voy al servidor y pongo los selects siguientes en estado "Selecciona opcion..."

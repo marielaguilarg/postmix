@@ -3,17 +3,24 @@ class seccionController{
 
 public function vistanomservController(){
     $datosController = $_GET["idser"];
-    $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
-   // echo $respuesta;
-   // foreach($respuesta as $row => $item){
-    //  $nomserv=$respuesta["ser_descripcionesp"];
-    //echo $respuesta;
+   $idc=$_GET["idc"];
+    echo '<li><a href="index.php?action=listaservicio&idc='.$idc.'"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+  //}
+}
+
+public function vistaNomServicioController(){
+    $numser = $_GET["idser"];
+    #buscar el nombre del servicio
+    $respuesta =DatosServicio::vistaNomServicioModel($numser,"ca_servicios");
+
     echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
   //}
 }
 
 	public function vistaSeccionController(){
-		$numser = $_GET["idser"];	
+		$numser = $_GET["idser"];
+
+    $respuesta =DatosSeccion::vistaSeccionModel($numser,"cue_secciones");
 
 echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevaseccion&idser='.$numser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
      </div>
@@ -639,6 +646,17 @@ public function actualizarComentController(){
 </section>';
 
     }
+
+
+
+public function vistanomRservController(){
+    $datosController = $_GET["sv"];
+    $idc = $_GET["idc"];
+    $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
+    echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idc.'&sv='.$datosController.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+  //}
+}
+
 
 
 }

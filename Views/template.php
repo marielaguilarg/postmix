@@ -20,20 +20,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
+<script src='https://www.google.com/recaptcha/api.js'></script>    
 
-<script defer src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
 
 
   <link rel="stylesheet" href="views/dist/css/skins/skin-blue.min.css">
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
-
+<link rel="stylesheet" href="views/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="views/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="views/plugins/iCheck/all.css">
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="views/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+  <!-- Bootstrap time Picker -->
+  <link rel="stylesheet" href="views/plugins/timepicker/bootstrap-timepicker.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="views/bower_components/select2/dist/css/select2.min.css">
+  
   <!-- Google Font -->
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -93,17 +98,30 @@ desired effect
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="dist/img/mariel-160x160.jpg" class="user-image" alt="User Image">
-              <span class="hidden-xs">Mariel Aguilar</span>
+              <img src="views/dist/img/User-Icon.jpg" class="user-image" >
+              <span class="hidden-xs">
+              <?php
+              $datini=UsuarioController::Obten_NomUsuario();
+                echo $datini;               
+                 ?> 
+
+              </span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="dist/img/mariel-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="views/dist/img/User-Icon.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Mariel Aguilar
-                  <small>Web Developer</small>
+                <?php
+                  $datini=UsuarioController::Obten_NomUsuario();
+                  echo $datini;
+
+                  $cargo=UsuarioController::Obten_Cargo();
+                  echo "<small>".$cargo."</small>";               
+                 ?>
+                  
+                  
                 </p>
               </li>
               
@@ -115,7 +133,7 @@ desired effect
                   <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Salir</a>
+                  <a href=index.php?salir=1 class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -253,8 +271,58 @@ desired effect
 <!-- AdminLTE App -->
 <script src="views/dist/js/adminlte.min.js"></script>
 
+<script src="views/bower_components/moment/min/moment.min.js"></script>
+<script src="views/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap datepicker -->
+<script src="views/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' })
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+      {
+        ranges   : {
+          'Hoy'       : [moment(), moment()],
+          'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          '7 dias' : [moment().subtract(6, 'days'), moment()],
+          '30 días': [moment().subtract(29, 'days'), moment()],
+          'Este mes'  : [moment().startOf('month'), moment().endOf('month')],
+          'Mes anterior'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate  : moment()
+      },
+      function (start, end) {
+        $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+    )
+
+    //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    })
+
+   
+  })
+</script>
+
+
+
 </body>
 </html>

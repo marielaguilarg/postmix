@@ -1,7 +1,5 @@
 <?php
 
-
-
 require_once "Models/conexion.php";
 
 
@@ -100,6 +98,15 @@ class DatosServicio extends Conexion{
 		$stmt->close();	
 	}
 
+	public function vistaNomServicioModel($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_id, ser_descripcionesp FROM $tabla WHERE ser_id=:ids");
+
+		$stmt-> bindParam(":ids", $datosModel, PDO::PARAM_INT);
+		
+		$stmt-> execute();
+
+		return $stmt->fetch();
+	}
 
 
 }

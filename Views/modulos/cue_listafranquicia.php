@@ -9,8 +9,9 @@
 <?php
 
 $ingreso = new franquiciaController();
-$ingreso -> vistafranquiciaController();
 $ingreso -> borrarFranquiciaController();
+$ingreso -> vistafranquiciaController();
+
 
 ?>
 

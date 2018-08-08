@@ -15,7 +15,10 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
-		        $enlacesModel == "editaunegocio" ||
+
+		    $enlacesModel == "editaunegocio" ||
+
+
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
 			$enlacesModel == "editaseccion" ||
@@ -50,6 +53,10 @@ class EnlacesPaginas{
 			$enlacesModel == "runegociocomp" ||
 			$enlacesModel == "editarep" ||
 
+			$enlacesModel == "nvorep" ||
+			
+
+
 			#AQUI INICIA LA SECCION DE SEGURIDAD
 			$enlacesModel == "login" ||			
 
@@ -63,6 +70,7 @@ class EnlacesPaginas{
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
 			$enlacesModel == "nuevacuenta" || 
+
 			#AQUI INICIA SECCION INDICADORES   
 			$enlacesModel == "indgraficaindicador" ||
             $enlacesModel == "indgraficaindicadorgr" ||
@@ -75,9 +83,27 @@ class EnlacesPaginas{
             $enlacesModel == "indresultadosxrep"|| 
 		    $enlacesModel == "indrepdiario" ||
 		    $enlacesModel == "indrepxperiodo"  ||
-		    $enlacesModel == "indhistoricoxpv" 
-                                
-			){
+		    $enlacesModel == "indhistoricoxpv"  ||
+			$enlacesModel == "indcumplimientoestabl" ||
+			$enlacesModel == "indestadisticares"  ||
+			$enlacesModel == "indgraficares" ||
+			$enlacesModel == "indgraficaindicadorgr" ||
+			$enlacesModel == "indhistorialreportes" ||
+			$enlacesModel == "indhistoricoxpv" ||
+			$enlacesModel == "indindicadoresgrid" ||
+			$enlacesModel == "indrepdiario" ||
+			$enlacesModel == "indrepxperiodo" ||
+			$enlacesModel == "indresultadosxrep" ||
+			$enlacesModel == "indresumenresultados" ||
+
+			$enlacesModel == "indgraficaaplica" ||
+			$enlacesModel == "indgraficacomportamiento" ||
+			$enlacesModel == "indgraficacumplimiento" ||
+			$enlacesModel == "indgraficacumplimientoaj" ||
+            $enlacesModel == "indgraficafrecuencia"  ||
+            $enlacesModel == "indgraficapromediojarabe" 
+			 
+			 ){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";
 		}

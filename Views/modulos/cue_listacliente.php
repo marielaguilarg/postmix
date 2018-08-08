@@ -4,8 +4,8 @@
 <?php
 
 $ingreso = new MvcController();
-$ingreso -> vistaClientesController();
 $ingreso -> borrarClienteController();
+$ingreso -> vistaClientesController();
 
 ?>
 

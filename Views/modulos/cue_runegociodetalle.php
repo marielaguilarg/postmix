@@ -1,6 +1,16 @@
+ <section class="content-header">
+      <h1>Secciones <small></small></h1>
+<ol class="breadcrumb" >
+
+<?php
+$ingreso = new seccionController();
+$ingreso -> vistanomRservController();
+?>        
+        
+</ol>
+ </section>     
+
  <section class="content container-fluid">
-
-
       
  <div class="row">
         <div class="col-md-4" >
@@ -55,7 +65,13 @@
                 <!-- /.col -->
                 <div class="col-sm-4">
                   <div class="description-block">
-<button  class="btn btn-block btn-primary" style="width: 80%">Nuevo</button>
+              
+              <?php
+              $ingreso = new ReporteController();
+              $ingreso -> botonNuevoRep();
+              ?>  
+  
+
                   </div>
                   <!-- /.description-block -->
                 </div>

@@ -1,3 +1,4 @@
+
  <?php $unegocioContoller=new unegocioController();
                         $unegocioContoller->vistaNuevoUnegocio();
                     ?>﻿
@@ -260,4 +261,5 @@ $unegocioContoller ->registroUnegocioController();
     });
 </script>
     <!-- /.content -->
+
   </div>
