@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 
@@ -53,3 +52,4 @@ and id_imgnumreporte=:numrep ;";
     
     
 }
+
