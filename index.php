@@ -19,6 +19,7 @@ require_once "Controllers/abiertaController.php";
 require_once "Controllers/generalController.php";
 require_once "Controllers/productoController.php";
 require_once "Controllers/enlacesController.php";
+
 require_once "Controllers/indpostmix/estadisticasController.php";
 require_once "Controllers/indpostmix/graficaIndicadorController.php";
 require_once "Controllers/indpostmix/resumenResultadosController.php";
@@ -29,6 +30,10 @@ require_once "Controllers/indpostmix/tablaDinamicaController.php";
 require_once "Controllers/indpostmix/buscapvController.php";
 require_once "Controllers/indpostmix/historialReportesController.php";
 require_once "Controllers/indpostmix/basePostmixController.php";
+
+require_once "Controllers/usuarioController.php";
+require_once "Controllers/ReporteController.php";
+
 
 require_once "Models/model.php";
 require_once "Models/crud_clientes.php";
@@ -51,17 +56,36 @@ require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
 require_once "Models/crud_enlaces.php";
+require_once "Models/crud_usuario.php";
+require_once "Models/crud_solicitudes.php";
+require_once "Models/crud_reporte.php";
+require_once "Models/crud_catalogos.php";
+require_once "Models/crud_inspectores.php";
+require_once "Models/crud_mesasignacion.php";
+
+if (isset($_GET["salir"])) {
+	$nuevo =new UsuarioController();
+	$nuevo->Destruye_Sesion();
+}
+
 
 // ******************************************
 require_once "Models/uNegocio.php";
-require_once "Models/Nivel.php";
+
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_estado.php";
 require_once "Models/crud_catalogoDetalle.php";
 require_once "Models/crud_imagenDetalle.php";
-
+  $_SESSION['Usuario']="marisol";
 $mvc =new MvcController();
-$mvc -> plantilla();
+session_start();
+if (isset($_SESSION['Usuario'])) {
+	$mvc -> plantilla();
+} else {
+	
+	$mvc -> inicio();
+}
+
 
 
 
