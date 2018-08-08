@@ -72,8 +72,37 @@ class DatosProducto extends Conexion{
 		
 			$stmt->close();
 
+		}
+
+
+	public function vistaRepProductosModel($datosModel, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT ip_numseccion,ip_numrenglon,ip_numsistema,ip_descripcionproducto,ip_numcajas, ip_fechaproduccion,ip_fechacaducidad,ip_condicion,ip_edaddias,ip_semana,ip_estatus,ip_sinetiqueta FROM $tabla WHERE ip_claveservicio =:sv AND ip_numseccion =:sec and ip_numreporte =:numrep");
+
+			$stmt-> bindParam(":sec", $datosModel["sec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":sv", $datosModel["sv"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $datosModel["nrep"], PDO::PARAM_INT);
+			
+			$stmt-> execute();
+
+			return $stmt->fetchAll();
+
+			$stmt->close();
+
 	}
 
+    public function nombreOpProducto($datosModel, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT cad_descripcionesp FROM ca_catalogosdetalle WHERE cad_idcatalogo =:idcat AND cad_idopcion =:idop");
+
+			$stmt-> bindParam(":idcat", $datosModel["idcat"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idop", $datosModel["idop"], PDO::PARAM_INT);
+			
+			$stmt-> execute();
+
+			return $stmt->fetch();
+
+			$stmt->close();
+
+	}
 
 }
 

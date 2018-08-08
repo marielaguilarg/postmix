@@ -4,7 +4,7 @@
 
 <?php
 $ingreso = new seccionController();
-$ingreso -> vistanomservController();
+$ingreso -> vistaNomServicioController();
 ?>        
         
 </ol>
@@ -20,7 +20,7 @@ $ingreso -> vistanomservController();
 $ingreso = new seccionController();
 $ingreso -> borrarSeccionController();
 $ingreso -> vistaseccionController();
-//$ingreso -> borrarSeccionController();
+
 ?>
 
 

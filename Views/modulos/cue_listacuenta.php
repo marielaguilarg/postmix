@@ -13,8 +13,9 @@
 <?php
 
 $ingreso = new cuentaController();
-$ingreso -> vistaCuentasController();
 $ingreso -> borrarCuentaController();
+$ingreso -> vistaCuentasController();
+
 
 
 ?>

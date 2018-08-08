@@ -132,9 +132,11 @@ echo '<div class="form-group col-md-6">
           $respuesta = DatosServicio::actualizarServicioModel($datosController, "ca_servicios");
 
         if($respuesta=="success"){
-        //  header("location:index.php?action=listaservicio");
-          echo 'actualización exitosa';
-        } else {
+          echo "
+            <script type='text/javascript'>
+                window.location.href='index.php?action=listaservicio'
+                </script>
+                  ";} else {
           echo "error";
         }
     }
@@ -158,15 +160,14 @@ echo '<div class="form-group col-md-6">
         
         $respuesta = DatosServicio::registroServicioModel($datosController, "ca_servicios");
         
-        if($respuesta== "success"){
-
-          echo '<script> windows.location= "index.php?action=ok" </script>';
-          //header("location:index.php?action=ok");
-        }
-
-        else {
-          echo '<script> windows.location= "index.php?action=error" </script>';  
-
+        if($respuesta=="success"){
+            echo "
+            <script type='text/javascript'>
+              window.location.href='index.php?action=listaservicio'
+                </script>
+                  ";
+        } else {
+          echo "error";
         }
       }
     }
@@ -186,6 +187,9 @@ public function borrarServicioController(){
           } 
     }
   } 
+
+
+
 
 }
 

@@ -15,6 +15,8 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
+		    $enlacesModel == "editaunegocio" ||
+
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
 			$enlacesModel == "editaseccion" ||
@@ -48,6 +50,9 @@ class EnlacesPaginas{
 			$enlacesModel == "runegociodetalle" ||
 			$enlacesModel == "runegociocomp" ||
 			$enlacesModel == "editarep" ||
+			$enlacesModel == "nvorep" ||
+			
+
 
 			#AQUI INICIA LA SECCION DE SEGURIDAD
 			$enlacesModel == "login" ||			
@@ -61,8 +66,29 @@ class EnlacesPaginas{
 			$enlacesModel == "listan6" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
-			$enlacesModel == "nuevacuenta" 
-			){
+			$enlacesModel == "nuevacuenta" || 
+				   
+			$enlacesModel == "indbuscapv" ||
+			$enlacesModel == "indcumplimientoestabl" ||
+			$enlacesModel == "indestadisticares"  ||
+			$enlacesModel == "indgraficares" ||
+			$enlacesModel == "indgraficaindicadorgr" ||
+			$enlacesModel == "indhistorialreportes" ||
+			$enlacesModel == "indhistoricoxpv" ||
+			$enlacesModel == "indindicadoresgrid" ||
+			$enlacesModel == "indrepdiario" ||
+			$enlacesModel == "indrepxperiodo" ||
+			$enlacesModel == "indresultadosxrep" ||
+			$enlacesModel == "indresumenresultados" ||
+
+			$enlacesModel == "indgraficaaplica" ||
+			$enlacesModel == "indgraficacomportamiento" ||
+			$enlacesModel == "indgraficacumplimiento" ||
+			$enlacesModel == "indgraficacumplimientoaj" ||
+            $enlacesModel == "indgraficafrecuencia"  ||
+            $enlacesModel == "indgraficapromediojarabe" 
+			 
+			 ){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";
 		}
@@ -75,6 +101,8 @@ class EnlacesPaginas{
 			// aqui meteremos todas las secciones del cuestionario
 			$module ="views/modulos/cue_reporte.php";	
 		}
+
+	
 
 		else if($enlacesModel == "index"){
 

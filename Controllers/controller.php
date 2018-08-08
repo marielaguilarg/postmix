@@ -47,16 +47,16 @@ class MvcController{
 	    	
 	    	$respuesta = Datos::registroUsuarioModel($datosController, "ca_clientes");
 	    	
-	    	if($respuesta== "success"){
+	    	       // if($respuesta=="success"){
+            echo "
+            <script type='text/javascript'>
+              window.location.href='index.php?action=listacliente'
+                </script>
+                  ";
+        //} else {
+        //  echo "error";
+        //}
 
-          echo '<script> windows.location= "index.php?action=ok" </script>';
-          //header("location:index.php?action=ok");
-        }
-
-        else {
-          echo '<script> windows.location= "index.php?index.php" </script>';  
-
-        }
     	}
     }
 
@@ -149,9 +149,11 @@ class MvcController{
          	$respuesta = Datos::actualizarClienteModel($datosController, "ca_clientes");
          //&&	$liga='';
 	    	if($respuesta=="success"){
-				//header('location:index.php?action=listacliente');
-	    		 echo "cambio efectuado";
-	    	
+				  echo "
+            	<script type='text/javascript'>
+                window.location.href='index.php?action=listacliente'
+                </script>
+                  ";
 			
 	    	} else {
 	    		echo "error";

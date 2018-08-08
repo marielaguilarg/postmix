@@ -1,10 +1,7 @@
 
     <section class="content-header">
       <h1>Puntos de venta &nbsp; &nbsp; <small></small></h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><em class="fa fa-dashboard"></em> Home</a></li>
-        <li class="active">Clientes</li>
-      </ol>
+      
     </section>
 
     <!-- Main content -->
@@ -63,16 +60,7 @@ $ingreso -> vistaUnegocioController();
                </table>
             </div>
             <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-              </ul>
-            </div>
-          </div>
+                      </div>
           <!-- /.box -->
         </div>
         </div>

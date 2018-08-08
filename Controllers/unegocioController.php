@@ -1,9 +1,46 @@
 <?php
 class unegocioController{
+private $listanivel1;
+private $listanivel2;
+private $listanivel3;
+private $listanivel4;
+private $listanivel5;
+private $listanivel6;
+private $nombrenivel1;
+private $nombrenivel2;
+private $nombrenivel3;
+private $nombrenivel4;
+private $nombrenivel5;
+private $nombrenivel6;
+private $listaFranquicias;
+private $listaCuentas;
+private $listaEstatus;
+private $listaEstados;
+private $idpv;
+private $idref;
+private $desuneg;
+private $idpepsi;
+private $idcta;
+private $idnud;
+private $calle;
+private $numext;
+private $numint;
+private $mz;
+private $lt;
+private $col;
+private $del;
+private $mun;
+private $edo;
+private $cp;
+private $ref;
+private $tel;
+private $numpunto;
+private $cuenta;
 
 
 	public function vistaunegocioController(){
-		$page_size=10;
+    $idc=$_GET["idc"];
+		$page_size=100;
 		if(isset($_GET["pages"])){
 			$pages=$_GET["pages"];
 			$init =($pages - 1) * $page_size;
@@ -11,7 +48,7 @@ class unegocioController{
 			$init=0;
 			$pages=1;
 		}
-		$totuneg=Datosunegocio::cuentaUnegocioModel("ca_unegocios");
+		$totuneg=Datosunegocio::cuentaUnegocioModel($idc, "ca_unegocios");
 		$totpages= ceil($totuneg/$page_size);
 
 		if(isset($_POST["opcionuneg"])){
@@ -19,7 +56,7 @@ class unegocioController{
 			//echo $op;
 			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($op, "ca_unegocios");
 		} else {	
-			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, "ca_unegocios");
+			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idc, "ca_unegocios");
 		}
 
 
@@ -36,10 +73,18 @@ class unegocioController{
 	            
 		}
 
+          echo '
+               </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">';
+
+
 		if ($totpages>1) {
 			if (isset($pages)) {
 				if ($pages != 1){
-	      			echo '<li><a href="index.php?action=listaunegocio&pages='.($pages -1 ).'">&laquo;</a></li>';
+	      			echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.($pages -1 ).'">&laquo;</a></li>';
 
 				}
 			}	
@@ -50,10 +95,10 @@ class unegocioController{
 					if($page==$i){
 						echo $page;
 					} else {
-						echo '<li><a href="index.php?action=rlistaunegocio&pages='.$i.'">'.$i.'</a></li>';
+						echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.$i.'">'.$i.'</a></li>';
 					}
 				}else{
-				 		echo '<li><a href="index.php?action=rlistaunegocio&pages='.$i.'">'.$i.'</a></li>';
+				 		echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.$i.'">'.$i.'</a></li>';
 				} //IF 	
 			}	//FOR
 		echo '</ul>
@@ -66,8 +111,9 @@ class unegocioController{
 
 
 public function vistarunegocioController(){
-	$page_size=10;
+	$page_size=100;
 	$sv=$_GET["sv"];
+  $idcta=$_GET["idc"];
 		if(isset($_GET["pages"])){
 			$pages=$_GET["pages"];
 			$init =($pages - 1) * $page_size;
@@ -75,14 +121,15 @@ public function vistarunegocioController(){
 			$init=0;
 			$pages=1;
 		}
-		$totuneg=Datosunegocio::cuentaUnegocioModel("ca_unegocios");
+		$totuneg=Datosunegocio::cuentaUnegocioModel($idcta,"ca_unegocios");
 		$totpages= ceil($totuneg/$page_size);
+
 		if(isset($_POST["opcionuneg"])){
 			$op="%".$_POST["opcionuneg"]."%";
 			//echo $op;
-			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($op, "ca_unegocios");
+			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($idcta, $op, "ca_unegocios");
 		} else {	
-			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, "ca_unegocios");
+			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idcta, "ca_unegocios");
 		}
 
 		
@@ -92,7 +139,7 @@ public function vistarunegocioController(){
 	                  <td>'.$item["une_idpepsi"].'</td>
 		                  <td>'.$item["une_idcuenta"].'</td>
 	                  <td>
-	                    <a href="index.php?action=runegociodetalle&un='.$item["une_id"].'&sv='.$sv.'">'.$item["une_descripcion"].'</a>
+	                    <a href="index.php?action=runegociodetalle&idc='.$idcta.'&un='.$item["une_id"].'&sv='.$sv.'">'.$item["une_descripcion"].'</a>
 	                  </td>
 	                </tr>';
 	            
@@ -108,7 +155,7 @@ public function vistarunegocioController(){
 		if ($totpages>1) {
 			if (isset($pages)) {
 				if ($pages != 1){
-	      			echo '<li><a href="index.php?action=rlistaunegocio&pages='.($pages -1 ).'">&laquo;</a></li>';
+	      			echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.($pages -1 ).'">&laquo;</a></li>';
 
 				}
 			}	
@@ -118,10 +165,10 @@ public function vistarunegocioController(){
 					if($page==$i){
 						echo $page;
 					} else {
-						echo '<li><a href="index.php?action=rlistaunegocio&pages='.$i.'">'.$i.'</a></li>';
+						echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.$i.'">'.$i.'</a></li>';
 					}
 				}else{
-				 		echo '<li><a href="index.php?action=rlistaunegocio&pages='.$i.'">'.$i.'</a></li>';
+				 		echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.$i.'">'.$i.'</a></li>';
 				} //IF 	
 			}	//FOR
 		echo '</ul>
@@ -137,6 +184,7 @@ public function vistarunegocioController(){
 	public function vistaunegocioDetalle(){
 		$uneg=$_GET["un"];
 		$serv=$_GET["sv"];
+    $idc=$_GET["idc"];
 		$respuesta =Datosunegocio::vistaUnegocioDetalle($uneg, "ca_unegocios");
 		#presrenta datos de unegocio
 		echo '<h3 class="box-title">'.$respuesta["une_descripcion"].'</h3>
@@ -172,22 +220,64 @@ public function vistarunegocioController(){
                 <div class="col-sm-4">
                   <div class="description-block">
   
-                 <button type="button" class="btn btn-block btn-primary" style="width: 80%"><a href="index.php?action=runegociocomp&uneg='.$respuesta["une_id"].'"> Detalle </a></button>
+                 <button type="button" class="btn btn-block btn-primary" style="width: 80%"><a href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a></button>
 ';
 	}
 
 	public function vistaReportesunegocio(){
 		$uneg=$_GET["un"];
 		$serv=$_GET["sv"];
-		$respuesta =Datosunegocio::ReportesUnegocio($serv, $uneg, "ca_unegocios");
+    $idc=$_GET["idc"];
+    $gpo = UsuarioController::Obten_grupo();
+    //echo $gpo;
+   
+              
+    $respuesta =Datosunegocio::ReportesUnegocio($serv, $uneg, "ins_generales");
+  
 		foreach($respuesta as $row => $item){
-			echo '<div class="col-sm-4 border-right">
-                  <div class="description-block">
-                  <strong> <a href="index.php?action=editarep&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'">'.$item["i_numreporte"].'</a>
+      $numrep=$item["i_numreporte"];
+       echo '<div class="col-sm-4 border-right">
+                  <div class="description-block">';
+      if ($gpo=='adm') {
+               echo '<strong> <a href="index.php?action=editarep&idc='.$idc.'&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'">'.$item["i_numreporte"].'</a>';
+      } else {  // no es administrador
+        if ($serv==3){
+           
+           $totsol =DatosSolicitud::cuentasolicitudModel($numrep, $serv, "sol_estatussolicitud");
+            # existe solicitud?
+           if ($totsol>0){
+              $respuesta =DatosSolicitud::estatusSolicitudModel($numrep, $serv, "sol_estatussolicitud");
+              $final=$respuesta["sol_estatussolicitud"];
+              if ($final =3){
+                  echo '<strong> '.$item["i_numreporte"].'</a>';
+               }  else { # estatus diferente a 3
+                  echo '<strong> <a href="index.php?action=editarep&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'">'.$numrep.'</a>';
+               }  // FINAL=3 
+           } else {
+              echo '<strong>'.$numrep.'/SS';
+                 
+           }  // EXISTE SOLICITUD
+        } else {   // no es servicio 3
+          $final=$item["i_finalizado"];
+          if ($final==1){
+              
+              echo '<strong>'.$numrep;
+              
+          }  else {
+                   echo '<strong> <a href="index.php?action=editarep&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'">'.$numrep.'</a>';
+          }  
+        } // SERVICIO = 3
+      }
+      echo '
                    </strong><br>
                   </div>
                    </div>';
-		}	
+    
+    } // foreach  
+
+ 
+     
+	
 	}			
 
 	public function vistaunegocioCompleta(){
@@ -365,5 +455,19 @@ public function vistarunegocioController(){
 
 	}	
 
+public function vistanomRservDet(){
+    $datosController = $_GET["sv"];
+    $idc = $_GET["idc"];
+    $un=$_GET["uneg"];
+    $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
+    echo '<li><a href="index.php?action=runegociodetalle&idc='.$idc.'&sv='.$datosController.'&un='.$un.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+  //}
+}
+
+
+
+
+  
+  
 }
 ?>

@@ -343,4 +343,104 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 	}
 
 
+	public function vistareportePonderaModel($datosModel, $datoserv, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, r_descripcionesp, r_descripcioning, r_tiporeactivo FROM cue_reactivos WHERE sec_numseccion =:numsec AND ser_claveservicio=:servicio AND r_numreactivo<>0");
+
+		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":servicio", $datoserv, PDO::PARAM_INT);
+
+		$stmt-> execute();
+
+		return $stmt->fetchall();
+
+		$stmt->close();
+	}
+
+	public function leeDatosPonderaModel($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT id_ponderacionreal, id_comentario, id_aceptado, id_noaplica FROM ins_detalle WHERE id_claveservicio =:serv AND id_numreporte =:numrep AND id_numseccion =:numsec AND id_numreactivo =:numreac");
+
+		$stmt-> bindParam(":numsec", $datosModel["sec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":serv", $datosModel["ser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["nrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["nreac"], PDO::PARAM_INT);
+
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
+
+	public function verificaComentPonderaModel($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT rc_numcomentario FROM $tabla WHERE concat(sec_numseccion,'.',r_numreactivo) =:nsecreac AND ser_claveservicio=:serv");
+
+		$stmt-> bindParam(":nsecreac", $datosModel["secreac"], PDO::PARAM_STR);
+		$stmt-> bindParam(":serv", $datosModel["ser"], PDO::PARAM_INT);
+		
+		$stmt-> execute();
+
+		return $stmt->rowCount();
+
+		$stmt->close();
+	}
+
+public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT SUM(id_ponderacionreal) AS SUMAPONDERACION FROM ins_detalle WHERE id_claveservicio=:sv AND id_numreporte=:nrep AND id_numseccion=:numsec AND id_aceptado=-1 AND id_noaplica=0");
+
+		$stmt-> bindParam(":sv", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $nsec, PDO::PARAM_INT);
+		
+		$stmt-> execute();
+		
+		return $stmt->fetch();
+		$stmt->close();
+	}
+
+
+	
+
+
+   public function calculasumanoap($sv, $nrep, $nsec,  $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT sum(id_ponderacionreal) as sumanoap FROM $tabla WHERE  id_claveservicio=:sv and id_numreporte =:nrep and id_numseccion=:nsec and id_noaplica=-1");
+
+		$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_STR);
+		$stmt-> bindParam(":sv", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
+
+	public function ponderaseccion($sv, $nsec,  $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT sec_ponderacion FROM $tabla WHERE sec_numseccion=:nsec AND ser_claveservicio =:sv");
+
+		$stmt-> bindParam(":sv", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
+
+	public function vistanombrepondera($sv, $nsec,  $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT r_descripcionesp FROM cue_reactivos where ser_claveservicio=:sv and concat(sec_numseccion,'.',r_numreactivo)=:nsec");
+
+		$stmt-> bindParam(":sv", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
+	
+
+
+
+
+
 }

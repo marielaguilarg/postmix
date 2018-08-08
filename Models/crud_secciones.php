@@ -21,7 +21,7 @@ class DatosSeccion extends Conexion{
 
 
 public function vistaNombreServModel($datosModel, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT ser_descripcionesp FROM ca_servicios WHERE ser_id=:ids");
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_descripcionesp, cli_nombre FROM ca_servicios inner join ca_clientes ON ser_idcliente= cli_id WHERE ser_id=:ids");
 		
 		$stmt-> bindParam(":ids", $datosModel, PDO::PARAM_INT);
 		
@@ -378,5 +378,70 @@ public function vistaCuentasPonderacionModel($numcta,  $tabla){
 		$stmt->close();
     }
 
+	public function RegistrosEnSeccion($sv, $nsec, $nrep, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT is_numreporte 
+         FROM $tabla
+        WHERE is_claveservicio=:idser
+          AND is_numreporte=:numrep
+          AND is_numseccion=:numsec");
 
+		$stmt-> bindParam(":idser", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $nsec, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $nrep, PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->rowCount();
+
+		$stmt->close();
+	}
+ 
+  public function actualizaPondSeccion($datosModel, $tabla){
+
+		$stmt = Conexion::conectar()->prepare("UPDATE ins_seccion set is_nivelcum=:nivelacep, is_pondreal=:valreal where is_claveservicio=:idser AND is_numreporte=:numrep AND is_numseccion=:numsec");
+
+			$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_INT);
+			$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+			
+			IF($stmt-> execute()){
+
+				return "success";
+			}
+			
+			else {
+
+				return "error";
+		
+			};
+
+			$stmt->close();
+	}
+
+	public function registraPonderaSeccion($datosModel, $tabla){
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO ins_seccion (is_claveservicio, is_numreporte, is_numseccion, is_nivelcum,is_pondreal) values (:idser, :numrep, :numsec, :nivelacep, :valreal");
+
+		
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		
+		IF($stmt-> execute()){
+
+			return "success";
+		}
+		
+		else {
+
+			return "error";
+	
+		};
+
+		$stmt->close();
+	}
+ 
 }

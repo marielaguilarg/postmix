@@ -42,10 +42,12 @@ require_once "Models/crud_abierta.php";
 require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
-require_once "Models/crud_enlaces.php";
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_solicitudes.php";
 require_once "Models/crud_reporte.php";
+require_once "Models/crud_catalogos.php";
+require_once "Models/crud_inspectores.php";
+require_once "Models/crud_mesasignacion.php";
 
 if (isset($_GET["salir"])) {
 	$nuevo =new UsuarioController();
