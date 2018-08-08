@@ -55,6 +55,7 @@ require_once "Models/crud_abierta.php";
 require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
+require_once "Models/crud_enlaces.php";
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_solicitudes.php";
 require_once "Models/crud_reporte.php";
@@ -70,12 +71,12 @@ if (isset($_GET["salir"])) {
 
 // ******************************************
 require_once "Models/uNegocio.php";
-require_once "Models/Nivel.php";
+
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_estado.php";
 require_once "Models/crud_catalogoDetalle.php";
 require_once "Models/crud_imagenDetalle.php";
-
+  $_SESSION['Usuario']="marisol";
 $mvc =new MvcController();
 session_start();
 if (isset($_SESSION['Usuario'])) {
