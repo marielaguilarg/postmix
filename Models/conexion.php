@@ -4,7 +4,7 @@ class Conexion{
 
 	public function conectar(){
 
-		$link = new PDO("mysql:host=localhost;dbname=inspeccionpostmix", "root", "");
+		$link = new PDO("mysql:host=localhost;dbname=inspeccionpostmix", "root", "root");
 		return $link;
 
 
@@ -29,18 +29,18 @@ class Conexion{
 
             }
 		  $stmt->execute();
-        $stmt->debugDumpParams();
-     
+    // $stmt->debugDumpParams();
+   
 	       $respuesta=$stmt->fetchAll();
                if($stmt->errorInfo()[1]!=null)
                {   
-                   var_dump($stmt->errorInfo());
+                   //var_dump($stmt->errorInfo());
                    throw new Exception("Error al ejecutar consulta en la bd");
                
                }
                return $respuesta;
 			
-	    } catch (Exception $e) {
+	    } catch (PDOException $e) {
 		throw new Exception("Error al ejecutar consulta en la bd");
 			
 	    } 
@@ -66,12 +66,12 @@ class Conexion{
 	        	
 			}
                         $stmt->execute();
-                     $stmt->debugDumpParams();
+                //     $stmt->debugDumpParams();
                  
 		
 		 
 			
-	    } catch (Exception $e) {
+	    } catch (PDOException $e) {
                
 		throw new Exception("Error al ejecutar insert en la bd ".$e);
 			
@@ -89,12 +89,14 @@ class Conexion{
 	       $stmt->execute();
 			
 	       $respuesta=$stmt->fetchAll();
-               if($respuesta)
-                return $respuesta;
-               else{
-                  
-                  throw new Exception("Error al ejecutar consulta en la bd".$stmt->errorInfo()[2]); 
+           //   $stmt->debugDumpParams();
+              if($stmt->errorInfo()[1]!=null)
+               {   
+                   var_dump($stmt->errorInfo());
+                   throw new Exception("Error al ejecutar consulta en la bd".$stmt->errorInfo()[2]);
+               
                }
+               return $respuesta;
 			
 	    } catch (Exception $e) {
 		throw new Exception("Error al ejecutar consulta en la bd");

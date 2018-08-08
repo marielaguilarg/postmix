@@ -1147,5 +1147,224 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 }
 
 
+	public function validasubseccionEstandar($idser, $idsec, $idreac, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT red_parametroesp FROM $tabla WHERE ser_claveservicio=:idser and sec_numseccion=:idsec and r_numreactivo=:idreac");
 
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idreac", $idreac, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->rowCount();
+		
+			$stmt->close();
+
+	}
+
+	public function vistaEstandarRepReactivo($idser, $idsec, $idreac, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla where ser_claveservicio=:idser and sec_numseccion=:idsec and r_numreactivo=:idreac");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idreac", $idreac, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+		
+			$stmt->close();
+
+	}
+
+	public function vistaEstandarRepNumcar($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla where ser_claveservicio=:idser AND concat(sec_numseccion,'.',r_numreactivo,'.',re_numcaracteristica,'.',re_numcomponente2) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+			$stmt->close();
+
+	}
+
+	public function vistaEstandarRepGral($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla  where ser_claveservicio=:idser AND concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->rowCount();
+		
+			$stmt->close();
+
+	}
+
+	public function validaComentEstandar($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT rec_descomentarioesp FROM $tabla where ser_claveservicio =:idser AND concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica,'.', re_numcomponente2) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->rowCount();
+		
+			$stmt->close();
+
+	}
+
+	public function vistaNomSecEstandar($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT re_descripcionesp FROM $tabla WHERE concat(sec_numseccion,'.',r_numreactivo,'.',re_numcomponente)=:idsec and ser_claveservicio=:idser");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}	
+
+	public function vistaRepEstandarDet($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT ser_claveservicio,  red_numcaracteristica2, red_tipodato, red_ponderacion,  red_clavecatalogo, red_estandar, red_valormin, red_parametroesp, red_valormax, red_signouno, red_signodos, red_tiporeactivo, red_calculoespecial, red_tipocalculo, red_tipooperador, red_posicioncalculo 
+			FROM $tabla where ser_claveservicio =:idser AND concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica,'.', re_numcomponente2) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+		
+			$stmt->close();
+
+	}	
+
+	public function buscatipoevaluacion($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT re_tipoevaluacion from $tabla where ser_claveservicio=:idser and concat(sec_numseccion,'.',r_numreactivo,'.',re_numcomponente) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}	
+
+	public function vistaRepRealDet($datosModel, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_ponderacion, ide_numrenglon, ide_comentario, ide_aceptado, ide_numcolarc FROM $tabla WHERE  ide_claveservicio =:idser AND concat(ide_numseccion ,'.', ide_numreactivo ,'.', ide_numcomponente ,'.', ide_numcaracteristica1 ,'.', ide_numcaracteristica2 )=:idsec AND ide_numreporte=:idrep AND ide_numrenglon =:numren AND ide_numcaracteristica3=:numcar");
+
+			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $datosModel["idsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idrep", $datosModel["idrep"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}
+
+	public function buscatotren($idser, $idsec, $nrep, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT ide_numrenglon as claveren FROM ins_detalleestandar  WHERE ide_claveservicio = :idser AND ide_numreporte =:nrep AND concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2) =:idsec  group by ide_numrenglon");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+			$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+		
+			$stmt->close();
+
+	}	
+
+	public function buscaOpcionCat($idcat, $idopc, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT cad_descripcionesp FROM $tabla  WHERE cad_idcatalogo =:idcat AND cad_idopcion =:idopc");
+
+			$stmt-> bindParam(":idcat", $idcat, PDO::PARAM_INT);
+			$stmt-> bindParam(":idopc", $idopc, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}
+
+	public function nivelCumpEstandarUno($idser, $idsec, $idrep, $numren, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT sum(`ide_ponderacion`) as totalpon FROM ins_detalleestandar WHERE ide_numreporte=:idrep AND ide_claveservicio=:idser and concat(ide_numseccion,".",ide_numreactivo,".",ide_numcomponente,".",ide_numcaracteristica1,".",ide_numcaracteristica2)=:idsec group BY ide_numrenglon having ide_numrenglon=:numren");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}
+
+
+		public function nivCumpEstandarUno($idser, $idsec, $idrep, $numren, $tabla){
+			$stmt=Conexion::conectar()->prepare("SELECT sum(ide_ponderacion) as totalpon FROM ins_detalleestandar WHERE ide_numrenglon=:numren AND ide_numreporte=:idrep AND ide_claveservicio=:idser and concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2)=:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+		}	
+
+	public function nivelCumpEstandarDos($idser, $idsec, $idrep, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT sum(ide_ponderacion) as totpond,  count(ide_valorreal) as numreg FROM  $tabla where ide_claveservicio=:idser and ide_numreporte=:idrep and concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2)=:idsec");
+
+			//$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}
+
+	public function vistaNuevoEstandar($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT red_numcaracteristica2,red_parametroesp, red_tipodato, red_clavecatalogo FROM $tabla where ser_claveservicio=:idser and concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica,'.', re_numcomponente2) =:idsec order by red_numcaracteristica2");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+		
+			$stmt->close();
+	}		
+
+	public function vistaNumRegEstandar($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT max(ide_numrenglon) as claveren FROM ins_detalleestandar WHERE ide_claveservicio =:idser AND ide_numreporte =:idrep AND concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2) =:idsec");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}		
 }

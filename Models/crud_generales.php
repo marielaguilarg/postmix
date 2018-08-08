@@ -122,6 +122,7 @@ class DatosGenerales extends Conexion{
 
 	}
 
+
         public function getDatosReporteUnegocio($numrep,$vservicio)  {
             $sql_titulo = "SELECT * 
 FROM ins_generales
@@ -130,14 +131,44 @@ WHERE ins_generales.i_numreporte =:numrep   and ins_generales.i_claveservicio=:v
         //echo $sql_titulo;
           
             $stmt=DatosGenerales::conectar()->prepare($sql_titulo);
-
-            $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+           $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
 	     $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
               $stmt-> execute();
 //$stmt->debugDumpParams();
             $result=$stmt->fetch();
             return $result;
         }
+	public function validaExisteReporte($idser, $idrep, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT i_numreporte FROM ca_unegocios inner join $tabla on une_id=i_unenumpunto WHERE i_claveservicio =:idser AND i_numreporte =:idrep");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->rowCount();
+		
+			$stmt->close();
+
+	}
+
+
+	public function vistaReporteGenerales($idser, $idrep, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT i_claveinspector, i_fechavisita, i_mesasignacion, i_horaentradavis, hour(i_horaentradavis) AS HoraEn, minute(i_horaentradavis) AS HoraEn2, i_horasalidavis, hour(i_horasalidavis) AS HoraEn5, minute(i_horasalidavis) AS HoraEn6, hour(i_horaanalisissensorial) AS HoraEn3, minute(i_horaanalisissensorial) AS HoraEn4, i_responsablevis, i_puestoresponsablevis, i_sincobro, i_reportecic, i_numreportecic, i_finalizado, une_coordenadasxy, i_fechafinalizado, i_reasigna FROM ca_unegocios inner join $tabla on une_id=i_unenumpunto
+			WHERE i_claveservicio =:idser AND i_numreporte =:idrep");
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
+			
+			$stmt-> execute();
+			return $stmt->fetch();
+		
+			$stmt->close();
+
+	}
+
+
+
+       
 
 
 }
