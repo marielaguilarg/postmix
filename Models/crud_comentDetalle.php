@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 
@@ -21,3 +20,4 @@ class DatosComentDetalle
         $stmt->close();
     }
 }
+
