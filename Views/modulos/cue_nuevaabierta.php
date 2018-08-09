@@ -32,7 +32,10 @@
                 
                 <div class="box-footer col-md-12">
                       
-                 
+                  <?php     
+                  $registro = New AbiertaController();
+                  $registro-> botonRegresaAbController();
+                 ?>
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
               </form>

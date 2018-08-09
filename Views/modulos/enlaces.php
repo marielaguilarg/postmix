@@ -79,8 +79,10 @@
                             <li><a href="index.php?action=listaunegocio"><i class="fa fa-circle-o"></i> Todos los puntos</a>
                                 <ul class="treeview-menu">
                                     <?php
-                                   // $ingreso = new enlacesController();
-                                    //$ingreso->listaserviciosCues();
+
+                                    $ingreso = new enlacesController();
+                                    $ingreso->listaserviciosCues();
+
                                     ?>
 
                                 </ul>
@@ -148,7 +150,7 @@
 
                 <ul class="treeview-menu">	
                     <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i> Grafica
+                        <a href="#"><i class="fa fa-circle-o"></i> Gráfica
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -187,9 +189,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Reporte Diario</a></li>
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Reporte por Periodo</a></li>
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Historico por punto de Venta</a></li>
+                            <li><a href="indbuscapv"><i class="fa fa-circle-o"></i> Reporte Diario</a></li>
+                            <li><a href="indrepdiario"><i class="fa fa-circle-o"></i> Reporte por Periodo</a></li>
+                            <li><a href="indrepxperiodo"><i class="fa fa-circle-o"></i> Historico por punto de Venta</a></li>
                         </ul>
                     </li>
                     <li class="treeview"><a href="#"><i class="fa fa-circle-o"></i> Certificacion <span class="pull-right-container">

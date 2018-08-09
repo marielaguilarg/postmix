@@ -1,8 +1,11 @@
 <section class="content-header">
       <h1> INFORMACION DEL ESTABLECIMIENTO &nbsp; </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> SERVICIO</a></li>
-        <li class="active">Here</li>
+      <?php
+                $ingreso = new unegocioController();
+                $ingreso -> vistanomRservDet();
+                ?> 
+
       </ol>
     </section>
 

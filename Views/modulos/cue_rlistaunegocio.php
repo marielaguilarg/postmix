@@ -1,7 +1,15 @@
+<section class="content-header">
+  <h1>Reporte <small></small></h1>
+<ol class="breadcrumb" >
 
-    <section class="content-header">
-      <h1>REPORTE: Puntos de venta &nbsp; &nbsp; <small></small></h1>
-    </section>
+<?php
+$ingreso = new seccionController();
+$ingreso -> vistanomRservController();
+?>        
+        
+</ol>
+ </section>     
+
 
     <!-- Main content -->
     <section class="content container-fluid">
