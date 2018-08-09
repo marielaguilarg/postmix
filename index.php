@@ -76,7 +76,7 @@ require_once "Models/crud_usuario.php";
 require_once "Models/crud_estado.php";
 require_once "Models/crud_catalogoDetalle.php";
 require_once "Models/crud_imagenDetalle.php";
-  $_SESSION['Usuario']="marisol";
+  
 $mvc =new MvcController();
 session_start();
 if (isset($_SESSION['Usuario'])) {
