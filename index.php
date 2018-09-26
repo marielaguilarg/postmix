@@ -1,15 +1,26 @@
 <?php
-
+error_reporting(E_ERROR|E_NOTICE|E_WARNING);
+ini_set("display_errors", 1); 
+require_once "Controllers/usuarioController.php";
 require_once "Controllers/controller.php";
-require_once "Controllers/cuentacontroller.php";
+require_once "Models/model.php";
+require_once "Models/crud_usuario.php";
+require_once "Controllers/enlacesController.php";
+require_once "Models/crud_enlaces.php";
+
+
+require_once "Controllers/cuentaController.php";
+
 require_once "Controllers/servicioController.php";
 require_once "Controllers/franquiciaController.php";
 require_once "Controllers/seccionController.php";
 require_once "Controllers/unegocioController.php";
-require_once "Controllers/n1Controller.php";
+
+require_once "Controllers/n1controller.php";
 require_once "Controllers/n2Controller.php";
 require_once "Controllers/n3Controller.php";
 require_once "Controllers/n4Controller.php";
+
 require_once "Controllers/n5Controller.php";
 require_once "Controllers/n6Controller.php";
 require_once "Controllers/subnivelController.php";
@@ -18,24 +29,23 @@ require_once "Controllers/estandarController.php";
 require_once "Controllers/abiertaController.php";
 require_once "Controllers/generalController.php";
 require_once "Controllers/productoController.php";
-require_once "Controllers/enlacesController.php";
 
-require_once "Controllers/indpostmix/estadisticasController.php";
-require_once "Controllers/indpostmix/graficaIndicadorController.php";
-require_once "Controllers/indpostmix/resumenResultadosController.php";
-require_once "Controllers/indpostmix/resumenResxRepController.php";
-require_once "Controllers/indpostmix/generadorGraficas.php";
-require_once "Controllers/indpostmix/TablaEstadistica.php";
-require_once "Controllers/indpostmix/tablaDinamicaController.php";
-require_once "Controllers/indpostmix/buscapvController.php";
-require_once "Controllers/indpostmix/historialReportesController.php";
-require_once "Controllers/indpostmix/basePostmixController.php";
-
-require_once "Controllers/usuarioController.php";
-require_once "Controllers/ReporteController.php";
+ require_once "Controllers/indpostmix/estadisticasController.php";
+ require_once "Controllers/indpostmix/graficaIndicadorController.php";
+ require_once "Controllers/indpostmix/resumenResultadosController.php";
+ require_once "Controllers/indpostmix/resumenResxRepController.php";
+ require_once "Controllers/indpostmix/generadorGraficas.php";
+ require_once "Controllers/indpostmix/TablaEstadistica.php";
+ require_once "Controllers/indpostmix/tablaDinamicaController.php";
+ require_once "Controllers/indpostmix/buscapvController.php";
+ require_once "Controllers/indpostmix/historialReportesController.php";
+ require_once "Controllers/indpostmix/basePostmixController.php";
 
 
-require_once "Models/model.php";
+require_once "Controllers/reporteController.php";
+
+
+
 require_once "Models/crud_clientes.php";
 require_once "Models/crud_servicios.php";
 require_once "Models/crud_cuentas.php";
@@ -55,8 +65,8 @@ require_once "Models/crud_abierta.php";
 require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
-require_once "Models/crud_enlaces.php";
-require_once "Models/crud_usuario.php";
+
+
 require_once "Models/crud_solicitudes.php";
 require_once "Models/crud_reporte.php";
 require_once "Models/crud_catalogos.php";
@@ -75,18 +85,19 @@ require_once "Models/uNegocio.php";
 require_once "Models/crud_usuario.php";
 require_once "Models/crud_estado.php";
 require_once "Models/crud_catalogoDetalle.php";
-require_once "Models/crud_imagenDetalle.php";
-  $_SESSION['Usuario']="marisol";
+require_once "Models/crud_imagendetalle.php";
+  
+
 $mvc =new MvcController();
 session_start();
+
 if (isset($_SESSION['Usuario'])) {
 	$mvc -> plantilla();
+	//echo "con usuario";
 } else {
-	
+	//echo "inicio";
 	$mvc -> inicio();
 }
-
-
 
 
 ?>
