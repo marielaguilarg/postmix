@@ -1,13 +1,5 @@
  <section class="content-header">
-      <h1>Secciones <small></small></h1>
-<ol class="breadcrumb" >
-
-<?php
-$ingreso = new seccionController();
-$ingreso -> vistanomRservController();
-?>        
-        
-</ol>
+      <h1>Análisis Pendientes <small></small></h1>
  </section>     
 
  <section class="content container-fluid">
@@ -68,15 +60,7 @@ $ingreso -> vistanomRservController();
               
               <?php
               $ingreso = new ReporteController();
-              $ingreso -> botonNuevoRep();
-              ?>  
-  
-
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-            </div>
+           Análisis Pendientesso -> botonNuevoRep();
               </div>
               
             </div>

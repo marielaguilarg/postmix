@@ -12,7 +12,7 @@
 
 <?php
 $ingreso = new ReporteController();
-//$ingreso -> vistaRnomservController();
+$ingreso -> vistaRnomservController();
 ?>        
         
 </ol>
@@ -30,7 +30,6 @@ $ingreso = new ReporteController();
 
 $ingreso = new ReporteController();
 $ingreso -> vistaSeccionNuevoReporte();
-
 
 ?>
 
