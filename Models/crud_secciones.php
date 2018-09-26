@@ -21,7 +21,7 @@ class DatosSeccion extends Conexion{
 
 
 public function vistaNombreServModel($datosModel, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT ser_descripcionesp FROM ca_servicios WHERE ser_id=:ids");
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_descripcionesp, cli_nombre FROM ca_servicios inner join ca_clientes ON ser_idcliente= cli_id WHERE ser_id=:ids");
 		
 		$stmt-> bindParam(":ids", $datosModel, PDO::PARAM_INT);
 		
@@ -44,7 +44,7 @@ public function editaSeccionModel($datosModel, $servicioModel, $tabla){
 	}
 
 public function actualizarSeccionModel($datosModel, $tabla){
-    
+
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET sec_descripcionesp=:desesp,sec_descripcioning=:desing, sec_nomsecesp= :nomesp, sec_nomsecing=:noming, sec_ordsecind=:ordensec,sec_indagua=:indmues WHERE ser_claveservicio=:idser and sec_numseccion=:idsec");
 
 		
@@ -363,43 +363,8 @@ public function vistaCuentasPonderacionModel($numcta,  $tabla){
 	
 		$stmt->close();
 	}
-     function nombreSeccionIdioma($seccion,$servicio, $vidiomau) {
-   
-    $sql = "SELECT
-cue_secciones.sec_descripcionesp,
-cue_secciones.sec_descripcioning,
-cue_secciones.sec_nomsecesp,
-cue_secciones.sec_nomsecing,
-cue_secciones.sec_nomsecind,
-cue_secciones.sec_numseccion,
-cue_secciones.ser_claveservicio
-FROM
-cue_secciones
-WHERE
-cue_secciones.ser_claveservicio =:servicio AND
-cue_secciones.sec_numseccion =  :seccion";
-    
-    $st =Conexion::conectar()->prepare($sql);
-    $st->bindParam(":servicio", $servicio, PDO::PARAM_INT);
-   $st->bindParam(":seccion", $seccion, PDO::PARAM_INT);
-   $st->execute();
-    $rs=$st->fetchAll();
-   
-    if ($vidiomau == 2) {
-        $nomcampo = "sec_nomsecing";
-    } else {
-       
-        $nomcampo = "sec_nomsecind";
-        $nomcampo = "sec_nomsecesp";
-    }
-    foreach ($rs as $row) {
-        $arr = $row[$nomcampo] ;
-    }
 
-    return $arr;
-}   
-       
-public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabla){
+	public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabla){
 		
         $stmt=Conexion::conectar()->prepare("SELECT  sd_clavecuenta, sd_ponderacion, sd_fechainicio, sd_fechafinal FROM cue_seccionesdetalles where sec_numseccion =:numsec and ser_claveservicio=:numser and sd_clavecuenta=:numcuen  and sd_fechainicio<=now() and  sd_fechafinal>=now()");
 
@@ -413,7 +378,70 @@ public function buscaponderacionseccion($datossec,  $datosser, $datoscuen, $tabl
 		$stmt->close();
     }
 
+	public function RegistrosEnSeccion($sv, $nsec, $nrep, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT is_numreporte 
+         FROM $tabla
+        WHERE is_claveservicio=:idser
+          AND is_numreporte=:numrep
+          AND is_numseccion=:numsec");
 
+		$stmt-> bindParam(":idser", $sv, PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $nsec, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $nrep, PDO::PARAM_INT);
+		$stmt-> execute();
 
+		return $stmt->rowCount();
 
+		$stmt->close();
+	}
+ 
+  public function actualizaPondSeccion($datosModel, $tabla){
+
+		$stmt = Conexion::conectar()->prepare("UPDATE ins_seccion set is_nivelcum=:nivelacep, is_pondreal=:valreal where is_claveservicio=:idser AND is_numreporte=:numrep AND is_numseccion=:numsec");
+
+			$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_INT);
+			$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+			
+			IF($stmt-> execute()){
+
+				return "success";
+			}
+			
+			else {
+
+				return "error";
+		
+			};
+
+			$stmt->close();
+	}
+
+	public function registraPonderaSeccion($datosModel, $tabla){
+
+		$stmt = Conexion::conectar()->prepare("INSERT INTO ins_seccion (is_claveservicio, is_numreporte, is_numseccion, is_nivelcum,is_pondreal) values (:idser, :numrep, :numsec, :nivelacep, :valreal");
+
+		
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		
+		IF($stmt-> execute()){
+
+			return "success";
+		}
+		
+		else {
+
+			return "error";
+	
+		};
+
+		$stmt->close();
+	}
+ 
 }

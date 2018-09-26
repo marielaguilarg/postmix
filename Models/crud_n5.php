@@ -12,7 +12,7 @@ class Datosncin extends Conexion{
 		$stmt-> bindParam(":idn", $datosModel, PDO::PARAM_INT);
 		
 		$stmt-> execute();
-    
+
 		return $stmt->fetchAll();
 		$stmt->close();
 	}
@@ -36,21 +36,7 @@ class Datosncin extends Conexion{
 
 		return $stmt->fetchAll();
 		$stmt->close();
-	}	
- public function nombreNivel5($id,$tabla) {
-
-            $sql = "SELECT n5_id, n5_nombre FROM $tabla where n5_id=:id ";
-
-           $stmt = Conexion::conectar()-> prepare($sql);
-            $stmt->bindParam(":id",$id,PDO::PARAM_INT);
-            $stmt->execute();
-            $res=$stmt->fetchAll();
-            foreach ($res as $row) {
-              $nombre = $row["n5_nombre"];
-            }
-             return $nombre;
-        }
-
+	}
 
 
 

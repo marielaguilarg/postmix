@@ -341,43 +341,6 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 
 		$stmt->close();
 	}
-        
-        
-function CumplimientoPonderada($vservicio, $referencia, $reporte) {
-  
-    $SQL_PRESION_O = "SELECT  id_aceptado as nivaceptren, cue_reactivos.r_descripcionesp, cue_reactivos.r_descripcioning, id_noaplica
-FROM ins_detalle
-Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
-WHERE
-concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) =  :referencia  and ins_detalle.id_numreporte=:rep and cue_reactivos.ser_claveservicio=:vservicio";
-    //echo $SQL_PRESION_O;
-
-    $stmt = Conexion::conectar()-> prepare($SQL_PRESION_O);
-
-    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
-    $stmt-> bindParam(":rep",$reporte , PDO::PARAM_INT);
-    $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
-    $stmt-> execute();
-
-    $RS_PRESION_O=$stmt->fetchall();
-    $res=array();
-    foreach ($RS_PRESION_O as $ROW_PRESION_O) {
-        if ($ROW_PRESION_O ['id_noaplica'] == - 1)
-        {    $res[2] = "<strong>NA</strong>";}
-        else
-        if ($ROW_PRESION_O ['nivaceptren'] == - 1)
-        {   $res[2] = "paloma";}
-        else
-        {    $res[2] = "tache";}
-        if ($_SESSION["idiomaus"] == 2)
-        {   $res[0] = $ROW_PRESION_O ['r_descripcioning'];}
-        else
-        {    $res[0] = $ROW_PRESION_O ['r_descripcionesp'];}
-        $res[1] = "";
-        $res[3] = $referencia;
-    }
-    return $res;
-}
 
 
 	public function vistareportePonderaModel($datosModel, $datoserv, $tabla){
@@ -475,9 +438,103 @@ public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
 		$stmt->close();
 	}
 	
+	public function verificaSeccionPondera($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT id_numreactivo FROM $tabla WHERE id_claveservicio =:nser AND id_numreporte =:nrep AND id_numseccion =:nsec");
+
+		$stmt-> bindParam(":nser", $datosModel["nser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nrep", $datosModel["nrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $datosModel["nsec"], PDO::PARAM_INT);
+		
+		$stmt-> execute();
+
+		return $stmt->rowCount();
+
+		$stmt->close();
+	}
+
+	public function validaDatosPonderada($nsec, $nser, $nreac, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT r_numreactivo,r_descripcionesp
+				   FROM $tabla WHERE ser_claveservicio =:nser 
+				    AND sec_numseccion =:nsec
+					AND r_numreactivo <>:nreac");
+
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+		$stmt-> bindParam(":nser", $nser, PDO::PARAM_INT);
+		$stmt-> bindParam(":nreac", $nreac, PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetchall();
+
+		$stmt->close();
+	}
 
 
 
 
+	public function leePonderacionReactivo($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT rd_ponderacion FROM cue_reactivosdetalle WHERE ser_claveservicio =:sv AND sec_numseccion =:nsec AND r_numreactivo =:nreac AND rd_clavecuenta =:ncuen");
+
+		$stmt-> bindParam(":sv", $datosModel["nser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $datosModel["nsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nreac", $datosModel["nreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":ncuen", $datosModel["ncuen"], PDO::PARAM_INT);
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
+
+    public function insertaregistroPonderado($datosModel, $tabla){
+
+	$stmt = Conexion::conectar()->prepare("INSERT into $tabla  (id_claveservicio, id_numreporte, id_numseccion, id_numreactivo, id_ponderacionreal, id_comentario, id_aceptado, id_noaplica) values (:idser, :numrep, :numsec, :numreac, :valpond, :descom, :opcsel, :opcnoap)");
+			
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valpond", $datosModel["valpond"], PDO::PARAM_INT);
+		$stmt-> bindParam(":descom", $datosModel["descom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":opcsel", $datosModel["opcsel"], PDO::PARAM_INT);
+		$stmt-> bindParam(":opcnoap", $datosModel["opcnoap"], PDO::PARAM_INT);
+
+			IF($stmt-> execute()){
+
+				return "success";
+			}
+			
+			else {
+
+				return "error";
+		
+			};
+
+			$stmt->close();
+	}
+
+    public function borrarPonderacionAnterior($nser, $nrep, $nsec, $tabla){
+
+		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id_claveservicio =:nser  AND id_numreporte =:nrep AND id_numseccion =:nsec");
+		
+
+		$stmt-> bindParam(":nser", $nser, PDO::PARAM_INT);
+		$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+
+		IF($stmt-> execute()){
+
+			return "success";
+		}
+		
+		else {
+
+			return "error";
+	
+		}
+
+		$stmt->close();	
+	}
+
+ 
 
 }

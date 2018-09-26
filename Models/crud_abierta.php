@@ -19,9 +19,7 @@ class DatosAbierta extends Conexion{
 	}
 
 	public function vistaAbiertaModeln1($servicioModel, $datosModel, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente,
- ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning 
-FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,ra_numcaracteristica,ra_numcomponente2) =:nsec");
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,ra_numcaracteristica,ra_numcomponente2) =:nsec");
 		
 
 		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_INT);
@@ -494,44 +492,6 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 		
 			$stmt->close();
 
-	}
-	
-	public function getReactivoAbiertoxReactivo($servicioModel, $datosModel, $tabla){
-	    $stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,'.', r_numreactivo)=:nsec");
-	    
-	    $stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_INT);
-	    $stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
-	    
-	    $stmt-> execute();
-	    
-	    return $stmt->fetchAll();
-	}
-	
-	public function consultaInsDetalleAbierta($reporte,$numser,$seccion,$reactivo,$componente,$caract1,$caract2,$caract3,$renglon, $tabla){
-	    $query_na="SELECT ida_descripcionreal, ida_numreporte FROM $tabla
-where ida_claveservicio=:servicio and ida_numseccion=:seccion and ida_numreactivo=:reactivo and ida_numcomponente=:componente
-and ida_numcaracteristica1=:caract1 and ida_numcaracteristica2=:caract2 and ida_numcaracteristica3=:caract3
- and ida_numreporte=:reporte and ida_numrenglon=:renglon";
-	    
-	    $stmt = Conexion::conectar()-> prepare();
-	    
-	    
-	    $stmt-> bindParam(":servicio", $numser, PDO::PARAM_INT);
-	    $stmt-> bindParam(":seccion", $seccion, PDO::PARAM_INT);
-	    $stmt-> bindParam(":reactivo", $reactivo, PDO::PARAM_INT);
-	    $stmt-> bindParam(":componente", $componente, PDO::PARAM_INT);
-	    $stmt-> bindParam(":caract1", $caract1, PDO::PARAM_INT);
-	    $stmt-> bindParam(":caract2", $caract2, PDO::PARAM_INT);
-	    $stmt-> bindParam(":renglon", $caract3, PDO::PARAM_INT);
-	    $stmt-> bindParam(":caract3", $renglon, PDO::PARAM_INT);
-	    $stmt-> bindParam(":reporte", $reporte, PDO::PARAM_INT);
-	    
-	    
-	    $stmt-> execute();
-	    
-	    return $stmt->fetchAll();
-	
-	    
 	}
 
 	public function validasubseccionAbierta($idser, $idsec, $idreac, $tabla){

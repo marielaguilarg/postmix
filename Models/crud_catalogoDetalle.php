@@ -9,7 +9,7 @@ class DatosCatalogoDetalle {
   `cad_descripcionesp`,
   `cad_descripcioning`,
   `cad_otro`
-FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id");
+     FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id");
          
 		$stmt->bindParam(":id", $datosModel, PDO::PARAM_INT);
 		
@@ -47,4 +47,22 @@ ca_catalogosdetalle.cad_idopcion =  :opcion";
         
       return $res;
         }
+
+public function listaCatalogoDetalleOpc($datosModel, $op, $tabla){
+    $stmt = Conexion::conectar()-> prepare("SELECT
+  `cad_idcatalogo`,
+  `cad_idopcion`,
+  `cad_descripcionesp`,
+  `cad_descripcioning`,
+  `cad_otro`
+     FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id and cad_idopcion=:op");
+         
+    $stmt->bindParam(":id", $datosModel, PDO::PARAM_INT);
+    $stmt->bindParam(":op", $op, PDO::PARAM_INT);
+    
+    $stmt-> execute();
+
+    return $stmt->fetch();
+  }
+
 }

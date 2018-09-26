@@ -1,138 +1,86 @@
 <?php
 
-require_once "conexion.php";
+require_once "Models/conexion.php";
 
-class DatosUnegocio extends Conexion {
+
+class DatosUnegocio extends Conexion{
+
 #vistaservicios
 
-    public function vistaUnegocioModel($init = false, $page_size = false, $tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla limit :init, :size");
+	public function vistaUnegocioModel($init=false, $page_size=false, $cta, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where cue_clavecuenta=:cta limit :init, :size ");
+		
+		$stmt-> bindParam(":init", $init, PDO::PARAM_INT);
+		$stmt-> bindParam(":size", $page_size, PDO::PARAM_INT);			
+		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);
+		$stmt-> execute();
 
-        $stmt->bindParam(":init", $init, PDO::PARAM_INT);
-        $stmt->bindParam(":size", $page_size, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
-    public function vistaFiltroUnegocioModel($datosbus, $tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where une_descripcion LIKE :opbusqueda");
-
-        $stmt->bindParam(":opbusqueda", $datosbus, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
-    public function cuentaUnegocioModel($tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla");
-
-        $stmt->execute();
-
-        return $qty = $stmt->RowCount();
-    }
-
-    public function vistaUnegocioDetalle($uneg, $tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla WHERE une_id=:uneg");
-
-        $stmt->bindParam(":uneg", $uneg, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        return $stmt->fetch();
-    }
-
-    public function ReportesUnegocio($idser, $iduneg, $tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT i_numreporte, i_finalizado FROM ins_generales WHERE i_claveservicio=:idser and i_claveuninegocio=:iduneg");
-
-        $stmt->bindParam(":idser", $idser, PDO::PARAM_STR);
-        $stmt->bindParam(":iduneg", $iduneg, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        return $stmt->fetchall();
-    }
-
-    public function UnegocioCompleta($iduneg, $tabla) {
-        $stmt = Conexion::conectar()->prepare("SELECT cue_clavecuenta, une_id, une_descripcion, une_idpepsi, une_idcuenta, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_estado, une_dir_cp, une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia, une_dir_idestado, fc_idfranquiciacta, une_num_unico_distintivo,`une_estatus`,`une_fechaestatus` FROM $tabla WHERE une_id=:iduneg");
-
-        $stmt->bindParam(":iduneg", $iduneg, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        return $stmt->fetch();
-    }
-
-    public function registrarUnegocio($datosModel, $tabla) {
-        try {
-            $ssql = "select max(une_id) as claveuneg from $tabla";
-
-            $stmt = Conexion::conectar()->prepare($ssql);
-
-            $stmt->execute();
-            $rs = $stmt->fetch();
-
-            if (sizeof($rs) > 0) {
-
-                $numunineg = $rs["claveuneg"];
-            } else {
-                $numunineg = 0;
-            }
-            $numunineg += 1;
+		return $stmt->fetchAll();
+		$stmt->close();
+	}
 
 
-            $stmt = null;
-//procedimiento de insercion de  la cuenta	   
-            $sSQL = "insert into $tabla ( cue_clavecuenta, une_id, une_descripcion, une_idpepsi, une_idcuenta, une_num_unico_distintivo, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_idestado, une_dir_cp, une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia,une_dir_estado,fc_idfranquiciacta,une_numpunto,une_estatus,une_fechaestatus)
-    values (:ncuenta, :numunineg,:desuneg,:idpepsi, :idcta, :idnud, :calle, :numext, :numint, :mz, :lt,
-    :col, :del, :mun, :edo, :cp, :ref, :tel, :clanivel1, :clanivel2, :clanivel3, :clanivel4, :clanivel5, :clanivel6,
-    upper(:nom_edo),:franqcuenta, :numpun, :estatuscuenta, :fecest)";
-            $stmt = Conexion::conectar()->prepare($sSQL);
+	public function vistaFiltroUnegocioModel($cta, $datosbus, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where cue_clavecuenta=:cta and une_descripcion LIKE :opbusqueda ");
+	
+		$stmt-> bindParam(":opbusqueda", $datosbus, PDO::PARAM_STR);
+		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);
+		$stmt-> execute();
 
-            $stmt->bindParam(":ncuenta", $datosModel["ncuenta"], PDO::PARAM_INT);
-            $stmt->bindParam(":numunineg", $numunineg, PDO::PARAM_INT);
-            $stmt->bindParam(":desuneg", $datosModel["desuneg"]);
-            $stmt->bindParam(":idpepsi", $datosModel["idpepsi"]);
-            $stmt->bindParam(":idcta", $datosModel["idcta"], PDO::PARAM_INT);
-            $stmt->bindParam(":idnud", $datosModel["idnud"]);
-            $stmt->bindParam(":calle", $datosModel["calle"]);
-            $stmt->bindParam(":numext", $datosModel["numext"]);
-            $stmt->bindParam(":numint", $datosModel["numint"]);
-            $stmt->bindParam(":mz", $datosModel["mz"]);
-            $stmt->bindParam(":lt", $datosModel["lt"]);
+		return $stmt->fetchAll();
+	
+		$stmt->close();
 
-            $stmt->bindParam(":col", $datosModel["col"]);
-            $stmt->bindParam(":del", $datosModel["del"]);
-            $stmt->bindParam(":mun", $datosModel["une_dir_municipio"]);
-            $stmt->bindParam(":edo", $datosModel["une_dir_estado"], PDO::PARAM_INT);
-            $stmt->bindParam(":cp", $datosModel["une_dir_cp"]);
-            $stmt->bindParam(":ref", $datosModel["une_dir_referencia"]);
-            $stmt->bindParam(":tel", $datosModel["une_dir_telefono"]);
-            $stmt->bindParam(":clanivel1", $datosModel["clanivel1"]);
-            $stmt->bindParam(":clanivel2", $datosModel["clanivel2"]);
-            $stmt->bindParam(":clanivel3", $datosModel["clanivel3"]);
-            $stmt->bindParam(":clanivel4", $datosModel["clanivel4"]);
-            $stmt->bindParam(":clanivel5", $datosModel["clanivel5"]);
-            $stmt->bindParam(":clanivel6", $datosModel["clanivel6"]);
+	}
 
-            $stmt->bindParam(":nom_edo", $datosModel["une_dir_estado"]);
-            $stmt->bindParam(":franqcuenta", $datosModel["franqcuenta"], PDO::PARAM_INT);
-            $stmt->bindParam(":numpun", $datosModel["numpun"], PDO::PARAM_INT);
-            $stmt->bindParam(":estatuscuenta", $datosModel["estatus"], PDO::PARAM_INT);
-            $stmt->bindParam(":fecest", $datosModel["fecest"]);
+	public function cuentaUnegocioModel($cta, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where cue_clavecuenta=:cta");
+		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);		
+		$stmt-> execute();
 
-            $res = $stmt->execute();
+		return $qty=$stmt->RowCount();
+		$stmt->close();
+	}
+
+	public function vistaUnegocioDetalle( $uneg, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla WHERE une_id=:uneg");
+			
+		$stmt-> bindParam(":uneg", $uneg, PDO::PARAM_STR);
+					
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}
 
 
+	public function ReportesUnegocio($idser, $iduneg, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT i_claveservicio, i_numreporte, i_finalizado FROM $tabla WHERE i_claveservicio=:idser and i_unenumpunto=:iduneg");
+			
+		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+		$stmt-> bindParam(":iduneg", $iduneg, PDO::PARAM_INT);
+					
+		$stmt-> execute();
 
+		return $stmt->fetchall();
 
-            return "success";
-        } catch (Exception $ex) {
-            return "error";
-        }
-    }
+		$stmt->close();
+	}
 
-    public function actualizarUnegocio($datosModel, $tabla) {
+	public function UnegocioCompleta( $iduneg, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT cue_clavecuenta, une_id, une_descripcion, une_idpepsi, une_idcuenta, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_estado, une_dir_cp, une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia, une_dir_idestado, fc_idfranquiciacta, une_num_unico_distintivo, une_estatus, une_fechaestatus FROM $tabla WHERE une_id=:iduneg");
+			
+		$stmt-> bindParam(":iduneg", $iduneg, PDO::PARAM_STR);
+					
+		$stmt-> execute();
+
+		return $stmt->fetch();
+
+		$stmt->close();
+	}	
+
+public function actualizarUnegocio($datosModel, $tabla) {
         try {
 //procedimiento de insercion de  la cuenta	   
             $sSQL = "update $tabla
@@ -341,6 +289,77 @@ ca_unegocios.une_cla_pais=$aux2[2]";
          "franq"=>$franquicia);
      return Conexion::ejecutarQuery($slq_franquicia,$parametros );
     }
+
+ public function registrarUnegocio($datosModel, $tabla) {
+        try {
+            $ssql = "select max(une_id) as claveuneg from $tabla";
+
+            $stmt = Conexion::conectar()->prepare($ssql);
+
+            $stmt->execute();
+            $rs = $stmt->fetch();
+
+            if (sizeof($rs) > 0) {
+
+                $numunineg = $rs["claveuneg"];
+            } else {
+                $numunineg = 0;
+            }
+            $numunineg += 1;
+
+
+            $stmt = null;
+//procedimiento de insercion de  la cuenta	   
+            $sSQL = "insert into $tabla ( cue_clavecuenta, une_id, une_descripcion, une_idpepsi, une_idcuenta, une_num_unico_distintivo, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_idestado, une_dir_cp, une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia,une_dir_estado,fc_idfranquiciacta,une_numpunto,une_estatus,une_fechaestatus)
+    values (:ncuenta, :numunineg,:desuneg,:idpepsi, :idcta, :idnud, :calle, :numext, :numint, :mz, :lt,
+    :col, :del, :mun, :edo, :cp, :ref, :tel, :clanivel1, :clanivel2, :clanivel3, :clanivel4, :clanivel5, :clanivel6,
+    upper(:nom_edo),:franqcuenta, :numpun, :estatuscuenta, :fecest)";
+            $stmt = Conexion::conectar()->prepare($sSQL);
+
+            $stmt->bindParam(":ncuenta", $datosModel["ncuenta"], PDO::PARAM_INT);
+            $stmt->bindParam(":numunineg", $numunineg, PDO::PARAM_INT);
+            $stmt->bindParam(":desuneg", $datosModel["desuneg"]);
+            $stmt->bindParam(":idpepsi", $datosModel["idpepsi"]);
+            $stmt->bindParam(":idcta", $datosModel["idcta"], PDO::PARAM_INT);
+            $stmt->bindParam(":idnud", $datosModel["idnud"]);
+            $stmt->bindParam(":calle", $datosModel["calle"]);
+            $stmt->bindParam(":numext", $datosModel["numext"]);
+            $stmt->bindParam(":numint", $datosModel["numint"]);
+            $stmt->bindParam(":mz", $datosModel["mz"]);
+            $stmt->bindParam(":lt", $datosModel["lt"]);
+
+            $stmt->bindParam(":col", $datosModel["col"]);
+            $stmt->bindParam(":del", $datosModel["del"]);
+            $stmt->bindParam(":mun", $datosModel["une_dir_municipio"]);
+            $stmt->bindParam(":edo", $datosModel["une_dir_estado"], PDO::PARAM_INT);
+            $stmt->bindParam(":cp", $datosModel["une_dir_cp"]);
+            $stmt->bindParam(":ref", $datosModel["une_dir_referencia"]);
+            $stmt->bindParam(":tel", $datosModel["une_dir_telefono"]);
+            $stmt->bindParam(":clanivel1", $datosModel["clanivel1"]);
+            $stmt->bindParam(":clanivel2", $datosModel["clanivel2"]);
+            $stmt->bindParam(":clanivel3", $datosModel["clanivel3"]);
+            $stmt->bindParam(":clanivel4", $datosModel["clanivel4"]);
+            $stmt->bindParam(":clanivel5", $datosModel["clanivel5"]);
+            $stmt->bindParam(":clanivel6", $datosModel["clanivel6"]);
+
+            $stmt->bindParam(":nom_edo", $datosModel["une_dir_estado"]);
+            $stmt->bindParam(":franqcuenta", $datosModel["franqcuenta"], PDO::PARAM_INT);
+            $stmt->bindParam(":numpun", $datosModel["numpun"], PDO::PARAM_INT);
+            $stmt->bindParam(":estatuscuenta", $datosModel["estatus"], PDO::PARAM_INT);
+            $stmt->bindParam(":fecest", $datosModel["fecest"]);
+
+            $res = $stmt->execute();
+
+
+
+
+            return "success";
+        } catch (Exception $ex) {
+            return "error";
+        }
+    }
+
+
 
 }
 

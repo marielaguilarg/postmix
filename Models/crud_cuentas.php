@@ -16,14 +16,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetchAll();
-	}
-	
-        public function vistaCuentasxcliente($idcliente,$tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla where cue_idcliente=:id_cliente ;");
-		$stmt->bindParam("id_cliente", $idcliente,PDO::PARAM_INT);
-		$stmt-> execute();
-
-		return $stmt->fetchAll();
+		$stmt->close();
 	}
 	
 
@@ -33,6 +26,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetchAll();
+		$stmt->close();
 	}
 
 	public function registroCuentaModel($datosModel, $tabla){
@@ -53,7 +47,7 @@ class DatosCuenta extends Conexion{
 
 		 	return "error";
 		 }
-
+		 $stmt->close();
 
 	}
 
@@ -67,6 +61,7 @@ class DatosCuenta extends Conexion{
 		$stmt-> execute();
 
 		return $stmt->fetch();
+		$stmt->close();
 	}
 	
 	public function actualizarCuentaModel($datosModel, $tabla){
@@ -115,149 +110,15 @@ class DatosCuenta extends Conexion{
 		$stmt->close();	
 	}
 
-function nombreCuenta($cuenta, $cliente) {
 
-    $sql = "SELECT
-ca_cuentas.cue_idcliente,
-ca_cuentas.ser_claveservicio,
-ca_cuentas.cue_id,
-ca_cuentas.cue_descripcion,
-ca_cuentas.cue_tipomercado,
-ca_cuentas.cue_siglas,
-ca_cuentas.cue_lugar
-FROM
-ca_cuentas
-where ca_cuentas.cue_idcliente=:cliente ";
+	 public function vistaCuentasxcliente($idcliente,$tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla where cue_idcliente=:id_cliente ;");
+		$stmt->bindParam("id_cliente", $idcliente,PDO::PARAM_INT);
+		$stmt-> execute();
 
-    $sql.=" and cue_clavecuenta=:cuenta";
-    $sql.=" order by ca_cuentas.cue_id";
-    
-    $res = Conexion::conectar()->prepare($sql);
-    $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
-    $res-> bindParam(":cliente", $cliente, PDO::PARAM_INT);
-    foreach ($res as $row) {
-        $nombre = $row["cue_descripcion"];
-    }
-   
-    return $nombre;
-}
+		return $stmt->fetchAll();
+	}
 
-public function cuentasxNiveltm($VarNivel2,$aux,$cliente,$cuenta){
-      $sql_cuentas = "SELECT
-
-ca_cuentas.cue_id,ca_cuentas.cue_descripcion
-FROM
-ca_unegocios
-Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id  ";
-
-                        switch ($VarNivel2) {
-                            case 6: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-ca_unegocios.une_cla_pais=$aux[2] and
-ca_unegocios.une_cla_zona=$aux[3] and
-ca_unegocios.une_cla_estado=$aux[4] and
-ca_unegocios.une_cla_ciudad=$aux[5] and
-ca_unegocios.une_cla_franquicia=$aux[6] ";
-                                break;
-                            case 5: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-ca_unegocios.une_cla_pais=$aux[2] and
-ca_unegocios.une_cla_zona=$aux[3] and
-ca_unegocios.une_cla_estado=$aux[4] and
-ca_unegocios.une_cla_ciudad=$aux[5] ";
-                                break;
-                            case 4: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-ca_unegocios.une_cla_pais=$aux[2] and
-ca_unegocios.une_cla_zona=$aux[3] and
-ca_unegocios.une_cla_estado=$aux[4] ";
-                                break;
-                            case 3: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
-ca_unegocios.une_cla_pais=$aux[2] and
-ca_unegocios.une_cla_zona=$aux[3] ";
-                                break;
-                            case 2: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
-ca_unegocios.une_cla_pais=$aux[2]";
-                                break;
-                            case 1: $filtro = "ca_unegocios.une_cla_region=$aux[1]";
-                                break;
-                        }//fin switch
-                        $sql_cuentas.=" where " . $filtro . " and cue_tipomercado=:opcionSeleccionadaCuenta and `ca_cuentas`.`cue_idcliente`=:scli";
-                        $sql_cuentas.=" GROUP BY ca_unegocios.cue_clavecuenta;";
-                        
-                        $parametros=array("scli"=>$cliente,
-                   
-                    "opcionSeleccionadaCuenta"=>$cuenta);
-                         $res= Conexion::ejecutarQuery($sql_cuentas,$parametros);
-                         return $res;
-	
-
-}
-
-public function cuentasxNivel($VarNivel2,$aux,$cliente){
-    $sql_cuentas = "SELECT
-        
-ca_cuentas.cue_id,ca_cuentas.cue_descripcion
-FROM
-ca_unegocios
-Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id  ";
-   
-    switch ($VarNivel2) {
-        case 6: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-        ca_unegocios.une_cla_pais=$aux[2] and
-        ca_unegocios.une_cla_zona=$aux[3] and
-        ca_unegocios.une_cla_estado=$aux[4] and
-        ca_unegocios.une_cla_ciudad=$aux[5] and
-        ca_unegocios.une_cla_franquicia=$aux[6] ";
-        break;
-        case 5: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-        ca_unegocios.une_cla_pais=$aux[2] and
-        ca_unegocios.une_cla_zona=$aux[3] and
-        ca_unegocios.une_cla_estado=$aux[4] and
-        ca_unegocios.une_cla_ciudad=$aux[5] ";
-        break;
-        case 4: $filtro = " ca_unegocios.une_cla_region=$aux[1] and
-        ca_unegocios.une_cla_pais=$aux[2] and
-        ca_unegocios.une_cla_zona=$aux[3] and
-        ca_unegocios.une_cla_estado=$aux[4] ";
-        break;
-        case 3: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
-        ca_unegocios.une_cla_pais=$aux[2] and
-        ca_unegocios.une_cla_zona=$aux[3] ";
-        break;
-        case 2: $filtro = "ca_unegocios.une_cla_region=$aux[1] and
-        ca_unegocios.une_cla_pais=$aux[2]";
-        break;
-        case 1: $filtro = "ca_unegocios.une_cla_region=$aux[1]";
-        break;
-    }//fin switch
-    $sql_cuentas.=" where " . $filtro . " and `ca_cuentas`.`cue_idcliente`=:scli";
-    $sql_cuentas.=" GROUP BY ca_unegocios.cue_clavecuenta;";
-    
-    $parametros=array("scli"=>$cliente);
-    $res= Conexion::ejecutarQuery($sql_cuentas,$parametros);
-    return $res;
-    
-    
-}
-
-
-public function cuentasxCliente($tabla,$tipoMercado,$cliente){
-     $sql_cuentas="SELECT cue_id, cue_descripcion FROM $tabla WHERE cue_tipomercado=:opcionSeleccionadaCuenta"
-             . " and `ca_cuentas`.`cue_idcliente`=:scli;";
-     $parametros=array("opcionSeleccionadaCuenta"=>$tipoMercado,
-         "scli"=>$cliente);
-     
-     $res= Conexion::ejecutarQuery($sql_cuentas,$parametros);
-     return $res;
-     
-}
-
-public function cuentasxCliente2($tabla,$cliente){
-    $sql_cuentas="SELECT cue_id, cue_descripcion FROM $tabla WHERE  `ca_cuentas`.`cue_idcliente`=:scli;";
-    $parametros=array("scli"=>$cliente);
-    
-    $res= Conexion::ejecutarQuery($sql_cuentas,$parametros);
-    return $res;
-    
-}
 
 
 }

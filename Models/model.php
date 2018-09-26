@@ -15,9 +15,7 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
-
 		    $enlacesModel == "editaunegocio" ||
-
 
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
@@ -52,10 +50,15 @@ class EnlacesPaginas{
 			$enlacesModel == "runegociodetalle" ||
 			$enlacesModel == "runegociocomp" ||
 			$enlacesModel == "editarep" ||
-
 			$enlacesModel == "nvorep" ||
 			
-
+			#AQUI INICIA SECCION REPORTE	
+			$enlacesModel == "anapend" ||
+			$enlacesModel == "anarealiza" ||
+			$enlacesModel == "estanalisis" ||
+			$enlacesModel == "recepcion" ||
+			$enlacesModel == "prueba" ||
+			
 
 			#AQUI INICIA LA SECCION DE SEGURIDAD
 			$enlacesModel == "login" ||			
@@ -69,21 +72,10 @@ class EnlacesPaginas{
 			$enlacesModel == "listan6" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
-			$enlacesModel == "nuevacuenta" || 
-
-			#AQUI INICIA SECCION INDICADORES   
-			$enlacesModel == "indgraficaindicador" ||
-            $enlacesModel == "indgraficaindicadorgr" ||
-            $enlacesModel == "indestadisticares"  ||
-            $enlacesModel == "indindicadoresgrid"  ||
-            $enlacesModel == "indcumplimientoestabl" ||
-            $enlacesModel == "indindicadores" ||
-            $enlacesModel == "indbuscapv" ||
-            $enlacesModel == "indhistorialreportes"  ||
-            $enlacesModel == "indresultadosxrep"|| 
-		    $enlacesModel == "indrepdiario" ||
-		    $enlacesModel == "indrepxperiodo"  ||
-		    $enlacesModel == "indhistoricoxpv"  ||
+			$enlacesModel == "nuevacuenta" ||
+			$enlacesModel == "nuevoReporteProducto"||  
+				   
+			$enlacesModel == "indbuscapv" ||
 			$enlacesModel == "indcumplimientoestabl" ||
 			$enlacesModel == "indestadisticares"  ||
 			$enlacesModel == "indgraficares" ||
@@ -116,6 +108,8 @@ class EnlacesPaginas{
 			// aqui meteremos todas las secciones del cuestionario
 			$module ="views/modulos/cue_reporte.php";	
 		}
+
+	
 
 		else if($enlacesModel == "index"){
 

@@ -58,8 +58,8 @@ class UsuarioModel extends Conexion{
 
 		$stmt->close();
 	}
-        
-          public function getUsuario($id,$tabla){
+
+public function getUsuario($id,$tabla){
 		$stmt = Conexion::conectar()-> prepare("select `cus_usuario`,
   `cus_contrasena`,
   `cus_nombreusuario`,
@@ -85,104 +85,9 @@ class UsuarioModel extends Conexion{
 		return $stmt->fetchAll();
 		
 	}
-        
-         function buscarReferenciaNivel($usuario) {
-        $result = 0;
-      
-        // verifico el tipo de usuario
-
-        $query = "SELECT
-cnfg_usuarios.cus_usuario,
-cnfg_usuarios.cus_clavegrupo,
-cnfg_usuarios.cus_tipoconsulta,
-cnfg_usuarios.cus_nivel1,
-cnfg_usuarios.cus_nivel2,
-cnfg_usuarios.cus_nivel3,
-cnfg_usuarios.cus_nivel4,
-cnfg_usuarios.cus_nivel5,
-cnfg_usuarios.cus_nivel6,
-cnfg_usuarios.cus_cliente,
-cnfg_usuarios.cus_servicio,
-cnfg_usuarios.cus_nombreusuario
-FROM
-cnfg_usuarios
-where cus_usuario=:usuario ";
-        $parametros = array("usuario" => $usuario);
-
-        $res = Conexion::ejecutarQuery($query, $parametros);
-        foreach ($res as $row) {
-            $nivCons = $row["cus_tipoconsulta"];
-            $grupo=$row["cus_clavegrupo"];
-            if ($grupo == "cli" || $grupo == "muf") {
-                $refer = $row["cus_nivel4"] . "." . $row["cus_nivel5"] . "." . $row["cus_nivel6"];
-            }
-            if ($grupo == "cue") {
-                if ($row["cus_nivel3"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"] . "." . $row["cus_nivel3"];
-                else if ($row["cus_nivel2"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"];
-                else
-                    $refer = $row["cus_nivel1"];
-            }
-        }
-
-        return $refer;
-    }
 
 
-
-
-  function validarRegionCuenta() {
-        $result = 0;
-        $usuario = $_SESSION["Usuario"];
-
-       
-        // verifico el tipo de usuario
-      
-            $query = "SELECT
-cnfg_usuarios.cus_usuario,
-cnfg_usuarios.cus_clavegrupo,
-cnfg_usuarios.cus_tipoconsulta,
-cnfg_usuarios.cus_nivel1,
-cnfg_usuarios.cus_nivel2,
-cnfg_usuarios.cus_nivel3,
-cnfg_usuarios.cus_nivel4,
-cnfg_usuarios.cus_cliente,
-cnfg_usuarios.cus_servicio,
-cnfg_usuarios.cus_nombreusuario
-FROM
-cnfg_usuarios
-where cus_usuario=:usuario ";
-//      echo $query;
-            $parametros = array("usuario" => $usuario);
-            $res = Conexion::ejecutarQuery($query, $parametros);
-
-            foreach ($res as $row) {
-                $grupo=$row["cus_clavegrupo"];
-                $nivCons = $row["cus_tipoconsulta"];
-                $niv4 = $row["cus_nivel4"];
-                $niv1 = $row["cus_nivel1"];
-                $niv2 = $row["cus_nivel2"];
-                $niv3 = $row["cus_nivel3"];
-            }
-            if ($grupo == "cli") {
-                if ($nivCons >= 4)
-                    $result = $nivCons; //devuelvo nivel de consulta
-                else if ($nivCons < 4)
-                    $result = 0; //puede ver todos
-            } else
-            if ($grupo == "cue") {
-
-                if ($niv2 > 0) { //es usuario de franquicia
-                    $result = "P"; //devuelvo cuenta y franquicia
-                    if ($niv3 > 0) //es usuario por p.v.
-                        $result = "PP";
-                } else    //puede ver toda la cuenta
-                    $result = "F";
-            }
-        
-        return $result;
-    }
 
 }
+
 ?>	

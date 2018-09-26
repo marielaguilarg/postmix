@@ -26,19 +26,6 @@ class Datosncua extends Conexion{
 		return $stmt->fetch();
 	}
 
- public function nombreNivel4($id,$tabla) {
-
-            $sql = "SELECT n4_id, n4_nombre FROM $tabla where n4_id=:id ";
-
-            $stmt = Conexion::conectar()-> prepare($sql);
-            $stmt->bindParam(":id",$id,PDO::PARAM_INT);
-            $stmt->execute();
-            $res=$stmt->fetchAll();
-            foreach ($res as $row) {
-              $nombre = $row["n4_nombre"];
-            }
-             return $nombre;
-        }
 }
 
 

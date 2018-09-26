@@ -26,24 +26,7 @@ class Datosnuno extends Conexion{
 		return $stmt->fetch();
 
 		$stmt->close();
-	}	  
-
- public function nombreNivel1($id,$tabla) {
-
-            $sql = "SELECT n1_id, n1_nombre FROM $tabla where n1_id=:id ";
-
-            $stmt = Conexion::conectar()-> prepare($sql);
-            $stmt->bindParam(":id",$id,PDO::PARAM_INT);
-            $stmt->execute();
-            $res=$stmt->fetchAll();
-           
-            
-          
-            foreach ($res as $row) {
-               $nombre = $row["n1_nombre"];
-            }
-            return $nombre;
-          }
+	}
 }
 
 
