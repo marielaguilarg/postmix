@@ -1,8 +1,5 @@
 <?php
 class abiertaController{
-    
-   
-    
 
 	public function vistaabiertaController(){
 		//lee numero de seccion y numero de servicio
@@ -1260,8 +1257,6 @@ public function registrarAbiertaController(){
 		} // if
 	} // function
 
-
-
 	public function reporteAbiertaDetalleController(){
 		#lee varia{bles
 		$idser=$_GET["sv"];
@@ -1538,7 +1533,6 @@ public function reporteAbiertaController(){
 //	}
 
 }
-
 
 
 

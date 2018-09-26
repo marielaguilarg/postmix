@@ -193,6 +193,32 @@ $lonref=strlen($cadreferencia);
 
 	}
 
+
+
+ public function mysql_fecha($fecha)	//pasa la fecha de a/m/d a formato m/d/y
+   {
+   		
+   	
+   		$nva_fecha=explode('-',$fecha);
+		
+		return $nva_fecha[1].'-'.$nva_fecha[2].'-'.$nva_fecha[0];
+	
+   }
+
+ public function fecha_mysql($fecha)	//pasa la fecha de a/m/d a formato m/d/y
+   {
+   		
+   	
+   		$nva_fecha=explode('/',$fecha);
+		
+		return $nva_fecha[2].'/'.$nva_fecha[0].'/'.$nva_fecha[1];
+	
+   }
+
+
+
+
+
 	public function vistaNombresubseccionController(){
 
 			$seccion = $_GET["sec"];

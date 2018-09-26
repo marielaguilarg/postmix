@@ -2,31 +2,49 @@
 class UsuarioController{
 
 	public function validarUsuarioController(){
-		//echo "entre a validar";
 		//var_dump(($_POST["g-recaptcha-response"]));
-
+			//echo "validausuario";
 		if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
 			//echo "entre a validacion de captcha";
 						// validar el captcha
-			$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+			//$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+			$secretKey = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+		//	echo "secret".$secret;
 			$ip= $_SERVER["REMOTE_ADDR"];
-
+		//	echo "ip".$ip;
 			$captcha=$_POST["g-recaptcha-response"];
+		//	echo "captcha".$captcha;
 	          
-	        $result = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha&remoteip=$ip");
+	        //$result = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha&remoteip=$ip");
 	        
-	       // var_dump($result);
+			$ch = curl_init();
 
-	       $array = json_decode($result, TRUE);
-	       if ($array ["success"])
+			curl_setopt_array($ch, [
+			    CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
+			    CURLOPT_POST => true,
+			    CURLOPT_POSTFIELDS => [
+			        'secret' => $secretKey,
+			        'response' => $captcha,
+			        'remoteip' => $_SERVER['REMOTE_ADDR']
+			    ],
+			    CURLOPT_RETURNTRANSFER => true
+			]);
+
+			$output = curl_exec($ch);
+			curl_close($ch);
+
+			$json = json_decode($output, TRUE);
+	       
+	       if ($json ["success"]==TRUE)
+	       //IF ($json)
 	       {
-		      // 	echo "si eres humano";
+		       	//echo "si eres humano";
 		       		# vamos a validar el mail y el password
 	       		$logemail=$_POST["logemail"];
 		       	$datoslogController= array("logemail"=>$logemail,
 	            			"logpass"=>$_POST["logpass"]); 
-		       	//echo $datosController["logemail"];
-		       	//echo $datosController["logpass"];
+		       //	echo $datoslogController["logemail"];
+		       //	echo $datoslogController["logpass"];
 				$respuesta =UsuarioModel::validaUsuarioModel($datoslogController, "cnfg_usuarios");	var_dump($respuesta);		
 				if ($respuesta>0) {
 				 	 	#actualiza Estatus del usuario
@@ -69,7 +87,7 @@ class UsuarioController{
 	       }  else {
 	       		       }
 	     } else {
-
+	     	//echo "no paso el captcha";	
 		}  // captcha
 	}	
 

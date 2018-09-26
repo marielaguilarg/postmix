@@ -576,15 +576,24 @@ public function editarPonderaComentController(){
       $sumanoap=0;
       echo '
     <!-- Main content -->
-    <section class="content container-fluid">';
+    <section class="content container-fluid">
+    <form role="form" method="POST">';
 
-
-    $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
+    echo '<input type="hidden" name="sec" value="'.$sec.'">';
+    echo '<input type="hidden" name="ser" value="'.$ser.'">';
+    echo '<input type="hidden" name="nrep" value="'.$nrep.'">';
+   echo '<input type="hidden" name="pv" value="'.$pv.'">';
+   echo '<input type="hidden" name="idc" value="'.$idc.'">';
+    
+    
+ $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
      
     foreach($respuesta as $row => $item){
       echo '
+      
         <div class="col-md-4" >
           <div class="box box-info" >
+          
             <div class="box-header with-border">
             <h3 class="box-title">No.'. $item["r_numreactivo"].'</h3>
 
@@ -617,7 +626,7 @@ public function editarPonderaComentController(){
                  $respuesta = DatosPond::leeDatosPonderaModel($datosController, "ins_detalle");
                    echo '<div class="box-footer col-md-6">                 
                     <ul class="nav nav-stacked">
-                      <li><label>ACEPTADO <input type="checkbox"'; 
+                      <li><label>ACEPTADO <input type="checkbox" name="chk'. $item["r_numreactivo"].'"'; 
                    
                    if (isset($respuesta)) {
                       $numrow=1;
@@ -655,7 +664,7 @@ public function editarPonderaComentController(){
                 </div>
                  <div class="box-footer col-md-6">               
                     <ul class="nav nav-stacked">
-                      <li><label>NO APLICA <input type="checkbox" ';
+                      <li><label>NO APLICA <input type="checkbox"  name="noap'. $item["r_numreactivo"].'"';
                       echo $noaplica.'
                       ></label></li>
                     </ul>                      
@@ -696,7 +705,7 @@ public function editarPonderaComentController(){
                   if ($numcom>=1){
                    
                     echo '
-                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">Comentario </a></span></button>';
+                   <button type="button" class="btn btn-block btn-info" name="comen'.$item["r_tiporeactivo"].'"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">Comentario </a></span></button>';
                   }
                   echo '
                   </div>
@@ -710,21 +719,34 @@ public function editarPonderaComentController(){
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-              </div> 
+              </div>
+             
                    </div>
+               
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
-    </div>';
+    </div>
+     ';
       } //foreach
+   
 
+  #registra reporte
+              $ingreso = new PonderacionController();
+              $ingreso -> registraPonderada();
+
+   echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=editarep&sec='.$sec.'&sv='.$ser.'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'" >  Cancelar  </a></button>
+     ';
+     echo '<button type="submit" class="btn btn-info pull-right">Guardar</button>';
+    echo '</form> ';
   }
 
   public function vistanivelcumplimiento(){
       $sv = $_GET["sv"];
       $nsec=$_GET["sec"];
       $nrep=$_GET["nrep"];
-      
+      $pv=$_GET["pv"];
+      $idc=$_GET["idc"];
 
       
       $respuesta = DatosPond::calculasumapond($sv, $nrep, $nsec, 0,-1, "ins_detalle");
@@ -767,11 +789,121 @@ public function editarPonderaComentController(){
           $resp1 = DatosSeccion::actualizaPondSeccion($datosController, "ins_seccion");
       } else {
           $resp1 = DatosSeccion::registraPonderaSeccion($datosController, "ins_seccion");
-      }
+      
       #verificar los registros para las secciones con letra
 
-      echo '<small>    NIVEL DE CUMPLIMIENTO '.$nivelacep.'%</small></h1>'; 
+      echo '
+       
+    <small>    NIVEL DE CUMPLIMIENTO '.$nivelacep.'%</small></h1>';
+     
   } 
+
+}
+ 
+
+  public function registraPonderada(){
+
+    $idc=$_POST["idc"];
+   
+    if ($idc){
+       //echo "entre a inserta ponderada";  
+      foreach($_POST as $nombre_campo => $valor){
+        $asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+          eval($asignacion);
+         // echo ($asignacion);         
+       }
+      #validar si la seccion existe
+       $datosController= array("nsec"=>$sec,
+                              "nser"=>$ser,
+                              "nrep"=>$nrep,
+                              );
+                 
+      $totreg = DatosPond::verificaSeccionPondera($datosController, "ins_detalle");
+      if ($totreg>0) {
+      //   echo "hay registro";
+      $respuesta = DatosPond::borrarPonderacionAnterior($ser, $nrep, $sec, "ins_detalle");
+         ## elimina registro
+       
+      } 
+        //echo "no hay registro";
+       #lee regsitros de seccion
+      $reactivos = DatosPond::validaDatosPonderada($sec, $ser, 0, "cue_reactivos");
+      //var_dump($reactivos);
+
+
+      foreach($reactivos as $row => $item){      
+          $numreac=$item["r_numreactivo"];
+          $desreac=$item["r_descripcionesp"];
+          $noapnom="noap".$numreac;
+          $opnoap=${$noapnom};
+          if ($opnoap) {    // no aplica es verdadera
+            // signamos a todo 0
+            $opcnoap=-1;
+            $opcsel=0;
+            # busca ponderacion
+            
+            $datosController= array("nser"=>$ser,
+                              "nsec"=>$sec,
+                              "nreac"=>$numreac,
+                              "ncuen"=>$idc,
+                              );
+            
+            $ponderacion = DatosPond::leePonderacionReactivo($datosController, "cue_reactivosdetalle");
+            if ($ponderacion["rd_ponderacion"]){
+                 $valpond=$ponderacion["rd_ponderacion"];
+            } else {
+              $valpond=0;
+            }
+            
+           } else {
+            $opcnoap=0; 
+            $chknom="chk".$numreac;
+            $opsel=${$chknom};    //validamos la opcion selecionada
+            if ($opsel) {    //si es aceptado
+                $opcsel=-1;
+                $datosController= array("nser"=>$ser,
+                              "nsec"=>$sec,
+                              "nreac"=>$numreac,
+                              "ncuen"=>$idc,
+                              );
+            
+                $ponderacion = DatosPond::leePonderacionReactivo($datosController, "cue_reactivosdetalle");
+                if ($ponderacion["rd_ponderacion"]){
+                  $valpond=$ponderacion["rd_ponderacion"];
+                } else {
+                  $valpond=0;
+                }
+
+            }else {   // si no es aceptado
+                $opcsel=0;
+                $valpond=0; 
+            } 
+          }  
+      # vamos a ingresar EL REACTIVO
+          $descom=0;
+
+        $datosController= array("idser"=>$ser,
+            "numrep"=>$nrep,
+            "numsec"=>$sec,
+            "numreac"=>$numreac,
+            "valpond"=>$valpond,
+            "descom"=>$descom,
+            "opcsel"=>$opcsel,
+            "opcnoap"=>$opcnoap,
+            );
+        $respuesta = DatosPond::insertaregistroPonderado($datosController, "ins_detalle");
+      }  //foreach
+      // regresa
+         echo "regresa";
+            echo "
+           <script type='text/javascript'>
+             window.location.href='index.php?action=editarep&idc=".$idc."&sv=".$ser."&pv=".$pv."&nrep=".$nrep."'
+                </script>
+                  ";
+      
+         } // if validacion post 
+   }    // funcion
+
 
 
 

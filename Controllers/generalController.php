@@ -195,6 +195,9 @@ class GeneralController{
          $pv=$_GET["pv"];
          $idc=$_GET["idc"];
 
+         #guarda en pantalla
+     
+
 		echo '<section class="content container-fluid">
 
       <!----- Inicia contenido ----->
@@ -203,8 +206,13 @@ class GeneralController{
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-              <form role="form">';
-                # valida si existen datos
+             <form role="form" method="post">';
+             echo '<input type="hidden" name="sv" value="'.$sv.'">';
+             echo '<input type="hidden" name="nrep" value="'.$nrep.'">';         
+             echo '<input type="hidden" name="sec" value="'.$sec.'">';
+             echo '<input type="hidden" name="pv" value="'.$pv.'">';
+             echo '<input type="hidden" name="idc" value="'.$idc.'">';
+                      # valida si existen datos
              $existe = DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
              if ($existe){
                 
@@ -212,6 +220,7 @@ class GeneralController{
                 #LEE VARIABLES
                   $cinsp=$registro["i_claveinspector"];
                   $fecvis=$registro["i_fechavisita"];
+                 // echo $fecvis;
                   $mesas=$registro["i_mesasignacion"];
                   $hrent=$registro["i_horaentradavis"];
                   $horaEn=$registro["HoraEn"];
@@ -234,26 +243,27 @@ class GeneralController{
                   $fecfin=$registro["i_fechafinalizado"];
                   $reasigna=$registro["i_reasigna"];
                   $gpo=$_SESSION["GrupoUs"];
+                  
                   echo '
                   <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
                   
-                  echo '<select class="form-control" name="insp" id=insp>';
+                  echo '<select class="form-control" name="inspector" id=inspector>';
                   #busca inspector
                   $catalogo = DatosInspector::listainspectores("ca_inspectores");
                    foreach ($catalogo as $key => $item) {
                       if ($item["ins_clave"]==$cinsp) {
                         echo '<option value='.$item["ins_clave"].' selected>'.$item["ins_nombre"].'</option>';
                       } else {
-                        echo '<option '.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';
+                        echo '<option value='.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';
                       }                   
-                  }  
+                   }  
 
                    echo ' </select>
                   </div>
                   <div class="form-group col-md-12">
                   <label>MES ASIGNACION</label>';
-                   echo '<select class="form-control" name=mesas id="mesas">';
+                   echo '<select class="form-control" name="mesas" id="mesas">';
                    $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
                    //$sele="";
                    foreach ($catalogo as $key => $rowc) {
@@ -306,7 +316,7 @@ class GeneralController{
                 </div>
                 <div class="form-group col-md-12">
                   <label>RESPONSABLE DEL PUNTO DE VENTA</label>
-                  <input type="text" class="form-control" placeholder="" id="resp" name="resp" value="'.$respvis.'">
+                  <input type="text" class="form-control" placeholder="" id="responsable" name="responsable" value="'.$respvis.'">
                 </div>
                 <div class="form-group col-md-12">
                   <label>CARGO</label>
@@ -340,9 +350,9 @@ class GeneralController{
                         $j1=$j;
                       }
                       if ($j==$horaEn2){
-                         echo "<option value='".$j."' selected>".$j1."</option>";
+                         echo "<option value='".$j1."' selected>".$j1."</option>";
                        }else{
-                          echo "<option value='".$j."'>".$j1."</option>";
+                          echo "<option value='".$j1."'>".$j1."</option>";
                        }     
                   }
                     
@@ -378,9 +388,9 @@ class GeneralController{
                         $j1=$j;
                       }
                      if ($j==$horaEn4){
-                        echo "<option value='".$j."' selected>".$j1."</option>";
+                        echo "<option value='".$j1."' selected>".$j1."</option>";
                      }else{
-                         echo "<option value='".$j."'>".$j1."</option>";
+                         echo "<option value='".$j1."'>".$j1."</option>";
                      }  
                     
                   }
@@ -405,7 +415,7 @@ class GeneralController{
 
                  <div class="form-group col-md-6">
                  <label>Min</label>
-                  <select class="form-control"  name="HoraEn5">';
+                  <select class="form-control"  name="HoraEn6">';
                   
                   for($j=0;$j<=60;$j++)
                   {
@@ -415,21 +425,30 @@ class GeneralController{
                         $j1=$j;
                       }
                      if ($j==$horaEn6){
-                        echo "<option value='".$j."' selected>".$j1."</option>";
+                        echo "<option value='".$j1."' selected>".$j1."</option>";
                        }else{
-                        echo "<option value='".$j."'>".$j."</option>";
+                        echo "<option value='".$j1."'>".$j."</option>";
                        }     
       
                     
                   }
+
+                  $fvis=SubnivelController::mysql_fecha($fecvis);
+
                   echo '</select>
                 </div>
-                <div class="input-group">
+              <div class="form-group">
+                <label>FECHA DE VISITA:</label>
+
+                <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" name="fechavisita" id="reservation">
-                </div>';  
+                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis"  value="'.$fvis.'">
+                </div>
+                <!-- /.input group -->
+              </div>';
+
                   if ($gpo=='adm'){
                     echo '<div class="form-group col-md-4">';
                     if ($reasigna) {
@@ -440,8 +459,9 @@ class GeneralController{
                     }
                 
                     echo ' <label >REASIGNACION</label>
-                    <input type="checkbox" name="indsyd" '.$valreas.'/>
+                    <input type="checkbox" name="REAS" '.$valreas.'/>
                     </div>
+
                     <div class="form-group col-md-4">';
                     if ($sincobro) {
                         $valsinc="checked";
@@ -450,7 +470,7 @@ class GeneralController{
                          $valsinc="";
                     }
                      echo ' <label >SIN COBRO</label>
-                        <input type="checkbox" name="indsyd" '.$valsinc.'/>
+                        <input type="checkbox" name="SINCOB" '.$valsinc.'/>
                     </div>';
                   }  
 
@@ -462,31 +482,37 @@ class GeneralController{
                   else {
                      $valant="";
                 }
-                 
+                 $femi=SubnivelController::mysql_fecha($fecfin);
                 echo ' <label >REPORTE CIC</label>
                     <input type="checkbox" name="REPCIC"  '.$valant.' />
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-4">
                   <label>NO DE REPORTE CIC</label>
                   <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic" value='.$numrepcic.'>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-4">
                   <label>COORDENAADAS XY</label>
                   <input type="text" class="form-control" placeholder="" id="coorxy" name="coorxy" value="'.$corxy.'">
                 </div>
-                <div class="form-group col-md-12">
-                  <label>FECHA EMISION</label>
-                  <input type="text" class="form-control" placeholder="" id="fecemis" name="fecemis" value="'.$fecfin.'">
+              <div class="form-group">
+                <label>FECHA DE EMISION:</label>
+
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker2" name="fecemi"  value="'.$femi.'">
                 </div>
-                
-                
+                <!-- /.input group -->
+              </div>
+
                 ';                
 
                 if ($finaliza==1) {
                   echo '
                          <div class="form-group col-md-12">
                           <label>FINALIZAR REPORTE  :  FINALIZADO</label>
-                         <input type="button" name="FIN" id="FIN" value="Reactivar" onClick=oCargarre("index.php?op=reac&nrep=1");>
+                         <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=RG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Reactivar </a></button>
                          </div>';
 
 
@@ -503,12 +529,12 @@ class GeneralController{
                 <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
                   
-                  echo '<select class="form-control">';
+                  echo '<select class="form-control" name="inspector">';
                   #busca inspector
                   $catalogo = DatosInspector::listainspectores("ca_inspectores");
                   echo '<option "">--- Seleccione opcion ---</option>';
                   foreach ($catalogo as $key => $item) {
-                    echo '<option '.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';                        
+                    echo '<option value='.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';                        
                   }  
 
                    echo ' </select>
@@ -569,7 +595,7 @@ class GeneralController{
                 </div>
                 <div class="form-group col-md-12">
                   <label>RESPONSABLE DEL PUNTO DE VENTA</label>
-                  <input type="text" class="form-control" placeholder="" id="resp" name="resp" value="'.$respvis.'">
+                  <input type="text" class="form-control" placeholder="" id="responsable" name="responsable" value="'.$respvis.'">
                 </div>
                 <div class="form-group col-md-12">
                   <label>CARGO</label>
@@ -599,7 +625,7 @@ class GeneralController{
                       }else{
                         $j1=$j;
                       }
-                    echo "<option value='".$j."'>".$j1."</option>";
+                    echo "<option value='".$j1."'>".$j1."</option>";
                     
                   }
                   echo '</select>
@@ -628,7 +654,7 @@ class GeneralController{
                       }else{
                         $j1=$j;
                       }
-                    echo "<option value='".$j."'>".$j1."</option>";
+                    echo "<option value='".$j1."'>".$j1."</option>";
                     
                   }
                   echo '</select>
@@ -636,7 +662,7 @@ class GeneralController{
                 <div class="form-group col-md-6">
                   <label>HORA DE SALIDA</label>
                    <label>Hrs</label>
-                  <select class="form-control"  name="HoraEn4">';
+                  <select class="form-control"  name="HoraEn5">';
                   
                   for($j=1;$j<=24;$j++)
                   {
@@ -648,7 +674,7 @@ class GeneralController{
 
                  <div class="form-group col-md-6">
                  <label>Min</label>
-                  <select class="form-control"  name="HoraEn5">';
+                  <select class="form-control"  name="HoraEn6">';
                   
                   for($j=0;$j<=60;$j++)
                   {
@@ -657,63 +683,79 @@ class GeneralController{
                       }else{
                         $j1=$j;
                       }
-                    echo "<option value='".$j."'>".$j1."</option>";
+                    echo "<option value='".$j1."'>".$j1."</option>";
                     
                   }
                   echo '</select>
                 </div>
-                <div class="form-group col-md-12">
-                  <label>FECHA VISITA</label>
-                  <input type="text" class="form-control" placeholder="" id="">
-                  </div>
-                <div class="form-group col-md-4">
-                   <label >REASIGNACION</label>
-                    <input type="checkbox" name="indsyd" />
-                </div>
-                <div class="form-group col-md-4">
-                   <label >SIN COBRO</label>
-                    <input type="checkbox" name="indsyd" />
-                </div><div class="form-group col-md-4">
-                   <label >REPORTE CIC</label>
-                    <input type="checkbox" name="indsyd" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>NO DE REPORTE CIC</label>
-                  <input type="text" class="form-control" placeholder="" id=resp name=resp>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>COORDENAADAS XY</label>
-                  <input type="text" class="form-control" placeholder="" id=resp name=resp>
-                </div>
-                <div class="form-group  col-md-12">
-                <label>FECHA EMISION:</label>
+                 <div class="form-group">
+                <label>FECHA DE VISITA :</label>
 
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="datepicker">
+                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis">
                 </div>
-                               
-               <div class="form-group col-md-12">
-                  <label>FINALIZAR REPORTE</label>
-                  <input type="text" class="form-control" placeholder="" id="">
+                <!-- /.input group -->
+              </div>
+
+
+                <div class="form-group col-md-4">
+                   <label >REASIGNACION</label>
+                    <input type="checkbox" name="REAS" />
+                </div>
+                <div class="form-group col-md-4">
+                   <label >SIN COBRO</label>
+                    <input type="checkbox" name="SINCOB" />
+                </div><div class="form-group col-md-4">
+                   <label >REPORTE CIC</label>
+                    <input type="checkbox" name="REPCIC" />
+                </div>
+                <div class="form-group col-md-12">
+                  <label>NO DE REPORTE CIC</label>
+                  <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic">
+                </div>
+                <div class="form-group col-md-12">
+                  <label>COORDENAADAS XY</label>
+                  <input type="text" class="form-control" placeholder="" id="coorxy" name="coorxy">
                 </div>
                 
-                  ';
+              <div class="form-group">
+                <label>FECHA DE EMISION:</label>
+
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker2" name="fecemi">
+                </div>
+                <!-- /.input group -->
+              </div>
+
+                </br>';
+                               
+                  echo '  <div class="form-group col-md-12">
+                          <label>FINALIZAR REPORTE  :  </label>
+                    <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=FG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Finalizar </a></button>';
 
              }
+
+              #registra reporte
+              $ingreso = new GeneralController();
+              $ingreso -> registrarRepDatosGenerales();
+              //$ingreso -> finalizareporteController();
 
                 echo '<!-- Datos iniciales alta de punto de venta -->
                 
                 <!-- Clasificación punto de venta -->
                 <br>
                 
-                
-                                <!-- Pie de formulario -->
-                 <div class="box-footer col-md-12">
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
-              </div>
+                <div class="box-footer col-md-12">
+                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=editarep&sv='.$sv.'&idc='.$idc.'&nrep='.$nrep.'&pv='.$pv.'"> Cancelar </a></button>
+                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                 </div>
+               
               </form>
               </div>
               </div>
@@ -726,6 +768,201 @@ class GeneralController{
 
 
 	}
+
+
+  public function registrarRepDatosGenerales(){
+      
+       if(isset($_POST["inspector"])||isset($_POST["fecemi"])){
+         # lee todas las variables
+            foreach($_POST as $nombre_campo => $valor){
+          $asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+            eval($asignacion);
+            //echo ($asignacion);
+         }
+         $horent="";
+         $horanasen="";
+         $horsal="";
+          if ($horent){
+          }else{
+             $horent=$HoraEn.":".$HoraEn2;
+          }
+          if ($horanasen){
+          }else{
+             $horanasen=$HoraEn3.":".$HoraEn4;
+          }
+          if ($horsal){
+          }else{
+             $horsal=$HoraEn5.":".$HoraEn6;
+          }
+          //formato a la fecha de visita para bd
+          //$fecvis= mysql_fecha($fecvis);
+          //$fecvis=SubnivelController::mysql_fecha($fecvis);
+          //$fecemis=SubnivelController::mysql_fecha($fecemi);
+          if ($fecemi) {
+            $finaliza=1;
+           } 
+          if ($REPCIC) {
+            $repcic1=-1;
+          } else {
+            $repcic1=0;
+          } 
+          if ($SINCOB) {
+            $sincob1=-1;
+          } else {
+            $sincob1=0;
+          } 
+
+          if ($REAS) {
+            $reasig=-1;
+          } else {
+            $reasig=0;
+          } 
+
+          if($fecemi) {
+              $fecemis=SubnivelController::fecha_mysql($fecemi);
+               
+            }else{
+                $fecemis="0000/00/00";
+            }
+            var_dump($fecemis);
+
+          if($fecvis) {
+              $fvis=SubnivelController::fecha_mysql($fecvis);
+               
+            }else{
+              $fvis="0000/00/00";
+            }
+            var_dump($fvis);
+
+         $datosController= array("idser"=>$sv,
+                                 "numrep"=>$nrep,
+                                 "numunineg"=>$pv,
+                                 "cinspec"=>$inspector,
+                                 "fecvis"=>$fvis,
+                                 "mesasig"=>$mesas,
+
+                                 "horent"=>$horent,
+                                 "horsal"=>$horsal,
+                                 "resp"=>$responsable,
+                                 "cargo"=>$cargo,
+                                 "horanasen"=>$horanasen,
+     
+                                 "repcic1"=>$repcic1,
+                                 "sincob1"=>$sincob1,
+                                 "numrepcic"=>$numrepcic,
+                                 "fecemis"=>$fecemis,
+                                 "reasig"=>$reasig,
+                                 "coorxy"=>$coorxy,
+                                 );
+          //var_dump($datosController);
+
+
+
+        $respuesta =DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
+        //var_dump($respuesta);
+        if ($respuesta==0){
+          #nuevo registro
+          //echo "es nuevo registro";
+          #insertar nuevo registro
+          $respuesta =DatosGenerales::insertaRepGeneral($datosController, "ins_generales");
+           //var_dump($respuesta);
+           
+        } else { #ya existe
+          //  echo "el registro ya existe";
+              if ($FIN) {
+                $finaliza=1;
+               } else {
+                $finaliza=0;   
+               }
+          //    if ($REAS) {
+          //      $reasig=-1;
+          //    } else {
+          //      $reasig=-0;
+          //    } 
+          #actualiza registro 
+          $respuesta =DatosGenerales::actualizaRepGeneral($datosController, "ins_generales");
+          var_dump($respuesta); 
+        }
+        echo "
+        <script type='text/javascript'>
+        window.location.href='index.php?action=editarep&sv=".$sv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."';
+        </script>
+        ";   
+    } // el inspector tiene datos
+  }    
+
+  public function finalizareporteController(){
+     $serv=$_GET["sv"];
+     $nrep=$_GET["nrep"];
+     $tipos=$_GET["ts"];
+     $pv=$_GET["pv"];
+     $sec=$_GET["sec"];
+     if ($tipos=="FG"){
+       #valida servicio 
+       if ($serv==3){
+           #valida que ya se genero el registro en la parte principal
+           $respuesta =DatosGenerales::validaDiagnostico($serv, $nrep, "5", "4", $tabla);
+           if ($respuesta>=0){
+               $respuesta =DatosGenerales::actualizafinalizado($serv, $nrep, "ins_generales");
+               $respuesta =DatosGenerales::finalizaSolicitud($serv, $nrep, "3", "cer_solicitud");
+              print("<script language='javascript'>alert('El reporte No. $nrep ha sido finalizado'); </script>");
+              echo "
+              <script type='text/javascript'>
+              window.location.href='index.php?action=rsn&sv=".$serv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."&ts=G';
+              </script>        ";
+           } else {
+           #actualiza estatus
+            print("<script language='javascript'>alert('El reporte $numr NO puede finalizarse, aun no se ha diagnosticado'); </script>");
+            echo "
+              <script type='text/javascript'>
+              window.location.href='index.php?action=rsn&sv=".$serv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."&ts=G';
+              </script>        ";
+           }
+
+       }else{  #resto de servicios
+          $respuesta =DatosGenerales::actualizafinalizado($serv, $nrep, "ins_generales");
+          print("<script language='javascript'>alert('El reporte No. $nrep ha sido finalizado'); </script>");
+        echo "
+        <script type='text/javascript'>
+        window.location.href='index.php?action=rsn&sv=".$serv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."&ts=G';
+        </script>
+        ";        
+       }
+     }
+  }
+
+public function reactivaReporteController(){
+    
+     $serv=$_GET["sv"];
+     $nrep=$_GET["nrep"];
+     $tipos=$_GET["ts"];
+     $pv=$_GET["pv"];
+     $sec=$_GET["sec"];
+     $idc=$_GET["idc"];
+     if ($tipos=="RG"){
+       #valida servicio 
+       if ($serv==3){
+          $respuesta =DatosGenerales::reactivaReporte($serv, $nrep, "ins_generales");
+          print("<script language='javascript'>alert('El reporte No. $nrep ha sido reactivado'); </script>");
+          $respuesta =DatosGenerales::finalizaSolicitud($serv, $nrep, "2", "cer_solicitud");
+        echo "
+        <script type='text/javascript'>
+        window.location.href='index.php?action=rsn&sv=".$serv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."&ts=G';
+        </script>
+        ";
+
+       }else{  #resto de servicios
+          $respuesta =DatosGenerales::reactivaReporte($serv, $nrep, "ins_generales");
+          print("<script language='javascript'>alert('El reporte No. $nrep ha sido reactivado'); </script>");
+        echo "
+        <script type='text/javascript'>
+        window.location.href='index.php?action=rsn&sv=".$serv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."&ts=G';
+        </script>
+        ";        
+       }
+     }
+  }
+
 
 
 }

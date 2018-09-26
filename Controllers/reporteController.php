@@ -108,18 +108,27 @@ class ReporteController{
 		      $ingreso = new GeneralController();
 			  $ingreso -> reporteGeneralController();
 			  break;
+			case "FG" : 	       
+		      $ingreso = new GeneralController();
+			  $ingreso -> finalizareporteController();
+			  break;
+			case "RG" : 	       
+		      $ingreso = new GeneralController();
+			  $ingreso -> reactivaReporteController();
+			  break;    
 			case "E" : 	       
 		      $ingreso = new EstandarController();
 		      $ingreso -> reporteEstandarController();
 			  break;
 			case "ED" : 	       
 		      $ingreso = new EstandarController();
+		      $ingreso -> borraRepEstandarDetalle();
 			  $ingreso -> reporteEstandarDetalle();
 			  break;
 			case "EN" : 	       
 		      $ingreso = new EstandarController();
 		      // registra estandar
-			  $ingreso -> nuevoRepEstandar();
+			  $ingreso -> nuevoReporteEstandar();
 			  $ingreso -> insertaReporteEstandar();
 			  break;
 			case "TM" : 	       
@@ -132,7 +141,7 @@ class ReporteController{
 		       break;
 		    case "PN" :
 		       $ingreso = new PonderacionController();
-			  // $ingreso -> borrarPonderaController();
+			   $ingreso -> insertaPonderada();
 			  // $ingreso -> vistaConsultaPonderaController();
 		       break;
 		   case "SN" :
@@ -153,6 +162,15 @@ class ReporteController{
 		    case "V" :       
 		       $ingreso = new ProductoController();
 			   $ingreso -> reporteProductoController();
+		       break;
+
+			case "VN" :       
+		       $ingreso = new ProductoController();
+			   $ingreso -> nuevoRepProductoController();
+		       break;
+		    case "GV" :       
+		       $ingreso = new ProductoController();
+			   //$ingreso -> nuevoRepDetProductoController();
 		       break;
 		       
 		    default:

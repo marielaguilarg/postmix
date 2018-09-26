@@ -5,6 +5,7 @@ class MvcController{
 	#llamada a template
 
 	public function plantilla(){
+		//echo "entre a plantilla";
  		include "views/template.php";
 	}
 

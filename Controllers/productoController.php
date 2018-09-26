@@ -1,7 +1,5 @@
 <?php
 class ProductoController{
-    
-   
 
 	public function vistaProductoController(){
 		if (isset($_GET["sec"])) {
@@ -195,14 +193,19 @@ class ProductoController{
 		}
 		}
 	}
-	
-	
 
 	public function reporteProductoController(){
 
 		$nrep = $_GET["nrep"];
 		$sec = $_GET["sec"];
 		$sv=$_GET["sv"];
+
+			echo '<div class="row">
+	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$sec.'&sv='.$sv.'&ts=VN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+	 </div>
+	 </div>';
+
+
 
 		$datosController= array("sec"=>$sec,
 	                            "sv"=>$sv,
@@ -240,14 +243,14 @@ class ProductoController{
              <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
 			<div class="col-sm-6 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">No.</h5>
+                    <h5 class="description-text"><strong>No.</strong></h5>
                     <span class="description-text-2">'.$item["ip_numrenglon"].'</span>
                   </div>
                   <!-- /.description-block -->
                 </div>
             <div class="col-sm-6">
                   <div class="description-block">
-                    <h5 class="description-text">No. de sistema</h5>
+                    <h5 class="description-text"><strong>No. de sistema</strong></h5>
                     <span class="description-text-2">'.$item["ip_numsistema"].'</span>
                   </div>
                   <!-- /.description-block -->
@@ -272,14 +275,14 @@ class ProductoController{
               <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
 			<div class="col-sm-6 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">Cajas</h5>
+                    <h5 class="description-text"><strong>Cajas</strong></h5>
                     <span class="description-text-2">'.$item["ip_numcajas"].'</span>
                   </div>
                   <!-- /.description-block -->
                 </div>
             <div class="col-sm-6">
                   <div class="description-block">
-                    <h5 class="description-text">Condicion</h5>
+                    <h5 class="description-text"><strong>Condicion</strong></h5>
                     <span class="description-text-2">';
                     if ($item["ip_condicion"]=="V"){
                     	echo "VIGENTE";
@@ -294,7 +297,7 @@ class ProductoController{
               <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
 			<div class="col-sm-6 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">Fecha de produccion</h5>
+                    <h5 class="description-text"><strong>Fecha de produccion</strong></h5>
                     <span class="description-text-2">';
 
 					$fecprod=SubnivelController::cambiaf_a_normal($item["ip_fechaproduccion"]);
@@ -305,7 +308,7 @@ class ProductoController{
                 </div>
             <div class="col-sm-6 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">Fecha de caducidad</h5>
+                    <h5 class="description-text"><strong>Fecha de caducidad</strong></h5>
                     <span class="description-text-2">';
                     $feccad=SubnivelController::cambiaf_a_normal($item["ip_fechacaducidad"]);
                     echo $feccad.'</span>
@@ -316,21 +319,21 @@ class ProductoController{
 				<div class="row">
 			<div class="col-sm-4 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">Edad dias</h5>
+                    <h5 class="description-text"><strong>Edad dias</strong></h5>
                     <span class="description-text-2">'.$item["ip_edaddias"].'</span>
                   </div>
                   <!-- /.description-block -->
                 </div>
             <div class="col-sm-4 border-right">
                   <div class="description-block">
-                    <h5 class="description-text">Semanas</h5>
+                    <h5 class="description-text"><strong>Semanas</strong></h5>
                     <span class="description-text-2">'.$item["ip_semana"].'</span>
                   </div>
                   <!-- /.description-block -->
                 </div>
             <div class="col-sm-4">
                   <div class="description-block">
-                    <h5 class="description-text">Estatus</h5>
+                    <h5 class="description-text"><strong>Estatus</strong></h5>
                     <span class="description-text-2">';
 					if ($item["ip_estatus"]=="I"){
                     	echo "INSTALADO";
@@ -377,6 +380,145 @@ class ProductoController{
 echo '</section>';
 }
 
+public function nuevoRepProductoController(){
+	  $sv = $_GET["sv"];
+	  $idc = $_GET["idc"];
+	  $sec = $_GET["sec"];
+	  $nrep =$_GET["nrep"];
+
+
+echo '
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1> ALTA DE PRODUCTO <small></small></h1>
+    </section>
+
+    <!-- Main content -->
+    <section class="content container-fluid">
+
+
+      <!----- Inicia contenido ----->
+        <div class="row">
+		<div class="col-md-12">
+        <div class="box box-info">
+            
+            <div class="box-body">
+  			<form role="form"  method="post">          
+              <div class="form-group">
+               <div class="form-group col-md-12">
+                <label for="Sistemano" class="col-sm-2 control-label">Sistema No.</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="numsistema" placeholder="">
+                </div>
+				  </div>
+              <div class="form-group col-md-12">
+                <label for="Producto" class="col-sm-2 control-label">Producto</label>
+                <div class="col-sm-10">
+                    
+				<select class="form-control" name="numcatalogo" id="numcatalogo">
+					  <option value="">--- Elija el catalogo ---</option>';
+				 
+			    $respuestac = DatosCatalogoDetalle::listaCatalogoDetalle(2, "ca_catalogosdetalle");
+				foreach($respuestac as $row => $itemc){
+					echo '<option value='.$itemc["cad_idopcion"].'>'.$itemc["cad_descripcionesp"].'</option>';
+					}
+
+					echo '</select>
+				  </div>
+				 </div> 
+              <div class="form-group col-md-12">
+                <label for="TotalDeCajas" class="col-sm-2 control-label">Total de cajas</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="registros" placeholder="">
+                </div>
+				  </div>';
+
+		$ingreso = new ProductoController();
+		$ingreso ->nuevoRepDetProductoController();
+
+
+                 echo ' <div class="row">
+		<div class="col-md-12" >
+		<button  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;" onclick><a href="index.php?action=rsn&sec='.$sec.'&sv='.$ser.'&ts=GV&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'" >  Aceptar  </a></button>
+		<button type="submit" class="btn btn-info pull-right">Guardar</button>
+		 </div>
+		 </div>
+              </div>
+              </div>
+              </form>
+            </div>
+            <!-- /.box-body -->
+          </div>
+			</div>
+        </div>
+	  <!----- Finaliza contenido ----->
+    </section>
+    <!-- /.content -->
+ ';
+  
+
+}
+
+public function nuevoRepDetProductoController(){
+
+	echo "entre a producto controller";
+	$ncajas=$_POST["registros"];	
+
+//	if (isset($_POST["registros"]) {
+//   		echo "<script>alert('Usuario insertado exitosamente');</script>";   
+//    }
+
+	
+
+   	foreach($_POST as $nombre_campo => $valor){
+				$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+				eval($asignacion);
+		 	echo ($asignacion);
+			} 
+
+echo '
+    <div class="row">
+           <div class="col-md-12">
+          <div class="box">
+            <div class="box-header">
+              <h4 class="box-title">Sistema No.</h4>
+            </div>
+            <div class="box-header">
+              <h4 class="box-title">Producto</h4>
+            </div>
+            <div class="box-header">
+              <h4 class="box-title">No. de Cajas</h4>
+            </div>
+          
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table">
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 20%">FECHA CADUCI</th>
+                  <th style="width: 20%">NUM CAJAS</th>
+                  <th style="width: 20%">ESTATUS</th>
+                  <th style="width: 20%">SIN ETIQUETA</th>
+                </tr>
+               </table>
+            </div>
+           
+          <!-- /.box -->
+        </div>
+        </div>
+
+
+	  <!----- Finaliza contenido ----->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->';
+
+
+
+
+}
 
 }
 ?>	
