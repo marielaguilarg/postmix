@@ -19,7 +19,9 @@ class DatosAbierta extends Conexion{
 	}
 
 	public function vistaAbiertaModeln1($servicioModel, $datosModel, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,ra_numcaracteristica,ra_numcomponente2) =:nsec");
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente,
+ ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning 
+FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,ra_numcaracteristica,ra_numcomponente2) =:nsec");
 		
 
 		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_INT);
@@ -134,6 +136,7 @@ public function vistaAbiertaModeln3($servicioModel, $datosModel, $tabla){
 			$stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
 			$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_STR);
 			$stm1-> execute();
+			//$stm1->debugDumpParams();
 			return $stm1->fetch();
 			$stm1->close();
 
@@ -493,6 +496,44 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 			$stmt->close();
 
 	}
+	
+	public function getReactivoAbiertoxReactivo($servicioModel, $datosModel, $tabla){
+	    $stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,'.', r_numreactivo)=:nsec");
+	    
+	    $stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
+	    $stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	   
+	    return $stmt->fetchAll();
+	}
+	
+	public function consultaInsDetalleAbierta($reporte,$numser,$seccion,$reactivo,$componente,$caract1,$caract2,$caract3,$renglon, $tabla){
+	    $query_na="SELECT ida_descripcionreal, ida_numreporte FROM $tabla
+where ida_claveservicio=:servicio and ida_numseccion=:seccion and ida_numreactivo=:reactivo and ida_numcomponente=:componente
+and ida_numcaracteristica1=:caract1 and ida_numcaracteristica2=:caract2 and ida_numcaracteristica3=:caract3
+ and ida_numreporte=:reporte and ida_numrenglon=:renglon";
+	    
+	    $stmt = Conexion::conectar()-> prepare($query_na);
+	    
+	  
+	    $stmt-> bindParam(":servicio", $numser, PDO::PARAM_INT);
+	    $stmt-> bindParam(":seccion", $seccion, PDO::PARAM_INT);
+	    $stmt-> bindParam(":reactivo", $reactivo, PDO::PARAM_INT);
+	    $stmt-> bindParam(":componente", $componente, PDO::PARAM_INT);
+	    $stmt-> bindParam(":caract1", $caract1, PDO::PARAM_INT);
+	    $stmt-> bindParam(":caract2", $caract2, PDO::PARAM_INT);
+	    $stmt-> bindParam(":renglon", $caract3, PDO::PARAM_INT);
+	    $stmt-> bindParam(":caract3", $renglon, PDO::PARAM_INT);
+	    $stmt-> bindParam(":reporte", $reporte, PDO::PARAM_INT);
+	    
+	    
+	    $stmt-> execute();
+	    
+	    return $stmt->fetchAll();
+	
+	    
+	}
 
 	public function validasubseccionAbierta($idser, $idsec, $idreac, $tabla){
 		$stmt=Conexion::conectar()->prepare("SELECT rad_descripcionesp FROM $tabla  where ser_claveservicio=:idser and sec_numseccion=:idsec and r_numreactivo=:idreac");
@@ -514,7 +555,7 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 		  FROM $tabla WHERE ser_claveservicio =:idser  AND concat(sec_numseccion,'.', r_numreactivo) =:idsec");
 
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
-			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
 			
 			$stmt-> execute();
 			return $stmt->fetchall();
@@ -540,7 +581,7 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 		$stmt=Conexion::conectar()->prepare("SELECT sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp FROM $tabla WHERE ser_claveservicio =:idser AND concat(sec_numseccion,'.', r_numreactivo,'.', ra_numcomponente,'.', ra_numcaracteristica) =:idsec");
 
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
-			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
 			
 			$stmt-> execute();
 			return $stmt->fetchall();
@@ -601,12 +642,109 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
 			
 			$stmt-> execute();
+			//$stmt->debugDumpParams();
 			return $stmt->fetchall();
 		
 			$stmt->close();
 
 	}
 
+	
+	public function consultaAbiertoDetalle($idser, $idsec, $idrep,  $tabla){
+	    $sqlnr = "SELECT  `ida_claveservicio`,
+  `ida_numreporte`,
+  `ida_numseccion`,
+  `ida_numreactivo`,
+  `ida_numcomponente`,
+  `ida_numcaracteristica1`,
+  `ida_numcaracteristica2`,
+  `ida_numcaracteristica3`,
+  `ida_descripcionreal`,
+  `ida_comentario`,
+  `ida_aceptado`,
+  `ida_numrenglon`
+		  FROM ".$tabla."
+		 WHERE `ins_detalleabierta`.`ida_claveservicio` =:idser
+		   AND `ins_detalleabierta`.`ida_numreporte` =:numrep 
+		   AND concat(ida_numseccion,'.',ida_numreactivo,'.',ida_numcomponente,'.',ida_numcaracteristica1,'.',ida_numcaracteristica2) =:secc group by ida_numrenglon;";
+	    
+	    $stmt=Conexion::conectar()->prepare($sqlnr);
+	    
+	    $stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+	    $stmt-> bindParam(":secc", $idsec, PDO::PARAM_STR);
+	    $stmt-> bindParam(":numrep", $idrep, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	   
+	    return $stmt->fetchall();
+	    
+	  
+	   
+	    
+	}
+	
+	public function consultaAbiertoDetallexSeccion($idser, $idsec, $idrep,  $tabla){
+	    $sqlnr = "SELECT  `ida_claveservicio`,
+  `ida_numreporte`,
+  `ida_numseccion`,
+  `ida_numreactivo`,
+  `ida_numcomponente`,
+  `ida_numcaracteristica1`,
+  `ida_numcaracteristica2`,
+  `ida_numcaracteristica3`,
+  `ida_descripcionreal`,
+  `ida_comentario`,
+  `ida_aceptado`,
+  `ida_numrenglon`
+		  FROM ".$tabla."
+		 WHERE `ins_detalleabierta`.`ida_claveservicio` =:idser
+		   AND `ins_detalleabierta`.`ida_numreporte` =:numrep
+		   AND ida_numseccion =:secc ;";
+	    
+	    $stmt=Conexion::conectar()->prepare($sqlnr);
+	    
+	    $stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+	    $stmt-> bindParam(":secc", $idsec, PDO::PARAM_STR);
+	    $stmt-> bindParam(":numrep", $idrep, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	 
+	    return $stmt->fetchall();
+	    
+	    
+	    
+	    
+	}
+	
+	public function getAbierta($datosservicio, $datosModel, $tabla){
+	    $stm1=Conexion::conectar()->prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo,
+ ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning 
+from $tabla where concat(sec_numseccion,'.',r_numreactivo,'.',ra_numcomponente,'.',ra_numcaracteristica,'.',ra_numcomponente2) =:idsec and ser_claveservicio=:idser");
+	    
+	    $stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
+	    $stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_STR);
+	    $stm1-> execute();
+	  
+	    return $stm1->fetch();
+	    $stm1->close();
+	    
+	}
+	
+	public function getAbDetModel($servicioModel, $datosModel, $tabla){
+	    $stmt = Conexion::conectar()-> prepare("SELECT  ser_claveservicio, sec_numseccion, r_numreactivo, 
+ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, rad_numcaracteristica2, rad_descripcionesp,
+ rad_descripcioning, rad_syd, rad_lugarsyd, rad_tiporeactivo, rad_formatoreactivo, rad_clavecatalogo,
+ rad_valorminimo, rad_valormaximo FROM $tabla 
+WHERE concat(sec_numseccion,'.',r_numreactivo,'.',ra_numcomponente,'.',
+ra_numcaracteristica,'.',ra_numcomponente2)=:nsec and ser_claveservicio= :ids");
+	    
+	    $stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
+	    $stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	 
+	    return $stmt->fetchAll();
+	}
 	
 	
 }

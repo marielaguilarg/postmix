@@ -9,7 +9,7 @@ class DatosCatalogoDetalle {
   `cad_descripcionesp`,
   `cad_descripcioning`,
   `cad_otro`
-     FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id");
+FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id");
          
 		$stmt->bindParam(":id", $datosModel, PDO::PARAM_INT);
 		
@@ -23,8 +23,7 @@ class DatosCatalogoDetalle {
             
          $sql_cat = "SELECT
 ca_catalogosdetalle.cad_descripcionesp,
-ca_catalogosdetalle.cad_descripcioning
-FROM".
+ca_catalogosdetalle.cad_descripcioning FROM ".
 $tabla."
 WHERE
 ca_catalogosdetalle.cad_idcatalogo =  :clavecatalogo AND

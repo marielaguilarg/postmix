@@ -122,6 +122,39 @@ class DatosGenerales extends Conexion{
 
 	}
 
+
+        public function consultaReporteUnegocioInspector($numrep,$vservicio)  {
+            $sql_titulo = "SELECT * , left(i_horaentradavis,5) as horent,   left(i_horasalidavis,5) as horsal,  left(i_horaanalisissensorial,5) as horana
+FROM ins_generales Inner Join ca_unegocios ON 
+ ins_generales.i_unenumpunto = ca_unegocios.une_id
+ Inner Join ca_inspectores ON ins_generales.i_claveinspector = ca_inspectores.ins_clave
+WHERE ins_generales.i_numreporte =:numrep   and ins_generales.i_claveservicio=:vservicio";
+        //echo $sql_titulo;
+          
+            $stmt=DatosGenerales::conectar()->prepare($sql_titulo);
+           $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+	     $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+              $stmt-> execute();
+//$stmt->debugDumpParams();
+            $result=$stmt->fetch();
+            return $result;
+        }
+        
+        public function getDatosReporteUnegocio($numrep,$vservicio)  {
+            $sql_titulo = "SELECT *
+FROM ins_generales
+Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
+WHERE ins_generales.i_numreporte =:numrep   and ins_generales.i_claveservicio=:vservicio";
+            //echo $sql_titulo;
+            
+            $stmt=DatosGenerales::conectar()->prepare($sql_titulo);
+            $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+            $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+            $stmt-> execute();
+            //$stmt->debugDumpParams();
+            $result=$stmt->fetch();
+            return $result;
+        }
 	public function validaExisteReporte($idser, $idrep, $tabla){
 		$stmt=Conexion::conectar()->prepare("SELECT i_numreporte FROM ca_unegocios inner join $tabla on une_id=i_unenumpunto WHERE i_claveservicio =:idser AND i_numreporte =:idrep");
 
@@ -146,8 +179,7 @@ class DatosGenerales extends Conexion{
 			$stmt-> execute();
 			return $stmt->fetch();
 		
-			$stmt->close();
-
+		
 	}
 
 	public function insertaRepGeneral($datosModel, $tabla){
@@ -176,18 +208,18 @@ class DatosGenerales extends Conexion{
 			IF($stmt-> execute()){
 
 				return "success";
-			}
-			
-			else {
-
-				return "error";
-		
-			};
-		
-			$stmt->close();
-
 	}
-
+	
+			else {
+        
+				return "error";
+        
+			}
+                                
+                                
+	}
+          
+        
 	public function actualizaRepGeneral($datosModel, $tabla){
 		$stmt=Conexion::conectar()->prepare("UPDATE ins_generales Set i_claveinspector=:cinspec, i_mesasignacion=:mesasig, i_horaentradavis=:horent, i_horasalidavis=:horsal, i_responsablevis=:resp, i_puestoresponsablevis=:cargo,  i_horaanalisissensorial=:horanasen, i_fechavisita=:fecvis, i_reportecic=:repcic1,  i_sincobro=:sincob1, i_numreportecic=:numrepcic, i_coordenadasxy=:coorxy, i_fechafinalizado=:fecemis, i_finalizado=:finaliza, i_reasigna=:reasig where  i_claveservicio =:idser and i_numreporte =:numrep and i_unenumpunto = :numunineg");
 
@@ -198,8 +230,7 @@ class DatosGenerales extends Conexion{
 			$stmt-> bindParam(":fecvis", $datosModel["fecvis"], PDO::PARAM_STR);
 			$stmt-> bindParam(":mesasig", $datosModel["mesasig"], PDO::PARAM_STR);
 			$stmt-> bindParam(":horent", $datosModel["horent"], PDO::PARAM_STR);
-			$stmt-> bindParam(":horsal", $datosModel["horsal"], PDO::PARAM_STR);
-			$stmt-> bindParam(":resp", $datosModel["resp"], PDO::PARAM_INT);
+       		$stmt-> bindParam(":resp", $datosModel["resp"], PDO::PARAM_INT);
 			$stmt-> bindParam(":cargo", $datosModel["cargo"], PDO::PARAM_STR);
 		   $stmt-> bindParam(":horanasen", $datosModel["horanasen"], PDO::PARAM_STR);
 			$stmt-> bindParam(":repcic1", $datosModel["repcic1"], PDO::PARAM_INT);
@@ -220,14 +251,36 @@ class DatosGenerales extends Conexion{
 
 				return "error";
 		
-			};
+			}
 		
 			$stmt->close();
 
 	}
 
 
-	public function actualizafinalizado($idser, $numrep, $tabla){
+
+ public function consultaReportexServicioUneg($idser, $idune, $tabla){
+	    $sqltr="SELECT ins_generales.i_numreporte FROM
+ins_generales WHERE ins_generales.i_unenumpunto =:cveuneg AND
+
+ins_generales.i_claveservicio =:cveser ";
+	    $stmt=Conexion::conectar()->prepare($sqltr);
+	    
+	    $stmt-> bindParam(":cveser", $idser, PDO::PARAM_INT);
+	    $stmt-> bindParam(":cveuneg", $idune, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	    return $stmt->fetchAll();
+	   
+	    
+	}
+	
+
+       
+
+
+}	   
+public function actualizafinalizado($idser, $numrep, $tabla){
 		$stmt=Conexion::conectar()->prepare("UPDATE ins_generales SET i_finalizado=1 WHERE i_claveservicio =:idser AND i_numreporte =:numrep");
 
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
@@ -307,3 +360,6 @@ public function finalizaSolicitud($idser, $numrep, $estsol, $tabla){
 
 	}
 }
+
+
+?>

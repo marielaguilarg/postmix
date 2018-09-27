@@ -341,6 +341,63 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 
 		$stmt->close();
 	}
+        
+        
+function CumplimientoPonderada($vservicio, $referencia, $reporte) {
+  
+    $SQL_PRESION_O = "SELECT  id_aceptado as nivaceptren, cue_reactivos.r_descripcionesp, cue_reactivos.r_descripcioning, id_noaplica
+FROM ins_detalle
+Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
+WHERE
+concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) =  :referencia  and ins_detalle.id_numreporte=:rep and cue_reactivos.ser_claveservicio=:vservicio";
+    //echo $SQL_PRESION_O;
+
+    $stmt = Conexion::conectar()-> prepare($SQL_PRESION_O);
+
+    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+    $stmt-> bindParam(":rep",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> execute();
+
+    $RS_PRESION_O=$stmt->fetchall();
+    $res=array();
+    foreach ($RS_PRESION_O as $ROW_PRESION_O) {
+        if ($ROW_PRESION_O ['id_noaplica'] == - 1)
+        {    $res[2] = "<strong>NA</strong>";}
+        else
+        if ($ROW_PRESION_O ['nivaceptren'] == - 1)
+        {   $res[2] = "paloma";}
+        else
+        {    $res[2] = "tache";}
+        if ($_SESSION["idiomaus"] == 2)
+        {   $res[0] = $ROW_PRESION_O ['r_descripcioning'];}
+        else
+        {    $res[0] = $ROW_PRESION_O ['r_descripcionesp'];}
+        $res[1] = "";
+        $res[3] = $referencia;
+    }
+    return $res;
+}
+
+function listaReactivos($vservicio, $referencia, $reporte) {
+    
+    $SQL_PRESION_O = "SELECT  id_aceptado as nivaceptren, cue_reactivos.r_descripcionesp, cue_reactivos.r_descripcioning, id_noaplica
+FROM ins_detalle
+Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
+WHERE
+ins_detalle.id_numseccion =  :referencia  and ins_detalle.id_numreporte=:rep and cue_reactivos.ser_claveservicio=:vservicio";
+    //echo $SQL_PRESION_O;
+    
+    $stmt = Conexion::conectar()-> prepare($SQL_PRESION_O);
+    
+    $stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+    $stmt-> bindParam(":rep",$reporte , PDO::PARAM_INT);
+    $stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+    $stmt-> execute();
+    
+    return $stmt->fetchall();
+  
+}
 
 
 	public function vistareportePonderaModel($datosModel, $datoserv, $tabla){

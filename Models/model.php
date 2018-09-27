@@ -15,7 +15,9 @@ class EnlacesPaginas{
 			$enlacesModel == "editafranquicia" ||
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
+
 		    $enlacesModel == "editaunegocio" ||
+
 
 			$enlacesModel == "nuevaseccion" ||
 			$enlacesModel == "listaseccion" ||
@@ -50,6 +52,7 @@ class EnlacesPaginas{
 			$enlacesModel == "runegociodetalle" ||
 			$enlacesModel == "runegociocomp" ||
 			$enlacesModel == "editarep" ||
+
 			$enlacesModel == "nvorep" ||
 			
 			#AQUI INICIA SECCION REPORTE	
@@ -58,7 +61,7 @@ class EnlacesPaginas{
 			$enlacesModel == "estanalisis" ||
 			$enlacesModel == "recepcion" ||
 			$enlacesModel == "prueba" ||
-			
+
 
 			#AQUI INICIA LA SECCION DE SEGURIDAD
 			$enlacesModel == "login" ||			
@@ -72,10 +75,22 @@ class EnlacesPaginas{
 			$enlacesModel == "listan6" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
-			$enlacesModel == "nuevacuenta" ||
+			$enlacesModel == "nuevacuenta" || 
 			$enlacesModel == "nuevoReporteProducto"||  
-				   
-			$enlacesModel == "indbuscapv" ||
+
+			#AQUI INICIA SECCION INDICADORES   
+			$enlacesModel == "indgraficaindicadorgrv2" ||
+            $enlacesModel == "indgraficaindicadorgr" ||
+            $enlacesModel == "indestadisticares"  ||
+            $enlacesModel == "indindicadoresgrid"  ||
+            $enlacesModel == "indcumplimientoestabl" ||
+            $enlacesModel == "indindicadores" ||
+            $enlacesModel == "indbuscapv" ||
+            $enlacesModel == "indhistorialreportes"  ||
+            $enlacesModel == "indresultadosxrep"|| 
+            $enlacesModel == "indrepdiario" ||
+            $enlacesModel == "indrepxperiodo"  ||
+            $enlacesModel == "indhistoricoxpv"  ||
 			$enlacesModel == "indcumplimientoestabl" ||
 			$enlacesModel == "indestadisticares"  ||
 			$enlacesModel == "indgraficares" ||
@@ -87,13 +102,28 @@ class EnlacesPaginas{
 			$enlacesModel == "indrepxperiodo" ||
 			$enlacesModel == "indresultadosxrep" ||
 			$enlacesModel == "indresumenresultados" ||
-
+		    
+            $enlacesModel == "indconsultaponderada" ||
+            $enlacesModel == "indconsultaabiertadetalle" ||
+            $enlacesModel == "indconsultaestandar" ||
+            $enlacesModel == "indconsultasecciones" ||
+            $enlacesModel == "indlistasecciones" ||
+		   
+		    $enlacesModel == "indconsultageneral" ||
 			$enlacesModel == "indgraficaaplica" ||
 			$enlacesModel == "indgraficacomportamiento" ||
 			$enlacesModel == "indgraficacumplimiento" ||
 			$enlacesModel == "indgraficacumplimientoaj" ||
             $enlacesModel == "indgraficafrecuencia"  ||
-            $enlacesModel == "indgraficapromediojarabe" 
+		    $enlacesModel == "indgraficapromediojarabe"  ||
+		    //ligas a certificacion
+		    $enlacesModel == "editasolicitud" ||
+		    $enlacesModel == "listasolicitudes" ||
+		    $enlacesModel == "listacertificados"||
+		    $enlacesModel == "listaestatussolicitud"||
+		    
+		    //seccion de consultas
+		    $enlacesModel=="inicio_excel"
 			 
 			 ){
 
@@ -108,8 +138,6 @@ class EnlacesPaginas{
 			// aqui meteremos todas las secciones del cuestionario
 			$module ="views/modulos/cue_reporte.php";	
 		}
-
-	
 
 		else if($enlacesModel == "index"){
 

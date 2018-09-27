@@ -14,6 +14,18 @@ class DatosInspector extends Conexion{
 		
 			$stmt->close();
 	}
+	
+	public function getInspector($usuario,$tabla){
+	    $sqlins="SELECT ca_inspectores.ins_usuario, ca_inspectores.ins_nombre FROM $tabla
+ WHERE ca_inspectores.ins_usuario =:nins";
+	    
+	    $stmt=Conexion::conectar()->prepare($sqlins);
+	    $stmt->bindParam(":nins", $usuario, PDO::PARAM_INT);
+	    $stmt-> execute();
+	   
+	    return $stmt->fetch();
+	    
+	}
 
 }
 
