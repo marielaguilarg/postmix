@@ -142,7 +142,7 @@ function cortarPalabra($cadena){
    {
    		
    	
-   		$nva_fecha=split('/',$fecha);
+   		$nva_fecha=str_split('/',$fecha);
 		
 		return $nva_fecha[2].'/'.$nva_fecha[1].'/'.$nva_fecha[0];
 	
@@ -152,37 +152,37 @@ function cortarPalabra($cadena){
    {
    		
    	
-   		$nva_fecha=split('/',$fecha);
+   		$nva_fecha=str_split('/',$fecha);
 		
 		return $nva_fecha[2].'-'.$nva_fecha[1].'-'.$nva_fecha[0];
 	
    }
 
-  function formato_fecha($fechacad) {
-            if ("$fechacad" != "") { //<-- verifico que el campo fecha no est� vac�o
-                $fechacad = str_replace("-01-", 'Ene', $fechacad);
-                $fechacad = str_replace("-02-", 'Feb', $fechacad);
-                $fechacad = str_replace("-03-", 'Mar', $fechacad);
-                $fechacad = str_replace("-04-", 'Abr', $fechacad);
-                $fechacad = str_replace("-05-", 'May', $fechacad);
-                $fechacad = str_replace("-06-", 'Jun', $fechacad);
-                $fechacad = str_replace("-07-", 'Jul', $fechacad);
-                $fechacad = str_replace("-08-", 'Ago', $fechacad);
-                $fechacad = str_replace("-09-", 'Sep', $fechacad);
-                $fechacad = str_replace("-10-", 'Oct', $fechacad);
-                $fechacad = str_replace("-11-", 'Nov', $fechacad);
-                $fechacad = str_replace("-12-", 'Dic', $fechacad);
-                if (preg_match("([0-9]{4})([A-Za-z -]{3})([0-9]{2})", $fechacad, $res)) {
-                    $aux = "{$res[3]}-{$res[2]}-{$res[1]}";
-                    return strtoupper($aux);
-
-                    //$html->asignar('FechaVisita',$aux);
-                    //echo $aux;
-                }
-            }
-        }
-
    
+   function formato_fecha($fechacad) {
+       if($fechacad!="") //<-- verifico que el campo fecha no esté vacío
+       {
+           $fechacad=str_replace("-01-",'Ene',$fechacad);
+           $fechacad=str_replace("-02-",'Feb',$fechacad);
+           $fechacad=str_replace("-03-",'Mar',$fechacad);
+           $fechacad=str_replace("-04-",'Abr',$fechacad);
+           $fechacad=str_replace("-05-",'May',$fechacad);
+           $fechacad=str_replace("-06-",'Jun',$fechacad);
+           $fechacad=str_replace("-07-",'Jul',$fechacad);
+           $fechacad=str_replace("-08-",'Ago',$fechacad);
+           $fechacad=str_replace("-09-",'Sep',$fechacad);
+           $fechacad=str_replace("-10-",'Oct',$fechacad);
+           $fechacad=str_replace("-11-",'Nov',$fechacad);
+           $fechacad=str_replace("-12-",'Dic',$fechacad);
+           if(preg_match("/([0-9]{4})([A-Za-z]{3})([0-9]{2})/",$fechacad,$res)) {
+            
+               $aux="{$res[3]}-{$res[2]}-{$res[1]}";
+               return $aux;
+               //$html->asignar('FechaVisita',$aux);
+               //echo $aux;
+           }
+       }
+   }
 
 
 
@@ -368,6 +368,109 @@ public function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo){
 '.$texto.'
                             </select>
                         </div>';
+}
+
+//formato de fechas para su uso en el despliegue de reportes
+//Autor : Diego Alvarez F.
+//Fecha de creación : 04 de Septiembre de 2006
+//Funciones adicionales para el trabajo con fechas
+function cambiaf_a_normal($fecha){
+    preg_match("([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
+    $lafecha=$mifecha[3]."/".$mifecha[2]."/".$mifecha[1];
+    return $lafecha;
+}
+
+
+
+//Transforma la fecha al formato requerido en factura
+function fecha_factura($fecha){
+    preg_match( "([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
+    switch ($mifecha[2])
+    {
+        case "01":
+            $strMes="Enero";
+            break;
+        case "02":
+            $strMes="Febrero";
+            break;
+        case "03":
+            $strMes="Marzo";
+            break;
+        case "04":
+            $strMes="Abril";
+            break;
+        case "05":
+            $strMes="Mayo";
+            break;
+        case "06":
+            $strMes="Junio";
+            break;
+        case "07":
+            $strMes="Julio";
+            break;
+        case "08":
+            $strMes="Agosto";
+            break;
+        case "09":
+            $strMes="Septiembre";
+            break;
+        case "10":
+            $strMes="Octubre";
+            break;
+        case "11":
+            $strMes="Noviembre";
+            break;
+        case "12":
+            $strMes="Diciembre";
+            break;
+    }
+    $lafecha=$mifecha[3]."-".$strMes."-".substr($mifecha[0],3,1);
+    return $lafecha;
+}
+
+function fecha_comp($fecha){
+    preg_match( "([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
+    switch ($mifecha[2])
+    {
+        case "01":
+            $strMes="Enero";
+            break;
+        case "02":
+            $strMes="Febrero";
+            break;
+        case "03":
+            $strMes="Marzo";
+            break;
+        case "04":
+            $strMes="Abril";
+            break;
+        case "05":
+            $strMes="Mayo";
+            break;
+        case "06":
+            $strMes="Junio";
+            break;
+        case "07":
+            $strMes="Jul";
+            break;
+        case "08":
+            $strMes="Ago";
+            break;
+        case "09":
+            $strMes="Sep";
+            break;
+        case "10":
+            $strMes="Oct";
+            break;
+        case "11":
+            $strMes="Nov";
+            break;
+        case "12":
+            $strMes="Dic";
+            break;
+    }
+    $lafecha=$mifecha[3]."-".$strMes."-".substr($mifecha[0],0,4);
+    return $lafecha;
 }
 
 }
