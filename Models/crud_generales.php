@@ -279,7 +279,7 @@ ins_generales.i_claveservicio =:cveser ";
        
 
 
-}	   
+	   
 public function actualizafinalizado($idser, $numrep, $tabla){
 		$stmt=Conexion::conectar()->prepare("UPDATE ins_generales SET i_finalizado=1 WHERE i_claveservicio =:idser AND i_numreporte =:numrep");
 
