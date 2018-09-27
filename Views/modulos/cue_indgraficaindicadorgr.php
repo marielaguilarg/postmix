@@ -1,28 +1,30 @@
 <!-- Content Header (Page header) -->
-<?php
-$graficaIndicador = new GraficaIndicadorController();
-//$menu = new Navegacion();
-//$menu->cargarFiltros(1, 100);
-
-$graficaIndicador->vistaGraficaIndicadores();
+<?php
+$graficaIndicador = new GraficaIndicadorController();
+// $menu = new Navegacion();
+// $menu->cargarFiltros(1, 100);
+
+$graficaIndicador->vistaGraficaIndicadores();
 ?>
 <style>
-    .container {
-        width: 100%;
-        height: 350px;
-        margin: 0;
-        padding: 0;
-    }
+.container {
+	width: 100%;
+	height: 350px;
+	margin: 0;
+	padding: 0;
+}
 </style>
-<script src="js/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
-          <script src="js/anychart8.2.1/js/anychart-exports.min.js"></script>
-          <script src="js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
-            <script src="js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
-              <script src="js/anychart8.2.1/js/anychart-ui.min.js"></script>
-                <script src="js/anychart8.2.1/js/anychart-table.min.js"></script>
+<script src="js/anychart8.2.1/js/anychart-base.min.js"
+	type="text/javascript"></script>
+<script src="js/anychart8.2.1/js/anychart-exports.min.js"></script>
+<script src="js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
+<script src="js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
+<script src="js/anychart8.2.1/js/anychart-ui.min.js"></script>
+<script src="js/anychart8.2.1/js/anychart-table.min.js"></script>
 
 
 <script type="text/javascript">
+
     anychart.onDocumentReady(function () {
   
         function drawGauge(value, rango1, rango2, rango3, rango4, url) {
@@ -102,6 +104,7 @@ $graficaIndicador->vistaGraficaIndicadores();
                     .enabled(true)
                     .position('right-center')
                     .offsetX(-10)
+                    .offsetY(7)
                     .anchor('left-center')
                     .fontSize(10)
                     .fontColor('#212121')
@@ -137,42 +140,32 @@ $graficaIndicador->vistaGraficaIndicadores();
         }
 
         function dibujarTablaGraf(container, urlDatos, idtabla) {
-        var	preloader = anychart.ui.preloader();
+        	var	preloader = anychart.ui.preloader();
         	// render preloader to the DOM
             //	preloader.render();
 //             	  preloader = anychart.ui.preloader();
 //               	// cover only chart container
-             preloader.render(document.getElementById(container));
+         	preloader.render(document.getElementById(container));
               	// show preloader
-              	                  preloader.visible(true);
+            preloader.visible(true);
 // set stage
             var stage = anychart.graphics.create(container);
-        
-
-            anychart.data.loadJsonFile(urlDatos, function (data) {
+        	anychart.data.loadJsonFile(urlDatos, function (data) {
 		
                 var Availability = anychart.data.set(data);
-
-
 // content for first row
-                var contents = [["ATRIBUTO", "% DE ESTABLECIMIENTOS QUE CUMPLEN CON EL ESTANDAR"]];
-
-
-
-
+                var contents = [["ATRIBUTO", "% DE ESTABLECIMIENTOS QUE CUMPLEN CON EL ESTANDAR","ESTANDAR"]];
 // Table settings
 
 // create table
                 var table = anychart.standalones.table();
-
-
-                for (var i = 0; i < Availability.getRowsCount(); i++) {
+				for (var i = 0; i < Availability.getRowsCount(); i++) {
                     if (Availability.row(i) != null)
                         contents.push([
                             // create line charts in the first column
                             Availability.row(i)[0], // get names for second column
-
-                            drawGauge(Availability.row(i)[2], Availability.row(i)[4], Availability.row(i)[5], Availability.row(i)[6], Availability.row(i)[7], Availability.row(i)[9])
+                            drawGauge(Availability.row(i)[2], Availability.row(i)[4], Availability.row(i)[5], Availability.row(i)[6], Availability.row(i)[7], Availability.row(i)[9]),
+                            Availability.row(i)[1]
                         ]);
                     else
                         contents.push(["", "Por el momento no hay información.Intente otra consulta"]);
@@ -183,18 +176,19 @@ $graficaIndicador->vistaGraficaIndicadores();
 
 // disable borders and adjust width of second and fourth column
                 table.cellBorder(null);
-                table.getCol(0).maxWidth(100);
-                table.getCol(1).width("70%");
-//table.getCol(2).width("60%");
+                table.getCol(0).width(150);
+               // table.getCol(1).width("70%");
+				table.getCol(2).width("25%");
                 //  table.getCol(2).width(60).fontWeight(600);
                 table.getRow(0).height(30).fontWeight(600);
-// table.getRow(3).height(25);
-
-// visual settings for the first row
- table.getCell(0,0).fill("#444444").fontColor("#FFF");
-  table.getCell(0,1).fill("#444444").fontColor("#FFF");
+                // table.getRow(3).height(25);
+                
+                // visual settings for the first row
+                 table.getCell(0,0).fill("#444444").fontColor("#FFF");
+                 table.getCell(0,1).fill("#444444").fontColor("#FFF");
+                 table.getCell(0,2).fill("#444444").fontColor("#FFF");
                 //  table.getCell(0, 2).colSpan(2).hAlign("left");
-// table.getCell(1,2).padding(0,9);
+                // table.getCell(1,2).padding(0,9);
 
 // visual settings for text in table
                 table.vAlign("middle").hAlign("center").fontWeight(400).fontSize(11);
@@ -202,7 +196,7 @@ $graficaIndicador->vistaGraficaIndicadores();
 // set table container and initiate draw
                 table.container(stage).draw();
                
-                     preloader.visible(false);
+                //preloader.visible(false);
 
 // Settings for table content
 
@@ -219,7 +213,7 @@ $graficaIndicador->vistaGraficaIndicadores();
 //  legend.background().enabled(false);
 //  legend.container(stage).draw();
 
-                dibujarTabla(idtabla, data);
+          //      dibujarTabla(idtabla, data);
 
             });
         //  preloader.visible(false);
@@ -244,11 +238,11 @@ $graficaIndicador->vistaGraficaIndicadores();
         }
     
             
-<?php
-$i = 0;
-foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
-    echo 'dibujarTablaGraf("container' . ($i) . '","' . $seccionind->getUrlDatos() . '","tabla' . ($i++) . '");';
-}
+<?php
+$i = 0;
+foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
+    echo 'dibujarTablaGraf("container' . ($i) . '","' . $seccionind->getUrlDatos() . '","tabla' . ($i ++) . '");';
+}
 ?>
    
     });
@@ -268,10 +262,10 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
 </script>
 
 <section class="content-header">
-    <h1> <?php echo $graficaIndicador->getNombre_indicador(); ?></h1>
-    <h1> <?php echo $graficaIndicador->getPeriodo() ?></h1>
-    <h1> <?php echo $graficaIndicador->getNombre_nivel() ?></h1>
-    <ol class="breadcrumb">
+	<h1> <?php echo $graficaIndicador->getNombre_indicador(); ?></h1>
+	<h1> <?php echo $graficaIndicador->getPeriodo() ?></h1>
+	<h1> <?php echo $graficaIndicador->getNombre_nivel() ?></h1>
+	<ol class="breadcrumb">
         <?php Navegacion::desplegarNavegacion();?>
 
     </ol>
@@ -279,94 +273,99 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
 
 <!-- Main content -->
 <section class="content container-fluid">
-    <!----- Filtros ----->
-    <div class="row">
-    <div class="col-xs-12">
-        <div class="box box-info"  >
-        <div class="box-header with-border">
-            <h3 class="box-title">Filtros</h3>
-        </div>
-        <div class="box-body">
-            <form name="form1" action="index.php?action=indgraficaindicadorgr" method="post" >
-                <div class="row" >
-                    <div class="col-sm-4 border-right filtros" >
-  
-    <input name="alertanav" type="hidden" id="alertanav" value="<?php echo $graficaIndicador->getAlertanav(); ?>"  >
-    <input name="opcionuni" type="hidden" id="opcionuni" value="<?php echo $graficaIndicador->getOpcionuni(); ?>"  >
+	<!----- Filtros ----->
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-info">
+				<div class="box-header with-border">
+					<h3 class="box-title">Filtros</h3>
+				</div>
+				<div class="box-body">
+					<form name="form1" action="index.php?action=indgraficaindicadorgr"
+						method="post">
+						<div class="row">
+							<div class="col-sm-4 border-right filtros">
+
+								<input name="alertanav" type="hidden" id="alertanav"
+									value="<?php echo $graficaIndicador->getAlertanav(); ?>"> <input
+									name="opcionuni" type="hidden" id="opcionuni"
+									value="<?php echo $graficaIndicador->getOpcionuni(); ?>">
 
 
-                        <!-- /.form-group -->
+								<!-- /.form-group -->
                         
-                                <?php
-                             
-                                echo $graficaIndicador->getListanivel2();
-                                echo $graficaIndicador->getListanivel3();
+                                <?php
+
+                                echo $graficaIndicador->getListanivel2();
+                                echo $graficaIndicador->getListanivel3();
                                 ?>
                         
-<?php
-echo $graficaIndicador->getListanivel4();
+<?php
+echo $graficaIndicador->getListanivel4();
 ?>
                    
                       
-<?php
-echo $graficaIndicador->getListanivel5();
+<?php
+echo $graficaIndicador->getListanivel5();
 ?>
                     </div>
-        <div class="col-sm-4 border-right"  >                 
-<?php
-echo $graficaIndicador->getListanivel6();
+							<div class="col-sm-4 border-right">                 
+<?php
+echo $graficaIndicador->getListanivel6();
 ?>
                         
                         <div class="form-group">
 
 
-                            <input name="action" type="hidden"  value="indgraficaindicadorgr"  >
-                            <label>Periodo</label>
-                            <select name="anio" class="form-control" id="anio_asig" required>
-                                <option value="">Seleccione el periodo</option>       
+									<input name="action" type="hidden"
+										value="indgraficaindicadorgr"> <label>Periodo</label> <select
+										name="anio" class="form-control" id="anio_asig" required>
+										<option value="">Seleccione el periodo</option>       
 <?php echo $graficaIndicador->getOpciones_anio(); ?>
-                            </select>	
+                            </select>
 
-                        </div>
-                    </div>
-                    <div class="col-sm-4 border-right"  >
-                        <div class="form-group">
-                            <label>Mes</label>
-                            <select class="form-control" name="mes_solo" id="mes" required>
-                                <option value="" selected>Seleccione el mes</option>
+								</div>
+							</div>
+							<div class="col-sm-4 border-right">
+								<div class="form-group">
+									<label>Mes</label> <select class="form-control" name="mes_solo"
+										id="mes" required>
+										<option value="" selected>Seleccione el mes</option>
 <?php echo $graficaIndicador->getOpciones_mes(); ?>
                             </select>
 
-                        </div>
+								</div>
 
 
-                        <div class="form-group" >
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-info pull-right">Filtrar</button>
-                        </div>
-                    </div>
-           </div>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
+								<div class="form-group">
+									<label>&nbsp;</label>
+									<button type="submit" class="btn btn-info pull-right">Filtrar</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<div class="row">
-    <div class="col-md-12">
+	<div class="row">
+		<div class="col-md-12">
 
-<?php
-$i = 0;
-foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
+<?php
+$i = 0;
+foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
     ?>
 
             <div class="box ">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><?php echo $seccionind->getTitulo(); ?></h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                     <!--    <div class="btn-group">
+				<div class="box-header with-border">
+					<h3 class="box-title"><?php echo $seccionind->getTitulo(); ?></h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool"
+							data-widget="collapse">
+							<i class="fa fa-minus"></i>
+						</button>
+						<!--    <div class="btn-group">
                             <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-wrench"></i></button>
                             <ul class="dropdown-menu" role="menu">
@@ -378,40 +377,40 @@ foreach ($graficaIndicador->getListaSecciones() as $seccionind) {
                             </ul>
                         </div>-->
 
-                    </div>
-                </div>
+					</div>
+				</div>
 
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-7">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-12">
 
-    <?php echo '<div class="container" id="container' . ($i) . '" ></div>';
+    <?php
+
+echo '<div class="container" id="container' . ($i++) . '" ></div>';
     ?>
 
 
                         </div>
 
-                        <!-- inicia tabla-->
-                        <div class="col-md-5">
-                            <div class="table-responsive" id="tabla<?php echo ($i++) ?>">
-
-
-                            </div>
-                            <!-- /.table-responsive -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                </div>
-                </div>  
+						<!-- inicia tabla-->
+<!-- 						<div class="col-md-5"> -->
+					<!-- 		<div class="table-responsive" id="tabla<?php //echo ($i++) ?>"></div>-->
+							<!-- /.table-responsive -->
+<!-- 						</div> -->
+						<!-- /.col -->
+					</div>
+				</div>
+			</div>  
 <?php } ?>
        
     </div>
-</div>
+	</div>
 </section>
 
 <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="js/jquery.cascading-drop-down.js"></script>
 <script>
+
     $('.form-control').ssdCascadingDropDown({
         nonFinalCallback: function (trigger, props, data, self) {
 

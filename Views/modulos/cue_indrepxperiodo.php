@@ -27,45 +27,47 @@ function oculta(id, id2)
 }
 //-->
 </script>
-<?php
-
-$basepController = new BasePostmixController();
-$basepController->vistaReportePeriodo();
+<?php
+
+$basepController = new BasePostmixController();
+$basepController->vistaReportePeriodo();
 ?>
+  <section class="content-header">
+                <h2><?php echo $basepController->getTitulo1()?></h2>
+     
+    </section>
 <section class="content container-fluid">
 	<!--  filtros -->
 	<div class="box box-info">
 		<div class="box-header with-border">
-			<h3 class="box-title">Reporte por periodo</h3>
+			<h3 class="box-title"><?php echo $basepController->getSubtitulo()?></h3>
 		</div>
 		<div class="box-body">
 			<form name="form1" id="form1" method="post"
-				action="Controllers/indpostmix/postmix_excelController.php">
+				action="imprimirReporte.php?<?php echo "admin=".$basepController->getOpcion() ?>">
+<input name="tipo_consulta" type="hidden" value="p"   >
+				<div><?php echo T_("ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DEFINA EL PERIODO")?>:</div>
 
-				<div>ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DEFINA EL PERIODO:</div>
-
-				<div>
-					<label>PERIODO</label>
-				</div>
+				
 				<div class="form-row">
 					<div class="col-md-2">
 
-						<label>INDICE DE : </label>
+			    <label><?php echo T_("INDICE DE")?>: </label>
 					</div>
 					<div class="col-md-2">
 						<select class="form-control" name="fechainicio" id="fechainicio">
-							<option value="1">Enero</option>
-							<option value="2">Febrero</option>
-							<option value="3">Marzo</option>
-							<option value="4">Abril</option>
-							<option value="5">Mayo</option>
-							<option value="6">Junio</option>
-							<option value="7">Julio</option>
-							<option value="8">Agosto</option>
-							<option value="9">Septiembre</option>
-							<option value="10">Octubre</option>
-							<option value="11">Noviembre</option>
-							<option value="12">Diciembre</option>
+							<?php echo '<option value="1">'.T_("Enero").'</option>
+							<option value="2">'.T_("Febrero").'</option>
+							<option value="3">'.T_("Marzo").'</option>
+							<option value="4">'.T_("Abril").'</option>
+							    <option value="5">'.T_("Mayo").'</option>
+							<option value="6">'.T_("Junio").'</option>
+							<option value="7">'.T_("Julio").'</option>
+							    <option value="8">'.T_("Agosto").'</option>
+							<option value="9">'.T_("Septiembre").'</option>
+							<option value="10">'.T_("Octubre").'</option>
+							    <option value="11">'.T_("Noviembre").'</option>
+							<option value="12">'.T_("Diciembre").'</option>';?>
 						</select>
 					</div>
 					<div class="col-md-2">
@@ -91,22 +93,22 @@ $basepController->vistaReportePeriodo();
 					</div>
 
 					<div class="col-md-2">
-						<label>AL INDICE DE </label>
+						<label><?php echo T_("AL INDICE DE")?> </label>
 					</div>
 					<div class="col-md-2">
 						<select class="form-control" id="fechafin" name="fechafin">
-							<option value="1">Enero</option>
-							<option value="2">Febrero</option>
-							<option value="3">Marzo</option>
-							<option value="4">Abril</option>
-							<option value="5">Mayo</option>
-							<option value="6">Junio</option>
-							<option value="7">Julio</option>
-							<option value="8">Agosto</option>
-							<option value="9">Septiembre</option>
-							<option value="10">Octubre</option>
-							<option value="11">Noviembre</option>
-							<option value="12">Diciembre</option>
+						<?php echo '<option value="1">'.T_("Enero").'</option>
+							<option value="2">'.T_("Febrero").'</option>
+							<option value="3">'.T_("Marzo").'</option>
+							<option value="4">'.T_("Abril").'</option>
+							<option value="5">'.T_("Mayo").'</option>
+							<option value="6">'.T_("Junio").'</option>
+							<option value="7">'.T_("Julio").'</option>
+							<option value="8">'.T_("Agosto").'</option>
+							<option value="9">'.T_("Septiembre").'</option>
+							<option value="10">'.T_("Octubre").'</option>
+							<option value="11">'.T_("Noviembre").'</option>
+							<option value="12">'.T_("Diciembre").'</option>';?>
 						</select>
 					</div>
 					<div class="col-md-2">
@@ -140,30 +142,29 @@ $basepController->vistaReportePeriodo();
 
 						<div class="form-check">
 							<input class="form-check-input" name="consulta" type="radio"
-								value="t" checked="checked" onClick="oculta('cuentas')"> TODAS
-							LAS CUENTAS
+								value="t" checked="checked" onClick="oculta('cuentas')"> <?php echo T_("TODAS LAS CUENTAS")?>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-check">
 							<input class="form-check-input" name="consulta" type="radio"
-								value="u" onClick="muestra('cuentas')"> SOLO 1 CUENTA
+								value="u" onClick="muestra('cuentas')"> <?php echo T_("SOLO 1 CUENTA")?>
 						</div>
 
 
 						<div id="cuentas" class="form-check" style="display:none">
 
 
-							<label>Cuentas: </label>
+							<label><?php echo T_("Cuentas")?>: </label>
 
-							<!-- inicioBloque: tBusqueda -->
-
-<?php  foreach($basepController->getListaCuentas() as $cuenta ){
-
-    echo $cuenta;
-    
-}?>
-   
+							<!-- inicioBloque: tBusqueda -->
+
+<?php  foreach($basepController->getListaCuentas() as $cuenta ){
+
+    echo $cuenta;
+    
+}?>
+   
 <!-- finBloque: tBusqueda -->
 
 
@@ -173,9 +174,9 @@ $basepController->vistaReportePeriodo();
 				</div>
 					<div class="form-row">
 
-						<button type="submit" class="btn btn-primary">Generar</button>
+						<button type="submit" class="btn btn-primary"><?php echo T_("Generar")?></button>
 					</div>
-				</div>
+				
 			</form>
 		</div>
 	</div>

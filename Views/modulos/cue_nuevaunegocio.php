@@ -3,13 +3,13 @@
                     ?>﻿
 <section class="content-header">
       <h1> Punto de venta &nbsp; </h1>
-    
+
     </section>
 
     <!-- Main content -->
     <section class="content container-fluid">
      <?php $unegocioContoller=new unegocioController();
-    
+
                         $unegocioContoller->vistaNuevoUnegocio();
                     ?>
       

@@ -31,6 +31,7 @@ $ingreso -> vistaRnomservController();
 $ingreso = new ReporteController();
 $ingreso -> vistaSeccionNuevoReporte();
 
+
 ?>
 
 </div>

@@ -1,5 +1,6 @@
 
 <?php 
+
 $estadisticasController=new EstadisticasController;
 $estadisticasController->vistaIndEstadisticaRes();
         
@@ -13,13 +14,14 @@ $estadisticasController->vistaIndEstadisticaRes();
 }
 </style>
 
-  <script src="../js/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
-          <script src="../js/anychart8.2.1/js/anychart-exports.min.js"></script>
-          <script src="../js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
-            <script src="../js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
-              <script src="../js/anychart8.2.1/js/anychart-ui.min.js"></script>
-                <script src="../js/anychart8.2.1/js/anychart-table.min.js"></script>
+  <script src="js/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
+          <script src="js/anychart8.2.1/js/anychart-exports.min.js"></script>
+          <script src="js/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
+            <script src="js/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
+              <script src="js/anychart8.2.1/js/anychart-ui.min.js"></script>
+                <script src="js/anychart8.2.1/js/anychart-table.min.js"></script>
           <script type="text/javascript">
+        
 anychart.onDocumentReady(function () {
           anychart.data.loadJsonFile("<?php echo $estadisticasController->getGraficaaplica(); ?>", function (data) {
 	// create a chart and set loaded data
@@ -152,10 +154,10 @@ function abrirVentana()
 
  
         <section class="content-header">
-                <h1><?php echo $estadisticasController->getFiltrosSel()->getNombre_seccion();
-              echo "<br>".$estadisticasController->getFiltrosSel()->getPeriodo();
-              echo "<br>".$estadisticasController->getFiltrosSel()->getNombre_nivel();
-              echo "<br>".$estadisticasController->getFiltrosSel()->getNombre_franquicia();?></h1>
+                <h1><?php echo $estadisticasController->getFiltrosSel()->getNombre_seccion();?></h1>
+         <h1> <?php echo $estadisticasController->getFiltrosSel()->getPeriodo();?></h1>
+         <h1> <?php echo $estadisticasController->getFiltrosSel()->getNombre_nivel();?></h1>
+         <h1> <?php echo$estadisticasController->getFiltrosSel()->getNombre_franquicia();?></h1>
       <ol class="breadcrumb">
            <?php Navegacion::desplegarNavegacion();?>
       </ol>

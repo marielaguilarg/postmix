@@ -1,12 +1,10 @@
+
  <?php $unegocioContoller=new unegocioController();
                         $unegocioContoller->vistaNuevoUnegocio();
                     ?>﻿
 <section class="content-header">
-      <h1> Punto de venta &nbsp; </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Edita Punto de venta</li>
-      </ol>
+      <h1> EDITAR PUNTO DE VENTA</h1>
+      
     </section>
 
     <!-- Main content -->
@@ -260,4 +258,5 @@ $unegocioContoller ->registroUnegocioController();
     });
 </script>
     <!-- /.content -->
+
   </div>

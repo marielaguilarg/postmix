@@ -4,7 +4,11 @@ $generarbusquedacont->generarBusquedaRes();
 $historialRepController=new HistorialReportesController();
 $historialRepController->vistaHistorialReportes();
 ?>
-
+<style >
+    .los_demas {
+    display: none;
+}
+</style>
  
 <script language="JavaScript" type="text/JavaScript"> 
  
