@@ -2,8 +2,9 @@
     @session_start();
 include "navegacion.php";
 include "generarBusquedaController.php";
-$maxte=ini_get('max_execution_time');
-ini_set('max_execution_time',400);
+
+
+
 class EstadisticasController {
 
     private $nivel;
@@ -30,6 +31,8 @@ class EstadisticasController {
     private $busqueda;
 
     public function vistaIndEstadisticaRes() {
+        $maxte=ini_get('max_execution_time');
+        ini_set('max_execution_time',400);
         if ($_GET) {
             $keys_get = array_keys($_GET);
             foreach ($keys_get as $key_get) {
@@ -42,8 +45,7 @@ class EstadisticasController {
         $this->busqueda->generarBusquedaRes();
         }
 //echo $_SESSION["Usuario"];
-
-
+     
         $Usuario = $_SESSION ["Usuario"];
 
 
@@ -215,10 +217,10 @@ class EstadisticasController {
 
         $ult = sizeof($_SESSION["historico"]) - 2;
 //veo grupo para saber a donde regresa
-        if ($_SESSION["grupous"] == "cli" || $_SESSION["grupous"] == "cue") {
-            $strRegresar = "MENprincipal.php?op=indi&admin=cons&mes=&sec=" . $_GET["tit"] . "&ref=" . $subseccion;
-        } else
-            $strRegresar = 'MENprincipal.php?op=Bhistorico2&Opcion=consulta&tcons=res';
+//        if ($_SESSION["grupous"] == "cli" || $_SESSION["grupous"] == "cue") {
+//            $strRegresar = "MENprincipal.php?op=indi&admin=cons&mes=&sec=" . $_GET["tit"] . "&ref=" . $subseccion;
+//        } else
+//            $strRegresar = 'MENprincipal.php?op=Bhistorico2&Opcion=consulta&tcons=res';
         $strRegresar = "javascript: history.back();";
 //$navegacion='<li><a href="MENindprincipal.php?op=mindi&mes='.$_SESSION["fmes"].'&sec='.$numseccion.'&filx='.$_SESSION["ffilx"].'&niv='.$_SESSION["fniv"].'" style="z-index:9;">'.T_("GRAFICA").'</a></li>';
 // $navegacion.='<li><a href="MENindprincipal.php?op=mindi&admin=cons&mes='.$_SESSION["fmes"].'&sec='.$numseccion.'&filx='.$_SESSION["ffilx"].'&fily='.$_SESSION["ffily"].'&ref='.$subseccion.'&niv='.$_SESSION["fniv"].'&ren='.$_SESSION["fren"].'" style="z-index:8;">'.T_("INDICADORES").'</a></li>';
@@ -734,12 +736,12 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
 
             if ($tiposec == "E") {
                 $refer = $this->vclienteu . "." . $this->vserviciou . "." . $rowu["rep"] . "." . $rowu["cue_clavecuenta"] . "." . $numseccion . "." . $rowu["i_unenumpunto"];
-                $liga_sec = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=" . $tiposec . "&opadmin=detalle_consulta&subsecc=" . $subsubseccion . "&ruta=b&cump=" . $cump . "&num=" . $refer;
+                $liga_sec = "index.php?action=indlistasecciones&tiposec=ED&subsecc=" . $subsubseccion . "&ruta=b&cump=" . $cump . "&num=" . $refer;
             }
             //http://localhost/muesmerc/MEmodulos/MENindprincipal.php?op=Cconsec&tiposec=E&opadmin=detalle_consulta&subsecc=8.0.2.0.0.6&num=100.1.449.1.8.
             else {
                 $refer = $this->vclienteu . "." . $this->vserviciou . "." . $rowu["rep"] . "." . $rowu["cue_clavecuenta"] . "." . $numseccion . "." . $rowu["i_unenumpunto"];
-                $liga_sec = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=" . $tiposec . "&ruta=b&cump=" . $cump . "&Op=" . $refer;
+                $liga_sec = "index.php?action=indlistasecciones&tiposec=" . $tiposec . "&ruta=b&cump=" . $cump . "&Op=" . $refer;
             }
             $establecimiento->setLiga($liga_sec);
 
@@ -752,7 +754,9 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
 
         //  $html->asignar ( 'nomcomp', nombreSeccion($subseccionl, $vidiomau) );
             $nomcomp = $this->nombreSeccion($subseccionl, $vidiomau);
+       
         $this->filtrosSel->setNombre_seccion($nomcomp);
+      
         $this->filtrosSel->setPeriodo($periodo);
         $this->filtrosSel->setNombre_nivel($_SESSION["finfoarea"]);
 //busco nombre de la seccion
@@ -968,7 +972,7 @@ LEFT JOIN (ins_generales
  INNER JOIN tmp_estadistica ON tmp_estadistica.numreporte=ins_generales.i_numreporte
  AND tmp_estadistica.usuario=:usuario
 )ON  ca_unegocios.une_id = ins_generales.i_unenumpunto 
-LEFT JOIN ins_detalle ON ins_detalle.id_claveservicio = ins_generales`.i_claveservicio 
+LEFT JOIN ins_detalle ON ins_detalle.id_claveservicio = ins_generales.i_claveservicio 
 AND `id_numreporte`=i_numreporte
 AND `id_numseccion`=:aux_sec0 AND `id_numreactivo`=:aux_sec1
 where 
@@ -1008,6 +1012,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0 and une_estatus=1";
 
     //    var_dump($parametros);
         $result_cat = Conexion::ejecutarQuery($sql, $parametros);
+        
         foreach ($result_cat as $row) {
 
 
@@ -1201,10 +1206,10 @@ tmp_estadistica.mes_asignacion ASC;";
              $this->filtrosSel=$this->busqueda->getFiltrosSel();
             }
             else $this->filtrosSel=new ConsultaIndicadores;;
-            if ($vidiomau == 2) {
+            if ($_SESSION["idiomaus"] == 2) {
                 $this->estadisticas->setAtributo($rowt ["descing"]);
                 
-                $this->filtrosSel->setNombre_seccion($rowt ["descesp"]);
+                $this->filtrosSel->setNombre_seccion($rowt ["descing"]);
                 $nom_componente = $rowt ["descing"];
               
             } else {
@@ -1213,7 +1218,7 @@ tmp_estadistica.mes_asignacion ASC;";
                 $this->filtrosSel->setNombre_seccion($rowt ["descesp"]);
                 $nom_componente = $rowt ["descesp"];
             } // fin de idioma
-            
+          
             if ($tiposec == "V")
                 $this->tit_cumplaj= '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("EDAD PROMEDIO POR PRODUCTO");
         }

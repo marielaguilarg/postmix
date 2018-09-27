@@ -63,11 +63,11 @@ class BuscapvController
         }
         
         /* * ************************************** */
-        //echo  $_SESSION["Usuario"];
+        $_SESSION["clienteind"]=1;
+        $_SESSION["servicionind"]=1;
         $MiVar = $_SESSION["Usuario"] ;
-        $uscliente = $_SESSION["clienteind"]=1;
+        $uscliente = $_SESSION["clienteind"];
         $usservicio = $_SESSION["servicioind"];
-        $_SESSION["fbuscapv"] = 1; /* indica que busque el pv, para la navegacion */
         /* * ************************************** */
         
         $ban = $busqueda;
@@ -582,7 +582,7 @@ ca_franquiciascuenta.cli_idcliente= '$uscliente'";
             $num_rows = sizeof($rs_sql_us);
             
             if (sizeof($rs_sql_us) == 1) { // si es uno envia al punto de venta
-                header("Location: MENprincipal.php?op=Bhistorico2&Opcion=datos&prin=1&numrep=" . $row["numreporte"] . "&cser=" . $vserviciou . "&ccli=" . $vclienteu);
+                header("Location: index.php?action=indhistorialreportes&prin=1&numrep=" . $row["numreporte"] . "&cser=" . $vserviciou . "&ccli=" . $vclienteu);
             } else if (sizeof($rs_sql_us) > 0) {
                 
                 $this->pages = new Paginator($num_rows, 9, array(

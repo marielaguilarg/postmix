@@ -373,7 +373,7 @@ class TablaDinamicaController {
         $_SESSION["ffily"] = $gfily;  /* filtros de cuentas */
         $_SESSION["fref"] = $ref; /* referencia de seccion */
         $_SESSION["fren"] = $ren; /* nivel consulta x cuenta */
-        $this->ligaDescargar='cue_indindicadoresxregion_expexcel.php?mes='.$mes_asig.'&sec='.$seccion.
+        $this->ligaDescargar='mes='.$mes_asig.'&sec='.$seccion.
                   '&niv='.$nivel.'&filx='.$gfilx.'&ren='.$reng.'&fily='.$gfily.'&ref='.$ref.'&rdata='.$rdata.'&sem='.$sem.
                  '&per='.$per.'&filuni='.$gfiluni; 
 //***********$html->asignar('urlregresar',$hrefreg);
@@ -1308,6 +1308,7 @@ ca_unegocios.cue_clavecuenta,
 ca_unegocios.une_cla_estado";
 
         $res = Conexion::ejecutarQuery($sql, $parametros);
+      
         return $res;
     }
 
@@ -1504,6 +1505,7 @@ ca_unegocios.une_cla_estado";
 
         global $vidiomau;
         global $ureg;
+      
         if ($colorsem)
             $rs = $this->ConsultaSemaforo($mes_asig, $referencia, $permiso, $filx, $fily, $colorsem, $fperiodo);
         else
@@ -1805,11 +1807,11 @@ ca_unegocios.une_cla_estado";
                             //   echo $reg."][".$per."--".$total."--". $totalreg[$reg][$per]["tot"]."<br>";
                             //acumulo por mes
                             if ($per == 1)
-                                $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("Mensual"), $reng2 . " " . $reng1 . " " . $reng3));
+                                $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("MENSUAL"), $reng2 . " " . $reng1 . " " . $reng3));
                             if ($per == 2)
-                                $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                                $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                             if ($per == 3)
-                                $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                                $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                             //  var_dump($totalreg);
                             $totalreg[$reg][$per]["tot"] += $total;
                             $totalreg[$reg][$per]["acep"] += $acept;
@@ -1892,11 +1894,11 @@ ca_unegocios.une_cla_estado";
                                 $reng3 = TablitaDinamica::getDivResultado("% " . T_("cumple"), ' <a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" ><strong>' . $porc . "</strong></a>");
                         }
                         if ($per == 1)
-                            $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("Mensual"), $reng2 . " " . $reng1 . " " . $reng3));
+                            $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("MENSUAL"), $reng2 . " " . $reng1 . " " . $reng3));
                         if ($per == 2)
-                            $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                            $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                         if ($per == 3)
-                            $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                            $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                     }
                 }
 
@@ -1975,11 +1977,11 @@ ca_unegocios.une_cla_estado";
                     }
                     $rowdata[] = array("ren2" => $reng2, "ren1" => $reng1, "ren3" => $reng3);
                     if ($per == 1)
-                        $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("Mensual"), $reng2 . " " . $reng1 . " " . $reng3));
+                        $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("MENSUAL"), $reng2 . " " . $reng1 . " " . $reng3));
                     if ($per == 2)
-                        $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                        $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                     if ($per == 3)
-                        $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                        $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
 
                     $totalfin[$per]["acep"] += $total_cuen[$cuen][$per]["acep"];
                     $totalfin[$per]["tot"] += $total_cuen[$cuen][$per]["tot"];
@@ -2059,11 +2061,11 @@ ca_unegocios.une_cla_estado";
                        }
                 $rowdata[] = array("ren2" => $reng2, "ren1" => $reng1, "ren3" => $reng3);
                 if ($per == 1)
-                    $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("Mensual"), $reng2 . " " . $reng1 . " " . $reng3));
+                    $tablacuenta->setResultados1(TablitaDinamica::getDivPeriodo(T_("MENSUAL"), $reng2 . " " . $reng1 . " " . $reng3));
                 if ($per == 2)
-                    $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                    $tablacuenta->setResultados2(TablitaDinamica::getDivPeriodo(T_("6 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
                 if ($per == 3)
-                    $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 Meses"), $reng2 . " " . $reng1 . " " . $reng3));
+                    $tablacuenta->setResultados3(TablitaDinamica::getDivPeriodo(T_("12 MESES"), $reng2 . " " . $reng1 . " " . $reng3));
             }
         }
         $listacuentas[] = $tablacuenta;
@@ -2769,7 +2771,8 @@ $this->mes_asig = Utilerias::cambiaMesGIng($mes_asig);
 
 
 
-$url_img = "http://muesmerc.com.mx/muesmerc/img/banner_pepsi.jpg";
+//$url_img = "http://muesmerc.com.mx/muesmerc/img/banner_pepsi.jpg";
+$url_img = "img/banner_pepsi.jpg";
 //$url_img="http://localhost/muesmerc/img/banner_pepsi.jpg";
 //$url_img=str_replace("\\", '/', $url_img);
 
@@ -2897,6 +2900,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
     $clave_cue = 1;
     $acumtot = 0;
     $acumacep = 0;
+    $campNivel[3] = "une_cla_zona";
     $campNivel[4] = "une_cla_estado";
     $campNivel[5] = "une_cla_ciudad";
     $campNivel[6] = "une_cla_franquicia";
@@ -2921,8 +2925,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
 
     //verifico que haya resultados si no consulto el nombre de la seccion
     $nomAux = null;
-
-
+   
     if (sizeof($rs) <= 0) {
         $nomAux = DatosEst::buscaIndicadores($referencia, $vidiomau,$this->servicio);
 
@@ -2936,7 +2939,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
             $periodo = $acept = $acumtot = 0;
             $cuenta = $row[$campGrup[$ty]]; //sera eje y
             $region = $row[$campNivel[$tx]]; //será eje x
-
+           
             if ($vidiomau == 2) {
                 $nomseccion = $row["red_parametroing"];
             } else {
@@ -2972,6 +2975,8 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
             $totalreg[$region][$periodo]["acep"] = 0;
         }
 }
+
+
  
     $this->nombreSeccion=$nomseccion;
     $this->estandar= $estandar;
@@ -3005,6 +3010,16 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
     //busco nombre de regiones
     $num_regs = 0;
     switch ($nivel) {
+        case 2: //busco estados
+            $columnas = $this->unidadesNeg($mes_asig, $referencia, $filx, $fily);
+            $nivf = "uni";
+            
+            break;
+        case 3: //busco estados
+            $columnas = $this->zonas($mes_asig, $referencia, $filx, $fily);
+            $nivf = "zon";
+            
+            break;
         case 4: //busco estados
             $columnas = $this->regiones( $mes_asig, $referencia, $filx, $fily);
             $nivf = "reg";
@@ -3339,6 +3354,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
 //                $this->listaResultados = $this->pintaTablaSem($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $vperiodo);
 //            } else {
          //                                          ($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo, $gfily) 
+        
             $this->listaResultados = $this->pintaTabla($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $vperiodo, $gfily);
 //            }
         }

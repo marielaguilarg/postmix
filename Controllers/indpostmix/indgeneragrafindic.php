@@ -2,6 +2,7 @@
 require_once '../../Models/conexion.php';
 include('../../libs/php-gettext-1.0.11/gettext.inc');
 require_once '../../Utilerias/inimultilenguaje.php';
+
 require_once '../../Utilerias/utilerias.php';
 require_once "../../Controllers/indpostmix/generadorGraficas.php";
 @session_start();
@@ -130,7 +131,7 @@ if(isset($filx["niv6"])&&$filx["niv6"]!="")
 if(isset($fily["fra"])&&$fily["fra"]!="")
     $sqlt.=" and ca_unegocios.fc_idfranquiciacta=".$fily["fra"];
 if(isset($fily["pv"])&&$fily["pv"]!="")
-    $sqlt.=" and ca_unegocios.une_claveunegocio =".$fily["pv"];
+    $sqlt.=" and ca_unegocios.une_id =".$fily["pv"];
 $sqlt.=" GROUP BY
 cue_reactivosestandardetalle.sec_numseccion,
 cue_reactivosestandardetalle.r_numreactivo,

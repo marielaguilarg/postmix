@@ -1,5 +1,30 @@
 <?php
-namespace indpostmix;
+
+include ( 'Models/crud_comentDetalle.php');
+// echo "aqui",filter_input(INPUT_GET, "tiposec",FILTER_SANITIZE_STRING);
+// switch (filter_input(INPUT_GET, "tiposec",FILTER_SANITIZE_STRING)){
+//     case "A" : header('index.php?action=indconsultaabierta.php');
+//     break;
+//     case "AD":include("views/modulos/cue_indconsultaabiertadetalle.php");
+//     break;
+//     case "V" : header('index.php?action=indconsultaproducto.php');
+//     break;
+//     case "E" : header('index.php?action=indconsultaestandar.php');
+//     break;
+//     case "P" : header('index.php?action=indconsultaponderado.php');
+//     break;
+//     case "C" : header('index.php?action=indconsultacomentpond.php');
+//     break;
+//     case 'img':	header('index.php?action=indconsultaimagen.php');
+//     break;
+//     case "coment" :
+//         header('index.php?action=indconsultacomentario.php');
+//         break;
+//     case "datos" :
+//         header('index.php?action=indconsultadatosestableci2.php');
+//         break;
+// }
+
 
 class ConsultaSeccionesController
 {
@@ -39,124 +64,110 @@ class ConsultaSeccionesController
     
   
     
-    $ssql = "SELECT *
-			 FROM ca_unegocios
-			WHERE concat(cli_idcliente,'.',ser_claveservicio,'.',cue_clavecuenta,'.',une_claveunegocio)='" . $refer . "'";
-    $this->nomunegocio = DatosUnegocio::nombrePV($iduneg);
+     $this->nomunegocio =    ConsultaSeccionesController::nombreUnegocio($iduneg);
    
     
     
     // asigna numero de reporte
-    
-    $this->titulo2= T_("REPORTE NO.")." : " . $numrep;
-   
-    $this->titulo1=T_("CONSULTA REPORTE");
- 
-  
+       $this->titulo1=T_("CONSULTA REPORTE");
+
     
     //muestra secciones
     $rs = DatosSeccion::vistaSeccionModel($idser,"cue_secciones");
+   
     $sumapond = 0;
     $cont = 0;
     foreach ($rs as $row ) {
+        $secciones=array();
         if ($cont % 2 == 0) {
             $color = "subtitulo3";
         } else { //class="subtitulo31"
             $color = "subtitulo31";
         }
-        $secciones['numsec']= "<td class='$color'>" . ($row ["sec_numseccion"]) . "</td>";
+        $secciones['numsec']=  ($row ["sec_numseccion"]) ;
         if($_SESSION["idiomaus"]==2)
-            $secciones['nomsec']= "<td class='$color'><div align='left'>" . $row ["sec_descripcioning"] . "</div></td>";
+            $secciones['nomsec']=  $row ["sec_descripcioning"];
             else
-                $secciones['nomsec']="<td class='$color'><div align='left'>" . $row ["sec_descripcionesp"] . "</div></td>";
+                $secciones['nomsec']= $row ["sec_descripcionesp"] ;
                 
                 /*             * ************************************Busca Ponderacion********************************************* */
-              
-                
-                
-                
-                $sqlp = "SELECT *
-	         	 FROM cue_seccioncomentario
-                         inner join ins_comentseccion ON ins_comentseccion.is_claveservicio = cue_seccioncomentario.ser_claveservicio AND ins_comentseccion.is_numseccion = cue_seccioncomentario.sec_numseccion AND ins_comentseccion.is_comentario = cue_seccioncomentario.sec_numcoment
-				WHERE ser_claveservicio = '" . $idser . "'
-			  	  AND sec_numseccion = " . $row ["sec_numseccion"]." and is_numreporte = '".$numrep."'";
+//                  $sqlp = "SELECT *
+// 	         	 FROM cue_seccioncomentario
+//                          inner join ins_comentseccion ON ins_comentseccion.is_claveservicio = cue_seccioncomentario.ser_claveservicio AND ins_comentseccion.is_numseccion = cue_seccioncomentario.sec_numseccion AND ins_comentseccion.is_comentario = cue_seccioncomentario.sec_numcoment
+// 				WHERE ser_claveservicio = '" . $idser . "'
+// 			  	  AND sec_numseccion = " . $row ["sec_numseccion"]." and is_numreporte = '".$numrep."'";
                 
                 //          echo $sqlp;
-                $rsp = @mysql_query($sqlp);
-                $num_reg = @mysql_num_rows($rsp);
+                 $rsp =DatosComentDetalle::consultaComentSeccion($idser,$numrep,$row ["sec_numseccion"]);
+                $num_reg = sizeof($rsp);
                 if ($num_reg != 0) {
-                    while ($rowp = @mysql_fetch_array($rsp)) {
+                   
                         
-                        $secciones['celdaComent']= "<td class='$color' >" . "<a href='MENprincipal.php?op=mindi&admin=Cconsec&tiposec=coment&secc=" . $idser . "." . $row ["sec_numseccion"] . "&referencia=" . $refer . "&numrep=" . $numrep . "'>" . "<img src='../img/agregar.png' height='20' width='20' border='0'></a></td>";
-                    }
+                        $secciones['celdaComent']= "<a class=\"btn btn-block btn-info\" href='index.php?action=indlistasecciones&tiposec=coment&secc=" . $idser . "." . $row ["sec_numseccion"] . "&referencia=" . $refer . "&numrep=" . $numrep . "'>
+<span style=\"font-size: 12px\">".T_("COMENTARIO")."</span></a>";
+                    
                 } else {
-                    $secciones['celdaComent']= "<td class='$color'></td>";
+                    $secciones['celdaComent']= "<a class=\"btn btn-block btn-info\" disabled>
+<span style=\"font-size: 12px\">".T_("COMENTARIO")."</span></a>";
                 }
                 
                 
                 
-                if(revisaImagenes($idser, $numrep,  $row ["sec_numseccion"])) { //muestro boton de imagenes
+             //   if($this->revisaImagenes($idser, $numrep,  $row ["sec_numseccion"])) { //muestro boton de imagenes
                     
-                    // verifica si hay imagenes y crea la liga
-                    $sql="SELECT
-                   id_ruta
-                    FROM
-                    ins_imagendetalle
-                    where ins_imagendetalle.id_imgclaveservicio='".$idser."' and
-                    ins_imagendetalle.id_imgnumreporte='".$numrep."' and
-                    ins_imagendetalle.id_imgnumseccion='".$row ["sec_numseccion"]."' and
-                    ins_imagendetalle.id_imgnumreactivo='';";
+//                     // verifica si hay imagenes y crea la liga
+//                     $sql="SELECT
+//                    id_ruta
+//                     FROM
+//                     ins_imagendetalle
+//                     where ins_imagendetalle.id_imgclaveservicio='".$idser."' and
+//                     ins_imagendetalle.id_imgnumreporte='".$numrep."' and
+//                     ins_imagendetalle.id_imgnumseccion='".$row ["sec_numseccion"]."' and
+//                     ins_imagendetalle.id_imgnumreactivo='';";
                     //             echo $sql;
-                    $rs1=mysql_query($sql);
+                    $rs1=DatosImagenDetalle::consultaImagenDetalle($idser,$numrep,$row ["sec_numseccion"],'',"ins_imagendetalle");
                     
-                    //            if (mysql_num_rows($rs1) > 0) {
-                    $divImg='<div style="display:none;">';
-                    $href="";
-                    $i=1;
-                    if($row_max = mysql_fetch_array($rs1))
-                    {
-                        $rutaFoto=$row_max["id_ruta"];
+                    
+                    
+                    if (sizeof($rs1) > 0) {
+                        $imagenes= "<a class=\"btn btn-block btn-info\" data-trigger=\"gallery_".$row["sec_numseccion"]."\"  href='index.php?action=indlistasecciones&tiposec=img&secc=".$idser.".".
+                            $row ["sec_numseccion"] ."&numrep=".$numrep."'><i class=\"fa fa-image\"></i></a>";
+                   
+                    foreach($rs1 as $row_max ) {
                         
-                        $html->asignar('celdaImg',"<td  class='$color' ><div align='center'>".
-                            "<a href='MENprincipal.php?op=mindi&admin=Cconsec&tiposec=img&secc=".$idser.".".
-                            $row ["sec_numseccion"] ."&numrep=".$numrep."'>".
-                            "<img src='../img/camara.png' width='27' height='21' border='0'></a></div></td>");
-                    }
-                    while($row_max = mysql_fetch_array($rs1)) {
+                        $rutaFoto="fotografias/".$row_max["id_ruta"];
                         
-                        $rutaFoto=$row_max["id_ruta"];
-                        
-                        $href.='<a href="../fotografias/'.$rutaFoto.'"  >
-                        <img  src="../fotografias/'.$rutaFoto.'" width="120" height="120" alt="" /></a>';
-                        /*	 $href.='<a href="../fotografias/'.$rutaFoto.'" class="lytebox"   data-lyte-options="group:seccion'.$cont.'" >
-                         <img  src="../fotografias/'.$rutaFoto.'" width="120" height="120" alt="" /></a>';
-                         */
+                        $imagenes.='<a href="'.$rutaFoto.'" data-fancybox="gallery_'.$row["sec_numseccion"].'"  style="display:none;">
+                              foto
+                                </a>';
                         
                     }
+                    $secciones["celdaImg"]=$imagenes;
                     // $html->asignar('divImg',$divImg.$href."</div>");
                     
                 }
                 else
-                    $html->asignar('celdaImg', "<td class='$color'></td>");
+                    $secciones['celdaImg']="<a class=\"btn btn-block btn-info\" disabled>
+<span style=\"font-size: 12px\"><i class=\"fa fa-image\"></i></span></a>";
                     
                     /*             * ************************************************************************************************************* */
                     //excepcion para la liga de los datos generales
                     if( $row ["sec_numseccion"] ==1) {
-                        $liga="MENprincipal.php?op=mindi&admin=Cconsec&tiposec=datos&cser=".$idser."&numrep=".$numrep."&prin=".$_SESSION["prin"]."&cli=".$idclien;
+                        $liga="index.php?action=indlistasecciones&tiposec=datos&cser=".$idser."&numrep=".$numrep."&prin=".$_SESSION["prin"]."&cli=".$idclien;
                         $OPD="";
                     }
                     else {
                         $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . $row ["sec_numseccion"] . "." . $iduneg;
-                        $liga = "MENprincipal.php?op=mindi&admin=Cconsec&tiposec=" . $row["sec_tiposeccion"] . "&Op=";
+                        $liga = "index.php?action=indlistasecciones&tiposec=" . $row["sec_tiposeccion"] . "&Op=";
                     }
-                    $html->asignar('celdaSumniv', "<td class='$color' >" . "<a href='" . $liga . $OPD . "'>" . "<img src='../img/agregar.png' height='20' width='20' border='0'></a></td>");
-                    $html->expandir('FILAS', '+tBusqueda');
+                    $secciones['celdaSumniv']= "<a href='" . $liga . $OPD . "' class='btn btn-block btn-info' ><span style='font-size: 12px'>".T_("DETALLE")."</span></a>";
+                    $this->listaSecciones[]=$secciones;
                     $cont++;
     }
     //$html->asignar('sumapondfinal', $sumapond);
-    $html->asignar('NRP', $numrep);
+   
     $infoarea=strtoupper(T_("No. de Reporte")) . " : " . $numrep;
-    $html->asignar('INFOAREA2', $nomunegocio."<br> ".$infoarea);
+    $this->titulo2=$infoarea;
     
    
     Navegacion::borrarRutaActual("d");
@@ -167,24 +178,14 @@ class ConsultaSeccionesController
     
     function revisaImagenes($idservicio,$idreporte,$idseccion) {
         $ban=0; //no hay fotos
-        $sql="SELECT
-                   id_ruta
-                    FROM
-                    ins_imagendetalle
-                    where ins_imagendetalle.id_imgclaveservicio='".$idservicio."' and
-                    ins_imagendetalle.id_imgnumreporte='".$idreporte."' and
-                    ins_imagendetalle.id_imgnumseccion='".$idseccion."' and
-                    ins_imagendetalle.id_imgnumreactivo='';";
+      
         //             echo $sql;
-        $rs1=mysql_query($sql);
+        $rs1=DatosImagenDetalle::consultaImagenDetalle($idservicio,$idreporte,$idseccion,'',"ins_imagendetalle");
         
         //            if (mysql_num_rows($rs1) > 0) {
         
-        while($row_max = mysql_fetch_array($rs1)) {
-            $ban=1; //tiene almenos una
-            break;
-        }
-        if($ban>0)
+     
+        if(sizeof($rs1)>0)
             return true;
             else
                 return false;
@@ -197,5 +198,39 @@ class ConsultaSeccionesController
             return DatosUnegocio::nombrePV($idune);
         }
     }
+    /**
+     * @return  $nomunegocio
+     */
+    public function getNomunegocio()
+    {
+        return $this->nomunegocio;
+    }
+
+    /**
+     * @return  $titulo1
+     */
+    public function getTitulo1()
+    {
+        return $this->titulo1;
+    }
+
+    /**
+     * @return  $titulo2
+     */
+    public function getTitulo2()
+    {
+        return $this->titulo2;
+    }
+
+    /**
+     * @return  $listaSecciones
+     */
+    public function getListaSecciones()
+    {
+        return $this->listaSecciones;
+    }
+
+    
+    
 }
 

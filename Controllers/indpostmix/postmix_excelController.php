@@ -1,13 +1,13 @@
 <?php
- require '../../Models/conexion.php';
-//require '../../Models/crud_usuario.php';
 
-require_once "../../libs/writeexcel/class.writeexcel_workbook.inc.php";
-require_once "../../libs/writeexcel/class.writeexcel_worksheet.inc.php";
+include 'Models/crud_estandar.php';
+include 'Models/crud_catalogoDetalle.php';
+include 'Models/crud_temporales.php';
+require_once "libs/writeexcel/class.writeexcel_workbook.inc.php";
+require_once "libs/writeexcel/class.writeexcel_worksheet.inc.php";
 
 error_reporting(E_ERROR | E_PARSE);
-$postmixexcel=new PostmixExcelController();
-$postmixexcel->exportar();
+
 
 class PostmixExcelController
 {
@@ -92,6 +92,7 @@ class PostmixExcelController
         $worksheet->write('A17', "Page/printer setup");
         $worksheet->write('A18', "Multiple worksheets");
         $workbook->close();
+       
         header("Content-Type: application/x-msexcel; name=\"example-demo.xls\"");
         header("Content-Disposition: inline; filename=\"example-demo.xls\"");
         $fh=fopen($fname, "rb");
@@ -108,6 +109,9 @@ class PostmixExcelController
     @session_start();
    
     $user = $_SESSION["Usuario"];
+    $this->cliente=1;
+    $this->servicio=1;
+  
     $sql="select `cus_usuario`,
     `cus_contrasena`,
     `cus_nombreusuario`,
@@ -316,7 +320,7 @@ class PostmixExcelController
     }
     
 //    hasta aqui todo correcto
-    
+  
     ////////////////////////////////// nombres de cada columna o prueba//////////////////////////////
     $enctablas=array("PUNTO DE VENTA","ID CUENTA","NUD","NO. DE ACTIVO","FECHA VISITA","NO. REPORTE","MES ASIGNACION","MANTTO CORRECTIVO","FUERA DE RANGO","SANITIZACION","FUERA DE RANGO","DIAGNOSTICO MANEJO DE AGUA","FUERA DE RANGO",
         "TEMPERATURA (°C)", "PRESION","TEMPERATURA (F)","VOLUMENES C02",
@@ -444,6 +448,7 @@ WHERE cue_reactivosestandardetalle.ser_claveservicio = 1  and concat(sec_numsecc
  or cue_reactivosestandardetalle.red_numcaracteristica2=7 or cue_reactivosestandardetalle.red_numcaracteristica2=8 or cue_reactivosestandardetalle.red_numcaracteristica2=9)
 ORDER BY cue_reactivosestandardetalle.red_numcaracteristica2  ASC";
     $res0=Conexion::ejecutarQuerysp($sql);
+   
     $totalE= sizeof($res0);
     $nomres="";
     If ($totalE>0) {
@@ -465,6 +470,7 @@ WHERE cue_reactivosestandardetalle.ser_claveservicio = 1 AND concat(sec_numsecci
 ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue_reactivosestandardetalle.red_numcaracteristica2>=4 and cue_reactivosestandardetalle.red_numcaracteristica2<=13),cue_reactivosestandardetalle.red_numcaracteristica2+1,if (cue_reactivosestandardetalle.red_numcaracteristica2=20,15,cue_reactivosestandardetalle.red_numcaracteristica2))) ASC";
     
     $res0=Conexion::ejecutarQuerysp($sql);
+   
     $totalE= sizeof($res0);
     $nomres="";
     If ($totalE>0) {
@@ -501,14 +507,17 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
             $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
         }
         for($i=13;$i<31;$i++) {
+         
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std);
+            $this->worksheet->write ($this->letras."3", utf8_decode($esttablas[$i]),$text_format_std);
         }
         for($i=31;$i<47;$i++) {
+          
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
+            $this->worksheet->write ($this->letras."3",utf8_decode($esttablas[$i]),$text_format_std1);
         }
         for($i=47;$i<50;$i++) {
+           
             $this->letras= $this->michr($letra++);
             $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std);
         }
@@ -524,7 +533,7 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
     foreach($_POST as $nombre_campo => $valor) {
         $asignacion = "\$" . $nombre_campo . "='" .filter_input(INPUT_POST,$nombre_campo, FILTER_SANITIZE_STRING) . "';";
         eval($asignacion);
-        //echo "<br>".$asignacion;
+       
     }
     
     // detalle
@@ -535,21 +544,21 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
         if (isset($tipo_consulta)) {
             $tcons=$tipo_consulta;
         } else {
-            $tcons=filter_input(INPUT_POST,"tipo_consulta", FILTER_SANITIZE_STRING) ;
+            $tcons=filter_input(INPUT_GET,"tipo_consulta", FILTER_SANITIZE_STRING) ;
         }
         $fecharep=$fechareporte;
         //echo $fecharep;
         $fr=explode('-', $fecharep);
-        $fecrec=$fr[2]."-".$fr[1].".".$fr[0];
+        $fecrec=$fr[2]."-".$fr[1]."-".$fr[0];
         
         $mes_asig=$fechainicio.".".$fechainicio2;
         $mes_asig2=$fechafin.".".$fechafin2;
         
-  
+
         
-        $punvta=filter_input(INPUT_POST,"punvta", FILTER_SANITIZE_INT) ;
-        
-        
+        $punvta=filter_input(INPUT_GET,"punvta", FILTER_SANITIZE_STRING) ;
+       
+        try{
         $this->datosUNegocio($mes_asig,$mes_asig2,$cuenta, $fecrec, $tcons, $text_format_det, $text_format_det1, $gpous, $punvta);
         //echo $punvta;
         $fin = microtime(true);
@@ -561,20 +570,22 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
         //$fh=fopen($fname, "rb");
         //fpassthru($fh);
         //unlink($fname);
-        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"");
-        header("Content-Disposition: inline; filename=\"".$nomarch.".xls\"");
-        //header("Content-Type: application/x-msexcel; name=\"example-demo.xls\"");
-        //header("Content-Disposition: inline; filename=\"example-demo.xls\"");
+        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"; charset=iso-8859-1");
+       header("Content-Disposition: inline; filename=\"".$nomarch.".xls\"");
+      
         $fh=fopen($fname, "rb");
         fpassthru($fh);
-        unlink($fname);
+        }catch (Exception $ex){
+            echo $ex;
+        }
+     //   unlink($fname);
    }  
         
         
         function datosUNegocio($mes_asig,$mes_asigfin, $cuenta, $fechar, $tipo_cons, $text_format_det, $text_format_det1, $grupous, $punvta) {
-        
-           
             
+           
+        
             //echo $this->select1."--".$this->select2."--".$this->select3;
             
             $reactivos=array("8.0.2.0.0.6","8.0.2.0.0.7",
@@ -604,7 +615,11 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
                 "5.0.2.0.0.18"
             );
             
-            $sqluneg="SELECT ca_unegocios.une_descripcion, CONVERT(ca_unegocios.une_idpepsi,UNSIGNED INTEGER) AS IDPEPSI, CONVERT(ca_unegocios.une_num_unico_distintivo,UNSIGNED INTEGER) AS NUD, date_format( ins_generales.i_fechavisita ,'%d-%m-%Y') as fecha_visita, ins_generales.i_numreporte,
+            $sqluneg="SELECT ca_unegocios.une_descripcion,
+ CONVERT(ca_unegocios.une_idpepsi,UNSIGNED INTEGER) AS IDPEPSI, 
+CONVERT(ca_unegocios.une_num_unico_distintivo,UNSIGNED INTEGER) AS NUD,
+ date_format( ins_generales.i_fechavisita ,'%d-%m-%Y') as fecha_visita, 
+ins_generales.i_numreporte,
     concat(case SUBSTRING_INDEX( ins_generales.i_mesasignacion,'.',1) when 1 THEN 'ENERO'
         WHEN 2 THEN 'FEBRERO' when 3 THEN 'MARZO' WHEN 4 THEN 'ABRIL'
         when 5 THEN 'MAYO' WHEN 6 THEN 'JUNIO' when 7 THEN 'JULIO' WHEN 8 THEN 'AGOSTO'
@@ -639,7 +654,7 @@ ins_generales.i_claveservicio=1 ";
             }
             
             if ($this->select3 != ""&&$this->select3 != "0") {
-                $sqluneg.= " and ins_generales.i_claveuninegocio='" . $this->select3 . "' ";
+                $sqluneg.= " and ins_generales.i_unenumpunto='" . $this->select3 . "' ";
             }
             if($this->select1!=""&&$this->select1!="0"){
                 $cuenta=$select1;
@@ -684,8 +699,9 @@ ins_generales.i_claveservicio=1 ";
             
             if($cuenta) {
                 if($cuenta!=-1)
-                    $sqluneg.=" and ins_generales.i_clavecuenta=".$cuenta;
+                    $sqluneg.=" and ca_unegocios.cue_clavecuenta=".$cuenta;
             }
+           
             //echo $mes_asig."--".$mes_asigfin;
             if($tipo_cons=="p") {
                 $sqluneg.=" and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:mes_asig),'%d.%m.%Y') 
@@ -693,7 +709,7 @@ ins_generales.i_claveservicio=1 ";
                 $parametros["mes_asig"]=$mes_asig;
                 $parametros["mes_asigfin"]=$mes_asigfin;
             } else if($tipo_cons=="v") {
-                $sqluneg.=" and concat(ca_unegocios.cue_clavecuenta,ca_unegocios.une_id) = :punvta";
+                $sqluneg.=" and concat(ca_unegocios.une_id) = :punvta";
                 $parametros["punvta"]=$punvta;
             } else {
                 $sqluneg.=" and ins_generales.i_fechavisita=:fechar order by ins_generales.i_numreporte";
@@ -702,13 +718,16 @@ ins_generales.i_claveservicio=1 ";
             //echo $sqluneg;
             //die();
             $resultuneg=Conexion::ejecutarQuery($sqluneg,$parametros);
+        
             //comenzamos en a
             $ren_ex=4;
+            try{
             Conexion::ejecutarQuerysp("truncate table tmp_generales");
+          
             foreach($resultuneg as $rowuneg) {
                 $letra=65;
                 // inserto enla tabla temporal
-                
+                $reporte=$rowuneg["i_numreporte"];
                 $queryi="insert into tmp_generales values(:cliente,1,'". $rowuneg["i_numreporte"]."')";
                 $parametros2=array("cliente"=>$this->cliente);
                 $resulti=Conexion::ejecutarInsert($queryi,$parametros2);
@@ -745,11 +764,16 @@ ins_generales.i_claveservicio=1 ";
                     $this->worksheet->write($this->michr(118).$ren_ex, $rowuneg[9], $text_format_det1);
                     $this->worksheet->write($this->michr(119).$ren_ex, $rowuneg[10], $text_format_det1);
                     $this->worksheet->write($this->michr(120).$ren_ex, $rowuneg[11], $text_format_det1);
-                    $this->worksheet->write($this->michr(121).$ren_ex, $rowuneg[12], $text_format_det1);
+                    $this->worksheet->write($this->michr(121).$ren_ex, utf8_decode($rowuneg[12]), $text_format_det1);
                 }
                 $ren_ex++;
             }  // termina el while
-            
+           
+            }
+            catch(Exception $ex){
+          
+                throw new Exception ("Hubo un error al hacer su consulta, intente otra");
+            }
             
             //busco resultados de estandar
             if ($grupous=="cic") {
@@ -757,11 +781,12 @@ ins_generales.i_claveservicio=1 ";
             } else {
                 $letra=78;
             }
+            
             for($i=0;$i<4;$i++){
                 $this->consultaEstandarRes($reactivos[$i], $letra, $text_format_det,$text_format_det1);
                 $letra++;
             }
-            
+         
             
             ///********** obtengo los ratios
             
@@ -773,9 +798,11 @@ ins_generales.i_claveservicio=1 ";
                     $letra++;
                 }
             }
+          
             
             // asigna mantenimiento correctivo
             $ren_ex=4;
+        
             $this->asmantcor1( $this->letras,$ren_ex, $text_format_det,$grupous);
             
             // asigna sanitizacion y agua
@@ -784,20 +811,22 @@ ins_generales.i_claveservicio=1 ";
                 $ren_ex=4;
                 $this->assanitiza($this->letras, $ren_ex, $text_format_det);
                 $ren_ex=4;
+              
                 $this->asagua($this->letras, $ren_ex, $text_format_det);
             }
             //numero de activo
             $ren_ex=4;
             $this->letras=68;
+          
            $this->asNumActivo($ren_ex,$this->letras, $text_format_det, $text_format_det);
-            
-           
+       // die(); 
+     
         }
         
         
         function asNumActivo($renglon,$letra, $text_format_det, $text_format_det1){
            
-            
+          
             // busca el numero de renglon a utilizar
             $queryren="SELECT i_numreporte,ida_numrenglon FROM tmp_generales left Join
 (SELECT  ida_claveservicio, ida_numreporte, ida_numrenglon FROM `ins_detalleabierta`
@@ -814,6 +843,7 @@ group by i_numreporte order by i_numreporte;";
 // where ida_claveservicio=1 and ida_numseccion=2 and ida_numreactivo=1 and ida_numcomponente=2
 // and ida_numcaracteristica1=0 and ida_numcaracteristica2=0 and ida_numcaracteristica3=9 and ida_numreporte='".$numreporte."' and ida_numrenglon=".$numren;
                     //echo $query_na;$reporte,$numser,$seccion,$reactivo,$componente,$caract1,$caract2,$caract3,$renglon, $tabla
+                   
                     $result_numact = DatosAbierta::consultaInsDetalleAbierta($numreporte,$this->servicio,2,1,2,0,0,9,$numren,"ins_detalleabierta");
                     foreach ($result_numact as $row_na) {
                         $numactivo=$row_na["ida_descripcionreal"];
@@ -846,7 +876,7 @@ AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re
 where (ins_detalleestandar.ide_numseccion=8 and ins_detalleestandar.ide_numreactivo=0 and ins_detalleestandar.ide_numcomponente=2 and ins_detalleestandar.ide_numcaracteristica1=0 and ins_detalleestandar.ide_numcaracteristica2=0
 and ins_detalleestandar.ide_numcaracteristica3=6)  or (ins_detalleestandar.ide_numseccion=8 and ins_detalleestandar.ide_numreactivo=0 and ins_detalleestandar.ide_numcomponente=2 and ins_detalleestandar.ide_numcaracteristica1=0 and ins_detalleestandar.ide_numcaracteristica2=0
 and ins_detalleestandar.ide_numcaracteristica3=9)and ins_detalleestandar.ide_claveservicio=1 and ide_numrenglon=1 ) as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = ide_numreporte group by i_numreporte order by i_numreporte";
-            //echo $query;
+          
             $result=Conexion::ejecutarQuerysp($query);
             foreach($result as $row) {
                 switch ($row["totcausa"])
@@ -884,6 +914,7 @@ and ins_detalleestandar.ide_numcaracteristica3=9)and ins_detalleestandar.ide_cla
                 }
                 $this->letras= $this->michr(72);
                 $this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
+                
                 $this->letras= $this->michr(73);
                 $this->worksheet->write ($this->letras.$nren, $razonmant, $text_format_det);
                 $nren++;
@@ -957,6 +988,7 @@ on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = ide_numr
                 //$this->letras= $this->michr(70);
                 //$this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
                 $this->letras= $this->michr(74);
+               
                 $this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
                 $this->letras= $this->michr(75);
                 $this->worksheet->write ($this->letras.$nren, $razonmant, $text_format_det);
@@ -1135,24 +1167,26 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
 //                         AND ide_numrenglon=".$rowren["ide_numrenglon"].";";
                        // $vservicio,  $reporte,$caract3,$seccion,$componente,$reactivo,$opcion
                         $result=DatosEst::consultaDetalleEstandar($this->servicio, $reporte,9,8,1,0,$rowren["ide_numrenglon"]);
+                     
                         foreach($result as $row) {
-                            if (round($row["valreal"],2)<=4.49 or round($row["valreal"],2)>=5.51) {
-                                //$calival="Si";
+                             if (round($row["ide_valorreal"],2)<=4.49 or round($row["ide_valorreal"],2)>=5.51) {
+                             
+                              //  $calival="Si";
                               //  $sqlsab="SELECT ca_catalogosdetalle.cad_descripcionesp FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '2' AND ca_catalogosdetalle.cad_idopcion =  '".$opcion_sabor[$i]."'";
-                                $resultsab=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",2,$opcion_sabor[$i]);
-                                foreach($resultsab as $rowsab) {
-                                    $motcali=$rowsab["cad_descripcionesp"];
+                                 $motcali=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",2,$opcion_sabor[$i]);
+                               
+                               //     $motcali=$rowsab["cad_descripcionesp"];
                                     if ($sabores) {
                                         $sabores = $sabores.",".$motcali;
                                     } else {
                                         $sabores = $motcali;
                                     }
-                                }
+                                
                             }
-                            $this->worksheet->write($this->michr($letra).$ren, round($row["valreal"],2), $text_format_det);
+                            $this->worksheet->write($this->michr($letra).$ren, round($row["ide_valorreal"],2), $text_format_det);
                         }
                   
-                      
+                      $letra++;
                     
                 }
                 else
@@ -1160,6 +1194,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                 $letra++;
                 }
             }
+       
             //	 $this->worksheet->write($this->michr(70).$ren, $calival, $text_format_det);
             //	 $this->worksheet->write($this->michr(71).$ren, $sabores);
             return $sabores;
@@ -1193,7 +1228,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
             on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = ide_numreporte
             order by i_numreporte";
             
-            $result=Conexion::ejecutarQuerysp($query);
+          
             $parametros=array("seccion"=>$aux[0],
                 "reactivo"=>$aux[1],
                 "componente"=>$aux[2],
@@ -1201,18 +1236,18 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                 "caract2"=>$aux[4],
                 "caract3"=>$aux[5],
                 "servicio"=>$this->servicio);
-            //die("fin cons");
+            $result=Conexion::ejecutarQuery($query,$parametros);
+         
             foreach($result as $row) {
                 //echo $letra;
                 if($row["red_tipodato"]=="C")   // busco el valor en catalogo
                 {
                     
                     
-                    $result_cat = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$row["red_clavecatalogo"],$row ["ide_valorreal"]);
-                    foreach ($result_cat as $row_cat) {
-                        $estandar=$row_cat["cad_descripcionesp"];
-                    }
-                    $this->worksheet->write($this->michr($letra).$renglon, $estandar, $text_format_det1);
+                    $estandar = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$row["red_clavecatalogo"],$row["ide_valorreal"]);
+                   
+                   
+                    $this->worksheet->write($this->michr($letra).$renglon,utf8_decode($estandar), $text_format_det1);
                    
                 }
                 else

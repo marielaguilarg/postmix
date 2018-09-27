@@ -1,5 +1,7 @@
 <?php
-class unegocioController{
+
+class unegocioController {
+
 private $listanivel1;
 private $listanivel2;
 private $listanivel3;
@@ -38,40 +40,40 @@ private $numpunto;
 private $cuenta;
 
 
-	public function vistaunegocioController(){
+public function vistaunegocioController() {
     $idc=$_GET["idc"];
 		$page_size=100;
-		if(isset($_GET["pages"])){
-			$pages=$_GET["pages"];
-			$init =($pages - 1) * $page_size;
-		} else {
-			$init=0;
-			$pages=1;
-		}
+if (isset($_GET["pages"])) {
+$pages = $_GET["pages"];
+$init = ($pages - 1) * $page_size;
+} else {
+$init = 0;
+$pages = 1;
+}
 		$totuneg=Datosunegocio::cuentaUnegocioModel($idc, "ca_unegocios");
-		$totpages= ceil($totuneg/$page_size);
+$totpages = ceil($totuneg / $page_size);
 
-		if(isset($_POST["opcionuneg"])){
-			$op="%".$_POST["opcionuneg"]."%";
-			//echo $op;
-			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($op, "ca_unegocios");
-		} else {	
+if (isset($_POST["opcionuneg"])) {
+$op = "%" . $_POST["opcionuneg"] . "%";
+//echo $op;
+$respuesta = Datosunegocio::vistaFiltroUnegocioModel($op, "ca_unegocios");
+} else {
 			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idc, "ca_unegocios");
-		}
+}
 
 
-		//echo $totuneg;
-		foreach($respuesta as $row => $item){
-			echo '  <tr>
-	                  <td>'.$item["une_id"].'</td>
-	                  <td>'.$item["une_idpepsi"].'</td>
-		                  <td>'.$item["une_idcuenta"].'</td>
+//echo $totuneg;
+foreach ($respuesta as $row => $item) {
+echo '  <tr>
+	                  <td>' . $item["une_id"] . '</td>
+	                  <td>' . $item["une_idpepsi"] . '</td>
+		                  <td>' . $item["une_idcuenta"] . '</td>
 	                  <td>
 	                    <a href="#">'.$item["une_descripcion"].'</a>
 	                  </td>
 	                </tr>';
 	            
-		}
+}
 
           echo '
                </table>
@@ -81,9 +83,9 @@ private $cuenta;
               <ul class="pagination pagination-sm no-margin pull-right">';
 
 
-		if ($totpages>1) {
-			if (isset($pages)) {
-				if ($pages != 1){
+if ($totpages > 1) {
+if (isset($pages)) {
+if ($pages != 1) {
 	      			echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.($pages -1 ).'">&laquo;</a></li>';
 
 				}
@@ -91,87 +93,87 @@ private $cuenta;
 		}
 
 		for ($i=1; $i<=$totpages;$i++){
-				if (isset($page)) {
-					if($page==$i){
-						echo $page;
-					} else {
+if (isset($page)) {
+if ($page == $i) {
+echo $page;
+} else {
 						echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.$i.'">'.$i.'</a></li>';
-					}
-				}else{
+}
+} else {
 				 		echo '<li><a href="index.php?action=listaunegocio&idc='.$idc.'&pages='.$i.'">'.$i.'</a></li>';
-				} //IF 	
-			}	//FOR
-		echo '</ul>
+} //IF 	
+} //FOR
+echo '</ul>
             </div>
           </div>
           <!-- /.box -->
         </div>
         </div>';
-	}
+}
 
 
-public function vistarunegocioController(){
+public function vistarunegocioController() {
 	$page_size=100;
-	$sv=$_GET["sv"];
+$sv = $_GET["sv"];
   $idcta=$_GET["idc"];
-		if(isset($_GET["pages"])){
-			$pages=$_GET["pages"];
-			$init =($pages - 1) * $page_size;
-		} else {
-			$init=0;
-			$pages=1;
-		}
+if (isset($_GET["pages"])) {
+$pages = $_GET["pages"];
+$init = ($pages - 1) * $page_size;
+} else {
+$init = 0;
+$pages = 1;
+}
 		$totuneg=Datosunegocio::cuentaUnegocioModel($idcta,"ca_unegocios");
-		$totpages= ceil($totuneg/$page_size);
+$totpages = ceil($totuneg / $page_size);
 
-		if(isset($_POST["opcionuneg"])){
-			$op="%".$_POST["opcionuneg"]."%";
-			//echo $op;
+if (isset($_POST["opcionuneg"])) {
+$op = "%" . $_POST["opcionuneg"] . "%";
+//echo $op;
 			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($idcta, $op, "ca_unegocios");
-		} else {	
+} else {
 			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idcta, "ca_unegocios");
-		}
+}
 
-		
-		foreach($respuesta as $row => $item){
-			echo '  <tr>
-	                  <td>'.$item["une_id"].'</td>
-	                  <td>'.$item["une_idpepsi"].'</td>
-		                  <td>'.$item["une_idcuenta"].'</td>
+
+foreach ($respuesta as $row => $item) {
+echo '  <tr>
+	                  <td>' . $item["une_id"] . '</td>
+	                  <td>' . $item["une_idpepsi"] . '</td>
+		                  <td>' . $item["une_idcuenta"] . '</td>
 	                  <td>
 	                    <a href="index.php?action=runegociodetalle&idc='.$idcta.'&un='.$item["une_id"].'&sv='.$sv.'">'.$item["une_descripcion"].'</a>
 	                  </td>
 	                </tr>';
 	            
-		}  // foreach
-			echo '
+}  // foreach
+echo '
                </table>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix">
               <ul class="pagination pagination-sm no-margin pull-right">';
-			
-			#trabajemos con la paginacion
-		if ($totpages>1) {
-			if (isset($pages)) {
-				if ($pages != 1){
+
+#trabajemos con la paginacion
+if ($totpages > 1) {
+if (isset($pages)) {
+if ($pages != 1) {
 	      			echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.($pages -1 ).'">&laquo;</a></li>';
 
 				}
 			}	
 		}	
 			for ($i=1; $i<=$totpages;$i++){
-				if (isset($page)) {
-					if($page==$i){
-						echo $page;
-					} else {
+if (isset($page)) {
+if ($page == $i) {
+echo $page;
+} else {
 						echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.$i.'">'.$i.'</a></li>';
-					}
-				}else{
+}
+} else {
 				 		echo '<li><a href="index.php?action=rlistaunegocio&idc='.$idcta.'&sv='.$sv.'&pages='.$i.'">'.$i.'</a></li>';
-				} //IF 	
-			}	//FOR
-		echo '</ul>
+} //IF 	
+} //FOR
+echo '</ul>
             </div>
           </div>
           <!-- /.box -->
@@ -181,13 +183,13 @@ public function vistarunegocioController(){
 	} // function
 
 
-	public function vistaunegocioDetalle(){
-		$uneg=$_GET["un"];
-		$serv=$_GET["sv"];
+public function vistaunegocioDetalle() {
+$uneg = $_GET["un"];
+$serv = $_GET["sv"];
     $idc=$_GET["idc"];
-		$respuesta =Datosunegocio::vistaUnegocioDetalle($uneg, "ca_unegocios");
-		#presrenta datos de unegocio
-		echo '<h3 class="box-title">'.$respuesta["une_descripcion"].'</h3>
+$respuesta = Datosunegocio::vistaUnegocioDetalle($uneg, "ca_unegocios");
+#presrenta datos de unegocio
+echo '<h3 class="box-title">' . $respuesta["une_descripcion"] . '</h3>
               <div class="box-tools pull-right">
                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -204,7 +206,7 @@ public function vistarunegocioController(){
                    <div class="col-sm-4 border-right">
                   <div class="description-block">
                     <h5 class="description-text">ID PEPSI</h5>
-              		<strong>'.$respuesta["une_idpepsi"].'</strong><br>
+              		<strong>' . $respuesta["une_idpepsi"] . '</strong><br>
           </div>
           <!-- /.description-block -->
           </div>
@@ -212,7 +214,7 @@ public function vistarunegocioController(){
           <div class="col-sm-4 border-right">
           <div class="description-block">
             <h5 class="description-text">ID CUENTA</h5>
-            <strong>'.$respuesta["une_idcuenta"].'</strong><br>
+            <strong>' . $respuesta["une_idcuenta"] . '</strong><br>
              </div>
                   <!-- /.description-block -->
                 </div>
@@ -222,11 +224,11 @@ public function vistarunegocioController(){
   
                  <button type="button" class="btn btn-block btn-primary" style="width: 80%"><a href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a></button>
 ';
-	}
+}
 
-	public function vistaReportesunegocio(){
-		$uneg=$_GET["un"];
-		$serv=$_GET["sv"];
+public function vistaReportesunegocio() {
+$uneg = $_GET["un"];
+$serv = $_GET["sv"];
     $idc=$_GET["idc"];
     $gpo = UsuarioController::Obten_grupo();
     //echo $gpo;
@@ -234,9 +236,9 @@ public function vistarunegocioController(){
               
     $respuesta =Datosunegocio::ReportesUnegocio($serv, $uneg, "ins_generales");
   
-		foreach($respuesta as $row => $item){
+foreach ($respuesta as $row => $item) {
       $numrep=$item["i_numreporte"];
-       echo '<div class="col-sm-4 border-right">
+echo '<div class="col-sm-4 border-right">
                   <div class="description-block">'; 
       if ($gpo=='adm') {
                echo '<strong> <a href="index.php?action=editarep&idc='.$idc.'&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'">'.$item["i_numreporte"].'</a>';
@@ -278,39 +280,39 @@ public function vistarunegocioController(){
  
      
 	
-	}			
+}
 
-	public function vistaunegocioCompleta(){
-		$uneg=$_GET["uneg"];
-		//echo $uneg;
+public function vistaunegocioCompleta() {
+$uneg = $_GET["uneg"];
+//echo $uneg;
 
-		$respuesta =Datosunegocio::UnegocioCompleta($uneg, "ca_unegocios");
-		
-				$nivel1=$respuesta["une_cla_region"];
-                $nivel2=$respuesta["une_cla_pais"];
-                $nivel3=$respuesta["une_cla_zona"];
-                $nivel4=$respuesta["une_cla_estado"];
-                $nivel5=$respuesta["une_cla_ciudad"];
-                $nivel6=$respuesta["une_cla_franquicia"];
-                
-          
+$respuesta = Datosunegocio::UnegocioCompleta($uneg, "ca_unegocios");
 
-		echo '<div class="form-group col-md-12">
+$nivel1 = $respuesta["une_cla_region"];
+$nivel2 = $respuesta["une_cla_pais"];
+$nivel3 = $respuesta["une_cla_zona"];
+$nivel4 = $respuesta["une_cla_estado"];
+$nivel5 = $respuesta["une_cla_ciudad"];
+$nivel6 = $respuesta["une_cla_franquicia"];
+
+
+
+echo '<div class="form-group col-md-12">
                   <label>NOMBRE</label>
-                  <br>'.
-                  $respuesta["une_descripcion"].'
+                  <br>' .
+$respuesta["une_descripcion"] . '
                 </div>
                 <div class="form-group col-md-4">
-                  <label>ID PEPSI</label><br>'.
-                  $respuesta["une_idpepsi"].'
+                  <label>ID PEPSI</label><br>' .
+$respuesta["une_idpepsi"] . '
                 </div>
                 <div class="form-group col-md-4">
-                  <label>ID CUENTA</label><br>'.
-                  $respuesta["une_idcuenta"].'
+                  <label>ID CUENTA</label><br>' .
+$respuesta["une_idcuenta"] . '
                 </div>
                 <div class="form-group col-md-4">
-                  <label>NUD</label><br>'.
-                  $respuesta["une_num_unico_distintivo"].'
+                  <label>NUD</label><br>' .
+$respuesta["une_num_unico_distintivo"] . '
                 </div>
 
                 <br>
@@ -318,136 +320,136 @@ public function vistarunegocioController(){
                 <h4>DIRECCIÓN</h4>
                 </div>
                <div class="form-group col-md-12">
-                  <label>CALLE</label><br>'.
-                  $respuesta["une_dir_calle"].'
+                  <label>CALLE</label><br>' .
+$respuesta["une_dir_calle"] . '
 
                 </div>
                 
                <div class="form-group col-md-3">
-                  <label>NUM. EXTERIOR</label><br>'.
-                  $respuesta["une_dir_numeroext"].'
+                  <label>NUM. EXTERIOR</label><br>' .
+$respuesta["une_dir_numeroext"] . '
                 </div>
                 
                 
                 <div class="form-group col-md-3">
-                  <label>NUM. INTERIOR</label><br>'.
-                  $respuesta["une_dir_numeroint"].'
+                  <label>NUM. INTERIOR</label><br>' .
+$respuesta["une_dir_numeroint"] . '
                 </div>
 				
                 <div class="form-group col-md-3">
-                  <label>MANZANA</label><br>'.
-                  $respuesta["une_dir_manzana"].'
+                  <label>MANZANA</label><br>' .
+$respuesta["une_dir_manzana"] . '
                 </div>
                 <div class="form-group col-md-3">
-                  <label>LOTE</label><br>'.
-                  $respuesta["une_dir_lote"].'
+                  <label>LOTE</label><br>' .
+$respuesta["une_dir_lote"] . '
                 </div>
                 <div class="form-group col-md-6">
-                  <label>COLONIA</label><br>'.
-                  $respuesta["une_dir_colonia"].'
+                  <label>COLONIA</label><br>' .
+$respuesta["une_dir_colonia"] . '
                 </div>
                 <div class="form-group col-md-6">
-                  <label>DELEGACIÓN</label><br>'.
-                  $respuesta["une_dir_delegacion"].'
+                  <label>DELEGACIÓN</label><br>' .
+$respuesta["une_dir_delegacion"] . '
                 </div>
 
                 <div class="form-group col-md-6">
-                  <label>CIUDAD</label><br>'.
-                  $respuesta["une_dir_municipio"].'
+                  <label>CIUDAD</label><br>' .
+$respuesta["une_dir_municipio"] . '
                 </div>
                 <div class="form-group col-md-6">
-                  <label>ESTADO</label><br>'.
-                  $respuesta["une_dir_estado"].'
+                  <label>ESTADO</label><br>' .
+$respuesta["une_dir_estado"] . '
                 </div>
                 <div class="form-group col-md-3">
-                  <label>C.P.</label><br>'.
-                  $respuesta["une_dir_cp"].'
+                  <label>C.P.</label><br>' .
+$respuesta["une_dir_cp"] . '
                 </div>
                 <div class="form-group col-md-9">
-                  <label>REFERENCIA</label><br>'.
-                  $respuesta["une_dir_referencia"].'
+                  <label>REFERENCIA</label><br>' .
+$respuesta["une_dir_referencia"] . '
                 </div>
                  <div class="form-group col-md-6">
-                  <label>TELÉFONO</label><br>'.
-                  $respuesta["une_dir_telefono"].'
+                  <label>TELÉFONO</label><br>' .
+$respuesta["une_dir_telefono"] . '
                 </div>';
 
-                # buscamos nombres de las estructuras;
-                
+# buscamos nombres de las estructuras;
 
 
 
 
-				$nomnivel =Estructura::vistaEstructuraCompleta(1,"cnfg_estructura");
 
-                echo '<br>
+$nomnivel = Estructura::vistaEstructuraCompleta(1, "cnfg_estructura");
+
+echo '<br>
                 <div class="col-md-12">
                 <h4>CLASIFICACIÓN</h4>
                 </div>
                 <div class="form-group col-md-6">
-                  <label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
-			
-				$datnivel =	Datosnuno::vistaN1opcionModel($respuesta["une_cla_region"], "ca_nivel1");
-				
-				echo $datnivel["n1_nombre"].'
+                  <label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
+
+$datnivel = Datosnuno::vistaN1opcionModel($respuesta["une_cla_region"], "ca_nivel1");
+
+echo $datnivel["n1_nombre"] . '
                  
                 </div>
                 <div class="form-group col-md-6">';
-                $nomnivel =Estructura::vistaEstructuraCompleta(2,"cnfg_estructura");
-                echo
-                  '<label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
-				
-				$datnivel =	Datosndos::vistaN2opcionModel($respuesta["une_cla_pais"], "ca_nivel2");
-				
-				echo $datnivel["n2_nombre"].'
+$nomnivel = Estructura::vistaEstructuraCompleta(2, "cnfg_estructura");
+echo
+'<label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
+
+$datnivel = Datosndos::vistaN2opcionModel($respuesta["une_cla_pais"], "ca_nivel2");
+
+echo $datnivel["n2_nombre"] . '
                 	
                 </div>
                 <div class="form-group col-md-6">';
 
-                $nomnivel =Estructura::vistaEstructuraCompleta(3,"cnfg_estructura");
-                echo
-                  '<label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
+$nomnivel = Estructura::vistaEstructuraCompleta(3, "cnfg_estructura");
+echo
+'<label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
 
-                $datnivel =	Datosntres::vistaN3opcionModel($respuesta["une_cla_zona"], "ca_nivel3");
-				
-				echo $datnivel["n3_nombre"].'
+$datnivel = Datosntres::vistaN3opcionModel($respuesta["une_cla_zona"], "ca_nivel3");
+
+echo $datnivel["n3_nombre"] . '
                 </div>
                 <div class="form-group col-md-6">';
 
-                $nomnivel =Estructura::vistaEstructuraCompleta(4,"cnfg_estructura");
-                echo
-                  '<label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
-                 $datnivel4 =Datosncua::vistaN4opcionModel($respuesta["une_cla_estado"], "ca_nivel4");
-				
-				echo $datnivel4["n4_nombre"].'
+$nomnivel = Estructura::vistaEstructuraCompleta(4, "cnfg_estructura");
+echo
+'<label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
+$datnivel4 = Datosncua::vistaN4opcionModel($respuesta["une_cla_estado"], "ca_nivel4");
+
+echo $datnivel4["n4_nombre"] . '
                 </div>
 
                 <div class="form-group col-md-6">';
-                $nomnivel =Estructura::vistaEstructuraCompleta(5,"cnfg_estructura");
-                echo
-                  '<label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
+$nomnivel = Estructura::vistaEstructuraCompleta(5, "cnfg_estructura");
+echo
+'<label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
 
-                 $datnivel5 =Datosncin::vistancinOpcionModel($nivel5, "ca_nivel5");
-                 if (isset($datnivel5["n5_nombre"])){
-				     $opcioncinco=$datnivel5["n5_nombre"];
-				} else {
-					 $opcioncinco="";
-				}	
-				echo $opcioncinco.'
+$datnivel5 = Datosncin::vistancinOpcionModel($nivel5, "ca_nivel5");
+if (isset($datnivel5["n5_nombre"])) {
+$opcioncinco = $datnivel5["n5_nombre"];
+} else {
+$opcioncinco = "";
+}
+echo $opcioncinco . '
                 </div>
                 <div class="form-group col-md-6">';
 
-                
-                $nomnivel =Estructura::vistaEstructuraCompleta(6,"cnfg_estructura");
-                echo
-                  '<label>'.$nomnivel["mee_descripcionnivelesp"].'</label><br>';
-                  $datnivel6 =Datosnsei::vistanseiOpcionModel($nivel6, "ca_nivel6");
-					if (isset($datnivel6["n6_nombre"])){
-				    	 $opcionseis=$datnivel6["n6_nombre"];
-					} else {
-						 $opcionseis="";
-					}	
-					echo $opcionseis.'
+
+$nomnivel = Estructura::vistaEstructuraCompleta(6, "cnfg_estructura");
+echo
+'<label>' . $nomnivel["mee_descripcionnivelesp"] . '</label><br>';
+$datnivel6 = Datosnsei::vistanseiOpcionModel($nivel6, "ca_nivel6");
+if (isset($datnivel6["n6_nombre"])) {
+$opcionseis = $datnivel6["n6_nombre"];
+} else {
+$opcionseis = "";
+}
+echo $opcionseis . '
 				
                 </div>';
 
@@ -483,9 +485,9 @@ public function listaClientesCuentas(){
     
     }   
      
-  }
-  
-  public function registroUnegocioController() {
+}
+
+public function registroUnegocioController() {
 
 if (isset($_POST["desuneg"])) {
 
@@ -495,11 +497,11 @@ $datosController[$nombre_campo]= filter_input(INPUT_POST,$nombre_campo, FILTER_S
 
 }
 
-   if(isset($datosController["idpv"]))
-      $respuesta= DatosUnegocio::actualizarUnegocio($datosController, "ca_unegocios");
-         
-   else
-     $respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
+if(isset($datosController["idpv"]))
+    $respuesta= DatosUnegocio::actualizarUnegocio($datosController, "ca_unegocios");
+        
+else
+$respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
 
             if ($respuesta == "success") {
 
@@ -513,10 +515,10 @@ $datosController[$nombre_campo]= filter_input(INPUT_POST,$nombre_campo, FILTER_S
             } else {
                 echo '<script> windows.location= "index.php?index.php" </script>';
             }
-    }
+}
 }
 
-  public function vistaNuevoUnegocio() {
+public function vistaNuevoUnegocio() {
 
 $this->cuenta= filter_input(INPUT_GET,"refer",FILTER_SANITIZE_NUMBER_INT);
 $rs_fran = DatosFranquicia::vistaFranquiciasModel("ca_franquicias");
@@ -757,7 +759,320 @@ $lista[] = "<option value='" . $item["n" . $nivel . "_id"] . "'>" .  $item["n" .
 return $lista;
 }
 
+public function listaClientesCuentas(){
+    $respuesta =DatosCuenta::listaClientesModel("ca_clientes");
 
-  
+  foreach($respuesta as $row => $item){
+       echo '<li class="treeview"><a><i class="fa fa-circle-o"></i>'.substr($item["cli_nombre"],0,15).' <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span></a>';
+       echo "  <ul class=\"treeview-menu\">";
+       $respcuentas= DatosCuenta::vistaCuentasxCliente($item["cli_id"],"ca_cuentas");
+       foreach($respcuentas as $row2 => $item2){
+            echo '<li><a href="index.php?action=nuevaunegocio&refer='.$item2["cue_id"].'"><i class="fa fa-circle-o"></i>'.substr($item2["cue_descripcion"],0,15).'</a></li>';
+           
+       }
+       echo "</ul></li>";
+       
+     
+
+    }   
+     
+
+                      
+}
+
+
+
+function getListanivel1() {
+return $this->listanivel1;
+}
+
+function getListanivel2() {
+return $this->listanivel2;
+}
+
+function getListanivel3() {
+return $this->listanivel3;
+}
+
+function getListanivel4() {
+return $this->listanivel4;
+}
+
+function getListanivel5() {
+return $this->listanivel5;
+}
+
+function getListanivel6() {
+return $this->listanivel6;
+}
+
+function getNombrenivel1() {
+return $this->nombrenivel1;
+}
+
+function getNombrenivel2() {
+return $this->nombrenivel2;
+}
+
+function getNombrenivel3() {
+return $this->nombrenivel3;
+}
+
+function getNombrenivel4() {
+return $this->nombrenivel4;
+}
+
+function getNombrenivel5() {
+return $this->nombrenivel5;
+}
+
+function getNombrenivel6() {
+return $this->nombrenivel6;
+}
+
+function getListaFranquicias() {
+return $this->listaFranquicias;
+}
+
+function getListaEstatus() {
+return $this->listaEstatus;
+}
+
+function getListaEstados() {
+return $this->listaEstados;
+}
+
+function getIdref() {
+return $this->idref;
+}
+
+function getDesuneg() {
+return $this->desuneg;
+}
+
+function getIdpepsi() {
+return $this->idpepsi;
+}
+
+function getIdcta() {
+return $this->idcta;
+}
+
+function getIdnud() {
+return $this->idnud;
+}
+
+function getCalle() {
+return $this->calle;
+}
+
+function getNumext() {
+return $this->numext;
+}
+
+function getNumint() {
+return $this->numint;
+}
+
+function getMz() {
+return $this->mz;
+}
+
+function getLt() {
+return $this->lt;
+}
+
+function getCol() {
+return $this->col;
+}
+
+function getDel() {
+return $this->del;
+}
+
+function getMun() {
+return $this->mun;
+}
+
+function getEdo() {
+return $this->edo;
+}
+
+function getCp() {
+return $this->cp;
+}
+
+function getRef() {
+return $this->ref;
+}
+
+function getTel() {
+return $this->tel;
+}
+
+function getNumpunto() {
+return $this->numpunto;
+}
+
+function setListanivel1($listanivel1) {
+$this->listanivel1 = $listanivel1;
+}
+
+function setListanivel2($listanivel2) {
+$this->listanivel2 = $listanivel2;
+}
+
+function setListanivel3($listanivel3) {
+$this->listanivel3 = $listanivel3;
+}
+
+function setListanivel4($listanivel4) {
+$this->listanivel4 = $listanivel4;
+}
+
+function setListanivel5($listanivel5) {
+$this->listanivel5 = $listanivel5;
+}
+
+function setListanivel6($listanivel6) {
+$this->listanivel6 = $listanivel6;
+}
+
+function setNombrenivel1($nombrenivel1) {
+$this->nombrenivel1 = $nombrenivel1;
+}
+
+function setNombrenivel2($nombrenivel2) {
+$this->nombrenivel2 = $nombrenivel2;
+}
+
+function setNombrenivel3($nombrenivel3) {
+$this->nombrenivel3 = $nombrenivel3;
+}
+
+function setNombrenivel4($nombrenivel4) {
+$this->nombrenivel4 = $nombrenivel4;
+}
+
+function setNombrenivel5($nombrenivel5) {
+$this->nombrenivel5 = $nombrenivel5;
+}
+
+function setNombrenivel6($nombrenivel6) {
+$this->nombrenivel6 = $nombrenivel6;
+}
+
+function setListaFranquicias($listaFranquicias) {
+$this->listaFranquicias = $listaFranquicias;
+}
+
+function setListaEstatus($listaEstatus) {
+$this->listaEstatus = $listaEstatus;
+}
+
+function setListaEstados($listaEstados) {
+$this->listaEstados = $listaEstados;
+}
+
+function setIdref($idref) {
+$this->idref = $idref;
+}
+
+function setDesuneg($desuneg) {
+$this->desuneg = $desuneg;
+}
+
+function setIdpepsi($idpepsi) {
+$this->idpepsi = $idpepsi;
+}
+
+function setIdcta($idcta) {
+$this->idcta = $idcta;
+}
+
+function setIdnud($idnud) {
+$this->idnud = $idnud;
+}
+
+function setCalle($calle) {
+$this->calle = $calle;
+}
+
+function setNumext($numext) {
+$this->numext = $numext;
+}
+
+function setNumint($numint) {
+$this->numint = $numint;
+}
+
+function setMz($mz) {
+$this->mz = $mz;
+}
+
+function setLt($lt) {
+$this->lt = $lt;
+}
+
+function setCol($col) {
+$this->col = $col;
+}
+
+function setDel($del) {
+$this->del = $del;
+}
+
+function setMun($mun) {
+$this->mun = $mun;
+}
+
+function setEdo($edo) {
+$this->edo = $edo;
+}
+
+function setCp($cp) {
+$this->cp = $cp;
+}
+
+function setRef($ref) {
+$this->ref = $ref;
+}
+
+function setTel($tel) {
+$this->tel = $tel;
+}
+
+function setNumpunto($numpunto) {
+$this->numpunto = $numpunto;
+}
+
+function getIdpv() {
+    return $this->idpv;
+}
+function getCuenta() {
+    return $this->cuenta;
+}
+
+
+function getNombreSeccion() {
+    return $this->nombreSeccion;
+}
+
+function getTitulopagina() {
+    return $this->titulopagina;
+}
+
+function getListaCuentas() {
+    return $this->listaCuentas;
+}
+
+function setListaCuentas($listaCuentas) {
+    $this->listaCuentas = $listaCuentas;
+}
+
+
+
 }
 ?>

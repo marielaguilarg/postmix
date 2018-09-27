@@ -1,5 +1,7 @@
 <?php
 class ProductoController{
+    
+   
 
 	public function vistaProductoController(){
 		if (isset($_GET["sec"])) {
@@ -193,6 +195,8 @@ class ProductoController{
 		}
 		}
 	}
+	
+	
 
 	public function reporteProductoController(){
 

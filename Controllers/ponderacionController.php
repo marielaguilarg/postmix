@@ -584,9 +584,9 @@ public function editarPonderaComentController(){
     echo '<input type="hidden" name="nrep" value="'.$nrep.'">';
    echo '<input type="hidden" name="pv" value="'.$pv.'">';
    echo '<input type="hidden" name="idc" value="'.$idc.'">';
-    
-    
- $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
+
+
+    $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
      
     foreach($respuesta as $row => $item){
       echo '
@@ -719,7 +719,7 @@ public function editarPonderaComentController(){
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-              </div>
+              </div> 
              
                    </div>
                
@@ -729,7 +729,7 @@ public function editarPonderaComentController(){
     </div>
      ';
       } //foreach
-   
+
 
   #registra reporte
               $ingreso = new PonderacionController();

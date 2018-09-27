@@ -212,7 +212,7 @@ class GeneralController{
              echo '<input type="hidden" name="sec" value="'.$sec.'">';
              echo '<input type="hidden" name="pv" value="'.$pv.'">';
              echo '<input type="hidden" name="idc" value="'.$idc.'">';
-                      # valida si existen datos
+                # valida si existen datos
              $existe = DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
              if ($existe){
                 
@@ -220,7 +220,6 @@ class GeneralController{
                 #LEE VARIABLES
                   $cinsp=$registro["i_claveinspector"];
                   $fecvis=$registro["i_fechavisita"];
-                 // echo $fecvis;
                   $mesas=$registro["i_mesasignacion"];
                   $hrent=$registro["i_horaentradavis"];
                   $horaEn=$registro["HoraEn"];
@@ -243,7 +242,6 @@ class GeneralController{
                   $fecfin=$registro["i_fechafinalizado"];
                   $reasigna=$registro["i_reasigna"];
                   $gpo=$_SESSION["GrupoUs"];
-                  
                   echo '
                   <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
@@ -257,7 +255,7 @@ class GeneralController{
                       } else {
                         echo '<option value='.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';
                       }                   
-                   }  
+                  }  
 
                    echo ' </select>
                   </div>
@@ -447,7 +445,7 @@ class GeneralController{
                   <input type="text" class="form-control pull-right" id="datepicker" name="fecvis"  value="'.$fvis.'">
                 </div>
                 <!-- /.input group -->
-              </div>';
+                </div>';  
 
                   if ($gpo=='adm'){
                     echo '<div class="form-group col-md-4">';
@@ -496,7 +494,7 @@ class GeneralController{
                 </div>
               <div class="form-group">
                 <label>FECHA DE EMISION:</label>
-
+                
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
@@ -505,7 +503,7 @@ class GeneralController{
                 </div>
                 <!-- /.input group -->
               </div>
-
+                
                 ';                
 
                 if ($finaliza==1) {
@@ -731,8 +729,8 @@ class GeneralController{
                   <input type="text" class="form-control pull-right" id="datepicker2" name="fecemi">
                 </div>
                 <!-- /.input group -->
-              </div>
-
+                </div>
+                
                 </br>';
                                
                   echo '  <div class="form-group col-md-12">
@@ -751,10 +749,10 @@ class GeneralController{
                 <!-- Clasificación punto de venta -->
                 <br>
                 
-                <div class="box-footer col-md-12">
+                 <div class="box-footer col-md-12">
                   <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=editarep&sv='.$sv.'&idc='.$idc.'&nrep='.$nrep.'&pv='.$pv.'"> Cancelar </a></button>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
-                 </div>
+                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
+              </div>
                
               </form>
               </div>

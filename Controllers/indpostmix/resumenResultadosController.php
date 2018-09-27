@@ -150,7 +150,7 @@ class ResumenResultadosController {
             }
             if ($filx["zon"] != "" && $filx["zon"] != 0) {
 
-                $nomzon = "-" . Datosntre::nombreNivel3($filx["zon"],"ca_nivel3");
+                $nomzon = "-" . Datosntres::nombreNivel3($filx["zon"],"ca_nivel3");
             }
             if ($filx["reg"] != "" && $filx["reg"] != 0) {
 

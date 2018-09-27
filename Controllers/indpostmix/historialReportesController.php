@@ -69,9 +69,9 @@ class HistorialReportesController {
                         $parametros["cad"]=$fil_ptoventa;
                 }
 
-                $SQLGEN= 'insert into INSTRUCTIONS (textosql) values ("'.$sql_c.'");';
+           //     $SQLGEN= 'insert into instructions (textosql) values ("'.$sql_c.'");';
                 try{
-        Conexion::ejecutarQuerysp($SQLGEN);
+//        Conexion::ejecutarQuerysp($SQLGEN);
 
                 $rs_sql_c = Conexion::ejecutarQuery ( $sql_c,$parametros );
                 $numreportes = sizeof( $rs_sql_c );

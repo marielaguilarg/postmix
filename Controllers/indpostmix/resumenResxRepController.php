@@ -29,7 +29,7 @@ class ResumenResxRepController
         }
         
         $vservicio = $_SESSION["servicioind"];
-        $vcliente = 100;
+        $vcliente = $_SESSION["clienteind"];
         
         $this->titulo1 = T_("RESUMEN DE RESULTADOS POR REPORTE");
         $this->numreporte = T_("NO. DE REPORTE") . ":" . $numrep;
@@ -43,18 +43,19 @@ class ResumenResxRepController
         $paloma = "<img src='img/palomita.png' width='20' height='20' border='0' alt='Ver resultados' title='" . T_('Ver resultados') . "'>";
         
         $row_rs_sql_titulo = DatosGenerales::getDatosReporteUnegocio($numrep, $vservicio);
+      
         if (sizeof($row_rs_sql_titulo)) {
-            $pto_vta = $row_rs_sql_titulo["une_claveunegocio"];
+            $pto_vta = $row_rs_sql_titulo["une_id"];
             $this->nombre_une = $row_rs_sql_titulo["une_descripcion"];
             $nomunegocio = $row_rs_sql_titulo["une_descripcion"];
             /* * *** FUNCION QUE CONVIERTE FECHA ******** */
             $mes = $row_rs_sql_titulo["i_mesasignacion"];
             $this->FechaVisita = Utilerias::formato_fecha($row_rs_sql_titulo["i_fechavisita"]);
             /* * ** FIN DE CONVERSION DE FECHA ********* */
-            $idclien = $row_rs_sql_titulo["i_idcliente"];
-            $vcliente = $idclien;
-            $idser = $row_rs_sql_titulo["i_claveservicio"];
-            $idcuen = $row_rs_sql_titulo["i_clavecuenta"];
+          //  $vcliente = $row_rs_sql_titulo["i_idcliente"];
+          
+        //    $idser = $row_rs_sql_titulo["i_claveservicio"];
+            $idcuen = $row_rs_sql_titulo["cue_clavecuenta"];
             $franquiciacta = $row_rs_sql_titulo["fc_idfranquiciacta"];
             
             /* * ************************************************************************ */
@@ -64,9 +65,9 @@ class ResumenResxRepController
         /* * ******************************* consulta para saber si el reporte tiene imagenes ********************************** */
         
         // echo $query_isec;
-        $rs_isec = DatosImagenDetalle::getImagenDetalle($idser, $numrep, "ins_imagendetalle");
+        $rs_isec = DatosImagenDetalle::getImagenDetalle($vservicio, $numrep, "ins_imagendetalle");
         foreach ($rs_isec as $row_isec) {
-            $this->listaImagenes[] = $row_isec["id_ruta"];
+            $this->listaImagenes[] = "fotografias/".$row_isec["id_ruta"];
             // if ($row_isec[0] > 0)//si hay imagenes
             // {
             // $objimagenes="<script language=\"javascript\">
@@ -115,14 +116,14 @@ class ResumenResxRepController
         
         /* * ******************************************************* */
         
-        $direccE = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=E&opadmin=detalle_consulta&ruta=a";
-        $direccV = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=V&ruta=a&Op=";
-        $direccP = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=P&ruta=a&Op=";
+        $direccE = "index.php?action=indlistasecciones&tiposec=ED&ruta=a";
+        $direccV = "index.php?action=indlistasecciones&tiposec=V&ruta=a&Op=";
+        $direccP = "index.php?action=indlistasecciones&tiposec=P&ruta=a&Op=";
         
-        $OPD = $idclien . "." . $idser . "." . $idcuen . "." . $pto_vta;
+        $OPD = $vcliente. "." . $vservicio . "." . $idcuen . "." . $pto_vta;
         // $html->asignar('refer', $OPD);
         
-        $this->ligaconsultarRep = 'MENindprincipal.php?op=mindi&admin=seccion&numrep=' . $numrep . '&referencia=' . $OPD;
+        $this->ligaconsultarRep = 'index.php?action=indconsultasecciones&numrep=' . $numrep . '&referencia=' . $OPD;
         //
         // $html->asignar('INFOAREA', $infoarea.'</td><td>
         // <a href="MENindprincipal.php?op=mindi&admin=res&mes=' . $mes . '&ptv=' . $pto_vta . '&fily=' . $idcuen . '.' . $franquiciacta.'" >'.T_("CONSULTAR HISTORIAL DEL PUNTO DE VENTA").' </a></td>');
@@ -153,7 +154,7 @@ class ResumenResxRepController
         
         // agrego la proporcion agua-jarabe
         
-        $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . "8." . $pto_vta;
+        $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . "8." . $pto_vta;
         $cols = "";
         foreach ($sec_calbebida as $sec) {
             $rs_cal_b = DatosEst::CumplimientoEstandar($vservicio, $sec, $numrep);
@@ -208,7 +209,7 @@ class ResumenResxRepController
             "5.0.2.13",
             "5.0.2.16"
         );
-        $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . "5." . $pto_vta;
+        $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . "5." . $pto_vta;
         $cont = 0;
         $dir = $direccE . "&subsecc=5.0.2.0.0" . "&num=" . $OPD;
         foreach ($sec_calagua as $sec) {
@@ -243,7 +244,7 @@ class ResumenResxRepController
         /* * ****************Presiones **************************** */
         $cols = "";
         $resultados = "";
-        $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . "2." . $pto_vta;
+        $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . "2." . $pto_vta;
         $cont = 0;
         $sec_presiones = DatosEst::ConsultaAtributos($vservicio, '2.8.1');
         
@@ -259,7 +260,7 @@ class ResumenResxRepController
             
             $simbolo = $RS_PRESION_O[2];
             
-            $direccpre = "MENindprincipal.php?op=mindi&admin=Cconsec&tiposec=E&opadmin=detalle_consulta&subsecc=2.8.1.0.0&ruta=a&num=" . $OPD;
+            $direccpre = "index.php?action=indlistasecciones&tiposec=ED&subsecc=2.8.1.0.0&ruta=a&num=" . $OPD;
             $direcc2 = "<a href='" . $direccpre . "'>" . $$simbolo . "</a>";
             $cols = "<td >" . $RS_PRESION_O[0] . "</td>";
             $cols .= "<td >" . $RS_PRESION_O[1] . "</td>";
@@ -288,20 +289,20 @@ class ResumenResxRepController
                 // echo "<br>";
                 // var_dump($res);
                 $simbolox = $res[2];
-                $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . $sec . "." . $pto_vta;
+                $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . $sec . "." . $pto_vta;
                 $direcc2 = "<a href='" . $direccV . $OPD . "'>" . $$simbolox . "</a>";
                 $color .= "p";
             } else if ($sec == '8.0.2.5') {
                 $res = DatosEst::CumplimientoEstandar($vservicio, $sec, $numrep);
                 $simbolox = $res[2];
-                $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . "8." . $pto_vta;
+                $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . "8." . $pto_vta;
                 $dir = $direccE . "&subsecc=8.0.2.0.0" . "&num=" . $OPD;
                 $direcc2 = "<a href='" . $dir . "'>" . $$simbolox . "</a>";
                 $color .= "p";
             } else {
                 $res = DatosPond::CumplimientoPonderada($vservicio, $sec, $numrep);
                 $simbolox = $res[2];
-                $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . "3." . $pto_vta;
+                $OPD = $vcliente . "." . $vservicio . "." . $numrep . "." . $idcuen . "." . "3." . $pto_vta;
                 $direcc2 = "<a href='" . $direccP . $OPD . "'>" . $$simbolox . "</a>";
                 $color .= "p";
             }
@@ -355,7 +356,7 @@ class ResumenResxRepController
     
     /**
      *
-     * @return the $listaImagenes
+     * @return  $listaImagenes
      */
     public function getListaImagenes()
     {

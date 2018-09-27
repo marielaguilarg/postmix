@@ -105,8 +105,6 @@ Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_
 
 INNER JOIN ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
-INNER JOIN ca_nivel4 ON ca_unegocios.une_cla_estado = ca_nivel4.n4_id
-INNER JOIN ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
 WHERE ins_generales.i_claveservicio=$servicio  ";
  if(isset($filuni["reg"])&&$filuni["reg"]!="")
  { $sqlt.=" and  une_cla_region=".$filuni["reg"];
@@ -141,7 +139,7 @@ $nivel=6;}
 if(isset($fily["fra"])&&$fily["fra"]!="")
     $sqlt.=" and ca_unegocios.fc_idfranquiciacta=".$fily["fra"];
 if(isset($fily["pv"])&&$fily["pv"]!="")
-    $sqlt.=" and ca_unegocios.une_claveunegocio =".$fily["pv"];
+    $sqlt.=" and ca_unegocios.une_id =".$fily["pv"];
 $sqlt.=" GROUP BY
 cue_reactivosestandardetalle.sec_numseccion,
 cue_reactivosestandardetalle.r_numreactivo,
@@ -157,10 +155,12 @@ $banok=0;
 $row="";
 if (isset($result)&&sizeof($result)>0)	//si hay datos los despliegan	
 {
-
+  if($_SESSION["idiomaus"]==2)
+      $campo="red_parametroing";
+      else $campo="red_parametroesp";
 	foreach ($result as $rowt){
             
-	   $chart [  ] =array( $rowt["red_parametroesp"],htmlentities($rowt["red_estandar"], ENT_COMPAT ,"ISO-8859-1"), Utilerias::redondear( $rowt["porc"]));
+	   $chart [  ] =array( $rowt[$campo],htmlentities($rowt["red_estandar"], ENT_COMPAT ,"ISO-8859-1"), Utilerias::redondear( $rowt["porc"]));
         
            $refer[]= $rowt["refer"];
           //  echo "--".$refer[];

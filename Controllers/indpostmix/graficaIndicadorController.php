@@ -1,5 +1,5 @@
 <?php
-include ('libs/php-gettext-1.0.11/gettext.inc');
+require_once ('libs/php-gettext-1.0.12/gettext.inc');
 include ('Utilerias/inimultilenguaje.php');
 include ('Utilerias/utilerias.php');
 
@@ -25,13 +25,13 @@ class GraficaIndicadorController {
     private $opciones_mes;
     private $listaSecciones;
     private $listanivel2;
-       private $listanivel3;
+    private $listanivel3;
     private $listanivel4;
-private $listanivel5;
-private $listanivel6;
-private $varnivel;
-private $gfilx;
-private $gfily;
+    private $listanivel5;
+    private $listanivel6;
+    private $varnivel;
+    private $gfilx;
+    private $gfily;
 
     public function vistaGraficaIndicadores() {
         foreach ($_POST as $nombre_campo => $valor) {
@@ -44,16 +44,18 @@ private $gfily;
             eval($asignacion);
         }
         $_SESSION["servicioind"] = 1;
-//session_destroy();
-      $select2=$clanivel2;
-      $select3=$clanivel3;
-      $select4=$clanivel4;
-      $select5=$clanivel5;
-      $select6=$clanivel6;
+        $_SESSION["clienteind"]=100;
+        $_SESSION["idiomaus"]=1;
+        $select2=$clanivel2;
+        $select3=$clanivel3;
+        $select4=$clanivel4;
+        $select5=$clanivel5;
+        $select6=$clanivel6;
         $grupo = $_SESSION["GrupoUs"];
         $vidiomau = $_SESSION["idiomaus"];
         $_SESSION["fbuscapv"] = null;
         $this->servicio = 1;
+        
         $this->cliente = 100;
       //  $_SESSION['Usuario']="marisol";
         
@@ -97,8 +99,8 @@ private $gfily;
 //        $seccion = $sec;
 
       
-       $navegacion=new Navegacion();
-       $navegacion->iniciar();
+        $navegacion=new Navegacion();
+        $navegacion->iniciar();
         $navegacion->borrarRutaActual("graficaind");
         $rutaact = $_SERVER['REQUEST_URI'];
         // echo $rutaact;
@@ -242,8 +244,8 @@ private $gfily;
             }
                     
           
-              $this->gfilx=$gfilx;
-              $this->gfily=$gfily;
+            $this->gfilx=$gfilx;
+            $this->gfily=$gfily;
              
       //        echo $gfiluni."--".$gfilx;
           
@@ -443,61 +445,60 @@ private $gfily;
 
 
          }
-  
-               
             //-----------------------------------
             //  inicializo etiquetas por idioma
             //  -----------------------------------
             
-                        if ($fily["pv"] == "") //no muestro para usr cuenta con nivel 3
-                            $this->lb_buscar = $cad_buscapv;
-                        else
-                            $this->lb_buscar = '<div class="seleccionidioma" >';
-                        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-                        $cad_buscapv = ' <div class="seleccionidioma" >
-                 <a href="index.php?action=indindicadores&mes=' . $mes_asig . '&filx=' . $gfilx . '&fily=' . $gfily . '&filuni=' . $gfiluni . '" >' . T_("INDICADORES") . '</a><span > | </span>';
-                        //s $cad_buscapv=''
-                        $this->lb_indicadores = $cad_buscapv;
+         if ($fily["pv"] == "") //no muestro para usr cuenta con nivel 3
+            $this->lb_buscar = $cad_buscapv;
+         else
+            $this->lb_buscar = '<div class="seleccionidioma" >';
+        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
+         $cad_buscapv = ' <div class="seleccionidioma" >
+ <a href="index.php?action=indindicadores&mes=' . $mes_asig . '&filx=' . $gfilx . '&fily=' . $gfily . '&filuni=' . $gfiluni . '" >' . T_("INDICADORES") . '</a><span > | </span>';
+        //s $cad_buscapv=''
+         $this->lb_indicadores = $cad_buscapv;
+
+
+         $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
+
+        /** variables de sesi�n para los filtros */
+        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
+         $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
+         $_SESSION["fmes"] = $mes; /* indice de aignacion */
+   
+         $_SESSION["fniv"] = $VarNivel2;  /* nivel de consulta */
+         $_SESSION["ffilx"] = $gfilx;
+         $_SESSION["ffily"] = $gfily;
+         $_SESSION["fref"] = null;
+
+
+         $this->mes_asig = $mesletra;
             
-            
-                        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
-            
-                        /** variables de sesi�n para los filtros */
-                        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-                        $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
-                        $_SESSION["fmes"] = $mes; /* indice de aignacion */
-                   
-                        $_SESSION["fniv"] = $VarNivel2;  /* nivel de consulta */
-                        $_SESSION["ffilx"] = $gfilx;
-                        $_SESSION["ffily"] = $gfily;
-                        $_SESSION["fref"] = null;
-            
-            
-                        $this->mes_asig = $mesletra;
-                            
-                        $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
-                      
-                        foreach ($secciones as $key) {
-                            $seccion=new SeccionIndi;
-                            $seccion->setTitulo($key[1]);
-                          //    echo $key[0];
-                            $seccion->setUrlDatos("Controllers/indpostmix/indgeneragrafindicjson.php?sec=" . $key[0] . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily .  "&filuni=" . $gfiluni);
-                          
-                           // $seccion->generaTabla($key[0]);
-                            $this->listaSecciones[] = $seccion;
-                        }
+      //  $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
+         $secciones = DatosEst::buscaSeccionesIndi2($this->servicio, $vidiomau);
+    // $secciones=array("5","2","3");
+         foreach ($secciones as $key) {
+            $seccion=new SeccionIndi;
+            $seccion->setTitulo($key[1]);
+          //    echo $key[0];
+            $seccion->setUrlDatos("Controllers/indpostmix/indgeneragrafindicjson.php?sec=" . $key[0] . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily .  "&filuni=" . $gfiluni);
+          
+           // $seccion->generaTabla($key[0]);
+            $this->listaSecciones[] = $seccion;
+         }
 
 
        
 
-                            $this->nombre_nivel = $lugar;
-                            $this->periodo = $mesletra;
+         $this->nombre_nivel = $lugar;
+         $this->periodo = $mesletra;
 //echo "Views/modulos/indgeneragrafindic.php?sec=" . $seccion . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily . "&niv=" . $gnivel . "&filuni=" . $gfiluni;
             //  "Controllers/indpostmix/indgeneragrafindicjson.php?sec=5&mes=5.2018&filx=&fily=&niv=4&filuni=1.1"
                  // }//fin oermiso
                  // else echo "no tiene permiso";
-            }//fin grupo
-    }//fin oermiso 1
+         }//fin grupo
+         }//fin oermiso 1
     }//fin funcion
 
 /***********hay que quitar**************/

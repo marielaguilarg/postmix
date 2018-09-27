@@ -1,5 +1,10 @@
 <?php
-namespace indpostmix;
+
+include "Controllers/indpostmix/consultaSeccionesController.php";
+
+include ( '../Models/crud_comentDetalle.php');
+
+
 
 class ConsultaPonderadoController
 {
@@ -12,58 +17,57 @@ class ConsultaPonderadoController
 
     
     public function vistaPonderado(){
-        session_start();
+      
         
         include "Utilerias/leevar.php";
         
       
         $Id = $Op;
         
-        $tache = "<img src='../img/tache.png' width='20' height='20' border='0' alt='no cumple'>";
-        $paloma = "<img src='../img/palomita.png' width='20' height='20' border='0' alt='cumple'>";
+        $tache = "<img src='img/tache.png' width='20' height='20' border='0' alt='no cumple'>";
+        $paloma= "<i class=\"fa-check-square-o\"></i>" ;
+      //  $paloma = "<img src='img/palomita.png' width='20' height='20' border='0' alt='cumple'>";
         
         
-        $datini = Utilerias::obtienedato($Id, 1);
-        $londat = Utilerias::obtienelon($Id, 1);
+        $datini = SubnivelController::obtienedato($Id, 1);
+        $londat = SubnivelController::obtienelon($Id, 1);
         $idclient = substr($Id, $datini, $londat);
         
         
-        $datini = Utilerias::obtienedato($Id, 2);
-        $londat = Utilerias::obtienelon($Id, 2);
+        $datini = SubnivelController::obtienedato($Id, 2);
+        $londat = SubnivelController::obtienelon($Id, 2);
         $idser = substr($Id, $datini, $londat);
         
         
-        $datini = Utilerias::obtienedato($Id, 3);
-        $londat = Utilerias::obtienelon($Id, 3);
+        $datini = SubnivelController::obtienedato($Id, 3);
+        $londat = SubnivelController::obtienelon($Id, 3);
         $idreporte = substr($Id, $datini, $londat);
         
         
-        $datini = Utilerias::obtienedato($Id, 4);
-        $londat = Utilerias::obtienelon($Id, 4);
+        $datini = SubnivelController::obtienedato($Id, 4);
+        $londat = SubnivelController::obtienelon($Id, 4);
         $idclavecuenta = substr($Id, $datini, $londat);
         
         
-        $datini = Utilerias::obtienedato($Id, 5);
-        $londat = Utilerias::obtienelon($Id, 5);
+        $datini = SubnivelController::obtienedato($Id, 5);
+        $londat = SubnivelController::obtienelon($Id, 5);
         $idnumseccion = substr($Id, $datini, $londat);
+       
         
-        
-        $datini = Utilerias::obtienedato($Id, 6);
-        $londat = Utilerias::obtienelon($Id, 6);
+        $datini = SubnivelController::obtienedato($Id, 6);
+        $londat = SubnivelController::obtienelon($Id, 6);
         $idclaveuninegocio = substr($Id, $datini, $londat);
      
-        $nomuni =ConsultaSeccionesController::nombreUne($idclaveuninegocio);
-     
+        $nomuni =ConsultaSeccionesController::nombreUnegocio($idclaveuninegocio);
+ 
         
         /* Crea nombre de seccion */
        
         //echo $ssql;
-        $nomsec= DatosSeccion::nombreSeccionIdioma($idnumseccion,$idser,$_SESSION["idiomaus"]);
-        $this->titulo= $row["sec_descripcioning"];
-         
-        
+        $nomsec= DatosSeccion::descripcionSeccionIdioma($idnumseccion,$idser,$_SESSION["idiomaus"]);
+       
         $this->nombreuni=$nomuni;
- 
+      
      
         //verifica si los reactivos ya existen
         /* crea reactivos */
@@ -86,46 +90,52 @@ class ConsultaPonderadoController
                 $color = "subtitulo3";
             }
             
-        $rse = DatosInspecciones::consultaInsDetalle($idser,$idreporte,$idnumseccion,$row["r_numreactivo"],"ins_detalle");
+            $datosController= array("sec"=>$idnumseccion,
+                "ser"=>$idser,
+                "nrep"=>$idreporte,
+                "nreac"=>$row["r_numreactivo"],
+            );
+           
+            $rse = DatosPond::leeDatosPonderaModel($datosController,"ins_detalle");
+            
         $numRows =sizeof($rse);
             if ($numRows != 0) { // existe en la base
                 foreach ($rse as $rowe) {
                     if ($rowe["id_aceptado"]) {
-                        $valant = "checked";
-                        $valant2=$paloma;
+                     //   $valant = "checked";
+                       // $valant2=$paloma;
+                        $valant2=T_("ACEPTADO");
                         //$sumapond++;
                     } else {
-                        $valant = "";
-                        $valant2=$tache;
+                       // $valant = "";
+                        $valant2=T_("NO ACEPTADO");
                     }
                     if ($rowe["id_noaplica"]) {
                         $valnoap = "checked";
-                        $valant2="<strong>NA</strong>";
+                        $valant2=T_("NO APLICA");
                     } else {
                         $valnoap = "";
                     }
-                    $valcom = $rowe["id_comentario"];
+                  //  $valcom = $rowe["id_comentario"];
                     $pondcta = $rowe["id_ponderacionreal"];
                 }
             } else {
-                $valant = "";
-                $valcom = "";
+               // $valant = "";
+              //  $valcom = "";
                 $valant2="";
             }
+            $resultado=array();
             //$sumapond=$sumapond+$pondcta;
-            $resultado['numreac']= " <td class='$color' >
-                <div align='left'>" . $row["r_numreactivo"] . "</td>";
+            $resultado['numreac']= $row["r_numreactivo"] ;
             if($_SESSION["idiomaus"]==2)
-                $resultado['descreac']= " <td class='$color' >
-                    <div align='left'>" . $row["r_descripcioning"] . "</div></td>";
+                $resultado['descreac']=  $row["r_descripcioning"] ;
             else
-                 $resultado['descreac']= " <td class='$color' >
-                        <div align='left'>" . $row["r_descripcionesp"] . "</div></td>";
+                 $resultado['descreac']= $row["r_descripcionesp"] ;
                     //			$html->asignar('checkreac'," <td class='$color'><div align='center'>".
                     //								 		"<input type='checkbox' disabled='disabled' name='chk".$row["r_numreactivo"]."' ".$valant."></div></td>");
                     //			$html->asignar('checknoap'," <td class='$color'><div align='center'>".
                     //								 		"<input type='checkbox' disabled='disabled' name='noap".$row["r_numreactivo"]."' ".$valnoap."></div></td>");
-                    $resultado['checkreac']= " <td class='$color'><div align='center'>" . $valant2 . "</div></td>";
+                    $resultado['checkreac']= $valant2 ;
                     if ($valnoap == "checked") {
                         $sumanoap = $sumanoap + $pondcta;
                     } else {
@@ -138,47 +148,60 @@ class ConsultaPonderadoController
                     //		   				  FROM cue_reactivoscomentarios
                     //						 WHERE concat(sec_numseccion,'.',r_numreactivo) ='" . $idnumseccion . '.' . $row["r_numreactivo"] . "' 						   AND ser_claveservicio='" . $idser . "'";
                     //consulto para saber si se capturó algun comentario
-                    $ssqlcom = "SELECT ins_comentdetalle.id_comentario FROM ins_comentdetalle
-            WHERE concat(id_comnumseccion,'.',id_comreactivo)='" . $idnumseccion . '.' . $row["r_numreactivo"]  . "' 
- AND id_comclaveservicio='" . $idser . "' and id_comnumreporte='" . $idreporte . "'";
-                    
+               
                     
                     $rsc = DatosComentDetalle::consultaComentDetalle($idser,$idreporte, $idnumseccion . '.' . $row["r_numreactivo"] ,"ins_comentdetalle");
                     $num_reg = sizeof($rsc);
                     if ($num_reg != 0) {
-                        $resultado['comentario']= "<td class='$color'><div align='center'>" . "<a href='MENprincipal.php?op=mindi&admin=Cconsec&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'>" . "<img src='../img/agregar.png' width='20' height='20' border='0'></a></div></td>";
+//                         $resultado['comentario']= "<a class=\"btn  btn-sm btn-info\"  tabindex='0'  data-toggle=\"popover\" data-trigger=\"focus\" ".
+//                         "title=\"Dismissible popover\" data-content=\"And here's some amazing content. It's very engaging. Right?\"  >" .T_("COMENTARIO"). "</a>";
+                        $resultado['comentario']= "<a class=\"btn btn-block btn-sm btn-info\" href='index.php?action=indlistasecciones&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'  >" .T_("COMENTARIO"). "</a>";
+// '<div class="collapse" id="collapseExample">
+//   <div class="card card-body">
+//     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+//   </div>
+// </div>';
+                        
+                        //href='index.php?action=indlistasecciones&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'
                     } else {
-                        $resultado['comentario']="<td class='$color'>
-                            <div align='center'></div></td>";
+                        $resultado['comentario']="<a class=\"btn btn-block  btn-sm btn-info\" disabled><span style=\"font-size: 12px\">" .T_("COMENTARIO"). "</span></a>";
+                      //  $resultado['comentario']="";
                     }
                     /*     * ************************************************************************************************ */
-                    $resultado['detareac']= "<td class='$color'>
-                        <div align='center'></div></td>";
+                     $resultado['detareac']= "<a class=\"btn btn-block btn-sm btn-info\" disabled>".T_("DETALLE")."</a>";
+                  //  $resultado['detareac']="";
                     if ($row["r_tiporeactivo"] != "") {
+                    //    echo "<br>****".$row["r_tiporeactivo"]."--". $row["r_numreactivo"] ;
                         if($this->buscaReactivos($row["r_tiporeactivo"], $idser, $idnumseccion, $row["r_numreactivo"])>0)
-                            $resultado['detareac']= "<td class='$color'> <div align='center'>" . "<a href='MENprincipal.php?op=mindi&admin=Cconsec&tiposec=" . $row["r_tiporeactivo"] . "&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'>" . "<img src='../img/agregar.png' width='20' height='20' border='0'></a></div></td>";
+                            $resultado['detareac']=  "<a class=\"btn btn-block btn-sm btn-info\" href='index.php?action=indlistasecciones&tiposec=" . $row["r_tiporeactivo"] . "&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'>".T_("DETALLE")."</a>";
+//                             $resultado['detareac']=  "<a class=\"btn  btn-info\" href='index.php?action=indlistasecciones&tiposec=" . $row["r_tiporeactivo"] . "&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'>".
+//                         "<i class=\"fa fa-plus\"></i></a>";
+                            
                     }
                     
                     // verifica si hay imagenes y crea la liga
                   
                   
-                    $rs1=DatosImagenDetalle::consultaComentDetalle($idser,$idreporte,$idnumseccion,ins_imagendetalle,"ins_imagendetalle");
+                    $rs1=DatosImagenDetalle::consultaImagenDetalle($idser,$idreporte,$idnumseccion,$row["r_numreactivo"],"ins_imagendetalle");
                     
                     //            if (mysql_num_rows($rs1) > 0) {
-                    $divImg='<div style="display:none;">';
-                    $href="";
-                    $i=1;
+                   
                     if(sizeof($rs1)>0) {
-                        if($row_max = $rs1[0]) {
-                            $rutaFoto=$row_max["id_ruta"];
+                        
+                       $imagenes="<a  class=\"btn btn-block btn-info\" data-trigger=\"gallery_".$row["r_numreactivo"]."\"  href='index.php?action=indlistasecciones&tiposec=img&secc=".$idser.".".
+                        $idnumseccion .".".$row["r_numreactivo"]."&numrep=".$idreporte."'>".
+                        "<i class=\"fa fa-image\"></i></a>";
+                        foreach($rs1 as $row_max) {
+                            $rutaFoto="fotografias/".$row_max["id_ruta"];
                             /* $html->asignar('imagen',"<td  class='$color' ><div align='center'>".
                              "<a href='../fotografias/".$rutaFoto."' class='lytebox'   data-lyte-options='group:seccion".$cont."'>".
-                             "<img src='../img/agregar.gif' width='27' height='21' border='0'></a></div></td>");*/
-                            $resultado['imagen']="<td  class='$color' ><div align='center'>".
-                                "<a href='MENprincipal.php?op=mindi&admin=Cconsec&tiposec=img&secc=".$idser.".".
-                                $idnumseccion .".".$row["r_numreactivo"]."&numrep=".$idreporte."'>".
-                                "<img src='../img/camara.png' width='20' height='22' border='0'></a></div></td>";
+                             "<img src='../img/agregar.gif' width='27' height='21' border='0'></a></div>");*/
+                         
+                             $imagenes.='<a href="'.$rutaFoto.'" data-fancybox="gallery_'.$row["r_numreactivo"].'"  style="display:none;">
+                              foto
+                                </a>';
                         }
+                        $resultado['imagen']=$imagenes;
                         /* while($row_max = mysql_fetch_array($rs1)) {
                         
                         $rutaFoto=$row_max["id_ruta"];
@@ -188,8 +211,9 @@ class ConsultaPonderadoController
                         }
                         $html->asignar('divImg',$divImg.$href."</div>");*/
                     }
-                    else     $resultado['imagen']= "<td class='$color'></td>";
-                    
+                    else    // $resultado['imagen']=  "&nbsp;";
+                     $resultado['imagen']=  "<a  class=\"btn btn-block btn-info\" disabled>".
+                         "<i class=\"fa fa-image\"></i></a>";
                     $this->listaPonderados[]=$resultado;
                     $cont++;
         }
@@ -225,37 +249,67 @@ class ConsultaPonderadoController
             // $html->asignar('NAVEGACION',$navegacion);
         Navegacion::borrarRutaActual("e");
         $rutaact = $_SERVER['REQUEST_URI'];
-        // echo $rutaact;
+      
         Navegacion::agregarRuta("e", $rutaact, T_("DETALLE"));
      
         
     }
       
         function buscaReactivos($tipoReac,$servicio,$seccion,$reactivo) {
+            
             switch($tipoReac) {
-                case 'A':$query="SELECT
-    cue_reactivosabiertos.ser_claveservicio
-    FROM
-    cue_reactivosabiertos
-    where cue_reactivosabiertos.ser_claveservicio='".$servicio."' and
-    cue_reactivosabiertos.sec_numseccion='".$seccion."' and
-    cue_reactivosabiertos.r_numreactivo='".$reactivo."';";
+                case 'A':$rse=DatosAbierta::getReactivoAbiertoxReactivo($servicio,$seccion.".".$reactivo,"cue_reactivosabiertos");
                 break;
-                case 'E':$query="SELECT
-    cue_reactivosestandar.ser_claveservicio
-    FROM
-    cue_reactivosestandar
-    where cue_reactivosestandar.ser_claveservicio='".$servicio."' and
-    cue_reactivosestandar.sec_numseccion='".$seccion."' and
-    cue_reactivosestandar.r_numreactivo='".$reactivo."'";
+                case 'E':$rse=DatosEst::getReactivoEstandarn1($servicio, $seccion . '.' . $reactivo,"cue_reactivosestandar");
                 break;
                 
                 
                 
             }
-            $rse = mysql_query($query);
-            $numRows = @mysql_num_rows($rse);
+            
+            $numRows = sizeof($rse);
             return $numRows;
     }
+        /**
+         * @return  $nombreuni
+         */
+        public function getNombreuni()
+        {
+            return $this->nombreuni;
+        }
+    
+        /**
+         * @return  $nombreSeccion
+         */
+        public function getNombreSeccion()
+        {
+            return $this->nombreSeccion;
+        }
+    
+        /**
+         * @return  $titulo
+         */
+        public function getTitulo()
+        {
+            return $this->titulo;
+        }
+    
+        /**
+         * @return  $listaPonderados
+         */
+        public function getListaPonderados()
+        {
+            return $this->listaPonderados;
+        }
+    
+        /**
+         * @return  $nivelCumplimiento
+         */
+        public function getNivelCumplimiento()
+        {
+            return $this->nivelCumplimiento;
+        }
+    
 
+    
     }

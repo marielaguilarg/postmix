@@ -24,15 +24,15 @@ class enlacesController{
     } 
   public function listanivelesController(){
       
-      //$_SESSION['Usuario']="marisol";
+   
+     
       if(isset ($_SESSION['Usuario']))
           $Usuario = $_SESSION['Usuario'];
           else{
               //mandar al login
-              $_SESSION['Usuario']="marisol";
+             // $_SESSION['Usuario']="marisol";
           }
-        //echo  $_SESSION['Usuario'];
-
+          
   $mes= filter_input(INPUT_GET, "mes", FILTER_SANITIZE_STRING);
   $seccion=filter_input(INPUT_GET,"sec",FILTER_SANITIZE_NUMBER_INT);
  // $filx=filter_input(INPUT_GET, "filx", FILTER_SANITIZE_STRING);
@@ -51,16 +51,16 @@ class enlacesController{
       $Nivel06 = $row_usuarios ["cus_nivel6"];
       
   }
-//  die($grupo);
+
    if ($grupo == "adm" || $grupo == 'mue'|| $grupo == 'aud')
    {   //nivel uno por default
        $VarNivel2 = 1;
        $Nivel01 = 1;
        $Nivel02 =1;
-      
+     
 //       $respuesta = Datosndos::vistandosModel(1,"ca_nivel2");
    }
-  // die($VarNivel2);
+   
   if($grupo!="cue"){
      
       if ($VarNivel2 ==1) {
@@ -115,13 +115,15 @@ class enlacesController{
     foreach($respuesta as $row ){
         if ($VarNivel2 >=1&&$VarNivel2<= 2) {
       echo '<li >
-        <a href="index.php?action=indgraficaindicadorgr&mes='.$mes."&sec=".$seccion."&filx=".$filx."&filuni=".$filuni.$row[0].'"><i class="fa fa-circle-o"></i>'.$row[1] .'
+        <a href="index.php?action=indgraficaindicadorgr&mes='.$mes."&sec=".$seccion."&filx=".$filx."&filuni=".$filuni.$row[0].'">
+<i class="fa fa-circle-o"></i>'.substr($row[1],0,15) .'
                 
-                  </a> ';
+                  </a>';
         }
         if ($VarNivel2 >=3&&$VarNivel2<= 5) {
             echo '<li >
-        <a href="index.php?action=indgraficaindicadorgr&mes='.$mes."&sec=".$seccion."&filx=".$filx.$row[0]."&filuni=".$filuni.'"><i class="fa fa-circle-o"></i>'.$row[1] .'
+        <a href="index.php?action=indgraficaindicadorgr&mes='.$mes."&sec=".$seccion."&filx=".$filx.$row[0]."&filuni=".$filuni.'">
+<i class="fa fa-circle-o"></i>'.substr($row[1],0,15).'
             
                   </a>';
         }
@@ -183,9 +185,9 @@ class enlacesController{
 
   public function listaserviciosCues(){
   
-      error_reporting(E_All);
+    
         $respcuenta = DatosCuenta::vistaCuentasModel("ca_cuentas");
-        //echo "entra aca";
+ 
         foreach($respcuenta as $row => $itemcuen){  
             echo '<li>
             <a href="index.php?action=listaunegocio&idc='.$itemcuen["cue_id"] .'"><em class="fa fa-circle-o"></em>'.$itemcuen["cue_descripcion"] .'</a>

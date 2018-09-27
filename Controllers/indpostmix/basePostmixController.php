@@ -8,6 +8,7 @@ class BasePostmixController
     private $estilotcuenta;
     private $listaCuentas;
     private $titulo1;
+    private $subtitulo;
     private $listaFechas;
     private $listamesIni;
     private $listamesFin;
@@ -27,6 +28,7 @@ class BasePostmixController
     private $listaUnegocios;
     private $NumeroReportes;
     private $pages;
+    private $opcion;
     
     
     /*
@@ -49,7 +51,8 @@ class BasePostmixController
     
     @session_start();
     $opcion=filter_input(INPUT_GET,"archivo", FILTER_SANITIZE_STRING); 	//opcionj para saber si genera el archivo o despliega el html
-    
+    $_SESSION["clienteind"]=1;
+    $_SESSION["servicionind"]=1;
     //$cuenta=$_POST["cuenta"];
     $servicio=$_SESSION["servicioind"];
     $cliente=$_SESSION["clienteind"];
@@ -63,10 +66,8 @@ class BasePostmixController
     // crea lista de fecha de inspeccion
     // validamos el grupo
     if($gpous=="muf"){
-        $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis FROM ins_generales  Inner Join ca_unegocios ON ins_generales.i_idcliente = ca_unegocios.cli_idcliente
-       
-        AND ins_generales.i_clavecuenta = ca_unegocios.cue_clavecuenta
-        AND ins_generales.i_claveuninegocio = ca_unegocios.une_claveunegocio
+       $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis FROM ins_generales  Inner Join ca_unegocios ON ins_generales.i_idcliente = ca_unegocios.cli_idcliente
+      AND ins_generales.i_unenumpunto = ca_unegocios.une_id
       WHERE YEAR(ins_generales.i_fechavisita) >=  '2013' AND ins_generales.i_claveservicio =  :servicio and
       concat(ca_unegocios.une_cla_region,'.',ca_unegocios.une_cla_pais,'.',ca_unegocios.une_cla_zona,'.',ca_unegocios.une_cla_estado)='".$refer."'
       GROUP BY ins_generales.i_fechavisita ORDER BY ins_generales.i_fechavisita DESC");
@@ -86,25 +87,41 @@ class BasePostmixController
     public function vistaReportePeriodo()
     {
     
+        $_SESSION["clienteind"]=1;
+        $_SESSION["servicionind"]=1;
         $gpous=$_SESSION["GrupoUs"]; 
-    //muestro menu cuentas
-    if($gpous=="cue"){
-        $this->estilotcuenta='style="display:none"';
-        
-    }else{
-        /***************para las listas de seleccion******************/
-        
-       $rs=DatosCuenta::cuentasxCliente2("ca_cuentas",$_SESSION["clienteind"]);
-        foreach ($rs as $row) {
-            
-            $this->listaCuentas[]="<div  >".
-                " <input type=\"radio\" name=\"cuenta\" value=\"".$row["cue_clavecuenta"]."\" />".$row["cue_descripcion"]."</div>";
-          
+        $this->opcion=filter_input(INPUT_GET, "op",FILTER_SANITIZE_STRING);
+        /*para la opcion de extraer bd o resumen de result.*/
+        if($this->opcion=="bp"){
+            $this->titulo1=T_("EXTRAER BASE POSTMIX");
+            $this->subtitulo=T_("Reporte por periodo");
+        }else
+            if($this->opcion=="CSD"){
+                $this->titulo1="SURVEY DATA";
+                $this->subtitulo="";
         }
-    }
+        else {$this->titulo1=T_("RESUMEN ANUAL");
+            $this->subtitulo="";
+        }
+    //muestro menu cuentas
+        if($gpous=="cue"){
+            $this->estilotcuenta='style="display:none"';
+            
+        }else{
+            /***************para las listas de seleccion******************/
+            
+           $rs=DatosCuenta::cuentasxCliente2("ca_cuentas",$_SESSION["clienteind"]);
+            foreach ($rs as $row) {
+                
+                $this->listaCuentas[]="<div  >".
+                    " <input type=\"radio\" name=\"cuenta\" value=\"".$row["cue_id"]."\" />".$row["cue_descripcion"]."</div>";
+              
+            }
+         }
     }
     public function vistaHistoricoPV(){
-        
+        $_SESSION["clienteind"]=1;
+        $_SESSION["servicionind"]=1;
         foreach ($_POST as $nombre_campo => $valor) {
             $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
             
@@ -115,6 +132,7 @@ class BasePostmixController
             
             eval($asignacion);
         }
+        
         $select1=$clanivel1;
        $select2=$clanivel2;
         $select3=$clanivel3;
@@ -377,7 +395,7 @@ class BasePostmixController
             
             // //inserta reportes en la tabla temporal tmp_estadistica
             
-            $rs_sql_us = DatosUnegocio::unegociosxNivel($fil_ptoventa, $fil_idpepsi, $filx, $fily, "", "");
+            $rs_sql_us = DatosUnegocio::unegociosxNivelxServicio($vserviciou,$fil_ptoventa, $fil_idpepsi, $filx, $fily, "", "");
             
             $num_reg = sizeof($rs_sql_us);
                 if ($num_reg >0) {
@@ -396,9 +414,9 @@ class BasePostmixController
                             250,
                             'All'
                         ));
-                        echo "************". $this->pages->limit_start."<br>". $this->pages->limit_end;
+                      
                        // die();
-                        $rs_sql_us = DatosUnegocio::unegociosxNivel($fil_ptoventa, $fil_idpepsi, $filx, $fily, $this->pages->limit_start, $this->pages->limit_end);
+                        $rs_sql_us = DatosUnegocio::unegociosxNivelxServicio($vserviciou,$fil_ptoventa, $fil_idpepsi, $filx, $fily, $this->pages->limit_start, $this->pages->limit_end);
                         
                         
                         foreach ($rs_sql_us  as $row_rs_sql_c) {
@@ -406,7 +424,7 @@ class BasePostmixController
                         $fily=$row_rs_sql_c["cue_clavecuenta"].".".$row_rs_sql_c["fc_idfranquiciacta"];
                         
                         //$direccion="MENprincipal.php?op=mindi&admin=consulta2&ptv=".$row_rs_sql_c["une_claveunegocio"]."&fily=".$fily;
-                        $direccion="Controllers/indpostmix/postmix_excelController.php?punvta=".$row_rs_sql_c["ser_claveservicio"].$row_rs_sql_c["cue_clavecuenta"].$row_rs_sql_c["une_claveunegocio"]."&tipo_consulta=v";
+                        $direccion="imprimirReporte.php?punvta=".$row_rs_sql_c["une_id"]."&tipo_consulta=v";
                         $uneg=array();
                         $uneg['NomPuntoVenta']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_descripcion"] . "</a></td>" ;
                         $uneg['Pepsi']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_idpepsi"] . "</a></td>" ;
@@ -564,6 +582,22 @@ class BasePostmixController
     {
         return $this->pages;
     }
+    /**
+     * @return mixed
+     */
+    public function getOpcion()
+    {
+        return $this->opcion;
+    }
+    /**
+     * @return mixed
+     */
+    public function getSubtitulo()
+    {
+        return $this->subtitulo;
+    }
+
+
 
  
       
