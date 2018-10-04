@@ -20,6 +20,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect. -->
+<script src="views/dist/js/jquery-3.0.0.min.js"></script>
+
+
 
   <link rel="stylesheet" href="views/dist/css/skins/skin-blue.min.css">
 
@@ -133,6 +136,8 @@ desired effect
                 </div>
               </li>
             </ul>
+            
+          
          
           <!-- Control Sidebar Toggle Button -->
 
@@ -179,6 +184,7 @@ desired effect
     <div class="pull-right hidden-xs">&nbsp;</div>
     <!-- Default to the left --><strong>Copyright &copy; 2018 Muesmerc S.A. de C.V.</strong> Todos los derechos reservados. </footer>
 
+ 
   <!-- /.control-sidebar -->
   <!-- Add the sidebar's background. This div must be placed
   immediately after the control sidebar -->
@@ -188,8 +194,7 @@ desired effect
 
 <!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 3 -->
-<script src="views/bower_components/jquery/dist/jquery.min.js"></script>
+
 <!-- Bootstrap 3.3.7 -->
 <script src="views/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="views/bower_components/select2/dist/js/select2.full.min.js"></script>
