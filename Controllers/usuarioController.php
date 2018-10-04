@@ -2,15 +2,16 @@
 class UsuarioController{
 
 	public function validarUsuarioController(){
-		//echo "entre a validar";
 		//var_dump(($_POST["g-recaptcha-response"]));
-
+			//echo "validausuario";
 		if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
 			//echo "entre a validacion de captcha";
 						// validar el captcha
-			$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+			//$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+			$secretKey = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+		//	echo "secret".$secret;
 			$ip= $_SERVER["REMOTE_ADDR"];
-
+		//	echo "ip".$ip;
 			$captcha=$_POST["g-recaptcha-response"];
 		//	echo "captcha".$captcha;
 	          
@@ -37,13 +38,13 @@ class UsuarioController{
 	       if ($json ["success"]==TRUE)
 	       //IF ($json)
 	       {
-		      // 	echo "si eres humano";
+		       	//echo "si eres humano";
 		       		# vamos a validar el mail y el password
 	       		$logemail=$_POST["logemail"];
 		       	$datoslogController= array("logemail"=>$logemail,
 	            			"logpass"=>$_POST["logpass"]); 
-		       	//echo $datosController["logemail"];
-		       	//echo $datosController["logpass"];
+		       //	echo $datoslogController["logemail"];
+		       //	echo $datoslogController["logpass"];
 				$respuesta =UsuarioModel::validaUsuarioModel($datoslogController, "cnfg_usuarios");	var_dump($respuesta);		
 				if ($respuesta>0) {
 				 	 	#actualiza Estatus del usuario
@@ -86,7 +87,7 @@ class UsuarioController{
 	       }  else {
 	       		       }
 	     } else {
-
+	     	//echo "no paso el captcha";	
 		}  // captcha
 	}	
 

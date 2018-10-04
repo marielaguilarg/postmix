@@ -1,6 +1,6 @@
 <?php
 require_once '../../Models/conexion.php';
-include('../../libs/php-gettext-1.0.11/gettext.inc');
+include('../../libs/php-gettext-1.0.12/gettext.inc');
 require_once '../../Utilerias/inimultilenguaje.php';
 
 require_once '../../Utilerias/utilerias.php';
@@ -10,10 +10,10 @@ set_time_limit(360);
 
 
 //$subseccion=$numop;
-$usuario_act=$_SESSION["Usuario"];
+$usuario_act=$_SESSION["UsuarioInd"];
 $grupo = $_SESSION["grupous"];
 /*elimino barra de ubicacion */
-$usuario=$_SESSION["usuario"];
+$usuario=$_SESSION["UsuarioInd"];
 
  
 $seccion = filter_input(INPUT_GET,"sec",FILTER_SANITIZE_SPECIAL_CHARS);

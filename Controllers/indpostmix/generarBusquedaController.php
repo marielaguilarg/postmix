@@ -144,8 +144,8 @@ ini_set('max_execution_time',400);
             $_SESSION["prin"] = "";
             if (isset($ptv) && $ptv != "")
                 $unidadnegocio = $ptv;
-       //  die($_SESSION["Usuario"]);
-            $Usuario = $_SESSION["Usuario"];
+       //  die($_SESSION["UsuarioInd"]);
+            $Usuario = $_SESSION["UsuarioInd"];
 
             
             $sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
@@ -301,7 +301,7 @@ if($fechaasig_fin!="")
            else { //esta seccion es para hostorial de pv
    $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
 //echo $sqlt;
-            $parametros2 = array("Usuario" => $_SESSION["Usuario"]);
+            $parametros2 = array("Usuario" => $_SESSION["UsuarioInd"]);
             $rs = Conexion::ejecutarQuery($sqlt, $parametros2);
             $num_reg = sizeof($rs);
             $_SESSION["fnumrep"] = $num_reg;

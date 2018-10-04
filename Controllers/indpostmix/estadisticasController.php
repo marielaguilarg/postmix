@@ -44,9 +44,9 @@ class EstadisticasController {
         { $this->busqueda=new GenerarBusquedaController;
         $this->busqueda->generarBusquedaRes();
         }
-//echo $_SESSION["Usuario"];
+//echo $_SESSION["UsuarioInd"];
      
-        $Usuario = $_SESSION ["Usuario"];
+        $Usuario = $_SESSION["UsuarioInd"];
 
 
         $tit_secciones = array(T_('CALIDAD DE LA BEBIDA'), T_('CALIDAD DEL AGUA'), T_('PRESIONES DE OPERACION'), T_('BUENOS HABITOS DE MANUFACTURA'));
@@ -424,7 +424,7 @@ class EstadisticasController {
         $_SESSION["frefer"] = $subseccionl;
 
 
-        $usuario_act = $_SESSION ["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 //obtengo numero de seccion
         $aux_sec = explode(".", $subseccionl);
         $numseccion = $aux_sec[0];
@@ -1026,7 +1026,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0 and une_estatus=1";
     
     function validaRegionCuenta() {
         $result = 0;
-        $usuario = $_SESSION["usuario"];
+        $usuario = $_SESSION["UsuarioInd"];
 
         $grupo = $_SESSION["grupous"];
         // verifico el tipo de usuario
@@ -1064,7 +1064,7 @@ cnfg_usuarios.cus_servicio=1";
 
     public function generarEstadisticas($tiposec, $numop, $mes_asig, $filx, $fily,$ptv) {
         set_time_limit(360);
-        $usuario_act = $_SESSION ["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
         $ancho = 600;
         $alto = 300;
@@ -1138,7 +1138,7 @@ tmp_estadistica.mes_asignacion ASC;	";
                 //$html->asignar ( 'tit_cumplaj', "<br>Edad promedio por producto");
                 //    $tit_cumplaj= "<br>Edad promedio por producto";
 
-                $this->graf_cumplaj = "Views/modulos/indgraficapromediojarabe.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+                $this->graf_cumplaj = "views/modulos/indgraficapromediojarabe.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
 
                 break;
         }
@@ -1246,21 +1246,21 @@ tmp_estadistica.mes_asignacion ASC;";
 //echo $usuario_act;
 //echo "xx  ".$numop;
 //hace el area de depliegue de la grafica de 270*170 pixeles y de color blanco
-        $this->graficaaplica = "Views/modulos/indgraficaaplica.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+        $this->graficaaplica = "views/modulos/indgraficaaplica.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
 
-        $this->graficanivelcumpl = "Views/modulos/indgraficacumplimiento.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+        $this->graficanivelcumpl = "views/modulos/indgraficacumplimiento.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
 
 
         if ($tipografica != 'C') { //despliega las otras graf
-            $this->graficagen = "Views/modulos/indgraficacomportamiento.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+            $this->graficagen = "views/modulos/indgraficacomportamiento.php?numsec=" . $numop . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
 
             if ($tiposec == "E") {
                 if ($numop == '8.0.1.0.0.9') { //grafica para proporcion agua jarabe
                     $this->tit_frec = '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO");
-                    $this->graficafrec = "Views/modulos/indgraficacumplimientoaj.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+                    $this->graficafrec = "views/modulos/indgraficacumplimientoaj.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
                 } else {
                     $this->tit_frec = '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("HISTOGRAMA DE FRECUENCIAS");
-                    $this->graficafrec = "Views/modulos/indgraficafrecuencia.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
+                    $this->graficafrec = "views/modulos/indgraficafrecuencia.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
                 }
             }
         }

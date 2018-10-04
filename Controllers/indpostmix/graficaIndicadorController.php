@@ -57,14 +57,14 @@ class GraficaIndicadorController {
         $this->servicio = 1;
         
         $this->cliente = 100;
-      //  $_SESSION['Usuario']="marisol";
+      //  $_SESSION['UsuarioInd']="marisol";
         
         /* busca opciones de usuario */
-        if(isset ($_SESSION['Usuario']))
-                  $Usuario = $_SESSION['Usuario'];
+        if(isset ($_SESSION['UsuarioInd']))
+                  $Usuario = $_SESSION['UsuarioInd'];
         else{
        //mandar al login
-            $_SESSION['Usuario']="marisol";
+            $_SESSION['UsuarioInd']="marisol";
         }
 
         //   include("MENindbarramenu.php");
@@ -493,7 +493,7 @@ class GraficaIndicadorController {
 
          $this->nombre_nivel = $lugar;
          $this->periodo = $mesletra;
-//echo "Views/modulos/indgeneragrafindic.php?sec=" . $seccion . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily . "&niv=" . $gnivel . "&filuni=" . $gfiluni;
+//echo "views/modulos/indgeneragrafindic.php?sec=" . $seccion . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily . "&niv=" . $gnivel . "&filuni=" . $gfiluni;
             //  "Controllers/indpostmix/indgeneragrafindicjson.php?sec=5&mes=5.2018&filx=&fily=&niv=4&filuni=1.1"
                  // }//fin oermiso
                  // else echo "no tiene permiso";
@@ -905,7 +905,7 @@ class SeccionIndi
 
     function generaTabla($seccion)
     {
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
         $resres = new ResumenResultadosController();
         $resres->setVcliente($_SESSION["clienteind"]);
         $resres->setVservicio($_SESSION["servicioind"]);

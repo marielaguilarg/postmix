@@ -26,13 +26,15 @@ class enlacesController{
       
    
      
-      if(isset ($_SESSION['Usuario']))
-          $Usuario = $_SESSION['Usuario'];
+      if(isset ($_SESSION['NombreUsuario']))
+          $Usuario = $_SESSION['NombreUsuario'];
+    if(!isset( $_SESSION["UsuarioInd"]))
+        $_SESSION["UsuarioInd"]=$_SESSION['NombreUsuario'];
           else{
               //mandar al login
              // $_SESSION['Usuario']="marisol";
           }
-          
+        
   $mes= filter_input(INPUT_GET, "mes", FILTER_SANITIZE_STRING);
   $seccion=filter_input(INPUT_GET,"sec",FILTER_SANITIZE_NUMBER_INT);
  // $filx=filter_input(INPUT_GET, "filx", FILTER_SANITIZE_STRING);

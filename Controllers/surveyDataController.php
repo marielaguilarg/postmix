@@ -62,19 +62,19 @@ class SurveyDataController
         $prueba->nuevacol($this->principal($fec1,$fec2),"","");		//funcion que sepliega el resto del reporte
       
         $cad=$prueba->cierretabla();
-     
+   
         $arch= "Archivos/".$nomcuenta.".xls";
   
         $this->creaarch($arch,$cad);						//se crea el archivo
      
-      //  echo $cad;
+       
         $letrero= "pruebas.php?f=".$arch;
      //   echo     "<a href=\"".$letrero.'" title="vinculo">Descargar archivo</a>';
-        header("Content-type: application/octet-stream");
-        //header("Content-type: application/force-download");
-        // $f="calendario.ZIP";
-        header("Content-Disposition: attachment; filename=\"".$arch."\"");
-        readfile($arch);
+         header("Content-type: application/octet-stream");
+//header("Content-type: application/force-download");
+//         // $f="calendario.ZIP";
+         header("Content-Disposition: attachment; filename=\"".$arch."\"");
+         readfile($arch);
            
     }
         
@@ -466,7 +466,7 @@ date_format( ins_generales.i_fechavisita ,'%d-%m-%Y')
 FROM
 ins_generales
 inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
- inner Join ca_cuentas ON  cue_id = ca_cuentas.cue_id
+ inner Join ca_cuentas ON  cue_clavecuenta = ca_cuentas.cue_id
  inner Join ca_nivel3 ON  ca_unegocios.une_cla_zona = ca_nivel3.n3_id
  inner Join ca_nivel4 ON  ca_unegocios.une_cla_estado = ca_nivel4.n4_id
 left Join ca_nivel5 ON  ca_unegocios.une_cla_ciudad = ca_nivel5.n5_id
@@ -488,8 +488,9 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                     $tbltemp->nuevacol($nomcolumna[$i],$this->arrcolores["gris"],"");			//se crea una columna para cada encabezado	 con la funcion nueva col, se indica el color
                 }
                 $tbltemp->finren();				//fin del renglon
-           
-                if($res=Conexion::ejecutarQuery($sSQL,$parametros)) {
+                $res=Conexion::ejecutarQuery($sSQL,$parametros);
+               
+                if($res) {
                      
                    foreach($res  as $row) {
                       
@@ -504,7 +505,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                     
                  
                 }
-              
+             
                    
                     
                     return $tbltemp->cierretabla();		//funcion que cierra la tabla tbltemp

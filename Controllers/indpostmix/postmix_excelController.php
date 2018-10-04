@@ -108,7 +108,7 @@ class PostmixExcelController
    
     @session_start();
    
-    $user = $_SESSION["Usuario"];
+    $user = $_SESSION["UsuarioInd"];
     $this->cliente=1;
     $this->servicio=1;
   

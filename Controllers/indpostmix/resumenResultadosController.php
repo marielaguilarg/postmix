@@ -40,7 +40,7 @@ class ResumenResultadosController {
         {$consutacontrl=new GenerarBusquedaController;
         $consutacontrl->generarBusquedaRes();}
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
         // genera info gr14fica
         //separamos los componentes de la seccion para hacer las consultas
@@ -51,7 +51,7 @@ class ResumenResultadosController {
 
 
 
-        $usuario = $_SESSION["Usuario"];
+        $usuario = $_SESSION["UsuarioInd"];
 
         $this->vcliente = 100;
         $this->vservicio = 1;

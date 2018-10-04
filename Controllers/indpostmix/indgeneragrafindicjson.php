@@ -1,7 +1,7 @@
 <?php
 //error_reporting(E_ERROR | E_PARSE | E_NOTICE);
 require '../../Models/conexion.php';
-require_once('../../libs/php-gettext-1.0.11/gettext.inc');
+require_once('../../libs/php-gettext-1.0.12/gettext.inc');
 require '../../Utilerias/inimultilenguaje.php';
 require '../../Utilerias/utilerias.php';
 //error_reporting(0);
@@ -15,7 +15,7 @@ set_time_limit(400);
 
 $grupo = $_SESSION["GrupoUs"];
 /*elimino barra de ubicacion */
-$usuario=$_SESSION["Usuario"];
+$usuario=$_SESSION["UsuarioInd"];
 $coloresgraf=array("#5cd65c","#ff1a1a","#6600ff","#ffff66","#ff4d4d"," #00e6e6"," #ff9900");
  
 $seccion = filter_input(INPUT_GET,"sec",FILTER_SANITIZE_NUMBER_INT);

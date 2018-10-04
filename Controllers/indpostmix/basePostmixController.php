@@ -60,7 +60,7 @@ class BasePostmixController
     ini_set("memory_limit","120M");
    
     $this->titulo1=T_("EXTRAER BASE POSTMIX");
-    $user = $_SESSION["Usuario"];
+    $user = $_SESSION["UsuarioInd"];
     $gpous=$_SESSION["GrupoUs"]; 
     $refer=UsuarioModel::buscarReferenciaNivel($user);
     // crea lista de fecha de inspeccion
@@ -141,7 +141,7 @@ class BasePostmixController
         $select6=$clanivel6;
     // inicia llenado de listas
    
-    $rs_usuarios =  UsuarioModel::getUsuario($_SESSION["Usuario"], "cnfg_usuarios");
+    $rs_usuarios =  UsuarioModel::getUsuario($_SESSION["UsuarioInd"], "cnfg_usuarios");
     foreach ($rs_usuarios as  $row_usuarios) {
         $GradoNivel = $row_usuarios ["cus_tipoconsulta"];
         $grupo = $row_usuarios ["cus_clavegrupo"];

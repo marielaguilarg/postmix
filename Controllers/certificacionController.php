@@ -1,6 +1,5 @@
 <?php
-
-require "Models/crud_muestras.php";
+//require "Models/crud_muestras.php";
 
 class CertificacionController{
     
@@ -33,7 +32,7 @@ class CertificacionController{
                 $imp=new ImprimirCertificadoController();
                 $imp->reporteAnalisis();
         }else{
-        $user = $_SESSION["Usuario"];
+        $user = $_SESSION["UsuarioInd"];
    
     
     // busco el grupo de usuarios
@@ -174,7 +173,7 @@ ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDE
     }
     public function vistaEstatusSolicitud(){
         
-        $user = $_SESSION["Usuario"];
+        $user = $_SESSION["UsuarioInd"];
         // busco el grupo de usuarios
         $rs_sql_gpo =UsuarioModel::getUsuario($user,"cnfg_usuarios");
         foreach ($rs_sql_gpo as $row_rs_sql_gpo ) {
@@ -344,7 +343,7 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
             
           
             
-            $user = $_SESSION["Usuario"];
+            $user = $_SESSION["UsuarioInd"];
             
           
             
@@ -885,7 +884,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
         
         public function insertarsolicitud(){
             define('RAIZ',"../solicitudes");
-            $user = $_SESSION["Usuario"];
+            $user = $_SESSION["UsuarioInd"];
            include 'Utilerias/leevar.php';
           
             $refer=3;
@@ -971,7 +970,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
               include 'Utilerias/leevar.php';
               
               
-              $user = $_SESSION["Usuario"];
+              $user = $_SESSION["UsuarioInd"];
               
               // genera clave de servicio, la consulta debe estar agrupada y debera presentar el numero maximo para obtenerlo
                
@@ -999,7 +998,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
           public function insertarDetalle(){
               
               define('RAIZ',"../solicitudes");
-              $user = $_SESSION["Usuario"];
+              $user = $_SESSION["UsuarioInd"];
              
               
               //echo $ncuenta;

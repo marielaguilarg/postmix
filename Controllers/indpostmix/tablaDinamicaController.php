@@ -78,7 +78,7 @@ class TablaDinamicaController {
 //valido si es de alguna region o cuenta
         $grupo = $_SESSION["GrupoUs"];
         $vidiomau = $_SESSION["idiomaus"];
-        $Usuario = $_SESSION ["Usuario"];
+        $Usuario = $_SESSION["UsuarioInd"];
 
         $filtros = new ConsultaIndicadores;
         $this->filtroSel = $filtros;
@@ -233,7 +233,7 @@ class TablaDinamicaController {
 
 
 //busco para barra de navegacion
-//$usuario=$_SESSION["usuario"];
+//$usuario=$_SESSION["UsuarioInd"];
 
 
             $this->filtrosTD = new FiltrosTablaDinamica;
@@ -2696,7 +2696,7 @@ where 1=1 ";
 
     function validaRegionCuenta() {
         $result = 0;
-        $usuario = $_SESSION["Usuario"];
+        $usuario = $_SESSION["UsuarioInd"];
 
         $grupo = $_SESSION["GrupoUs"];
         // verifico el tipo de usuario

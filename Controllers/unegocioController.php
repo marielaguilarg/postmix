@@ -467,25 +467,6 @@ public function vistanomRservDet(){
 }
 
 
-public function listaClientesCuentas(){
-    $respuesta =DatosCuenta::listaClientesModel("ca_clientes");
-  
-  foreach($respuesta as $row => $item){
-       echo '<li class="treeview">
-                <a  href="#"><i class="fa fa-circle-o"></i>'.$item["cli_nombre"].' <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span></a>';
-       echo '  <ul class="treeview-menu">';
-       $respcuentas= DatosCuenta::vistaCuentasxCliente($item["cli_id"],"ca_cuentas");
-       foreach($respcuentas as $row2 => $item2){
-            echo '<li><a href="index.php?action=nuevaunegocio&refer='.$item2["cue_id"].'"><i class="fa fa-circle-o"></i>'.$item2["cue_descripcion"].'</a></li>';
-           
-       }
-       echo "</ul></li>";
-    
-    }   
-     
-}
 
 public function registroUnegocioController() {
 

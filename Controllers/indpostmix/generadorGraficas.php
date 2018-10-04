@@ -4,7 +4,7 @@ class GeneradorGraficas {
 
     public function graficaAplica($subseccion, $tiposec, $vserviciou) {
 
-        $usuario_act = $_SESSION ["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
         if ($tiposec == 'E') { //consulta para secciones tipo estandar
             $sql_val = "select ide_aceptado,  red_parametroesp, 
 red_parametroing,
@@ -83,7 +83,7 @@ ins_detalleproducto.ip_numseccion, ip_condicion;	";
 
     public function graficaComportamiento($subseccion, $vserviciou, $tiposec) {
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
 
         $campoorder = "mes_asignacion";
@@ -197,7 +197,7 @@ print json_encode($chart);
 
     public function graficaCumplimiento($seccion, $vserviciou, $tiposec) {
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
 
 //separamos los componentes de la seccion para hacer las consultas
@@ -377,7 +377,7 @@ if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
 
     public function graficaCumpliminetoAJ($seccion, $vserviciou) {
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
 // genera info grafica
 //$seccion='2.8.1.0.0.1 ';
@@ -499,7 +499,7 @@ order by nivaceptren desc; ";
             "6" => T_("semanas"),
             "7" => T_("semanas"));
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
     
 //obtengo rangos
@@ -568,7 +568,7 @@ order by cnfg_rangosgrafica.rg_valinicial";
 
     public function graficaPromedioJarabe($seccion, $vserviciou) {
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
 
 

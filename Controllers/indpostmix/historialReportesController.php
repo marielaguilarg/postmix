@@ -31,7 +31,7 @@ class HistorialReportesController {
         } 
 
 
-        $usuario_act = $_SESSION["Usuario"];
+        $usuario_act = $_SESSION["UsuarioInd"];
 
         // genera info grafica
 

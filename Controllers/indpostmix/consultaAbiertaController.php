@@ -377,8 +377,8 @@ class ConsultaAbiertaController
                   
                     if ($rowd[rad_tiporeactivo] != "") {
                         $subsec = $numsec . "." . $numreac . "." . $numcom . "." . $rowd[rad_numcaracteristica2] . "." . $numcom2;
-                        $linksubn = "<a href='MEIprincipal.php?op=subnivel&secc=" . $subsec . "&tiposec=" . $rowd[rad_tiporeactivo] . "'>" .
-                            "<img src='../img/agregar.gif' width='27' height='21' border='0'></a>";
+                        $linksubn = "<a href='index.php?action=indlistasecciones&secc=" . $subsec . "&tiposec=" . $rowd[rad_tiporeactivo] . "'>" .
+                            " <i class=\"fa-plus\"></i></a>";
                         $this->listaTitulos[]=$rowd["rad_descripcion".$suf] . "  " . $linksubn ;
                     } else {
                         $this->listaTitulos[]=$rowd["rad_descripcion".$suf] ;

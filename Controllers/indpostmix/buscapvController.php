@@ -65,7 +65,7 @@ class BuscapvController
         /* * ************************************** */
         $_SESSION["clienteind"]=1;
         $_SESSION["servicionind"]=1;
-        $MiVar = $_SESSION["Usuario"] ;
+        $MiVar = $_SESSION["UsuarioInd"] ;
         $uscliente = $_SESSION["clienteind"];
         $usservicio = $_SESSION["servicioind"];
         /* * ************************************** */
@@ -555,7 +555,7 @@ ca_franquiciascuenta.cli_idcliente= '$uscliente'";
             // var_dump($this->listaFranquicias);
             $banfran = 1;
         }
-        $usuario = $_SESSION["Usuario"];
+        $usuario = $_SESSION["UsuarioInd"];
         $ban = $busqueda;
         
         if ($ban == 1) {

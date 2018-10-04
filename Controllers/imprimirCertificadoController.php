@@ -563,7 +563,8 @@ AND ins_detalleabierta.ida_numseccion =  '6' AND ins_detalleabierta.ida_numrepor
         //*** DATOS
         $pdf->SetFillColor(216,231,243);
         $pdf->SetFont('Arial','',10);
-        $ssql="SELECT ide_idmuestra, cad_descripcionesp, rm_fechahora  FROM (SELECT ins_detalleestandar.ide_idmuestra FROM
+        $ssql="SELECT ide_idmuestra, cad_descripcionesp, rm_fechahora  FROM (SELECT ins_detalleestandar.ide_idmuestra
+ FROM
 ins_detalleestandar Inner Join cue_secciones ON cue_secciones.ser_claveservicio = ins_detalleestandar.ide_claveservicio AND cue_secciones.sec_numseccion = ins_detalleestandar.ide_numseccion 
 WHERE ins_detalleestandar.ide_claveservicio =  ".$servicio." AND ins_detalleestandar.ide_numreporte =:numrep AND cue_secciones.sec_indagua =  '1' 
 GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte) AS A 
@@ -575,6 +576,7 @@ Inner Join ca_catalogos ON ca_catalogosdetalle.cad_idcatalogo = ca_catalogos.ca_
 WHERE ca_catalogos.ca_idcatalogo =  '43' GROUP BY aa_recepcionmuestradetalle.mue_idmuestra ) AS b 
 ON  ide_idmuestra=mue_idmuestra";
         $rs=Conexion::ejecutarQuery($ssql,array("numrep"=>$numrep));
+      
        foreach($rs as $row) {
             $pdf->SetY(68);
             $pdf->SetX(45);
