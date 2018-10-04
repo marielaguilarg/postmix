@@ -1,10 +1,12 @@
 <?php
+//error_reporting(E_WARNING|E_ERROR);
 @session_start();
+
 require_once "Models/crud_cuentas.php";
 require_once "Models/crud_franquicias.php";
 //require_once "../Models/conexion.php";
 require_once "Models/crud_unegocios.php";
-include('libs/php-gettext-1.0.11/gettext.inc');
+include('libs/php-gettext-1.0.12/gettext.inc');
 require_once "Utilerias/inimultilenguaje.php";
 	
 // Array que vincula los IDs de los selects declarados en el HTML con el nombre de la tabla donde se encuentra su contenido
@@ -15,30 +17,18 @@ $listadoSelects=array(
 "unidadnegocio"=>"ca_unegocios"
 );
 
-function validaSelect2($selectDestinoCuenta)
-{
-	// Se valida que el select enviado via GET exista
-	global $listadoSelects;
-	if(isset($listadoSelects[$selectDestinoCuenta])) return true;
-	else return false;
-}
 
-function validaOpcion2($opcionSeleccionadaCuenta)
-{
-	// Se valida que la opcion seleccionada por el usuario en el select tenga un valor numerico
-	if(is_numeric($opcionSeleccionadaCuenta)) return true;
-	else return false;
-}
-
+if (isset($_SESSION["UsuarioInd"])) { //valido que este logeado
+    
 //$selectDestinoCuenta=$_GET["selectcuenta"];
 //$opcionSeleccionadaCuenta=$_GET["opcioncuenta"];
 foreach ($_GET as $nombre_campo => $valor) {
     $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo ,FILTER_SANITIZE_STRING). "';";
-    echo $asignacion;
+  
     eval($asignacion);
 
 }
-$scli=$_SESSION["clientecons"];
+$scli=$_SESSION["clienteind"];
 $VarNivel2=$varn;
 $nivel=$niv;
 $selectDestinoCuenta=$selectcuenta;
@@ -49,7 +39,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
 	//echo $tabla;
 	if (($listadoSelects[$selectDestinoCuenta])=='ca_cuentas')
 	{
-		    if ($_SESSION['grupous'] == 'cli'||$_SESSION['grupous'] == 'muf') { 
+		    if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') { 
                 //separo los niveles
                 $aux=explode(".", $nivel);
                        
@@ -67,7 +57,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
             $consultaCuenta=DatosFranquicia::franquiciasxCuentacli($scli,$opcionSeleccionadaCuenta);
             
              // consulta para clientes
-            if ($_SESSION['grupous'] == 'cli'||$_SESSION['grupous'] == 'muf') {
+            if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
                 $consultaCuenta=DatosFranquicia::franquiciasxNivel($VarNivel2,$nivel,$sserv,$opcionSeleccionadaCuenta);
              
              
@@ -84,7 +74,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
 		{	
                 $consultaCuenta= DatosUnegocio::unegociosxTipoMercado($aux[0],$scli,$aux[1]);
                 
-                 if ($_SESSION['grupous'] == 'cli'||$_SESSION['grupous'] == 'muf') {
+                 if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
         
      $consultaCuenta= DatosUnegocio::unegociosxNivelxTipoMer($VarNivel2,$nivel,$aux[0],$scli,$franq);
      
@@ -95,7 +85,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
                   {  
   DatosUnegocio::unegociosxNivel("","",null,array("cta"=>$aux[0],"fra"=>$franq));
              
-                    if ($_SESSION['grupous'] == 'cli'||$_SESSION['grupous'] == 'muf') {
+                    if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
             $aux2=explode(".", $nivel);
        
                     $consultaCuenta= DatosUnegocio::unegociosxNivel("","",array("pais"=>$aux2[1],"uni"=>$aux2[2],"zon"=>$aux2[3],"reg"=>$aux2[4],"ciu"=>$aux2[5],"niv6" =>$aux2[6]),array("cta"=>$aux[0],"fra"=>$franq));
@@ -119,4 +109,23 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
 	}			
 	echo "</select>";
 }
+
+} else {
+   echo "error";
+}
+function validaSelect2($selectDestinoCuenta)
+{
+    // Se valida que el select enviado via GET exista
+    global $listadoSelects;
+    if(isset($listadoSelects[$selectDestinoCuenta])) return true;
+    else return false;
+}
+
+function validaOpcion2($opcionSeleccionadaCuenta)
+{
+    // Se valida que la opcion seleccionada por el usuario en el select tenga un valor numerico
+    if(is_numeric($opcionSeleccionadaCuenta)) return true;
+    else return false;
+}
+
 ?>
