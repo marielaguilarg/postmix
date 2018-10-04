@@ -4,12 +4,12 @@ $graficaIndicador = new GraficaIndicadorController();
 
 $graficaIndicador->vistaGraficaIndicadores();
 ?>
-       <script src="Views/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
-          <script src="Views/anychart8.2.1/js/anychart-exports.min.js"></script>
-          <script src="Views/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
-            <script src="Views/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
-              <script src="Views/anychart8.2.1/js/anychart-ui.min.js"></script>
-                <script src="Views/anychart8.2.1/js/anychart-table.min.js"></script>
+       <script src="views/anychart8.2.1/js/anychart-base.min.js" type="text/javascript"></script>
+          <script src="views/anychart8.2.1/js/anychart-exports.min.js"></script>
+          <script src="views/anychart8.2.1/js/anychart-data-adapter.min.js"></script>
+            <script src="views/anychart8.2.1/js/anychart-linear-gauge.min.js"></script>
+              <script src="views/anychart8.2.1/js/anychart-ui.min.js"></script>
+                <script src="views/anychart8.2.1/js/anychart-table.min.js"></script>
           <script type="text/javascript">
 anychart.onDocumentReady(function () {
           anychart.data.loadJsonFile("Controllers/indpostmix/indgeneragrafindicjson.php?sec=5&mes=5.2018&filx=&fily=&niv=4&filuni=1.1", function (data) {

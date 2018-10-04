@@ -1,7 +1,7 @@
 <?php
 @session_start();
 require_once "../../Controllers/indpostmix/generadorGraficas.php";
-include('../../libs/php-gettext-1.0.11/gettext.inc');
+include('../../libs/php-gettext-1.0.12/gettext.inc');
 include('../../Utilerias/inimultilenguaje.php');
 include('../../Models/conexion.php');
 $grafica=new GeneradorGraficas;
