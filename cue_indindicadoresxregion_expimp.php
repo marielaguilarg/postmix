@@ -1,7 +1,10 @@
-<?php  
+<?php 
+session_start();
+if (isset($_SESSION['UsuarioInd'])) { //valido que este logeado
+    
 require_once "Controllers/indpostmix/tablaDinamicaController.php";
 require_once "Controllers/tablahtml.php";
-require_once 'libs/php-gettext-1.0.11/gettext.inc';
+require_once 'libs/php-gettext-1.0.12/gettext.inc';
 include('Utilerias/inimultilenguaje.php');
 include('Utilerias/utilerias.php');
 require_once "Models/conexion.php";
@@ -45,7 +48,7 @@ border:#CCCCCC solid;
  
 
   <tr>
-        <td width="100%"  > <img src="{url_imagen}" alt="logos" width="100%" height="81">     </td>
+        <td width="100%"  > <img src="<?php echo $tabladin->getUrl_imagen()?>" alt="logos" width="100%" height="81">     </td>
 		
 		
       </tr>
@@ -112,3 +115,10 @@ border:#CCCCCC solid;
 
  </script>
 <!-- finBloque: Panel -->
+<?php 
+}else{
+  include "Controllers/controller.php";
+    $mvc =new MvcController();
+  
+    $mvc -> inicio();
+}?>
