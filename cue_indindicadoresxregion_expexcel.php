@@ -1,7 +1,12 @@
 <?php 
+session_start();
+if (isset($_SESSION['UsuarioInd'])) { //valido que este logeado
+    
+    
+    
 require_once "Controllers/indpostmix/tablaDinamicaController.php";
 require_once "Controllers/tablahtml.php";
-require_once 'libs/php-gettext-1.0.11/gettext.inc';
+require_once 'libs/php-gettext-1.0.12/gettext.inc';
 include('Utilerias/inimultilenguaje.php');
 include('Utilerias/utilerias.php');
 require_once "Models/conexion.php";
@@ -9,8 +14,8 @@ require_once "Models/conexion.php";
 include "Models/crud_estandar.php";
 include "Models/crud_estructura.php";
 $nomarch="Indicadores".date("dmyHi");
-// header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"");
-// header("Content-Disposition: attachment; filename=\"".$nomarch.".xls\"");
+header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"");
+ header("Content-Disposition: attachment; filename=\"".$nomarch.".xls\"");
 $tabladin=new TablaDinamicaController();
 $tabladin->exportarExcel();
 ?>
@@ -432,3 +437,10 @@ cnMvbWVkaWEvaW1hZ2UxLmpwZWdQSwUGAAAAAAYABgCFAQAAGzMAAAAA
 
 </body>
 <!-- finBloque: Panel -->
+<?php 
+}else{
+  include "Controllers/controller.php";
+    $mvc =new MvcController();
+  
+    $mvc -> inicio();
+}?>
