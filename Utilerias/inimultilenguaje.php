@@ -40,7 +40,7 @@ T_textdomain($domain);
 // define('LOCALE_DIR', PROJECT_DIR .'/locale');
 // define('DEFAULT_LOCALE', 'es_ES');
 
-// //require_once('php-gettext-1.0.11/gettext.inc');
+// //require_once('php-gettext-1.0.12/gettext.inc');
 
 // $encoding = 'UTF-8';
 // if(isset($_GET["lan"]))
