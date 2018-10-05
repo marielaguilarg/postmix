@@ -1,0 +1,1281 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pruebas\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-12 20:05-0500\n"
+"PO-Revision-Date: 2018-09-12 20:07-0500\n"
+"Last-Translator: hcd\n"
+"Language-Team: \n"
+"Language: es_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: T_;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 2.1.1\n"
+"X-Poedit-SearchPath-0: views/modulos\n"
+"X-Poedit-SearchPath-1: Controllers/indpostmix\n"
+
+#: Controllers/indpostmix/basePostmixController.php:60
+#: views/modulos/cue_indhistoricoxpv.php:6
+#: views/modulos/cue_indrepdiario.php:14
+#: views/modulos/cue_indrepxperiodo.php:36
+msgid "EXTRAER BASE POSTMIX"
+msgstr ""
+
+#: Controllers/indpostmix/basePostmixController.php:426
+#: Controllers/indpostmix/buscapvController.php:617
+#: Controllers/indpostmix/historialReportesController.php:102
+msgid "Total de Reportes"
+msgstr "TOTAL REPORTS"
+
+#: Controllers/indpostmix/buscapvController.php:51
+#: Controllers/indpostmix/buscapvController.php:630
+#: views/modulos/cue_indhistoricoxpv.php:20
+msgid "BUSCAR PUNTO DE VENTA"
+msgstr "FIND STORE"
+
+#: Controllers/indpostmix/buscapvController.php:52
+msgid ""
+"Estimado usuario, defina los siguientes criterios para buscar el punto de "
+"venta"
+msgstr "DEAR USER TO CONSULT THE RESULTS DEFINE THE FOLLOWING CRITERIA"
+
+#: Controllers/indpostmix/buscapvController.php:406
+msgid "Todas"
+msgstr "All"
+
+#: Controllers/indpostmix/consultaAbiertaController.php:95
+msgid "NO. DE REPORTE : "
+msgstr "REPORT NO.:"
+
+#: Controllers/indpostmix/consultaAbiertaController.php:234
+#: Controllers/indpostmix/consultaAbiertaController.php:513
+#: Controllers/indpostmix/consultaEstandarController.php:196
+#: Controllers/indpostmix/consultaEstandarController.php:752
+#: Controllers/indpostmix/consultaPonderadoController.php:171
+#: Controllers/indpostmix/consultaPonderadoController.php:176
+#: Controllers/indpostmix/consultaPonderadoController.php:253
+#: Controllers/indpostmix/consultaProductoController.php:197
+#: Controllers/indpostmix/consultaSeccionesController.php:163
+msgid "DETALLE"
+msgstr "DETAIL"
+
+#: Controllers/indpostmix/consultaAbiertaController.php:497
+#: Controllers/indpostmix/consultaComentPonderado.php:99
+#: Controllers/indpostmix/consultaComentPonderado.php:192
+#: Controllers/indpostmix/consultaEstandarController.php:180
+#: Controllers/indpostmix/consultaPonderadoController.php:237
+#: Controllers/indpostmix/resumenResxRepController.php:35
+msgid "NO. DE REPORTE"
+msgstr "REPORT NO."
+
+#: Controllers/indpostmix/consultaComentPonderado.php:88
+#: Controllers/indpostmix/estadisticasController.php:558
+msgid "SI"
+msgstr "YES"
+
+#: Controllers/indpostmix/consultaComentPonderado.php:105
+#: Controllers/indpostmix/consultaComentPonderado.php:198
+msgid "SUBSECCION"
+msgstr "SUBSECTIONS"
+
+#: Controllers/indpostmix/consultaEstandarController.php:523
+msgid "Resultado"
+msgstr "RESULT"
+
+#: Controllers/indpostmix/consultaEstandarController.php:738
+#: Controllers/indpostmix/consultaProductoController.php:190
+#: Controllers/indpostmix/consultaSeccionesController.php:169
+msgid "No. de Reporte"
+msgstr "REPORT NO."
+
+#: Controllers/indpostmix/consultaPonderadoController.php:107
+msgid "ACEPTADO"
+msgstr "COMPLYING"
+
+#: Controllers/indpostmix/consultaPonderadoController.php:111
+msgid "NO ACEPTADO"
+msgstr "NO COMPLYING"
+
+#: Controllers/indpostmix/consultaPonderadoController.php:115
+msgid "NO APLICA"
+msgstr ""
+
+#: Controllers/indpostmix/consultaPonderadoController.php:158
+#: Controllers/indpostmix/consultaPonderadoController.php:167
+#: Controllers/indpostmix/consultaSeccionesController.php:107
+#: Controllers/indpostmix/consultaSeccionesController.php:111
+msgid "COMENTARIO"
+msgstr "COMMENTS"
+
+#: Controllers/indpostmix/consultaSeccionesController.php:72
+msgid "CONSULTA REPORTE"
+msgstr "VIEW  REPORT"
+
+#: Controllers/indpostmix/consultaSeccionesController.php:176
+msgid "SECCIONES"
+msgstr "SECTIONS"
+
+#: Controllers/indpostmix/datosUnegocioController.php:18
+msgid "INFORMACION GENERAL DEL ESTABLECIMIENTO"
+msgstr "TEST"
+
+#: Controllers/indpostmix/datosUnegocioController.php:97
+msgid "NO. DE REPORTE: "
+msgstr "REPORT NO."
+
+#: Controllers/indpostmix/datosUnegocioController.php:111
+msgid "DATOS GENERALES"
+msgstr ""
+
+#: Controllers/indpostmix/estadisticasController.php:47
+#: Controllers/indpostmix/graficaIndicadorController.php:107
+msgid "GRAFICA"
+msgstr "CHART"
+
+#: Controllers/indpostmix/estadisticasController.php:52
+#: Controllers/indpostmix/estadisticasController.php:434
+#: Controllers/indpostmix/resumenResultadosController.php:259
+msgid "CALIDAD DE LA BEBIDA"
+msgstr "BEVERAGE QUALITY"
+
+#: Controllers/indpostmix/estadisticasController.php:52
+#: Controllers/indpostmix/estadisticasController.php:434
+#: Controllers/indpostmix/resumenResultadosController.php:259
+msgid "CALIDAD DEL AGUA"
+msgstr "WATER QUALITY"
+
+#: Controllers/indpostmix/estadisticasController.php:52
+#: Controllers/indpostmix/estadisticasController.php:434
+#: Controllers/indpostmix/resumenResultadosController.php:259
+msgid "PRESIONES DE OPERACION"
+msgstr "OPERATING PRESSURE"
+
+#: Controllers/indpostmix/estadisticasController.php:52
+#: Controllers/indpostmix/estadisticasController.php:434
+#: Controllers/indpostmix/resumenResultadosController.php:259
+msgid "BUENOS HABITOS DE MANUFACTURA"
+msgstr "GOOD MANUFACTURING HABITS"
+
+#: Controllers/indpostmix/estadisticasController.php:235
+msgid "ESTADISTICAS"
+msgstr "STATISTICS"
+
+#: Controllers/indpostmix/estadisticasController.php:460
+msgid "ESTABLECIMIENTOS QUE CUMPLEN CON EL ESTANDAR"
+msgstr "STORES WITHIN STANDARD"
+
+#: Controllers/indpostmix/estadisticasController.php:461
+msgid "ESTABLECIMIENTOS QUE NO CUMPLEN CON EL ESTANDAR"
+msgstr "STORES OUT OF STANDARD"
+
+#: Controllers/indpostmix/estadisticasController.php:467
+msgid "Se muestra el porcentaje de pruebas"
+msgstr "Shown as percentage"
+
+#: Controllers/indpostmix/estadisticasController.php:469
+#: Controllers/indpostmix/estadisticasController.php:643
+msgid "ESTABLECIMIENTOS CON MAS DEL 80% DE PRUEBAS DENTRO DEL ESTANDAR"
+msgstr "STORES OUT OF STANDARD"
+
+#: Controllers/indpostmix/estadisticasController.php:470
+#: Controllers/indpostmix/estadisticasController.php:644
+msgid "ESTABLECIMIENTOS CON MENOS DEL 80% DE PRUEBAS DENTRO DEL ESTANDAR"
+msgstr "STORES OUT OF STANDARD"
+
+#: Controllers/indpostmix/estadisticasController.php:609
+#: Controllers/indpostmix/estadisticasController.php:628
+#: Controllers/indpostmix/estadisticasController.php:1125
+#: views/modulos/cue_indconsultaproducto.php:101
+msgid "SEMANAS"
+msgstr "WEEKS"
+
+#: Controllers/indpostmix/estadisticasController.php:1223
+msgid "EDAD PROMEDIO POR PRODUCTO"
+msgstr "AVERAGE  AGE  FOR EACH PRODUCT"
+
+#: Controllers/indpostmix/estadisticasController.php:1235
+msgid "TAMAÑO DE LA MUESTRA"
+msgstr ""
+
+#: Controllers/indpostmix/estadisticasController.php:1259
+#: views/modulos/cue_indestadisticares.php:379
+msgid "PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO"
+msgstr "PERCENTAGE OF TESTS THAT MEET THE PRODUCT STANDARD"
+
+#: Controllers/indpostmix/estadisticasController.php:1262
+msgid "HISTOGRAMA DE FRECUENCIAS"
+msgstr "HISTOGRAM OF FREQUENCY"
+
+#: Controllers/indpostmix/generadorGraficas.php:76
+msgid "No Cumple"
+msgstr "OUT OF STANDARD"
+
+#: Controllers/indpostmix/generadorGraficas.php:77
+msgid "Cumple"
+msgstr "WITHIN STANDARD"
+
+#: Controllers/indpostmix/generadorGraficas.php:95
+#: Controllers/indpostmix/generadorGraficas.php:485
+msgid "Partes de agua por cada una de jarabe"
+msgstr "PARTS OF WATER FOR EACH OF SYRUP"
+
+#: Controllers/indpostmix/generadorGraficas.php:96
+#: Controllers/indpostmix/generadorGraficas.php:486
+msgid "Volumenes de CO2"
+msgstr "CO2 VOLUME"
+
+#: Controllers/indpostmix/generadorGraficas.php:109
+#: Controllers/indpostmix/generadorGraficas.php:110
+msgid "Semanas"
+msgstr "WEEKS"
+
+#: Controllers/indpostmix/generadorGraficas.php:462
+#: Controllers/indpostmix/generadorGraficas.php:636
+#: Controllers/indpostmix/indgeneragrafindic.php:195
+#: Controllers/indpostmix/indgeneragrafindicjson.php:178
+msgid "No hay datos suficientes para generar la grafica"
+msgstr "NOT ENOUGH DATA"
+
+#: Controllers/indpostmix/generadorGraficas.php:495
+msgid "psi"
+msgstr "psi"
+
+#: Controllers/indpostmix/generadorGraficas.php:499
+#: Controllers/indpostmix/generadorGraficas.php:500
+#: Controllers/indpostmix/resumenResultadosController.php:464
+msgid "semanas"
+msgstr "WEEKS"
+
+#: Controllers/indpostmix/generarBusquedaController.php:246
+msgid "a"
+msgstr "TO"
+
+#: Controllers/indpostmix/generarBusquedaController.php:321
+msgid "ESTE ESTABLECIMIENTO AUN NO CUENTA CON REPORTES"
+msgstr ""
+
+#: Controllers/indpostmix/generarBusquedaController.php:324
+msgid "Regresar"
+msgstr "Back"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:192
+#: Controllers/indpostmix/tablaDinamicaController.php:138
+#: Controllers/indpostmix/tablaDinamicaController.php:2792
+msgid "LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION"
+msgstr "SORRY, YOU HAVE NOT ENOUGHT PERMISSON TO SEE THIS INFORMATION"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:460
+#: Controllers/indpostmix/resumenResultadosController.php:209
+#: Controllers/indpostmix/resumenResultadosController.php:243
+msgid "INDICADORES"
+msgstr "POSTMIX AUDIT"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:59
+#: views/modulos/cue_indrepxperiodo.php:100
+msgid "Enero"
+msgstr "January"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:60
+#: views/modulos/cue_indrepxperiodo.php:101
+msgid "Febrero"
+msgstr "February"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:61
+#: views/modulos/cue_indrepxperiodo.php:102
+msgid "Marzo"
+msgstr "March"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:62
+#: views/modulos/cue_indrepxperiodo.php:103
+msgid "Abril"
+msgstr "April"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:63
+#: views/modulos/cue_indrepxperiodo.php:104
+msgid "Mayo"
+msgstr "May"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:64
+#: views/modulos/cue_indrepxperiodo.php:105
+msgid "Junio"
+msgstr "June"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:65
+#: views/modulos/cue_indrepxperiodo.php:106
+msgid "Julio"
+msgstr "July"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:66
+#: views/modulos/cue_indrepxperiodo.php:107
+msgid "Agosto"
+msgstr "August"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:67
+#: views/modulos/cue_indrepxperiodo.php:108
+msgid "Septiembre"
+msgstr "September"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:68
+#: views/modulos/cue_indrepxperiodo.php:109
+msgid "Octubre"
+msgstr "October"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:69
+#: views/modulos/cue_indrepxperiodo.php:110
+msgid "Noviembre"
+msgstr "November"
+
+#: Controllers/indpostmix/graficaIndicadorController.php:619
+#: views/modulos/cue_indrepxperiodo.php:70
+#: views/modulos/cue_indrepxperiodo.php:111
+msgid "Diciembre"
+msgstr "December"
+
+#: Controllers/indpostmix/historialReportesController.php:46
+#: views/modulos/cue_indhistorialreportes.php:78
+msgid "REPORTE NO."
+msgstr "REPORT NO."
+
+#: Controllers/indpostmix/historialReportesController.php:48
+msgid "HISTORIAL DE REPORTES"
+msgstr "VIEW  REPORT"
+
+#: Controllers/indpostmix/historialReportesController.php:49
+#: views/modulos/cue_indgraficaindicadorgrv2.php:344
+#: views/modulos/cue_indhistorialreportes.php:80
+msgid "MES"
+msgstr "MONTH"
+
+#: Controllers/indpostmix/indgeneragrafindic.php:276
+msgid "DE  ESTABLECIMIENTOS  QUE  CUMPLEN   CON   EL   ESTANDAR"
+msgstr "STORES WITHIN STANDARD"
+
+#: Controllers/indpostmix/resumenResultadosController.php:269
+msgid "ATRIBUTO"
+msgstr "ATTRIBUTE"
+
+#: Controllers/indpostmix/resumenResultadosController.php:271
+#: views/modulos/cue_indconsultaestandardetalle.php:39
+#: views/modulos/cue_indestadisticares.php:196
+msgid "ESTANDAR"
+msgstr "STANDARD"
+
+#: Controllers/indpostmix/resumenResultadosController.php:273
+#: views/modulos/cue_indestadisticares.php:285
+msgid "PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR"
+msgstr "PERCENTAGE OF TESTS THAT MEET THE STANDARD"
+
+#: Controllers/indpostmix/resumenResultadosController.php:320
+msgid "desplegar lista completa"
+msgstr "to  increase"
+
+#: Controllers/indpostmix/resumenResultadosController.php:327
+#: Controllers/indpostmix/resumenResultadosController.php:329
+#: Controllers/indpostmix/resumenResultadosController.php:332
+msgid "Consultar estadisticas"
+msgstr "See statistics"
+
+#: Controllers/indpostmix/resumenResxRepController.php:34
+msgid "RESUMEN DE RESULTADOS POR REPORTE"
+msgstr "RESULTS CRITERIA"
+
+#: Controllers/indpostmix/resumenResxRepController.php:42
+#: Controllers/indpostmix/resumenResxRepController.php:43
+msgid "Ver resultados"
+msgstr "SEE RESULTS"
+
+#: Controllers/indpostmix/resumenResxRepController.php:224
+#: Controllers/indpostmix/resumenResxRepController.php:311
+msgid "desplegar"
+msgstr "view"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:93
+msgid "INICIO"
+msgstr "HOME"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:361
+msgid "RANGO DE CUMPLIMIENTO: "
+msgstr "COMPLIANCE LEVEL"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:383
+msgid "TABLA DINAMICA"
+msgstr ""
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1635
+#: Controllers/indpostmix/tablaDinamicaController.php:2984
+#: views/modulos/cue_indbuscapv.php:44
+msgid "CUENTA"
+msgstr "CUSTOMER"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1644
+#: Controllers/indpostmix/tablaDinamicaController.php:2990
+#: views/modulos/cue_indbuscapv.php:54
+#: views/modulos/cue_indconsultageneral.php:140
+#: views/modulos/cue_indconsultageneralv2.php:128
+#: views/modulos/cue_indcumplimientoestabl.php:51
+msgid "FRANQUICIA"
+msgstr "BOTTLER"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1649
+#: Controllers/indpostmix/tablaDinamicaController.php:1655
+#: Controllers/indpostmix/tablaDinamicaController.php:2995
+#: Controllers/indpostmix/tablaDinamicaController.php:2999
+msgid "PUNTO VENTA"
+msgstr "STORE "
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1763
+#: Controllers/indpostmix/tablaDinamicaController.php:2045
+msgid "sin datos"
+msgstr "no data"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1766
+#: Controllers/indpostmix/tablaDinamicaController.php:1872
+#: Controllers/indpostmix/tablaDinamicaController.php:1967
+#: Controllers/indpostmix/tablaDinamicaController.php:2039
+#: Controllers/indpostmix/tablaDinamicaController.php:3217
+#: Controllers/indpostmix/tablaDinamicaController.php:3239
+msgid "tam. muestra"
+msgstr ""
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1770
+#: Controllers/indpostmix/tablaDinamicaController.php:1869
+#: Controllers/indpostmix/tablaDinamicaController.php:1881
+#: Controllers/indpostmix/tablaDinamicaController.php:1889
+#: Controllers/indpostmix/tablaDinamicaController.php:1954
+#: Controllers/indpostmix/tablaDinamicaController.php:1955
+#: Controllers/indpostmix/tablaDinamicaController.php:1964
+#: Controllers/indpostmix/tablaDinamicaController.php:2038
+#: Controllers/indpostmix/tablaDinamicaController.php:2054
+msgid "-"
+msgstr ""
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1772
+#: Controllers/indpostmix/tablaDinamicaController.php:1879
+#: Controllers/indpostmix/tablaDinamicaController.php:1881
+#: Controllers/indpostmix/tablaDinamicaController.php:1970
+#: Controllers/indpostmix/tablaDinamicaController.php:2043
+#: Controllers/indpostmix/tablaDinamicaController.php:2045
+#: Controllers/indpostmix/tablaDinamicaController.php:3224
+#: Controllers/indpostmix/tablaDinamicaController.php:3242
+msgid "no. pruebas"
+msgstr "NO. TESTS"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1799
+#: Controllers/indpostmix/tablaDinamicaController.php:1802
+#: Controllers/indpostmix/tablaDinamicaController.php:1892
+#: Controllers/indpostmix/tablaDinamicaController.php:1894
+#: Controllers/indpostmix/tablaDinamicaController.php:1974
+#: Controllers/indpostmix/tablaDinamicaController.php:1976
+#: Controllers/indpostmix/tablaDinamicaController.php:2051
+#: Controllers/indpostmix/tablaDinamicaController.php:2055
+msgid "cumple"
+msgstr "WITHIN STANDARD"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1810
+#: Controllers/indpostmix/tablaDinamicaController.php:1897
+#: Controllers/indpostmix/tablaDinamicaController.php:1980
+#: Controllers/indpostmix/tablaDinamicaController.php:2064
+msgid "MENSUAL"
+msgstr "MONTHLY"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1812
+#: Controllers/indpostmix/tablaDinamicaController.php:1899
+#: Controllers/indpostmix/tablaDinamicaController.php:1982
+#: Controllers/indpostmix/tablaDinamicaController.php:2066
+#: views/modulos/cue_indindicadoresgrid.php:120
+msgid "6 MESES"
+msgstr "6 MONTHS"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1814
+#: Controllers/indpostmix/tablaDinamicaController.php:1901
+#: Controllers/indpostmix/tablaDinamicaController.php:1984
+#: Controllers/indpostmix/tablaDinamicaController.php:2068
+#: views/modulos/cue_indindicadoresgrid.php:124
+msgid "12 MESES"
+msgstr "12 MONTHS"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1834
+#: Controllers/indpostmix/tablaDinamicaController.php:1838
+msgid "TOTAL"
+msgstr "TOTAL"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:1914
+#: Controllers/indpostmix/tablaDinamicaController.php:3054
+#: Controllers/indpostmix/tablaDinamicaController.php:3194
+msgid "TOTALES"
+msgstr "TOTAL"
+
+#: Controllers/indpostmix/tablaDinamicaController.php:2003
+msgid "GRAN TOTAL"
+msgstr ""
+
+#: views/modulos/cue_indbuscapv.php:22
+msgid "BUSQUEDA DE PUNTO DE VENTA"
+msgstr "FIND STORE"
+
+#: views/modulos/cue_indbuscapv.php:34 views/modulos/cue_indbuscapv.php:105
+#: views/modulos/cue_indconsultageneral.php:31
+#: views/modulos/cue_indconsultageneralv2.php:30
+#: views/modulos/cue_indcumplimientoestabl.php:53
+#: views/modulos/cue_indhistoricoxpv.php:53
+msgid "PUNTO DE VENTA"
+msgstr "STORE"
+
+#: views/modulos/cue_indbuscapv.php:40
+msgid "ID PEPSI:"
+msgstr "PEPSI ID:"
+
+#: views/modulos/cue_indbuscapv.php:87 views/modulos/cue_indhistoricoxpv.php:41
+msgid "BUSCAR"
+msgstr "FIND"
+
+#: views/modulos/cue_indbuscapv.php:99
+msgid "RESULTADO DE BUSQUEDA"
+msgstr "RESULT"
+
+#: views/modulos/cue_indbuscapv.php:106
+#: views/modulos/cue_indconsultageneral.php:36
+#: views/modulos/cue_indconsultageneralv2.php:34
+#: views/modulos/cue_indhistoricoxpv.php:26
+#: views/modulos/cue_indhistoricoxpv.php:54
+msgid "ID PEPSI"
+msgstr "PEPSI ID:"
+
+#: views/modulos/cue_indbuscapv.php:107
+#: views/modulos/cue_indconsultageneral.php:74
+#: views/modulos/cue_indconsultageneral.php:150
+#: views/modulos/cue_indconsultageneralv2.php:65
+#: views/modulos/cue_indconsultageneralv2.php:138
+#: views/modulos/cue_indcumplimientoestabl.php:52
+#: views/modulos/cue_indhistoricoxpv.php:55
+msgid "CIUDAD"
+msgstr "CITY"
+
+#: views/modulos/cue_indbuscapv.php:108
+#: views/modulos/cue_indconsultageneral.php:47
+#: views/modulos/cue_indconsultageneralv2.php:43
+#: views/modulos/cue_indhistoricoxpv.php:56
+msgid "DIRECCION"
+msgstr "ADDRESS"
+
+#: views/modulos/cue_indconsultaabierta.php:26
+msgid "SUBSECCIONES"
+msgstr "SUBSECTIONS"
+
+#: views/modulos/cue_indconsultacomentario.php:25
+msgid "COMENTARIOS"
+msgstr "COMMENTS"
+
+#: views/modulos/cue_indconsultaestandar.php:27
+msgid "COMPONENTES"
+msgstr "COMPONENTS"
+
+#: views/modulos/cue_indconsultaestandardetalle.php:32
+#: views/modulos/cue_indconsultaestandardetalle.php:40
+#: views/modulos/cue_indcumplimientoestabl.php:54
+msgid "RESULTADO"
+msgstr "RESULT"
+
+#: views/modulos/cue_indconsultaestandardetalle.php:38
+msgid "REACTIVO"
+msgstr ""
+
+#: views/modulos/cue_indconsultaestandardetalle.php:60
+#: views/modulos/cue_indconsultaponderada.php:129
+#: views/modulos/cue_indconsultaproducto.php:127
+msgid "NIVEL DE CUMPLIMIENTO"
+msgstr "COMPLIANCE LEVEL"
+
+#: views/modulos/cue_indconsultageneral.php:24
+#: views/modulos/cue_indconsultageneralv2.php:24
+msgid "DATOS DEL ESTABLECIMIENTO"
+msgstr "TEST"
+
+#: views/modulos/cue_indconsultageneral.php:28
+#: views/modulos/cue_indconsultageneralv2.php:28
+msgid "REPORTE DE VISITA"
+msgstr "TEST REPORTS"
+
+#: views/modulos/cue_indconsultageneral.php:39
+#: views/modulos/cue_indconsultageneralv2.php:36
+msgid "ID CUENTA"
+msgstr "ID CUSTOMER"
+
+#: views/modulos/cue_indconsultageneral.php:51
+#: views/modulos/cue_indconsultageneralv2.php:47
+msgid "CALLE"
+msgstr "STREET"
+
+#: views/modulos/cue_indconsultageneral.php:54
+#: views/modulos/cue_indconsultageneralv2.php:49
+msgid "NO. EXTERIOR"
+msgstr "EXT. NO."
+
+#: views/modulos/cue_indconsultageneral.php:58
+#: views/modulos/cue_indconsultageneralv2.php:52
+msgid "NO. INTERIOR"
+msgstr "INT. NO."
+
+#: views/modulos/cue_indconsultageneral.php:60
+#: views/modulos/cue_indconsultageneralv2.php:54
+msgid "MANZANA"
+msgstr "BLOCK"
+
+#: views/modulos/cue_indconsultageneral.php:62
+#: views/modulos/cue_indconsultageneralv2.php:56
+msgid "LOTE"
+msgstr "SECTION"
+
+#: views/modulos/cue_indconsultageneral.php:66
+#: views/modulos/cue_indconsultageneralv2.php:60
+msgid "COLONIA"
+msgstr "SETTLEMENT"
+
+#: views/modulos/cue_indconsultageneral.php:68
+#: views/modulos/cue_indconsultageneralv2.php:61
+msgid "C.P."
+msgstr "P.A."
+
+#: views/modulos/cue_indconsultageneral.php:72
+#: views/modulos/cue_indconsultageneralv2.php:64
+msgid "DELEGACION"
+msgstr "DISTRICT"
+
+#: views/modulos/cue_indconsultageneral.php:78
+#: views/modulos/cue_indconsultageneral.php:147
+#: views/modulos/cue_indconsultageneralv2.php:68
+#: views/modulos/cue_indconsultageneralv2.php:135
+#: views/modulos/cue_indconsultaproducto.php:66
+msgid "ESTADO"
+msgstr "STATE"
+
+#: views/modulos/cue_indconsultageneral.php:81
+#: views/modulos/cue_indconsultageneralv2.php:70
+msgid "TELEFONO"
+msgstr "PHONE"
+
+#: views/modulos/cue_indconsultageneral.php:85
+#: views/modulos/cue_indconsultageneralv2.php:73
+msgid "REFERENCIA"
+msgstr "REFERENCE"
+
+#: views/modulos/cue_indconsultageneral.php:93
+#: views/modulos/cue_indconsultageneralv2.php:81
+msgid "DATOS DE LA VISITA"
+msgstr "TEST DATE"
+
+#: views/modulos/cue_indconsultageneral.php:98
+#: views/modulos/cue_indconsultageneralv2.php:86
+msgid "FECHA VISITA"
+msgstr "TEST DATE"
+
+#: views/modulos/cue_indconsultageneral.php:100
+#: views/modulos/cue_indconsultageneralv2.php:88
+msgid "INSPECTOR"
+msgstr "INSPECTOR"
+
+#: views/modulos/cue_indconsultageneral.php:104
+#: views/modulos/cue_indconsultageneralv2.php:92
+msgid "INDICE"
+msgstr "INDEX"
+
+#: views/modulos/cue_indconsultageneral.php:107
+#: views/modulos/cue_indconsultageneralv2.php:95
+msgid "RESPONSABLE"
+msgstr "MANAGER"
+
+#: views/modulos/cue_indconsultageneral.php:113
+#: views/modulos/cue_indconsultageneralv2.php:101
+msgid "PUESTO"
+msgstr "JOB TITTLE"
+
+#: views/modulos/cue_indconsultageneral.php:118
+#: views/modulos/cue_indconsultageneralv2.php:106
+msgid "HORA DE"
+msgstr "TIME"
+
+#: views/modulos/cue_indconsultageneral.php:121
+#: views/modulos/cue_indconsultageneralv2.php:109
+msgid "ENTRADA"
+msgstr "ARRIVE"
+
+#: views/modulos/cue_indconsultageneral.php:122
+#: views/modulos/cue_indconsultageneralv2.php:110
+msgid "ANALISIS SENSORIAL"
+msgstr "SENSORIAL TEST"
+
+#: views/modulos/cue_indconsultageneral.php:123
+#: views/modulos/cue_indconsultageneralv2.php:111
+msgid "SALIDA"
+msgstr "DEPARTURE"
+
+#: views/modulos/cue_indconsultageneral.php:130
+#: views/modulos/cue_indconsultageneralv2.php:118
+msgid "CLASIFICACION"
+msgstr "CLASSIFICATION"
+
+#: views/modulos/cue_indconsultageneral.php:133
+#: views/modulos/cue_indconsultageneralv2.php:121
+msgid "COMPAÑIA"
+msgstr "COMPANY"
+
+#: views/modulos/cue_indconsultageneral.php:136
+#: views/modulos/cue_indconsultageneralv2.php:124
+msgid "UNIDAD DE NEGOCIO"
+msgstr "MARKET"
+
+#: views/modulos/cue_indconsultageneral.php:143
+#: views/modulos/cue_indconsultageneralv2.php:131
+msgid "REGION"
+msgstr "REGION"
+
+#: views/modulos/cue_indconsultageneral.php:143
+#: views/modulos/cue_indconsultageneralv2.php:131
+msgid "GRUPO"
+msgstr "GROUP"
+
+#: views/modulos/cue_indconsultageneral.php:147
+#: views/modulos/cue_indconsultageneralv2.php:135
+msgid "ZONA"
+msgstr "ZONE"
+
+#: views/modulos/cue_indconsultageneral.php:150
+#: views/modulos/cue_indconsultageneralv2.php:138
+msgid "CEDIS"
+msgstr "DISTRIBUTION CENTER"
+
+#: views/modulos/cue_indconsultaproducto.php:41
+msgid "NO. DE SISTEMA"
+msgstr "SYSTEM NO."
+
+#: views/modulos/cue_indconsultaproducto.php:49
+msgid "PRODUCTO"
+msgstr "PRODUCT"
+
+#: views/modulos/cue_indconsultaproducto.php:57
+msgid "CAJAS"
+msgstr "TOTAL BOXES"
+
+#: views/modulos/cue_indconsultaproducto.php:74
+msgid "FECHA DE PRODUCTO"
+msgstr "PRODUCTION DATE"
+
+#: views/modulos/cue_indconsultaproducto.php:83
+msgid "FECHA DE CADUCIDAD"
+msgstr "EXPIRATION DATE"
+
+#: views/modulos/cue_indconsultaproducto.php:92
+msgid "EDAD DIAS"
+msgstr "AGE(DAYS)"
+
+#: views/modulos/cue_indconsultaproducto.php:110
+msgid "ESTATUS"
+msgstr "STATUS"
+
+#: views/modulos/cue_indcumplimientoestabl.php:56
+msgid "Ordenar de mayor a menor"
+msgstr "In descending order"
+
+#: views/modulos/cue_indcumplimientoestabl.php:56
+msgid "Ordenar de menor a mayor"
+msgstr "In ascending order"
+
+#: views/modulos/cue_indestadisticares.php:178
+msgid "TOTAL DE RESULTADOS"
+msgstr "TOTAL RESULTS"
+
+#: views/modulos/cue_indestadisticares.php:208
+msgid "CUMPLEN"
+msgstr "WITHIN STANDARD"
+
+#: views/modulos/cue_indestadisticares.php:223
+msgid "NO CUMPLEN"
+msgstr "OUT OF STANDARD"
+
+#: views/modulos/cue_indestadisticares.php:238
+msgid "PROMEDIO"
+msgstr "AVERAGE"
+
+#: views/modulos/cue_indestadisticares.php:250
+msgid "DESVIACION ESTANDAR"
+msgstr "STANDARD DEVIATION"
+
+#: views/modulos/cue_indestadisticares.php:317
+msgid "PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR MES"
+msgstr "MONTHLY PERCENTAGE OF TESTS THAT MEET THE STANDARD"
+
+#: views/modulos/cue_indestadisticares.php:349
+msgid "VALOR PROMEDIO MENSUAL"
+msgstr "MONTHLY AVERAGE"
+
+#: views/modulos/cue_indgraficaindicadorgrv2.php:294
+msgid "FILTROS"
+msgstr "FILTERS"
+
+#: views/modulos/cue_indgraficaindicadorgrv2.php:334
+msgid "PERIODO"
+msgstr "PERIOD"
+
+#: views/modulos/cue_indgraficaindicadorgrv2.php:336
+msgid "Seleccione el periodo"
+msgstr "Select An Option"
+
+#: views/modulos/cue_indgraficaindicadorgrv2.php:346
+msgid "Seleccione el mes"
+msgstr "Select An Option"
+
+#: views/modulos/cue_indgraficaindicadorgrv2.php:355
+msgid "Filtrar"
+msgstr "Apply Filter"
+
+#: views/modulos/cue_indhistoricoxpv.php:13
+#, fuzzy
+#| msgid "Punto de venta"
+msgid "Histórico por punto de venta"
+msgstr "STORE"
+
+#: views/modulos/cue_indhistoricoxpv.php:16
+msgid ""
+"ESTIMADO USUARIO, PARA EXPORTAR EL REPORTE, SELECCIONE EL PUNTO DE VENTA"
+msgstr ""
+
+#: views/modulos/cue_indindicadoresgrid.php:105
+msgid "NUM. PRUEBAS"
+msgstr "NO. TESTS"
+
+#: views/modulos/cue_indindicadoresgrid.php:109
+msgid "TAMAÑO MUESTRA"
+msgstr ""
+
+#: views/modulos/cue_indindicadoresgrid.php:116
+msgid "MES ACTUAL"
+msgstr "THIS MONTH"
+
+#: views/modulos/cue_indindicadoresgrid.php:131
+msgid "TODOS"
+msgstr "ALL"
+
+#: views/modulos/cue_indindicadoresgrid.php:147
+msgid "APLICAR FILTROS"
+msgstr "FILTERS"
+
+#: views/modulos/cue_indrepdiario.php:24
+#, fuzzy
+#| msgid "Reporte No."
+msgid "Reporte diario"
+msgstr "REPORT NO."
+
+#: views/modulos/cue_indrepdiario.php:29
+msgid "ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DIARIO, SELECIONE EL DIA"
+msgstr ""
+
+#: views/modulos/cue_indrepdiario.php:31
+#, fuzzy
+#| msgid "FECHA DE PRODUCTO"
+msgid "FECHA DE INSPECCION"
+msgstr "PRODUCTION DATE"
+
+#: views/modulos/cue_indrepdiario.php:43
+#: views/modulos/cue_indrepxperiodo.php:177
+msgid "Generar"
+msgstr "Go To"
+
+#: views/modulos/cue_indrepxperiodo.php:43
+#, fuzzy
+#| msgid "Seleccione el periodo"
+msgid "Reporte por periodo"
+msgstr "Select An Option"
+
+#: views/modulos/cue_indrepxperiodo.php:49
+msgid "ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DEFINA EL PERIODO"
+msgstr ""
+
+#: views/modulos/cue_indrepxperiodo.php:55
+msgid "INDICE DE"
+msgstr "FROM INDEX"
+
+#: views/modulos/cue_indrepxperiodo.php:96
+msgid "AL INDICE DE"
+msgstr "TO INDEX"
+
+#: views/modulos/cue_indrepxperiodo.php:145
+msgid "TODAS LAS CUENTAS"
+msgstr "ALL CUSTOMER"
+
+#: views/modulos/cue_indrepxperiodo.php:151
+msgid "SOLO 1 CUENTA"
+msgstr "1 CUSTOMER"
+
+#: views/modulos/cue_indrepxperiodo.php:158
+#, fuzzy
+#| msgid "Cuenta"
+msgid "Cuentas"
+msgstr "CUSTOMER"
+
+#: views/modulos/cue_indresultadosxrep.php:79
+msgid "CONSULTAR TODO EL REPORTE"
+msgstr "VIEW  REPORT"
+
+#~ msgid "TODAS"
+#~ msgstr "ALL"
+
+#~ msgid "Aceptar"
+#~ msgstr "OK"
+
+#~ msgid "Cancelar"
+#~ msgstr "Cancel"
+
+#~ msgid "Todos"
+#~ msgstr "All"
+
+#~ msgid "Inicio"
+#~ msgstr "Home"
+
+#~ msgid "CRITERIOS DE CONSULTA"
+#~ msgstr "QUERY CRITERIA"
+
+#~ msgid "Fecha de Visita"
+#~ msgstr "SURVEY DATE"
+
+#~ msgid "Datos Generales"
+#~ msgstr "GENERAL DATA"
+
+#~ msgid "Datos del establecimiento"
+#~ msgstr "STORE INFORMATION"
+
+#~ msgid "Direccion"
+#~ msgstr "ADRESS"
+
+#~ msgid "Reporte de visita"
+#~ msgstr "SURVEY REPORT"
+
+#~ msgid "ID cliente"
+#~ msgstr "ID CUSTOMER"
+
+#~ msgid "ID Cuenta"
+#~ msgstr "ID CUSTOMER"
+
+#~ msgid "Calle"
+#~ msgstr "STREET"
+
+#~ msgid "Franquicia"
+#~ msgstr "BOTTLER"
+
+#~ msgid "Ciudad"
+#~ msgstr "CITY"
+
+#~ msgid "No. Exterior"
+#~ msgstr "EXT. NO."
+
+#~ msgid "No. Interior"
+#~ msgstr "INT. NO."
+
+#~ msgid "Manzana"
+#~ msgstr "BLOCK"
+
+#~ msgid "Lote"
+#~ msgstr "SECTION"
+
+#~ msgid "Colonia"
+#~ msgstr "SETTLEMENT"
+
+#~ msgid "Delegacion"
+#~ msgstr "DISTRICT"
+
+#~ msgid "Telefono"
+#~ msgstr "PHONE"
+
+#~ msgid "Referencia"
+#~ msgstr "REFERENCE"
+
+#~ msgid "Datos de la Visita"
+#~ msgstr "TEST DATE"
+
+#~ msgid "FechaVisita"
+#~ msgstr "TEST DATE"
+
+#~ msgid "Inspector"
+#~ msgstr "INSPECTOR"
+
+#~ msgid "Asignado al Indice"
+#~ msgstr "ASSIGNED TO DE INDEX"
+
+#~ msgid "Responsable"
+#~ msgstr "MANAGER"
+
+#~ msgid "Puesto"
+#~ msgstr "JOB TITTLE"
+
+#~ msgid "Entrada"
+#~ msgstr "ARRIVE"
+
+#~ msgid "Hora de"
+#~ msgstr "TIME"
+
+#~ msgid "Analisis sensorial"
+#~ msgstr "SENSORIAL TEST"
+
+#~ msgid "Salida"
+#~ msgstr "DEPARTURE"
+
+#~ msgid "PEPSICO DE MEXICO"
+#~ msgstr "PEPSICO MEXICO"
+
+#, fuzzy
+#~ msgid "Consultas Indicadores"
+#~ msgstr "See statistics"
+
+#~ msgid ""
+#~ "Estimado usuario, para consultar los resultados defina el siguiente "
+#~ "criterio"
+#~ msgstr "DEAR USER TO CONSULT THE RESULTS DEFINE THE FOLLOWING CRITERIA"
+
+#~ msgid "Indice de"
+#~ msgstr "INDEX FROM"
+
+#~ msgid "REPORTE NO"
+#~ msgstr "REPORT NO."
+
+#~ msgid "DESCRIPCION"
+#~ msgstr "DESCRIPTION"
+
+#~ msgid "IMAGENES"
+#~ msgstr "IMAGES"
+
+#~ msgid "CONDICION"
+#~ msgstr "STATE OF THE SYRUP"
+
+#~ msgid "SEMANA"
+#~ msgstr "WEEK"
+
+#~ msgid "Consultas"
+#~ msgstr "QUERY"
+
+#~ msgid "Resultados"
+#~ msgstr "TEST RESULTS"
+
+#~ msgid ""
+#~ "Estimado usuario, para consultar los resultados defina los siguientes "
+#~ "criterios"
+#~ msgstr "DEAR USER TO CONSULT THE RESULTS DEFINE THE FOLLOWING CRITERIA"
+
+#~ msgid "Tipo de Mercado"
+#~ msgstr "TYPE OF MARKET"
+
+#~ msgid "FRANQUICIA POR CUENTA"
+#~ msgstr "FRANCHISE"
+
+#~ msgid "Punto de Venta"
+#~ msgstr "STORE"
+
+#~ msgid "Periodo"
+#~ msgstr "PERIOD"
+
+#~ msgid "al Indice de"
+#~ msgstr "TO"
+
+#~ msgid "BUSQUEDA AVANZADA"
+#~ msgstr "ADVANCED SEARCH"
+
+#~ msgid "CLIENTE"
+#~ msgstr "COMPANY"
+
+#~ msgid "SERVICIO"
+#~ msgstr "SERVICE"
+
+#~ msgid "Avanzada"
+#~ msgstr "Advanced"
+
+#~ msgid "SELECCIONE PUNTO DE VENTA"
+#~ msgstr "FIND STORE"
+
+#~ msgid "Cerrar"
+#~ msgstr "Close"
+
+#~ msgid "TIPO MERCADO"
+#~ msgstr "TYPE OF MARKET"
+
+#~ msgid "CUMPLEN CON EL ESTANDAR"
+#~ msgstr "WITH THE STANDARD"
+
+#~ msgid "NO CUMPLEN CON EL ESTANDAR"
+#~ msgstr "WITHOUT THE STANDARD"
+
+#~ msgid "AUDITORIA POSTMIX"
+#~ msgstr "POSTMIX AUDIT"
+
+#~ msgid "PERIDO DE CONSULTA"
+#~ msgstr "QUERY PERIOD"
+
+#~ msgid "FECHA DE CONSULTA"
+#~ msgstr "DATE OF CONSULT"
+
+#~ msgid "FRANQUICIA CUENTA"
+#~ msgstr "FRANCHISE"
+
+#~ msgid "Total de Resultados"
+#~ msgstr "TOTAL RESULTS"
+
+#~ msgid "Estandar"
+#~ msgstr "STANDARD"
+
+#~ msgid "Promedio"
+#~ msgstr "AVERAGE"
+
+#~ msgid "Cumplen"
+#~ msgstr "WITHIN STANDARD"
+
+#~ msgid "No Cumplen"
+#~ msgstr "OUT OF STANDARD"
+
+#~ msgid "Desviacion Estandar"
+#~ msgstr "STANDARD DEVIATION"
+
+#~ msgid "Porcentaje de pruebas que cumplen con el estandar"
+#~ msgstr "PERCENTAGE OF TESTS THAT MEET THE STANDARD"
+
+#~ msgid "Porcentaje de pruebas que cumplen con el estandar por mes"
+#~ msgstr "MONTHLY PERCENTAGE OF TESTS THAT MEET THE STANDARD"
+
+#~ msgid "Valor promedio mensual "
+#~ msgstr "MONTHLY AVERAGE"
+
+#~ msgid ""
+#~ "LAS OPCIONES QUE SELECCIONO NO DEVUELVEN NINGUN RESULTADO, POR FAVOR "
+#~ "SELECCIONE OTRAS"
+#~ msgstr ""
+#~ "NO RESULTS CONTAINING ALL YOUR SEARCH TERMS WERE FOUND, PLEASE TRY AGAIN"
+
+#~ msgid "Jul"
+#~ msgstr "JUL"
+
+#~ msgid "Ago"
+#~ msgstr "AUG"
+
+#~ msgid "Sep"
+#~ msgstr "SEP"
+
+#~ msgid "Oct"
+#~ msgstr "OCT"
+
+#~ msgid "Nov"
+#~ msgstr "NOV"
+
+#~ msgid "Dic"
+#~ msgstr "DEC"
+
+#~ msgid "%   DE  ESTABLECIMIENTOS  QUE  CUMPLEN   CON   EL   ESTANDAR"
+#~ msgstr "STORES WITHIN STANDARD"
+
+#~ msgid "Frecuencia"
+#~ msgstr "FREQUENCY"
+
+#~ msgid "EXPORTAR"
+#~ msgstr "EXPORT"
+
+#~ msgid "IMPRIMIR"
+#~ msgstr "PRINT"
+
+#~ msgid "MES ASIGNACION"
+#~ msgstr "INDEX"
+
+#~ msgid "Verde"
+#~ msgstr "Green"
+
+#~ msgid "Amarillo"
+#~ msgstr "Yellow"
+
+#~ msgid "Rojo"
+#~ msgstr "Red"
+
+#~ msgid "IMAGENES CARGADAS"
+#~ msgstr "LOADED IMAGES"
+
+#~ msgid "minimizar lista"
+#~ msgstr "to reduce"
+
+#~ msgid "Consultar todo el reporte"
+#~ msgstr "CONSULT FULL REPORT"
+
+#~ msgid "Este reporte contiene imagenes"
+#~ msgstr "THIS REPORT CONTAINS PICTURES"
+
+#~ msgid "CUMPLIMIENTO CON EL ESTANDAR"
+#~ msgstr "MEET THE STANDARD"
+
+#~ msgid "Reportes Visita"
+#~ msgstr "TEST RESULT REPORTS"
+
+#~ msgid "DESCRIPCION DE SECCION"
+#~ msgstr "SECTIONS"
+
+#~ msgid "USUARIO"
+#~ msgstr "USER"
+
+#~ msgid "SECCION"
+#~ msgstr "SECTION"
+
+#~ msgid "REGRESAR"
+#~ msgstr "BACK"
+
+#~ msgid "PUNTO DE VENTA:"
+#~ msgstr "STORE"
+
+#~ msgid "AUDITORIA POST MIX"
+#~ msgstr "POSTMIX AUDIT"
+
+#~ msgid "NIVEL CUMPLIMIENTO"
+#~ msgstr "COMPLIANCE LEVEL"
+
+#~ msgid "REPORTES VISITA"
+#~ msgstr "TEST REPORTS"
+
+#, fuzzy
+#~ msgid "&lt;&lt;Regresar"
+#~ msgstr "Back"
+
+#~ msgid "Buscar"
+#~ msgstr "Search"
+
+#~ msgid "ID Pepsi"
+#~ msgstr "ID PEPSI"
+
+#~ msgid "NO"
+#~ msgstr "NO"
+
+#~ msgid "FILTRAR"
+#~ msgstr "APPLY FILTER"
+
+#~ msgid "CANCELAR"
+#~ msgstr "CANCEL"
+
+#~ msgid "Punto Venta"
+#~ msgstr "STORE"
+
+#~ msgid "°C"
+#~ msgstr "°C"
+
+#, fuzzy
+#~ msgid "Estado"
+#~ msgstr "Standar"
+
+#~ msgid ""
+#~ "This is how the story goes.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "This is how the story goes.\n"
+#~ "\n"
