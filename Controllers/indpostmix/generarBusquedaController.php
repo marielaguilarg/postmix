@@ -228,7 +228,9 @@ where    ins_generales.i_claveservicio=:vserviciou";
 
 ////inserta reportes en la tabla temporal tmp_estadistica
             try {
-                Conexion::ejecutarInsert($sql_porcuenta, $parametros);
+//                echo $sql_porcuenta;
+//                var_dump($parametros);
+               Conexion::ejecutarInsert($sql_porcuenta, $parametros);
             } catch (Exception $ex) {
                 echo $ex;
             }
@@ -301,6 +303,7 @@ if($fechaasig_fin!="")
            else { //esta seccion es para hostorial de pv
    $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
 //echo $sqlt;
+   
             $parametros2 = array("Usuario" => $_SESSION["UsuarioInd"]);
             $rs = Conexion::ejecutarQuery($sqlt, $parametros2);
             $num_reg = sizeof($rs);

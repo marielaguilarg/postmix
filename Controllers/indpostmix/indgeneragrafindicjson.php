@@ -38,7 +38,7 @@ $filx["edo"] = $aux[0];
 
 $filx["ciu"] = $aux[1];
 $filx["niv6"] = $aux[2];
-$gfilx=$filx["reg"].".".$filx["ciu"].".".$filx["niv6"];
+$gfilx=$filx["edo"].".".$filx["ciu"].".".$filx["niv6"];
 $auxy = explode(".", $gfily);
 
 $fily = array();
@@ -153,15 +153,16 @@ $result = Conexion::ejecutarQuerysp($sqlt);
 
 $banok=0;
 $row="";
+$i=0;
 if (isset($result)&&sizeof($result)>0)	//si hay datos los despliegan	
 {
   if($_SESSION["idiomaus"]==2)
       $campo="red_parametroing";
-      else $campo="red_parametroesp";
+   else $campo="red_parametroesp";
 	foreach ($result as $rowt){
-            
-	   $chart [  ] =array( $rowt[$campo],htmlentities($rowt["red_estandar"], ENT_COMPAT ,"ISO-8859-1"), Utilerias::redondear( $rowt["porc"]));
-        
+	   
+	    $chart [  ] =array( $rowt[$campo],$rowt["red_estandar"],Utilerias::redondear( $rowt["porc"]));
+	  // echo "*************".htmlentities(str_replace("&deg;","º",$rowt["red_estandar"]), ENT_COMPAT ,"ISO-8859-1") ;
            $refer[]= $rowt["refer"];
           //  echo "--".$refer[];
            
@@ -182,6 +183,7 @@ $nivel=$nivel+1;
 //var_dump($refer);
 if($banok){
     $gf=new GeneradorGraficas;
+  //  var_dump($chart);
 for($z=0;$z<sizeof($chart);$z++){
   
 
@@ -203,13 +205,15 @@ for($z=0;$z<sizeof($chart);$z++){
              $chart[$z][9]= "index.php?action=indindicadoresgrid&admin=cons&mes=".$mes_asig."&sec=".$seccion."&filx=".$gfilx.
             "&fily=".$gfily."&ref=".$refer[$z]."&niv=".$nivel."&bg=1&filuni=".$gfiluni;
 			}
-     $x1=$x1-($razon);
+   
 }
 }
 //$sufijo=(strlen($unidades[$subseccion])<4)?$unidades[$subseccion]:"";
 //echo "<pre>";
-//print_r($chart);
+////print_r($chart);
 //echo "</pre>";
+
+
 print json_encode($chart);
 
 

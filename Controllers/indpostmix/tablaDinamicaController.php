@@ -34,12 +34,7 @@ class TablaDinamicaController {
   
 
     public function vistaTablaDinamica() {
-        if ($_GET) {
-            $keys_post = array_keys($_GET);
-            foreach ($keys_post as $key_post) {
-                $$key_post = $_GET[$key_post];
-            }
-        }
+       include "Utilerias/leevar.php";
         $mes = filter_input(INPUT_GET, "mes", FILTER_SANITIZE_STRING);
         if (isset($mes)) {
             $mes_asig = filter_input(INPUT_GET, "mes", FILTER_SANITIZE_STRING);
@@ -920,7 +915,7 @@ ins_detalleestandar.ide_numcaracteristica3=:carac3 ";
         $eval = $this->consTipoEvaluacion(1, $referencia);
 
         $sql = "SELECT
- ca_cuentas.`cue_descripcion`,
+ 
    ca_unegocios.cue_clavecuenta,
     ca_unegocios.une_cla_region,
 ca_unegocios.une_cla_pais,
@@ -933,9 +928,7 @@ ca_unegocios.fc_idfranquiciacta,
 ca_unegocios.une_id,
 
 sum(if(ins_detalleestandar.ide_aceptado=-1,1,0)) AS pasa,
-sum(1) as tot,
-cue_reactivosestandardetalle.red_parametroesp, cue_reactivosestandardetalle.red_parametroing,
-cue_reactivosestandardetalle.red_estandar,";
+sum(1) as tot,";
         if ($auxper[0] && $auxper[0] != 0) {
             $sql .= " if(ins_generales.i_mesasignacion=:fmes_consulta,1,0) as mes,";
         }
@@ -951,16 +944,11 @@ cue_reactivosestandardetalle.red_estandar,";
 , convert(substring_index(i_mesasignacion,'.',1),unsigned) as mes_asig,  substring_index(i_mesasignacion,'.',-1) as anio_asig
 FROM
 ins_detalleestandar
-Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion 
-   AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica 
-   AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
 Inner Join ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-
-Inner Join ca_cuentas ON   ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
-where ins_generales.i_claveservicio=:servicio and ca_cuentas.cue_idcliente=:cliente ";
+where ins_generales.i_claveservicio=:servicio ";
         $parametros["servicio"] = $this->servicio;
-        $parametros["cliente"] = $this->cliente;
+      //  $parametros["cliente"] = $this->cliente;
         if (isset($filx["pais"]) && $filx["pais"] != "") {
             $sql .= "    and ca_unegocios.une_cla_region=:pais";
             $parametros["pais"] = $filx["pais"];
@@ -1547,11 +1535,11 @@ ca_unegocios.une_cla_estado";
                 $cuenta = $row[$campGrup[$ty]]; //sera eje y
                 $region = $row[$campNivel[$tx]]; //ser� eje x
 
-                if ($vidiomau == 2) {
-                    $nomseccion = $row["red_parametroing"];
-                } else {
-                    $nomseccion = $row["red_parametroesp"];
-                }
+//                 if ($vidiomau == 2) {
+//                     $nomseccion = $row["red_parametroing"];
+//                 } else {
+//                     $nomseccion = $row["red_parametroesp"];
+//                 }
 
 
 
@@ -1583,9 +1571,9 @@ ca_unegocios.une_cla_estado";
 //     
             }
         }
-//echo "<pre>";
-//print_r($matriz);
-//echo "</pre>";
+// echo "<pre>";
+// print_r($matriz);
+// echo "</pre>";
         $columnas = array();
      
         switch ($nivel) {
@@ -1634,7 +1622,7 @@ ca_unegocios.une_cla_estado";
             $indy = "cta";
             $gupcta = T_("CUENTA");
         }
-        //  var_dump($fily);
+      
         if ($ty == "F") {
 
             $renglones = $this->franquicias($fily["cta"], $filx);
@@ -1970,10 +1958,17 @@ ca_unegocios.une_cla_estado";
                         $reng2 = TablitaDinamica::getDivResultado(T_("no. pruebas"), $totaltemp);
                     }
                     if ($auxdatamos[2] == 1) {
-                        if ($ty == "P" || $ty == "PP"||$totalmuestra[$cuen]["muestratot"] == 0 ||$totalmuestra[$cuen]["muestratot"] == ""|| $total_cuen[$cuen][$per]["tot"] == 0||$total_cuen[$cuen][$per]["tot"] == "")
-                            $reng3 = TablitaDinamica::getDivResultado('% ' . T_("cumple"), $porc);
+                      
+                        if ($ty == "P" || $ty == "PP")
+                            $reng3 =TablitaDinamica::getDivResultado('% ' . T_("cumple"), $porc);
+//                        else if($totalmuestra[$cuen]["muestratot"] == 0)
+//                            echo "hola";
+//                            else if($total_cuen[$cuen][$per]["tot"] == "")
+//                        {   $reng3 ="aqui".TablitaDinamica::getDivResultado('% ' . T_("cumple"), $porc);
+//                        echo "<br>".$ty."--". $totalmuestra[$cuen]["muestratot"] .
+//                        $total_cuen[$cuen][$per]["tot"] ; }
                         else
-                            $reng3 = TablitaDinamica::getDivResultado('% ' . T_("cumple"), '<a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" onclick="return guardarLiga(this, \'ESTADISTICAS\');">  ' . $porc . "</a>");
+                            $reng3 =TablitaDinamica::getDivResultado('% ' . T_("cumple"), '<a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" onclick="return guardarLiga(this, \'ESTADISTICAS\');">  ' . $porc . "</a>");
                     }
                     $rowdata[] = array("ren2" => $reng2, "ren1" => $reng1, "ren3" => $reng3);
                     if ($per == 1)
@@ -2536,8 +2531,13 @@ ca_unegocios.une_cla_estado";
  FROM ca_unegocios 
  INNER JOIN `ca_cuentas` ON ca_unegocios.`cue_clavecuenta`=`ca_cuentas`.`cue_id` 
  WHERE  ca_cuentas.cue_idcliente=:cliente
-AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 AND ca_unegocios.une_cla_zona=3  ";
+AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 ";
+
         $parametros["cliente"] = $this->cliente;
+        if (isset($filx["zon"]) && $filx["zon"] != "") {
+            $sql.=" AND ca_unegocios.une_cla_zona=:zona";
+           $parametros["zona"]=$filx["zon"];
+        }
         if (isset($filx["reg"]) && $filx["reg"] != "") {
             $sql .= " and ca_unegocios.une_cla_estado=:reg";
             $parametros["reg"] = $filx["reg"];
@@ -2567,7 +2567,6 @@ AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 AND ca_unegoci
             $arreglo[$i++][1] = $nombre;
         }
 
-
         return $arreglo;
     }
 
@@ -2579,8 +2578,12 @@ AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 AND ca_unegoci
  INNER JOIN `ca_franquiciascuenta` ON ca_unegocios.`cue_clavecuenta`=`ca_franquiciascuenta`.`cue_clavecuenta` 
  AND `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
  WHERE  ca_franquiciascuenta.cue_clavecuenta=:cuenta " .
-                " AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 AND ca_unegocios.une_cla_zona=3";
+                " AND ca_unegocios.une_cla_pais=1 AND ca_unegocios.une_cla_region=1 ";
         $parametros["cuenta"] = $cuenta;
+        if (isset($filx["zon"]) && $filx["zon"] != "") {
+            $sql.=" AND ca_unegocios.une_cla_zona=:zona ";
+        $parametros["zona"]=$filx["zon"];
+        }
         if (isset($filx["reg"]) && $filx["reg"] != "") {
             $sql .= " and ca_unegocios.une_cla_estado=:reg";
             $parametros["reg"] = $filx["reg"];
@@ -2911,7 +2914,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
     $campGrup["PP"] = "une_id";
     $nivel = $tx; 
     $edo = $filx["reg"];
-    $cuenta = $_GET["cta"];
+    $cuenta = filter_input(INPUT_GET,"cta",FILTER_SANITIZE_NUMBER_INT);
     $cd = $filx["ciu"];
     $niv6 = $filx["niv6"];
     $zona = 3;
@@ -3354,7 +3357,7 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
 //                $this->listaResultados = $this->pintaTablaSem($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $vperiodo);
 //            } else {
          //                                          ($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo, $gfily) 
-        
+   
             $this->listaResultados = $this->pintaTabla($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $vperiodo, $gfily);
 //            }
         }

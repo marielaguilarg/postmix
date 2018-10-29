@@ -722,10 +722,38 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
                 $valreal = $this->buscaenCatalogo($rowu["valor"], $rowu["red_clavecatalogo"]);
             else
             if ($rowu["valor"] != "") {
+                
                 if ($tiposec == "E")
+                {   
+                    If (($subseccionl=="5.0.2.0.0.17") ||  ($subseccionl=="5.0.2.0.0.18")) {
+                        
+                        //echo "entre a valor 17 o 18";
+                        
+                        //echo round($rowdet["ide_valorreal"], 3);
+                        
+                        if ((round($rowu["valor"], 3))>=100){
+                            
+                            //echo "es mayor de 100";
+                            
+                            $valreal="Incontables";
+                            
+                        } else {
+                            
+                            $valreal = round($rowu["valor"], 3);
+                            
+                        }
+                        
+                    }else
+                    
                     $valreal = round($rowu["valor"], 2);
+                
+                
+                
+                }
                 else
+                    
                     $valreal = $rowu["valor"];
+                
             } else
                 $valreal = "-";
 
