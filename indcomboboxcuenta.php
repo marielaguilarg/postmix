@@ -53,9 +53,9 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
 	}
         if($tabla=="ca_franquiciascuenta")
             {
-          
+        
             $consultaCuenta=DatosFranquicia::franquiciasxCuentacli($scli,$opcionSeleccionadaCuenta);
-            
+           
              // consulta para clientes
             if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
                 $consultaCuenta=DatosFranquicia::franquiciasxNivel($VarNivel2,$nivel,$sserv,$opcionSeleccionadaCuenta);
