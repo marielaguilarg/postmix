@@ -2,8 +2,58 @@
 
 
 class Utilerias {
-  
-function cambiaMesGIng($mesas) {
+    
+    static function cambiaMesG($mesas) {
+        $lonmes = strlen ( $mesas );
+        if ($lonmes == 6) { // para los meses menores a 10
+            $mesasnum = substr ( $mesas, 0, 1 );
+            $peras = substr ( $mesas, 2, 4 );
+        } else {
+            $mesasnum = substr ( $mesas, 0, 2 );
+            $peras = substr ( $mesas, 3, 4 );
+        }
+        // cambia el mes
+        switch ($mesasnum) {
+            case 1 :
+                $mesaslet = "Enero";
+                break;
+            case 2 :
+                $mesaslet = "Febrero";
+                break;
+            case 3 :
+                $mesaslet = "Marzo";
+                break;
+            case 4 :
+                $mesaslet ="Abril";
+                break;
+            case 5 :
+                $mesaslet = "Mayo";
+                break;
+            case 6 :
+                $mesaslet = "Junio";
+                break;
+            case 7 :
+                $mesaslet ="Julio";
+                break;
+            case 8 :
+                $mesaslet = "Agosto";
+                break;
+            case 9 :
+                $mesaslet = "Septiembre";
+                break;
+            case 10 :
+                $mesaslet = "Octubre";
+                break;
+            case 11 :
+                $mesaslet = "Noviembre";
+                break;
+            case 12 :
+                $mesaslet ="Diciembre";
+                break;
+        }
+        return strtoupper($mesaslet)." ".$peras;
+    }
+static function cambiaMesGIng($mesas) {
 	$lonmes = strlen ( $mesas );
 	if ($lonmes == 6) { // para los meses menores a 10
 		$mesasnum = substr ( $mesas, 0, 1 );
@@ -56,7 +106,7 @@ function cambiaMesGIng($mesas) {
 
 
 //llega m�ximo de 30
-function cortarPalabra($cadena){
+static function cortarPalabra($cadena){
   // echo strlen($cadena);
     if(strlen($cadena)>15){ //corto
         //primero dejo en 30
@@ -90,7 +140,7 @@ function cortarPalabra($cadena){
     //echo $cadena;
         return $cadena;
 }
-  function fecha_res($fecha) {
+  static function fecha_res($fecha) {
     
       preg_match("/([0-9]{1,2}).([0-9]{1,4})/", $fecha, $mifecha);
 
@@ -138,7 +188,7 @@ function cortarPalabra($cadena){
      
    
    
-   function mysql_fecha($fecha)	//pasa la fecha de d/m/a?o a formato a?o/m/d
+   static function mysql_fecha($fecha)	//pasa la fecha de d/m/a?o a formato a?o/m/d
    {
    		
    	
@@ -148,7 +198,7 @@ function cortarPalabra($cadena){
 	
    }
 
-   function mysql_fecha2($fecha)	//pasa la fecha de d/m/a?o a formato a?o/m/d
+   static function mysql_fecha2($fecha)	//pasa la fecha de d/m/a?o a formato a?o/m/d
    {
    		
    	
@@ -159,7 +209,7 @@ function cortarPalabra($cadena){
    }
 
    
-   function formato_fecha($fechacad) {
+   static function formato_fecha($fechacad) {
        if($fechacad!="") //<-- verifico que el campo fecha no esté vacío
        {
            $fechacad=str_replace("-01-",'Ene',$fechacad);
@@ -187,42 +237,43 @@ function cortarPalabra($cadena){
 
 
 //funcion para crear el combolist
-function llenaListBox($SQL,$html,$option,$select,$expansor) {
+   static function llenaListBox($res) {
 
     /* llena listas  */
 
-    $SQLmcu = mysql_query($SQL);
-    while ($rowcu = mysql_fetch_array($SQLmcu)) {
+   $cad="";
+    foreach ($res as $rowcu) {
 
-        $html->asignar($option, "<option value='" . $rowcu[0] . "'>"
-                . $rowcu[1] . "</option>");
+        $cad.= "<option value='" . $rowcu[0] . "'>"
+                . $rowcu[1] . "</option>";
 
-        $html->expandir($select, '+'.$expansor);
+       
     }
-    mysql_free_result($SQLmcu);
-    return $html;
+   
+    return $cad;
 }
 
 //funcion para crear el combolist con una opcion seleccionada
-function llenaListBoxSel($SQL,$html,$option,$select,$expansor,$opcion_sel) {
+static function llenaListBoxSel($res,$opcion_sel) {
 
     /* llena listas  */
 
-    $SQLmcu = mysql_query($SQL);
-    while ($rowcu = mysql_fetch_array($SQLmcu)) {
+    
+    $cad="";
+    foreach ($res as $rowcu) {
         if( $rowcu[0]==$opcion_sel)
-            $html->asignar($option, "<option value='" . $rowcu[0] . "' selected>"
-                    . $rowcu[1] . "</option>");
+            $cad.= "<option value='" . $rowcu[0] . "' selected>"
+                    . $rowcu[1] . "</option>";
         else
-            $html->asignar($option, "<option value='" . $rowcu[0] . "'>"
-                    . $rowcu[1] . "</option>");
+            $cad.= "<option value='" . $rowcu[0] . "'>"
+                    . $rowcu[1] . "</option>";
 
-        $html->expandir($select, '+'.$expansor);
+       
     }
-    mysql_free_result($SQLmcu);
-    return $html;
+
+    return $cad;
 }
-   function crearOpcionesSel($SQL_TEM,$parametros, $seleccion) {
+   static function crearOpcionesSel($SQL_TEM,$parametros, $seleccion) {
 
     $RS_SQM_TE = Conexion::ejecutarQuery($SQL_TEM,$parametros);
 
@@ -236,7 +287,7 @@ function llenaListBoxSel($SQL,$html,$option,$select,$expansor,$opcion_sel) {
     return  $op ;
 }
 
- function crearOpcionesSelCad($RS_SQM_TE, $seleccion) {
+ static function crearOpcionesSelCad($RS_SQM_TE, $seleccion) {
 
    
     foreach ($RS_SQM_TE as $registro ) {
@@ -248,13 +299,13 @@ function llenaListBoxSel($SQL,$html,$option,$select,$expansor,$opcion_sel) {
     return  $op ;
 }
 
-function redondear($valor) {
+static function redondear($valor) {
 $float_redondeado=round($valor*1000)/1000;
 return $float_redondeado;
 }
 
 
-  public function crearOpcionesNivel($nivel,$id,$select) {
+  public static function crearOpcionesNivel($nivel,$id,$select) {
 switch($nivel){
     case 2:
 
@@ -292,7 +343,7 @@ foreach ($res as $registro) {
                 
           
 }
-function crearSelect($nombresel,$RS_SQM_TE,$select2){
+static function crearSelect($nombresel,$RS_SQM_TE,$select2){
      
          $listanivel[] = "<select class='form-control' name='$nombresel' id='$nombresel' onChange='cargaContenido(this.id)'>
                                <option value=''>- ".strtoupper(T_("Todos"))." -</option>";
@@ -311,7 +362,7 @@ function crearSelect($nombresel,$RS_SQM_TE,$select2){
 }
 
 //funcion que crea y llena un nuevo select a partir deu una consulta
-function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
+static function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
     $cad = '<select class="form-control" name="'.$nomselect.'" id="'.$nomselect.'" onchange="'.$funcionOC.'">' .
             "<option value=''>- ".T_("TODOS")." -</option>";
 
@@ -345,7 +396,7 @@ function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
     return $cad . $op . "</select>";
 }
 
-public function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo){
+public static function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo){
       $texto="";
     if(is_array($opciones)){
       
@@ -374,7 +425,7 @@ public function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo){
 //Autor : Diego Alvarez F.
 //Fecha de creación : 04 de Septiembre de 2006
 //Funciones adicionales para el trabajo con fechas
-function cambiaf_a_normal($fecha){
+static function cambiaf_a_normal($fecha){
     preg_match("([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
     $lafecha=$mifecha[3]."/".$mifecha[2]."/".$mifecha[1];
     return $lafecha;
@@ -383,7 +434,7 @@ function cambiaf_a_normal($fecha){
 
 
 //Transforma la fecha al formato requerido en factura
-function fecha_factura($fecha){
+static function fecha_factura($fecha){
     preg_match( "([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
     switch ($mifecha[2])
     {
@@ -428,7 +479,7 @@ function fecha_factura($fecha){
     return $lafecha;
 }
 
-function fecha_comp($fecha){
+static function fecha_comp($fecha){
     preg_match( "([0-9]{2,4})-([0-9]{1,2})-([0-9]{1,2})", $fecha, $mifecha);
     switch ($mifecha[2])
     {
