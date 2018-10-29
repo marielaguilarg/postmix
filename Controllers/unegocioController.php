@@ -674,7 +674,9 @@ foreach ($_GET as $nombre_campo => $valor) {
 $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo,FILTER_SANITIZE_STRING) . "';";
 eval($asignacion);
 }
+
 //$nivel = filter_input(INPUT_GET, "ni", FILTER_SANITIZE_SPECIAL_CHARS);
+
 $res = Datosnuno::vistan1Model("ca_nivel1");
 $nivel = 1;
 if (isset($clanivel1)) {

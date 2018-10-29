@@ -229,16 +229,16 @@ $lonref=strlen($cadreferencia);
 		case "G" : 	       
 	# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_descripcionesp"]. '</a></li>';
 		    break;
 		case "E" : 	       
 			# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -266,7 +266,7 @@ $lonref=strlen($cadreferencia);
 			case 1 :
 				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 			    break;
 			case 2 :
         	# coloca subtitulo de seccion
@@ -281,7 +281,7 @@ $lonref=strlen($cadreferencia);
 
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    break;
 		    #busca ultimo nivel en ponderada
 			//$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, "cue_reactivos");
@@ -303,57 +303,57 @@ $lonref=strlen($cadreferencia);
 
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    
 		    #busca ultimo nivel en ponderada
 			$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosestandar");
-			echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+			echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 		    }
 			  break;
 		case "P" : 	       
 		# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 		    
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    break;
 		case "PN" : 	       
 		# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 		    
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=sn&sec='.$seccion.'&ts=P&sv='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=sn&sec='.$seccion.'&ts=P&sv='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    break;
 		case "SN" : 	       
 		# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 		    
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=sn&sec='.$seccion.'&ts=P&sv='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=sn&sec='.$seccion.'&ts=P&sv='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    break;
 		
 		case "V" : 	       
 		# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 			  break;
 		case "A" : 	       
 		# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -381,7 +381,7 @@ $lonref=strlen($cadreferencia);
 			case 1 :
 				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 				break;	
 			case 2 :
         	# coloca subtitulo de seccion
@@ -398,14 +398,14 @@ $lonref=strlen($cadreferencia);
 		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		   		 #busca ultimo nivel en ponderada
 		   		$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 			  	break;
 			 }  // fin de switch nivel 
 			 break;	
 		case "AD" : 	       
 			# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -433,7 +433,7 @@ $lonref=strlen($cadreferencia);
 			case 1 :
 				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 				break;	
 			case 2 :
         	# coloca subtitulo de seccion
@@ -447,7 +447,7 @@ $lonref=strlen($cadreferencia);
 
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    $respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
 			//echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
@@ -469,14 +469,14 @@ $lonref=strlen($cadreferencia);
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    	$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 		    
 		    	#nivel tres
 				$respuesta3 = DatosSeccion::vistaNombreSeccionAbModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosabiertos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A"><em class="fa fa-dashboard"></em>COMPONENTE: '.$respuesta3["ra_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A">COMPONENTE: '.$respuesta3["ra_descripcionesp"]. '</a></li>';
 		    
 
 			  break;  
@@ -485,7 +485,7 @@ $lonref=strlen($cadreferencia);
 		case "ED" : 	       
 			# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -513,7 +513,7 @@ $lonref=strlen($cadreferencia);
 			case 1 :
 				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 				break;	
 			case 2 :
         	# coloca subtitulo de seccion
@@ -531,10 +531,10 @@ $lonref=strlen($cadreferencia);
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    	#busca ultimo nivel en estandar
 		   		$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec, $servicioController, $numreac, $numcom, "cue_reactivosestandar");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
 		    
 			  	break;
 			case 3 :
@@ -553,14 +553,14 @@ $lonref=strlen($cadreferencia);
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    	$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 		    
 		    	#nivel tres
 				$respuesta3 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosestandar");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A"><em class="fa fa-dashboard"></em>COMPONENTE: '.$respuesta3["re_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A">COMPONENTE: '.$respuesta3["re_descripcionesp"]. '</a></li>';
 		    
 
 			  break;
@@ -570,4 +570,3 @@ $lonref=strlen($cadreferencia);
 	}
 
 }
-?>

@@ -6,6 +6,8 @@ class ReporteController{
 	    $nrep=$_GET["nrep"];
 	    $un=$_GET["pv"];
 	    $idc=$_GET["idc"];
+	    $ts=$_GET["ts"];
+	    $sec=$_GET["sec"];
 	    $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
 	   	#busca el cliente
 
@@ -20,6 +22,11 @@ class ReporteController{
 		$fecvis=SubnivelController::cambiaf_a_normal($repgen["i_fechavisita"]);
 		//$fecvis=$repgen["i_fechavisita"];
 	    echo '<li><a href="index.php?action=runegociodetalle&idc='.$idc.'&sv='.$datosController.'&un='.$un.'&idc='.$idc.'">FECHA VISITA: '.$fecvis. '</a></li>';
+
+	    if ($ts=="TM"){
+			echo '<li><a href="index.php?action=rsn&idc='.$idc.'&sv='.$datosController.'&pv='.$un.'&ts=E&nrep='.$nrep.'&sec='.$sec.'">ATRAS: '.$fecvis. '</a></li>';
+
+	    }
 	    
 	}
 
@@ -132,9 +139,13 @@ class ReporteController{
 			  $ingreso -> insertaReporteEstandar();
 			  break;
 			case "TM" : 	       
-		      $ingreso = new EstandarController();
-			  //$ingreso -> vistaEstDetController();
-			  break;  
+		      $ingreso = new muestrasController();
+			  $ingreso -> tomaMuestraRep();
+			  break; 
+			case "TN" : 	       
+		      $ingreso = new muestrasController();
+			  $ingreso -> nuevaTomaMuestraRep();
+			  break;    
 		    case "P" :
 		       $ingreso = new PonderacionController();
 			   $ingreso -> reportePonderaController();
@@ -223,8 +234,7 @@ class ReporteController{
 		$nrep=$_GET["nrep"];
 		$pv=$_GET["pv"];
 		$idc=$_GET["idc"];
-		///echo $seccion;
-
+		
 		#lee seccion
 		$datini=SubnivelController::obtienedato($seccion,1);
 	 	$londat=SubnivelController::obtienelon($seccion,1);
@@ -263,8 +273,6 @@ class ReporteController{
 	 	} else {
 	 		$numcom2=0;
 	 	}
-	 	
-
 	 	if ($numreac!=0) {
 	 		if ($numcom==0) { // segundo nivel
 	 			$respuesta =DatosPond::vistanombrepondera($servicio, $seccion,  "cue_reactivos");
@@ -284,16 +292,21 @@ class ReporteController{
 					     case "EN" : 	   
 						//$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
 					     echo ' SECCION '.$nsec.' NUEVO REGISTRO '; break;
+						 
+						 
 						 } // fin de switch 
 
 					}
 	 		}	
 
 	 	} else {
+	 		//echo "entre a numreac =0"; 
 	 		if ($numcom==0){  //primer nivel, es de seccion
+			  // echo "entre a numcom=0";
 			$respuesta =DatosSeccion::vistaNombreSeccionModel($seccion, $servicio, "cue_secciones");
 		echo ' SECCION '.$seccion.' : '.$respuesta["sec_descripcionesp"];
 			} else { 
+				//echo "numcom dif de cero";
 					if (isset($_GET["ts"])) {
 						$nsec=$numsec.'.'.$numreac.'.'.$numcom;
 						switch($_GET["ts"]) {
@@ -308,6 +321,13 @@ class ReporteController{
 					    case "EN" : 	   
 						//$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
 					     echo ' SECCION '.$seccion.' NUEVO REGISTRO '; break;
+							
+		 				case "TN" : 	   
+						//$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
+					     echo ' SECCION '.$nsec.' TOMA DE MUESTRA '; break;
+						case "TM" : 	   
+						//$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
+					     echo ' SECCION '.$nsec.' MUESTRAS '; break;
 					
 						 } // fin de switch 
 

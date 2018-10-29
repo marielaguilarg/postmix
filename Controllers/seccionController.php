@@ -13,8 +13,18 @@ public function vistaNomServicioController(){
     #buscar el nombre del servicio
     $respuesta =DatosServicio::vistaNomServicioModel($numser,"ca_servicios");
 
-    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
   //}
+}
+
+public function vistaNomServSeccController(){
+    $numser = $_GET["sv"];
+    $numsec = $_GET["sec"];
+    #buscar el nombre del servicio
+    $respuesta =DatosServicio::vistaNomServicioModel($numser,"ca_servicios");
+    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+    $respuesta =DatosSeccion::vistaNombreSeccionModel($numsec, $numser, "cue_secciones");
+    echo '<li><a href="index.php?action=listaseccion&idser='.$numser.'">SECCION: '.$respuesta["sec_nomsecesp"]. '</a></li>';
 }
 
 	public function vistaSeccionController(){

@@ -9,6 +9,15 @@ class MvcController{
 		
 		include "views/modulos/cue_login.php";
 	}
+	
+	public function repFQ(){
+
+		$tiporep=$_GET["action"];
+		
+		include "views/modulos/cue_".$tiporep.".php";
+
+		
+	}
     # interaccion del usuario
     public function enlacesPaginasController(){
     	if(isset($_GET["action"])){
