@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ERROR|E_NOTICE|E_WARNING|E_CORE_ERROR |E_CORE_WARNING|E_COMPILE_ERROR);
-
+error_reporting(E_ALL);
 ini_set("display_errors", 1); 
 require_once "Controllers/usuarioController.php";
 require_once "Controllers/controller.php";
@@ -16,6 +15,7 @@ require_once "Controllers/servicioController.php";
 require_once "Controllers/franquiciaController.php";
 require_once "Controllers/seccionController.php";
 require_once "Controllers/unegocioController.php";
+require_once "Controllers/muestrasController.php";
 
 require_once "Controllers/n1controller.php";
 require_once "Controllers/n2Controller.php";
@@ -72,6 +72,7 @@ require_once "Models/crud_abierta.php";
 require_once "Models/crud_subnivel.php";
 require_once "Models/crud_generales.php";
 require_once "Models/crud_productos.php";
+require_once "Models/crud_muestras.php";
 
 require_once "Models/crud_solicitudes.php";
 require_once "Models/crud_reporte.php";
