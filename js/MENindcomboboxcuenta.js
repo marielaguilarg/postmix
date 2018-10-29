@@ -57,12 +57,12 @@ function cargaContenidoCuenta(idSelectOrigen,cliente,servicio)
       
          var nivel=document.getElementById("varnivel2").value;
     var lisNiveles=new Array();
-    lisNiveles[0]="select1";
-lisNiveles[1]="select2";
-lisNiveles[2]="select3";
-lisNiveles[3]="select4";
-lisNiveles[4]="select5";
-lisNiveles[5]="select6";
+    lisNiveles[0]="clanivel1";
+lisNiveles[1]="clanivel2";
+lisNiveles[2]="clanivel3";
+lisNiveles[3]="clanivel4";
+lisNiveles[4]="clanivel5";
+lisNiveles[5]="clanivel6";
 var refnivel="";
 for(i=0;i<6;i++){
 //alert(i+"--"+lisNiveles[i]);
@@ -80,8 +80,11 @@ campo=eval("document.form1."+lisNiveles[i]);
 			selectActual=document.getElementById(listadoSelectsCuenta[x]);
 			selectActual.length=0;
 			
-			var nuevaOpcion=document.createElement("option");nuevaOpcion.value=0;nuevaOpcion.innerHTML="- TODOS -";
-			selectActual.appendChild(nuevaOpcion);selectActual.disabled=true;
+			var nuevaOpcion=document.createElement("option");
+			nuevaOpcion.value=0;
+			nuevaOpcion.innerHTML="- TODOS -";
+			selectActual.appendChild(nuevaOpcion);
+			selectActual.disabled=true;
 			x++;
 		}
 	}
@@ -123,7 +126,9 @@ campo=eval("document.form1."+lisNiveles[i]);
 
                                 }
                                 selectDestino.length=0;
-				var nuevaOpcion=document.createElement("option");nuevaOpcion.value=0;nuevaOpcion.innerHTML="Cargando...";
+				var nuevaOpcion=document.createElement("option");
+				nuevaOpcion.value=0;
+				nuevaOpcion.innerHTML="Cargando...";
 				selectDestino.appendChild(nuevaOpcion);selectDestino.disabled=true;	
 			}
 			if (ajax.readyState==4)
