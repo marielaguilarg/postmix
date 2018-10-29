@@ -108,9 +108,9 @@ function validar1(dform){
 <section class="content container-fluid">
      <?php 
      include 'Controllers/certificacionController.php';
-     $certificacionController=new CertificacionController();
-     $certificacionController->vistaEditaSolicitud();
-   echo  $certificacionController->getMsg();
+     $facturasController=new CertificacionController();
+     $facturasController->vistaEditaSolicitud();
+   echo  $facturasController->getMsg();
                     ?>
       
         <div class="row">
@@ -118,72 +118,72 @@ function validar1(dform){
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-                 <form role="form" action="index.php?action=editasolicitud&admin=ingsol&nsol=<?php echo $certificacionController->getUnegocio()['CLAVEUNINEG']?>"  name="aform" method="post" enctype="multipart/form-data"  onsubmit="return validar(this);"> 
+                 <form role="form" action="index.php?action=editasolicitud&admin=ingsol&nsol=<?php echo $facturasController->getUnegocio()['CLAVEUNINEG']?>"  name="aform" method="post" enctype="multipart/form-data"  onsubmit="return validar(this);"> 
                  
                 <!-- Datos iniciales alta de punto de venta -->
                  
                   <div class="form-group col-md-6">
                   <label>NO. SOLICITUD :</label>
-                   <?php echo $certificacionController->getUnegocio()['CLAVEUNINEG']?>
+                   <?php echo $facturasController->getUnegocio()['CLAVEUNINEG']?>
       </div>
      
        <div class="form-group col-md-6"><label> CUENTA  :</label>
-        <select class="form-control" name="cta" id="cta" required> <option value="">- - - - - - - - - - - </option><?php echo $certificacionController->getListaCuentas()?></select>       </div>
+        <select class="form-control" name="cta" id="cta" required> <option value="">- - - - - - - - - - - </option><?php echo $facturasController->getListaCuentas()?></select>       </div>
      <div class="form-group col-md-6"><label>ID CUENTA  :</label>
-        <input class="form-control" required name="idcta" type="text" id="idcta" value="<?php echo $certificacionController->getUnegocio()['IDC']?>" size="60" onChange="carganiv2(this)"/>
+        <input class="form-control" required name="idcta" type="text" id="idcta" value="<?php echo $facturasController->getUnegocio()['IDC']?>" size="60" onChange="carganiv2(this)"/>
      </div>
         <div class="form-group col-md-6"><label>NOMBRE DEL PUNTO DE VENTA  :</label>
-        <input class="form-control" name="desuneg" required type="text" id="desuneg" value="<?php echo $certificacionController->getUnegocio()['NOMUNEG'] ?>" size="60">
-        <input class="form-control" name="clauneg" type="hidden" value="<?php echo $certificacionController->getUnegocio()['CLAVEUNINEG'] ?>" />
-        <input class="form-control" name="numpun" type="hidden" value="<?php echo $certificacionController->getUnegocio()['NPUN'] ?>" />
+        <input class="form-control" name="desuneg" required type="text" id="desuneg" value="<?php echo $facturasController->getUnegocio()['NOMUNEG'] ?>" size="60">
+        <input class="form-control" name="clauneg" type="hidden" value="<?php echo $facturasController->getUnegocio()['CLAVEUNINEG'] ?>" />
+        <input class="form-control" name="numpun" type="hidden" value="<?php echo $facturasController->getUnegocio()['NPUN'] ?>" />
         </div>
      
         <div class="form-group col-md-6"><label>CONTACTO :</label>
-       <input class="form-control" name="conuneg" required type="text" id="conuneg" value="<?php echo $certificacionController->getUnegocio()['ICON'] ?>" size="60">        </div>
+       <input class="form-control" name="conuneg" required type="text" id="conuneg" value="<?php echo $facturasController->getUnegocio()['ICON'] ?>" size="60">        </div>
     
          <div class="form-group col-md-6"><label>TELEFONO :</label>
-        <input class="form-control" name="tel" required type="text" id="tel" value="<?php echo $certificacionController->getUnegocio()['TELUNEG'] ?>" size="60" maxlength="25">        </div>
+        <input class="form-control" name="tel" required type="text" id="tel" value="<?php echo $facturasController->getUnegocio()['TELUNEG'] ?>" size="60" maxlength="25">        </div>
      
        <div class="form-group col-md-6"><label>TELEFONO MOVIL:</label>
-        <input class="form-control" name="cel" required type="text" id="cel" value="<?php echo $certificacionController->getUnegocio()['TELCEL'] ?>" size="60" maxlength="25">        </div>
+        <input class="form-control" name="cel" required type="text" id="cel" value="<?php echo $facturasController->getUnegocio()['TELCEL'] ?>" size="60" maxlength="25">        </div>
      
        <div class="form-group col-md-6"><label>CORREO ELECTRONICO :</label>
-       <input class="form-control" name="email" required type="text" id="email" value="<?php echo $certificacionController->getUnegocio()['MAIL'] ?>" size="60">        </div>  
+       <input class="form-control" name="email" required type="text" id="email" value="<?php echo $facturasController->getUnegocio()['MAIL'] ?>" size="60">        </div>  
      
     
         <div class="form-group col-md-6"><label>CALLE :</label>
-       <input class="form-control" name="calle" required type="text" id="calle" value="<?php echo $certificacionController->getUnegocio()['CALLEUNEG'] ?>" size="60">        </div>
+       <input class="form-control" name="calle" required type="text" id="calle" value="<?php echo $facturasController->getUnegocio()['CALLEUNEG'] ?>" size="60">        </div>
     
          <div class="form-group col-md-6"><label>NUMERO EXTERIOR :</label>
-        <input class="form-control" name="numext"  required type="text" id="noext" value="<?php echo $certificacionController->getUnegocio()['NUMEXUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="numext"  required type="text" id="noext" value="<?php echo $facturasController->getUnegocio()['NUMEXUNEG'] ?>" size="60">        </div>
     
          <div class="form-group col-md-6"><label>  NUMERO INTERIOR :</label>
-        <input class="form-control" name="numint" type="text" id="noint" value="<?php echo $certificacionController->getUnegocio()['NUMINUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="numint" type="text" id="noint" value="<?php echo $facturasController->getUnegocio()['NUMINUNEG'] ?>" size="60">        </div>
       
         <div class="form-group col-md-6"><label>MANZANA :</label>
-        <input class="form-control" name="mz" type="text" id="mz" value="<?php echo $certificacionController->getUnegocio()['MZUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="mz" type="text" id="mz" value="<?php echo $facturasController->getUnegocio()['MZUNEG'] ?>" size="60">        </div>
      
         <div class="form-group col-md-6"><label>LOTE :</label>
-        <input class="form-control" name="lt" type="text" id="lt" value="<?php echo $certificacionController->getUnegocio()['LTUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="lt" type="text" id="lt" value="<?php echo $facturasController->getUnegocio()['LTUNEG'] ?>" size="60">        </div>
      
        <div class="form-group col-md-6"><label>COLONIA :</label>
-        <input class="form-control" name="col" type="text" id="col" value="<?php echo $certificacionController->getUnegocio()['COLUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="col" type="text" id="col" value="<?php echo $facturasController->getUnegocio()['COLUNEG'] ?>" size="60">        </div>
      
         <div class="form-group col-md-6"><label> DELEGACION O MUNICIPIO :</label>
-        <input class="form-control" name="del" required type="text" id="del" value="<?php echo $certificacionController->getUnegocio()['DELEGUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="del" required type="text" id="del" value="<?php echo $facturasController->getUnegocio()['DELEGUNEG'] ?>" size="60">        </div>
       
         <div class="form-group col-md-6"><label> CIUDAD :</label>
-        <input class="form-control" name="mun" required type="text" id="mun" value="<?php echo $certificacionController->getUnegocio()['MUNUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="mun" required type="text" id="mun" value="<?php echo $facturasController->getUnegocio()['MUNUNEG'] ?>" size="60">        </div>
      
         <div class="form-group col-md-6"><label> ESTADO :</label>
         
-        <select class="form-control" name="edo" id="edo" required> <option value="">- - - - - - - - - - - </option><?php echo $certificacionController->getListaEstados()?></select>       </div>
+        <select class="form-control" name="edo" id="edo" required> <option value="">- - - - - - - - - - - </option><?php echo $facturasController->getListaEstados()?></select>       </div>
      
          <div class="form-group col-md-6"><label>CP :</label>
-        <input class="form-control" name="cp" type="text" id="cp" value="<?php echo $certificacionController->getUnegocio()['CPUNEG'] ?>" size="60">        </div>
+        <input class="form-control" name="cp" type="text" id="cp" value="<?php echo $facturasController->getUnegocio()['CPUNEG'] ?>" size="60">        </div>
      
          <div class="form-group col-md-6"><label>REFERENCIA :</label>
-        <input class="form-control" name="ref" type="text" id="ref" value="<?php echo $certificacionController->getUnegocio()['REFUNEG'] ?>" size="60"> 
+        <input class="form-control" name="ref" type="text" id="ref" value="<?php echo $facturasController->getUnegocio()['REFUNEG'] ?>" size="60"> 
              </div>
     
         <div class="form-group col-md-6"><button type="submit" class="btn btn-info pull-right">   Guardar </button></div>
@@ -199,10 +199,10 @@ function validar1(dform){
              <div class="box box-info">
              <div class="box-header with-border">ARCHIVOS</div>
              <div class="box-body">
-<?php echo $certificacionController->getSubtitulo();
+<?php echo $facturasController->getSubtitulo();
 ?>
 <?php 
-     foreach($certificacionController->getListaSolDet() as $detalle){
+     foreach($facturasController->getListaSolDet() as $detalle){
         echo $detalle["id_arc_exist"];
   
        echo $detalle["arc_exist"];
@@ -222,11 +222,11 @@ function validar1(dform){
 <form  name="cform" action="index.php?action=editasolicitud&admin=ingcom" method="post" enctype="multipart/form-data"> 
 
        <?php 
-       echo $certificacionController->getEnc_comen();
+       echo $facturasController->getEnc_comen();
        ?>
       
        <?php 
-        foreach ($certificacionController->getListaComentarios() as $comentario){
+        foreach ($facturasController->getListaComentarios() as $comentario){
          echo $comentario['fec'];        
         
          echo $comentario['hor'];       
@@ -247,11 +247,11 @@ function validar1(dform){
              <div class="box-header with-line">AUTORIZACION</div>
              <div class="box-body">
 <form  name="dform" action="index.php?action=editasolicitud&admin=autsol" method="post" > 
-      <?php echo $certificacionController->getEnc_autor()?>
+      <?php echo $facturasController->getEnc_autor()?>
         <!-- inicioBloque: PanelbusquedaC -->
           <!-- finBloque: PanelbusquedaC -->
              
-      <?php  echo $certificacionController->getAutor_ex()?>
+      <?php  echo $facturasController->getAutor_ex()?>
  
 </form> 
 </div></div>

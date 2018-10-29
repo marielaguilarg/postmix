@@ -1,75 +1,68 @@
+<script language="JavaScript" type="text/JavaScript"> 
+function imprimirFQ(nsec){
+//'var mform = docume'nt.form1;
+//var nsec=document.getElementById(numsecc).value;
+	 window.open("index2.php?action=repFQPDF&ntoma="+nsec);
+	 //window.open('index2.php&ntoma=6579');
+	 //window.moveTo(0, 0);
+}
+
+function imprimirMB(nsec){
+//var mform = document.form1;
+//   alert (mform.numsecc.value);
+	 window.open("index2.php?action=repMBPDF&ntoma="+nsec);
+}
+
+function imprimirPDF(){
+	 window.open('MEZprincipal.php?op=pdfFQ');
+}
+
+</script>
+
+
+
  <section class="content-header">
-      <h1>Análisis Pendientes <small></small></h1>
+  <div class="row" style="margin-top:-40px;" >
+
+   <h1 style="font-size:25px; margin-left: 15px; ">
+
+   muestras <small></small></h1>  
+
+
+</div>
+     
+<ol class="breadcrumb" >
+
+<?php
+//$ingreso = new ReporteController();
+//$ingreso -> vistaRnomservController();
+?>        
+        
+</ol>
  </section>     
 
- <section class="content container-fluid">
-      
- <div class="row">
-        <div class="col-md-4" >
-          <div class="box box-info" >
-            <div class="box-header with-border">
-                    
+    <section class="content container-fluid">
 
-                   <?php
-              $ingreso = new unegocioController();
-              $ingreso -> vistaunegocioDetalle();
-              ?>  
-               
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-            </div>
-              </div>
-               <div class="row" >
-                <ul class="nav nav-stacked" style="border-top: solid #f4f4f4">
-                  <li><a href="#"><strong> REPORTES</strong></a></li>
-                </ul>
-                <div class="row" >
-                 <!-- /. Inicia Número de reportes -->
-                    
 
-                    <?php
-              $ingreso = new unegocioController();
-              $ingreso -> vistaReportesunegocio();
-              ?>                                    
-                    
-                 
-                   <!-- /. Fin Número de reportes -->
-            </div>
-              </div>
-               <div class="row" >
-                 <ul class="nav nav-stacked" style="border-top: solid #f4f4f4">                  
-                 </ul>
-                
-                 <div class="row" >
-                <div class="col-sm-4 ">
-                  <div class="description-block">
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4 ">
-                  <div class="description-block">
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-4">
-                  <div class="description-block">
-              
-              <?php
-              $ingreso = new ReporteController();
-           Análisis Pendientesso -> botonNuevoRep();
-              </div>
-              
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
+      <div class="row">
+    <div class="col-md-12" >
+     
+       
 
-      </div>
-	  <!----- Finaliza contenido ----->
+<?php
+
+$ingreso = new muestrasController();
+$ingreso -> listaMuestrasPendientes();
+
+
+?>
+
+</div>
+</div>
+</section>
+
+       
+
     </section>
-   
+    
+   <!-- /.content-wrapper -->

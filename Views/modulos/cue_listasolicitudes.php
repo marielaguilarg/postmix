@@ -44,8 +44,8 @@ language: {
 
 <?php
 include 'Controllers/certificacionController.php';
-$certificacionController=new CertificacionController();
-$certificacionController->vistaListasolicitudes();
+$facturasController=new CertificacionController();
+$facturasController->vistaListasolicitudes();
 ?>
  <section class="content-header">
       <h1>CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA</h1>
@@ -80,7 +80,7 @@ $certificacionController->vistaListasolicitudes();
         </thead>
         <tbody>
         
-        <?php foreach($certificacionController->getListaSolicitudes() as $solicitud){
+        <?php foreach($facturasController->getListaSolicitudes() as $solicitud){
             
             //despliego renglones de solicitud
             ?>

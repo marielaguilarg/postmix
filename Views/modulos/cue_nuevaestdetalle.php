@@ -1,3 +1,35 @@
+<script type="text/javascript">
+<!--
+$("document").ready(function(){
+	$("#tipocatalogo").hide();
+    $(".tiponum").hide();
+});
+$(function(){
+$("#formareac").change(function(){
+	
+var op=this.value;
+
+if(op=="C")
+{	$("#tipocatalogo").toggle('slow');
+    $(".tiponum").toggle(false);
+} 
+else if(op=="N")
+{	$("#tipocatalogo").toggle(false);
+    $(".tiponum").toggle(true);
+} else {
+	$("#tipocatalogo").toggle(false);
+    $(".tiponum").toggle(false);
+}
+});
+
+$("#estandar").click(function() {
+	  alert( "Handler for .change() called." );
+	});
+});
+//-->
+</script>
+
+
 <!-- Content Header (Page header) -->
 
     <section class="content-header">
@@ -14,7 +46,7 @@
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-              <form role="form" method="post" onsubmit="return validar(this)"></span>
+              <form role="form" method="post" onsubmit="return validar(this)">
                   <?php
                       $registro = New EstandarController();     
                       $registro->nuevaEstandarDetController();
@@ -24,7 +56,7 @@
                 <div class="row">
                 <div class="form-group col-md-6">
                   <label>DESCRIPCION EN ESPAÑOL</label>
-                  <input type="text" class="form-control" name="descesp" >
+                  <input type="text" class="form-control" name="descesp" required >
 
                 </div>
                 <div class="form-group col-md-6">
@@ -34,7 +66,7 @@
 
                 <div class="form-group col-md-6">
                   <label>FORMATO DE REACTIVO</label>
-                  <select class="form-control" name="formareac">
+                  <select class="form-control" name="formareac" id="formareac" required>
                       <option value="">--- Elija el formato ---</option>
                       <option value="C">CATALOGO</option>
                       <option value="N">NUMERICO</option>
@@ -50,10 +82,15 @@
                   <input name="estandar" id="estandar" class="form-control" >
                 </div>
                 </div>  
-                <div class="row">
+                <div class="row" id="tipocatalogo">
                 <div class="form-group col-md-6">
                   <label>CATALOGO</label>
-                  <select class="form-control" name="numcatalogo">
+                  <select class="form-control cascada" name="numcatalogo"    data-group="niv-1"
+                                    data-id="niv1"
+                                    data-target="niv-2"
+                                    data-url="indcomboboxestdetalle.php?"
+                                    data-replacement="container1"
+                                    data-default-label="--- Elija el catalogo ---" >
                       <option value="">--- Elija el catalogo ---</option>
                     <?php
                        $registro = New EstandarController();     
@@ -64,12 +101,17 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label>OPCION CORRECTA</label>
-                  <select class="form-control" name="valopcatalogo">
-                      <option value="">--- Elija el opcion ---</option>
+                  <select class="form-control cascada" name="valopcatalogo"    data-group="niv-1"
+                                    data-id="niv-2"
+                                 
+                                    data-replacement="container1"
+                                    data-default-label="--- Elija opción ---">
+                      <option value="">--- Elija opción ---</option>
+                      
                   </select>
                 </div>
                 </div>
-                <div class="row">
+                <div class="row tiponum">
                 <div class="form-group col-md-6">
                    <label >CALCULO ESPECIAL</label>
                     <input type="checkbox" name="calesp" />
@@ -94,19 +136,19 @@
 
                 </div>
                 </div>  
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6 tiponum">
                    <label >SIGNO UNO</label>
                     <input name="siguno" id="siguno" class="form-control" >
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6 tiponum">
                   <label>VALOR MINIMO</label>
                   <input name="valmin" id="valmin" class="form-control" >
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6 tiponum">
                    <label >SIGNO DOS</label>
                     <input name="sigdos" id="sigdos" class="form-control" >
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-6 tiponum">
                   <label>VALOR MAXIMO</label>
                   <input name="valmax" id="valmax" class="form-control" >
                 </div>
@@ -198,3 +240,53 @@
 	  
 
   </div>
+   <script src="js/jquery.cascading-drop-down.js"></script>
+
+    <script>
+
+    $('.cascada').ssdCascadingDropDown({
+
+        nonFinalCallback: function(trigger, props, data, self) {
+
+
+
+            trigger.closest('form')
+
+                    .find('input[type="submit"]')
+
+                    .attr('disabled', true);
+
+
+
+        },
+
+        finalCallback: function(trigger, props, data) {
+
+
+
+            if (props.isValueEmpty()) {
+
+                trigger.closest('form')
+
+                        .find('input[type="submit"]')
+
+                        .attr('disabled', true);
+
+            } else {
+
+                trigger.closest('form')
+
+                        .find('input[type="submit"]')
+
+                        .attr('disabled', false);
+
+            }
+
+
+
+        }
+
+    });
+
+</script>
+  

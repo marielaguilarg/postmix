@@ -52,13 +52,13 @@
     </div>
                    <div class="form-group ">
         <label><?php echo T_("FRANQUICIA")?></label>
-       
+       <div>
   <?php
             foreach ($unegocioContoller->getListaFranquicias() as $franq) {
                 echo $franq;
             }
             ?>
-       
+       </div>
     </div>
 
             </div>

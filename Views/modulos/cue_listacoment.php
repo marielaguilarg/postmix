@@ -1,7 +1,10 @@
 <section class="content-header">
       <h1>Comentarios <small></small></h1>
 <ol class="breadcrumb" >
-
+<?php
+$ingreso = new seccionController();
+$ingreso -> vistaNomServSeccController();
+?>   
         
 </ol>
           

@@ -2,13 +2,11 @@
  <!-- generar nombre de seccion -->
  <div class="row" style="margin-top:-40px;" >
 
-   <h1 >
+    <h1 style="font-size:25px; margin-left: 15px; ">
 	<?php
 	$ingreso = new ReporteController();
 	$ingreso -> vistaNombreSeccion();
 	?>     
-    
-    
 
    <small></small></h1>  
 	<h1>
