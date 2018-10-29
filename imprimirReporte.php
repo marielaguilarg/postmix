@@ -53,6 +53,12 @@ $imp->descargarArchivo();
     include "Models/crud_generales.php";
     $imp=new InicioExcelController();
     $imp->descargarArchivo();
+}else if($admin=="repfac")
+{
+    include 'Controllers/repFacturacionController.php';
+    include 'Controllers/subnivelController.php';
+    $repFacturaController=new RepFacturacionController;
+    $repFacturaController->generarArchivo();
 }else
     { 
        
