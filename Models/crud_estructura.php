@@ -17,6 +17,16 @@ class Estructura extends Conexion{
 
 		$stmt->close();
 	}
+	
+	public static function listaEstructura(){
+	    $stmt = Conexion::conectar()-> prepare("SELECT mee_numnivel, mee_descripcionnivelesp, mee_descripcionniveling 
+FROM cnfg_estructura");
+	    
+	    $stmt-> execute();
+	    
+	    return $stmt->fetchAll();
+	    
+	}
 
 	    public function getDescripcionNivel($datosModel, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT * FROM $tabla WHERE mee_numnivel = :id");

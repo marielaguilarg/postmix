@@ -123,7 +123,16 @@ class EnlacesPaginas{
 		    $enlacesModel == "listaestatussolicitud"||
 		    
 		    //seccion de consultas
-		    $enlacesModel=="inicio_excel"
+		    $enlacesModel=="inicio_excel"||
+            $enlacesModel=="repfacturacion" ||
+		    $enlacesModel=="listafacturas"||
+		    //seccion de configuracion
+		    $enlacesModel=="slistagrupos"||
+		    $enlacesModel=="slistapermisos" ||
+		    $enlacesModel=="slistausuarios"||
+		    $enlacesModel=="snuevogrupo"||
+		    $enlacesModel=="snuevopermiso" ||
+		    $enlacesModel=="snuevousuario"
 			 
 			 ){
 

@@ -752,7 +752,7 @@ FROM
 cue_reactivosestandardetalle
 Inner Join cue_secciones ON cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion AND cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio
 WHERE
-cue_reactivosestandardetalle.sec_numseccion in (5,3,2) and
+cue_reactivosestandardetalle.sec_numseccion in (5,8,2) and
 cue_reactivosestandardetalle.ser_claveservicio =  :servicio
 GROUP BY
 cue_reactivosestandardetalle.ser_claveservicio,

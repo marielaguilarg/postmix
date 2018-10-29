@@ -108,6 +108,20 @@ class DatosServicio extends Conexion{
 		return $stmt->fetch();
 	}
 
+	public function vistaServicioxCliente($cliente, $tabla) {
+	    
+	    $stmt = Conexion::conectar()-> prepare("SELECT ser_id, ser_descripcionesp FROM ca_servicios WHERE ser_idcliente=:cliente");
+	    $stmt->bindParam(":cliente", $cliente, PDO::PARAM_INT);
+	    
+	    
+	    
+	    $stmt->execute();
+
+	    
+	    
+	    
+	    return $stmt->fetchAll();
+	}
 
 }
 

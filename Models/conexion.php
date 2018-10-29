@@ -22,11 +22,11 @@ class Conexion {
                 else
                     $stmt->bindValue(":" . $key, $param, PDO::PARAM_STR);
             }
-
+          
             $stmt->execute();
 
-            //$stmt->debugDumpParams();
-
+      
+          $stmt->debugDumpParams();
 
 
             $respuesta = $stmt->fetchAll();
