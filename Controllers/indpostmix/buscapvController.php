@@ -112,7 +112,7 @@ class BuscapvController
                 // nivel uno por default
                 $GradoNivel = $VarNivel2;
             $this->varnivel = $VarNivel2;
-            if ($VarNivel2 == NULL) {} else {
+            if ($VarNivel2 == NULL) { $Nivel01 = 1;} else {
                 // die($VarNivel2."--".$grupo);
                 $Nivel01 = 1;
                 
