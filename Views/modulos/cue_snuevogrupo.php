@@ -25,7 +25,7 @@ $grupoController->control();
                 <label for="nomesp" class="col-sm-2 control-label">Nombre</label>
                 <div class="col-sm-10">
               	<input name="idper" type="hidden" value="<?php echo $grupoController->getIDS()?>">
-                    <input name="nomesp"  id="nomesp" class="form-control" value="<?php echo $grupoController->getNOMESP()?>" >
+                    <input name="nomesp"  id="nomesp" class="form-control" value="<?php echo $grupoController->getNOMESP()?>" required >
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=slistagrupos">Cancelar</a></button>

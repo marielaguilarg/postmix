@@ -341,12 +341,7 @@
 
 
       <!----- Inicia contenido ----->
-
-    
-
- 
-
-     <!-- inicia repeticion -->
+  <!-- inicia repeticion -->
 
      <?php
 $j=1;$bac=1;

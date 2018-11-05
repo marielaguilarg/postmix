@@ -272,6 +272,36 @@
                 </li>
 
         </ul>
+        </li>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Configuracion</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+       <ul class="treeview-menu">
+                <li>
+                  <a href="index.php?action=slistagrupos"><i class="fa fa-circle-o"></i> Grupos
+                  </a>  
+                </li>
+                <li>
+                  <a href="index.php?action=ssurveydata"><i class="fa fa-circle-o"></i> Config. Survey Data
+                  </a>  
+                </li>
+                <li>
+                  <a  href="index.php?action=ssecciongrafica"><i class="fa fa-circle-o"></i> Config. Gráfica
+                  </a>  
+                </li>
+                <li>
+                  <a  href="index.php?action=srespaldoimagenes"><i class="fa fa-circle-o"></i> Respaldos
+                  </a>  
+                </li>
+               
+
+        </ul>
+        </li>
         <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

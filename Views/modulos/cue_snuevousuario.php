@@ -300,8 +300,9 @@ $usuarioCon->vistaNuevoUsuario();
   </div>
   </div>
   <div class="box-footer col-md-12">
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
-      <button class="btn btn-info pull-right" type="button"  onclick="document.location='index.php?action=slistausuarios&id=<?php echo $usuarioCon->getOp()?>';"  >CANCELAR</button>
+                 
+      <button class="btn btn-default pull-right" style="margin-left: 10px" type="button"  onclick="document.location='index.php?action=slistausuarios&id=<?php echo $usuarioCon->getOp()?>';"  >CANCELAR</button>
+     <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
    </div>
  </div>
  

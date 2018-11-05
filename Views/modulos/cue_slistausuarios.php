@@ -1,4 +1,4 @@
-<?php
+<script>function confirmar(){	if(confirm("¿Realmente desea eliminar?")){		return true;	}else{		//Si el codigo llega hasta aqu�, todo estar� bien  y realizamos el Submit		return false;	}	}</script><?php
 include 'Controllers/usuarioPermisosController.php';
 $usuarioController= new UsuarioPermisosController();
 $usuarioController->vistaListausuarios();
@@ -6,10 +6,10 @@ $usuarioController->vistaListausuarios();
 
 <section class="content-header">
 <h1>USUARIOS</h1><h1><?php echo $usuarioController->getTITULO5()?></h1>
-
+<ol class="breadcrumb">        <?php Navegacion::desplegarNavegacion();?>   </ol>   <div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=snuevousuario&admin=nuevo&id=<?php echo $usuarioController->getIdnum()?>"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>       </div></div>
 </section>
 <!-- Main content -->
-<section class="content container-fluid"><div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=snuevousuario&admin=nuevo&id=<?php echo $usuarioController->getIdnum()?>"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>       </div></div>
+<section class="content container-fluid">
 
 <!----- Inicia contenido -----><?php echo $usuarioController->getMensaje()?>
 <div class="row">
@@ -32,13 +32,13 @@ $usuarioController->vistaListausuarios();
 <div class="arrow">
 <div class="box-footer no-padding">
 <ul class="nav nav-stacked">
-<li><a href="#"><strong><?php echo $usuario["editausuario"]?></strong></a></li>
+<li><?php echo $usuario["editausuario"]?></li>
 </ul>
 </div>
 </div>
 <div class="row" ><div class="col-sm-4"></div>
 <div class="col-sm-4">
-<div class="description-block">  <a class="btn btn-block btn-info" href="index.php?action=slistausuarios&admin=borrar&usu=<?php echo $usuario['borrarusurario']."&id=".$usuarioController->getIdnum()?>"><i class="fa fa-trash-o"></i></a></button>
+<div class="description-block">  <a class="btn btn-block btn-info" onclick="return confirmar();" href="index.php?action=slistausuarios&admin=borrar&usu=<?php echo $usuario['borrarusurario']."&id=".$usuarioController->getIdnum()?>"><i class="fa fa-trash-o"></i></a>
 </div>
 <!-- /.description-block -->
 </div>

@@ -5,11 +5,11 @@ $grupoController->control();
 ?>
 
 <section class="content-header">
-<h1>GRUPOS</h1>
-
+<h1>GRUPOS</h1><ol class="breadcrumb">        <?php Navegacion::desplegarNavegacion();?>   </ol>
+<div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=snuevogrupo&admin=nuevo"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>       </div> </div>
 </section>
 <!-- Main content -->
-<section class="content container-fluid"><div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=snuevogrupo&admin=nuevo"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>       </div></div>
+<section class="content container-fluid">
 
 <!----- Inicia contenido -----><?php echo $grupoController->getMensaje()?>
 <div class="row">
@@ -32,7 +32,7 @@ $grupoController->control();
 <div class="arrow">
 <div class="box-footer no-padding">
 <ul class="nav nav-stacked">
-<li><a href="#"><strong><?php echo $grupo["editagrupo"]?></strong></a></li>
+<li><?php echo $grupo["editagrupo"]?></li>
 </ul>
 </div>
 </div>
