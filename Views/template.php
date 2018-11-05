@@ -22,8 +22,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         apply the skin class to the body tag so the changes take effect. -->
 <script src="views/dist/js/jquery-3.0.0.min.js"></script>
 
-
-
   <link rel="stylesheet" href="views/dist/css/skins/skin-blue.min.css">
 
 <link rel="stylesheet" href="views/bower_components/bootstrap-daterangepicker/daterangepicker.css">
@@ -39,8 +37,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="views/bower_components/select2/dist/css/select2.min.css">
   <link rel="stylesheet" href="views/dist/css/skins/_all-skins.min.css">
   <!-- Google Font -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <!--
 BODY TAG OPTIONS:
