@@ -69,7 +69,7 @@ echo '  <tr>
 	                  <td>' . $item["une_idpepsi"] . '</td>
 		                  <td>' . $item["une_idcuenta"] . '</td>
 	                  <td>
-	                    <a href="#">'.$item["une_descripcion"].'</a>
+	                     <a href="index.php?action=editaunegocio&referencia='.$item["une_id"].'&idc='.$idc.'">' . $item["une_descripcion"] . '</a>
 	                  </td>
 	                </tr>';
 	            
@@ -674,9 +674,7 @@ foreach ($_GET as $nombre_campo => $valor) {
 $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo,FILTER_SANITIZE_STRING) . "';";
 eval($asignacion);
 }
-
 //$nivel = filter_input(INPUT_GET, "ni", FILTER_SANITIZE_SPECIAL_CHARS);
-
 $res = Datosnuno::vistan1Model("ca_nivel1");
 $nivel = 1;
 if (isset($clanivel1)) {

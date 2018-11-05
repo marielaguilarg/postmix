@@ -296,7 +296,25 @@ public function registrarSeccionController(){
   public function iniciopoderaseccion(){
       $ser = $_GET["sv"];
       $sec = $_GET["sec"];
+
+    echo '<section class="content-header">
+      <h1>Ponderacion de Secciones <small></small></h1>
+      <ol class="breadcrumb" >';
+#buscar el nombre del servicio
+    $respuesta =DatosServicio::vistaNomServicioModel($ser,"ca_servicios");
+
+    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+    # busco seccion
+    $respuesta=DatosSeccion::vistaNombreSeccion($ser, $sec,"cue_secciones");
+    //var_dump($respuesta);
+    echo '<li><a href="index.php?action=listaseccion&idser='.$ser.'">SECCION: '.$respuesta["sec_descripcionesp"]. '</a></li>';
+    echo '        
+</ol>
+ </section>';     
   
+    
+
+
   echo '
   <div class="row">
       <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevaponcuenta&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>

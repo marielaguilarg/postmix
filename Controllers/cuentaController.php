@@ -239,22 +239,66 @@ public function borrarCuentaController(){
   } 
 
   public function listaponderaCuentaController(){
-      if(isset($_GET["idb"])){
-        $datosController = $_GET["idb"];
-        $respuesta = DatosCuenta::borrarCuentaModel($datosController, "ca_cuentas");
-      //  echo $respuesta;
-          if($respuesta=="success"){
-             echo '<script> windows.location= "index.php?action=listacuenta" </script>';
-            //header('location:index.php?action=listacliente');
-              // echo "cambio efectuado";
-            
-          
-            } else {
-              echo "error";
-            } 
-      }
-    } 
+        $respuesta = DatosCuenta::vistaCuentasModel("ca_cuentas");
+        foreach ($respuesta as $key => $item) {
+           echo '<option value='.$item["cue_id"].'>'.$item["cue_descripcion"].'</option>';
+        }  
+    }
 
+public function registroPonderaCuentaController(){
+
+
+      if (isset($_POST["cuenta"])){  
+        $fecini=SubnivelController::fecha_mysql($_POST["fecini"]);
+        $fecfin=SubnivelController::fecha_mysql($_POST["fecfin"]);
+        $nser=$_GET["ids"];
+        $nsec=$_GET["id"];
+        #valida existencia
+        $datosController=array("nser"=>$nser,
+                               "nsec"=>$nsec,
+                               "ncta"=>$_POST["cuenta"],
+                               "fecini"=>$fecini,                            
+                                    );        
+
+        $respuesta = DatosCuenta::validaperiodocuenta($datosController, "cue_seccionesdetalles");
+
+        if ($respuesta) {
+           #mensaje de ya existe
+        } else {
+          $datosController=array("nser"=>$nser,
+                               "nsec"=>$nsec,
+                               "ncta"=>$_POST["cuenta"],
+                               "fecini"=>$fecfin ,                            
+                                    );        
+
+          $respuesta1 = DatosCuenta::validaperiodocuenta($datosController, "cue_seccionesdetalles");
+
+          if ($respuesta1){
+
+           #mensaje de ya existe
+          } else {
+             #ingresamos
+            $datosController=array("nser"=>$nser,
+                               "nsec"=>$nsec,
+                               "ncta"=>$_POST["cuenta"],
+                               "fecini"=>$fecini, 
+                               "npond"=>$_POST["ponderacion"], 
+                               "fecfin"=>$fecfin, 
+                                    ); 
+            $respuestai = DatosCuenta::registroPonderaCuenta($datosController, "cue_seccionesdetalles");
+            if($respuestai== "success"){
+              echo "
+              <script type='text/javascript'>
+               window.location.href='index.php?action=ponderaseccion&sec=".$nsec."&sv=".$nser."'
+                </script>
+                ";   
+            }  // if de respuestai                 
+          } // else respuesta1  
+        } // else de respuesta
+      }
+      
+  }         
+  
 
 
 }

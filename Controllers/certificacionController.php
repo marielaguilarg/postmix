@@ -52,14 +52,12 @@ class CertificacionController{
         /*	echo '<script>alert("'.$gpo.'")</script>';   */
     }
     
-//     if ($nvasol){ //puede crear solicitud
+    if ($nvasol){ //puede crear solicitud
         
-//         $nuevo='<a href="MENindprincipal.php?admin=cert&opi=nuevo"><img src="../img/nuevasol.gif" width="89" height="25" border="0"></a>';
-//         $html->asignar('areanuevob',$nuevo);
-//         $band=1;
-        
-//         if()
-//     }
+        $nuevo='<a href="MENindprincipal.php?admin=cert&opi=nuevo"><img src="../img/nuevasol.gif" width="89" height="25" border="0"></a>';
+        $html->asignar('areanuevob',$nuevo);
+        $band=1;
+    }
     
     
     $this->titulo=T_("CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA");

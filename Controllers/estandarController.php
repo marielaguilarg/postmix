@@ -1310,7 +1310,7 @@ public function registrarEstandarController(){
 
                 <div class="form-group col-md-6">
                   <label>FORMATO DE REACTIVO</label>
-                  <select class="form-control" name="formato" id="formareac">
+                  <select class="form-control" name="formato">
                       <option value="">--- Elija el formato ---</option>';
                       if ($formato=="C"){
                           echo '<option value="C" selected="selected">CATALOGO</option>';	
@@ -1336,14 +1336,10 @@ public function registrarEstandarController(){
                   <input name="estandar" id="estandar" class="form-control" value="'.$estandar.'">
                 </div>
             </div>  
-                <div class="row" id="tipocatalogo">
+                <div class="row">
                 <div class="form-group col-md-6">
                   <label>CATALOGO</label>
- 					<select class="form-control cascada" name="numcatalogo"  data-group="niv-1"
-                                    data-id="niv1"
-                                    data-target="niv-2"
-                                    data-url="indcomboboxestdetalle.php?"
-                                    data-replacement="container1"  data-default-label="--- Elija el catalogo ---">
+ 					<select class="form-control" name="numcatalogo">
                       <option value="">--- Elija el catalogo ---</option>';
                  
               $respuestac = DatosEst::catalogosModel("ca_catalogos");
@@ -1362,10 +1358,8 @@ public function registrarEstandarController(){
                 </div>
                 <div class="form-group col-md-6">
                   <label>OPCION CORRECTA</label>
-                   <select class="form-control cascada" name="valopcatalogo"  data-group="niv-1"
-                                    data-id="niv-2"
-                                   data-replacement="container1"  data-default-label="--- Elija la opción ---">
-                      <option value="">--- Elija la opcion ---</option>';
+                   <select class="form-control" name="valopcatalogo">
+                      <option value="">--- Elija el opcion ---</option>';
 
                  $respuestac = DatosEst::catalogoDetalleModel($itemc["ca_idcatalogo"],"ca_catalogos");
                  if ($formato=="C"){
@@ -1386,7 +1380,7 @@ public function registrarEstandarController(){
                  echo ' </select>
                 </div>
                 </div>
-                <div class="row tiponum">
+                <div class="row">
                 <div class="form-group col-md-6">
                    <label >CALCULO ESPECIAL</label>';
                    if ($calesp == -1) {
@@ -1438,20 +1432,20 @@ public function registrarEstandarController(){
 
                 </div>
                 </div>  
-                <div class="form-group col-md-6 tiponum">
+                <div class="form-group col-md-6">
                    <label >SIGNO UNO</label>';
              if ($formato=="N"){
                 echo '<input name="siguno" id="siguno" class="form-control" value="'.$valsiguno.'">
                 </div>
-                <div class="form-group col-md-6 tiponum">
+                <div class="form-group col-md-6">
                   <label>VALOR MINIMO</label>
                   <input name="valmin" id="valmin" class="form-control" value="'.$valuno.'">
                 </div>
-                <div class="form-group col-md-6 tiponum">
+                <div class="form-group col-md-6">
                    <label >SIGNO DOS</label>
                     <input name="sigdos" id="sigdos" class="form-control" value="'.$valsigdos.'">
                 </div>
-                <div class="form-group col-md-6 tiponum">
+                <div class="form-group col-md-6">
                   <label>VALOR MAXIMO</label>
                   <input name="valmax" id="valmax" class="form-control" value="'.$valdos.'">
                 </div>';
