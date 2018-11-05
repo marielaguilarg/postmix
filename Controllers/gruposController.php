@@ -38,10 +38,11 @@ class GruposController
                 include('./MESusuarios.php');
                 break;
                 
-            default:
-                $this->mensaje="";
-                $this->vistaListaGrupos();
+          
+               
         }
+        
+        $this->vistaListaGrupos();
     }
     
     public function vistaListaGrupos(){
@@ -62,14 +63,19 @@ class GruposController
             }
             $grupo=array();
             $grupo['clavegrupo']=$row["cgr_clavegrupo"];
-            $grupo['editagrupo']="<div align='left'>"."<a href='index.php?action=snuevogrupo&admin=editar&id=".$row["cgr_clavegrupo"]."'>".$row["cgr_nombregrupo"]."</a></div>";
+            $grupo['editagrupo']="<a href='index.php?action=snuevogrupo&admin=editar&id=".$row["cgr_clavegrupo"]."'><strong>".$row["cgr_nombregrupo"]."</strong></a>";
             $grupo['borrargrupo']= $row["cgr_clavegrupo"].".".$row["cgr_nombregrupo"];
             $grupo['clavep']=$row["cgr_clavegrupo"];
             $grupo['ccolor']= $color;
             $cont++;
             $this->listaGrupos[]=$grupo;            
         }
-        
+        $navegacion=new Navegacion();
+        $navegacion->iniciar();
+        $navegacion->borrarRutaActual("grupos");
+        $rutaact = $_SERVER['REQUEST_URI'];
+        // echo $rutaact;
+        $navegacion::agregarRuta("grupos", $rutaact, "GRUPOS");
         
     }
     

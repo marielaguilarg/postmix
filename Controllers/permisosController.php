@@ -93,7 +93,12 @@ class PermisosController
             $cont++;
           $this->listaPermisos[]=$permiso;
         }//Termina foreach
-        
+        $navegacion=new Navegacion();
+     
+        $navegacion->borrarRutaActual("permiso");
+        $rutaact = $_SERVER['REQUEST_URI'];
+        // echo $rutaact;
+        $navegacion::agregarRuta("permiso", $rutaact, "PERMISOS");
     
     }
     

@@ -78,26 +78,31 @@ class UsuarioPermisosController
          $cont = 0;
          foreach ($rst as$row) {
             $usuario=array();
-            $usuario['claveusuario']="<a href='index.php?action=snuevousuario&nuevo=E&usu=".$row["cus_usuario"]."&id=".$op2."'>".$row["cus_usuario"]."</a>";
+            $usuario['claveusuario']=$row["cus_usuario"];
              
-            $usuario['editausuario']= "<div align='left'>" . $row["cus_nombreusuario"] . "</div>";
+            $usuario['editausuario']= "<a href='index.php?action=snuevousuario&nuevo=E&usu=".$row["cus_usuario"]."&id=".$op2."'><strong>". $row["cus_nombreusuario"] . "</strong></a>";
             if ($op2 == 'ext' && $row["cus_tipoconsulta"] > 0)
                 $tipo = "Cliente";
                 if ($op2 == 'ext' && $row["cus_tipoconsulta"] < 0)
                     $tipo = "Cuenta";
-                    if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 1)
-                        $tipo = "Administrador";
-                       if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 2)
-                            $tipo = "Auditor";
-                            if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 3)
-                                $tipo = "Muesmerc";
-                                $usuario['tipo']=  $tipo ;
-                                $usuario['borrarusurario']= $row["cus_usuario"];
+                if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 1)
+                    $tipo = "Administrador";
+                if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 2)
+                    $tipo = "Auditor";
+                if ($op2 == 'mue' && $row["cus_tipoconsulta"] == 3)
+                    $tipo = "Muesmerc";
+                $usuario['tipo']=  $tipo ;
+                $usuario['borrarusurario']= $row["cus_usuario"];
            $this->listaUsuarios[]=$usuario ;                   
                      
         }
       
-                
+        $navegacion=new Navegacion();
+        
+        $navegacion->borrarRutaActual("usuario");
+        $rutaact = $_SERVER['REQUEST_URI'];
+        // echo $rutaact;
+        $navegacion::agregarRuta("usuario", $rutaact, "USUARIOS");
     }
     
    
@@ -511,7 +516,7 @@ data-group='niv-1'
        $this->accion="EDITAR";
        $logino=$login;
         $login = $usu;
-        echo "***".$usu;
+      
         if (! isset ( $usu)) //viene de recarga
         {
            
@@ -845,7 +850,7 @@ data-group='niv-1'
                                         data-replacement='container1'
                                             data-default-label='-TODOS-'>
 			  						 <option value='0'>- Seleccione Una Opcion -</option>".
-                                    $this->creaOpcionesSel($SQL_P, $Nivel5)."</select>";
+                                    $this->creaOpcionesSel($SQL_P, $Nivel4)."</select>";
                                     
                                 }
                                 if ($VarNivel2 >= 5) {
@@ -1417,13 +1422,8 @@ data-group='niv-1'
                              $nivel."','".$cta."','".$franqcuenta."','".$unidadnegocio."','".$idioma."','$uscliente','$usservicio', $solcer)";
                              // }  */
                             
-                 $sql2 = "INSERT INTO cnfg_usuarios(cus_usuario,cus_contrasena,cus_nombreusuario,cus_empresa,cus_cargo,cus_telefono,cus_email,cus_clavegrupo,
-            cus_tipoconsulta,cus_nivel1,cus_nivel2,cus_nivel3,cus_nivel4,cus_nivel5,cus_nivel6,cus_idioma,
-`cus_cliente`, `cus_servicio`, cus_solcer)
-            VALUES('".$login."','".$contras."', '".$nomusu."', '".$empresa."', '".$cargo."', '".$tel."','".$email."','".$op2."',
-                '".$SelectNivel."','".$select1."','".$select2."','".$select3."','".$select4."','".$select5."','".$select6."','$idioma','$uscliente','$usservicio', $solcer)";
-                 UsuarioModel::insertarUsuario($login, $contras, $nomusu, $empresa, $cargo, $tel, $email, $op2, $SelectNivel, $select1,
-                     $select2, $select3, $select4, $select5, $select6, $idioma, $uscliente, $usservicio, $solcer, "cnfg_usuarios");
+                UsuarioModel::insertarUsuario($login, $contras, $nomusu, $empresa, $cargo, $tel, $email, $op2, 
+                        $nivel, $cta, $franqcuenta, $unidadnegocio, null,null,null, $idioma, $uscliente, $usservicio, $solcer, "cnfg_usuarios");
                             
                             
                           
