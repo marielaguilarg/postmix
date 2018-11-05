@@ -79,7 +79,8 @@ WHERE `cpe_grupo` = :grupo
             $stmt->bindParam(":grupo", $grupo);
             $stmt->bindParam(":claveopcion", $opcion);
           
-        $stmt->execute();
+       if($stmt->execute())
+           throw new Exception("Error al eliminar permiso");
         }catch(PDOException $es){
             throw new Exception("Error al eliminar permiso");
         }
@@ -104,7 +105,8 @@ VALUES (:grupo,
             $stmt->bindParam(":borrar", $borrar);
             $stmt->bindParam(":modificar", $modificar);
             $stmt->bindParam(":insertar", $insertar);
-            $stmt->execute();
+          if(!$stmt->execute())
+              throw new Exception("Error al insertar permiso");
           //  $stmt->debugDumpParams();
         }catch(PDOException $es){
             throw new Exception("Error al insertar permiso");

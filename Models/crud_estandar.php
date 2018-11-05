@@ -711,7 +711,7 @@ cue_reactivosestandardetalle.ser_claveservicio =  :servicio
 GROUP BY
 cue_reactivosestandardetalle.ser_claveservicio,
 cue_reactivosestandardetalle.sec_numseccion
-order by sec_ordsecind";
+order by seccion";
    
    
      $stmt = Conexion::conectar()-> prepare($sql);
@@ -1437,4 +1437,25 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 	    $stmt->close();
 	    
 	}	
+	
+	function ConsultaAtributosxSec($seccion) {
+	    /* 502 */
+	    $sql = "select cue_reactivosestandardetalle.sec_numseccion, cue_reactivosestandardetalle.r_numreactivo,
+cue_reactivosestandardetalle.re_numcomponente, cue_reactivosestandardetalle.re_numcaracteristica, cue_reactivosestandardetalle.re_numcomponente2, cue_reactivosestandardetalle.red_numcaracteristica2, cue_reactivosestandardetalle.red_parametroesp, cue_reactivosestandardetalle.red_parametroing
+from cue_reactivosestandardetalle 
+inner join cue_reactivosestandar on cue_reactivosestandar.ser_claveservicio=cue_reactivosestandardetalle.ser_claveservicio and cue_reactivosestandar.sec_numseccion=cue_reactivosestandardetalle.sec_numseccion
+and cue_reactivosestandar.r_numreactivo=cue_reactivosestandardetalle.r_numreactivo and cue_reactivosestandar.re_numcomponente=cue_reactivosestandardetalle.re_numcomponente
+and cue_reactivosestandar.re_numcaracteristica=cue_reactivosestandardetalle.re_numcaracteristica and cue_reactivosestandar.re_numcomponente2=cue_reactivosestandardetalle.re_numcomponente2
+where red_grafica=-1 and re_tipoevaluacion <>0 and cue_reactivosestandardetalle.sec_numseccion=:numseccion";
+	    $stmt = Conexion::conectar()-> prepare($sql);
+	   
+	    $stmt->bindParam(":numseccion", $seccion, PDO::PARAM_INT);
+	    $stmt->execute();
+	    
+	    $res=$stmt->fetchAll();
+	    
+	  
+	    return $res;
+	}
+	
 }

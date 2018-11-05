@@ -414,7 +414,11 @@ public function getUsuarioId($id,$tabla){
 
 	public static function insertarUsuario($login,$contras, $nomusu, $empresa, $cargo, $tel,$email,$op2,
                 $SelectNivel,$select1,$select2,$select3,$select4,$select5,$select6,$idioma,$uscliente,$usservicio, $solcer,$tabla){
-	    
+                  
+                    
+
+                    
+                    
 	    $sql2 = "INSERT INTO ".$tabla."(cus_usuario,cus_contrasena,cus_nombreusuario,cus_empresa,cus_cargo,cus_telefono,cus_email,cus_clavegrupo,
             cus_tipoconsulta,cus_nivel1,cus_nivel2,cus_nivel3,cus_nivel4,cus_nivel5,cus_nivel6,cus_idioma,
 cus_cliente, cus_servicio, cus_solcer)
@@ -423,7 +427,7 @@ cus_cliente, cus_servicio, cus_solcer)
 :solcer)";
 	    try{
 	    $stmt = Conexion::conectar()->prepare($sql2);
-	    $stmt->bindParam(":usuario", $login,PDO::PARAM_STR);
+	    $stmt->bindParam(":login", $login,PDO::PARAM_STR);
 	    $stmt->bindParam(":contras", $contras,PDO::PARAM_STR);
 	    $stmt->bindParam(":nomusu", $nomusu,PDO::PARAM_STR);
 	    $stmt->bindParam(":empresa", $empresa,PDO::PARAM_STR);
@@ -440,17 +444,15 @@ cus_cliente, cus_servicio, cus_solcer)
 	    $stmt->bindParam(":select6", $select6,PDO::PARAM_INT);
 	    $stmt->bindParam(":idioma", $idioma,PDO::PARAM_INT);
 	    $stmt->bindParam(":uscliente", $uscliente,PDO::PARAM_STR);
-	 //   $stmt->bindParam(":usservicio", $usservicio,PDO::PARAM_STR);
-	  //  $stmt->bindParam(":solcer", $solcer,PDO::PARAM_STR);
+	    $stmt->bindParam(":usservicio", $usservicio,PDO::PARAM_STR);
+	    $stmt->bindParam(":solcer", $solcer,PDO::PARAM_STR);
 	    
-	   $stmt->execute();
-	   $stmt->debugDumpParams();
-	   
-	    if ($stmt->errorInfo()[1] != null) {
-	        
-	       var_dump($stmt->errorInfo());
-	    }
-	    
+	  if( !$stmt->execute())
+	  { 
+	      $stmt->debugDumpParams();
+	    throw new Exception("Error al crear el usuario");
+	  }
+	  $stmt->debugDumpParams();
 	    }catch(PDOException $ex){
 	        throw new Exception("Error al crear el usuario");
 	    }
@@ -508,7 +510,8 @@ WHERE `cus_usuario` = :usuario;";
 	            $stmt->bindParam(":solcer", $solcer);
 	            $stmt->bindParam(":estatus", $estatus);
 	            
-	            $stmt->execute();
+	           if(! $stmt->execute())
+	               throw new Exception("Error al editar usuario");
 	          //  $stmt->debugDumpParams();
 	        }catch(PDOException $ex){
 	            throw new Exception("Error al editar usuario");
@@ -525,7 +528,8 @@ WHERE `cus_usuario` = :usuario";
 	        $stmt = Conexion::conectar()-> prepare($sql2);
 	        $stmt->bindParam(":usuario", $login);
 	    	        
-	        $stmt-> execute();
+	       if(!$stmt-> execute())
+	       throw new Exception("Error al borrar usuario");
 	    }catch(PDOException $ex){
 	        throw new Exception("Error al borrar usuario");
 	    }

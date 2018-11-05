@@ -132,7 +132,17 @@ class EnlacesPaginas{
 		    $enlacesModel=="slistausuarios"||
 		    $enlacesModel=="snuevogrupo"||
 		    $enlacesModel=="snuevopermiso" ||
-		    $enlacesModel=="snuevousuario"
+		    $enlacesModel=="snuevousuario"||
+		    $enlacesModel=="srangosgraffrec"||
+		    $enlacesModel=="ssecciongrafica" ||
+		    $enlacesModel=="snuevorango"||
+		    $enlacesModel=="ssurveydata"||
+		    $enlacesModel=="snuevosd"||
+		    $enlacesModel=="seditasd"||
+		    $enlacesModel=="srespaldoimagenes"||
+		    $enlacesModel=="seditasd"||
+		    $enlacesModel=="seditasd"
+		    
 			 
 			 ){
 

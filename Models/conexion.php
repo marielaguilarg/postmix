@@ -26,7 +26,7 @@ class Conexion {
             $stmt->execute();
 
       
-          $stmt->debugDumpParams();
+      //    $stmt->debugDumpParams();
 
 
             $respuesta = $stmt->fetchAll();
