@@ -27,10 +27,10 @@ function oculta(id, id2)
 }
 //-->
 </script>
-<?php
-
-$basepController = new BasePostmixController();
-$basepController->vistaReportePeriodo();
+<?php
+
+$basepController = new BasePostmixController();
+$basepController->vistaReportePeriodo();
 ?>
   <section class="content-header">
                 <h2><?php echo $basepController->getTitulo1()?></h2>
@@ -157,14 +157,14 @@ $basepController->vistaReportePeriodo();
 
 							<label><?php echo T_("Cuentas")?>: </label>
 
-							<!-- inicioBloque: tBusqueda -->
-
-<?php  foreach($basepController->getListaCuentas() as $cuenta ){
-
-    echo $cuenta;
-    
-}?>
-   
+							<!-- inicioBloque: tBusqueda -->
+
+<?php  foreach($basepController->getListaCuentas() as $cuenta ){
+
+    echo $cuenta;
+    
+}?>
+   
 <!-- finBloque: tBusqueda -->
 
 

@@ -1,6 +1,8 @@
 
  <?php $unegocioContoller=new unegocioController();
                         $unegocioContoller->vistaNuevoUnegocio();
+						$idc=$_GET["idc"];
+						
                     ?>﻿
 <section class="content-header">
       <h1> EDITAR PUNTO DE VENTA</h1>
@@ -220,6 +222,7 @@
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
                   <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaunegocio&idc=<?php echo $idc; ?>"> Cancelar </a></button>
               </div>
               </form>
               </div>
