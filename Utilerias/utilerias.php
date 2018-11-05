@@ -367,7 +367,7 @@ static function crearSelectOnChange($RS_SQM_TE, $nomselect,$funcionOC) {
             "<option value=''>- ".T_("TODOS")." -</option>";
 
     
-        if(sizeof($RS_SQM_TE)>2)
+        if(sizeof($RS_SQM_TE)>1)
           {  if($_SESSION["idiomaus"]==2) {
              
 //              die();
