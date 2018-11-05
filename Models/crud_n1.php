@@ -51,28 +51,6 @@ class Datosnuno extends Conexion{
 		$stmt->close();
 
 	}	  
-	
-	public function listaxCliente($idcli, $tabla){
-	    
-	    $stmt = Conexion::conectar()-> prepare("SELECT n1_id, n1_nombre, n1_idcliente FROM ca_nivel1 WHERE n1_idcliente=:idcli");
-	    
-	    
-	    
-	    $stmt-> bindParam(":idcli", $idcli, PDO::PARAM_INT);
-	    
-	    
-	    
-	    $stmt-> execute();
-	    
-	    
-	    
-	    return $stmt->fetchAll();
-	    
-	    
-	   
-	    
-	}
-	
 
 
 

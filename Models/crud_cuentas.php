@@ -8,7 +8,7 @@ class DatosCuenta extends Conexion{
     // vistaclientes
     public function vistaCuentasModel($tabla)
     {
-        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla;");
+        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla");
 
         $stmt->execute();
 
@@ -351,5 +351,43 @@ Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id  ";
 
         return $res;
     }
+
+    public function registroPonderaCuenta($datosModel, $tabla){
+
+		$stmt = Conexion::conectar()-> prepare("INSERT INTO cue_seccionesdetalles (ser_claveservicio, sec_numseccion, sd_clavecuenta, sd_ponderacion, sd_fechainicio, sd_fechafinal) VALUES(:nser, :nsec, :ncta, :npond, :fecini, :fecfin)");
+
+		$stmt->bindParam(":nser", $datosModel["nser"], PDO::PARAM_INT);
+		$stmt->bindParam(":nsec", $datosModel["nsec"], PDO::PARAM_INT);
+		$stmt->bindParam(":ncta", $datosModel["ncta"], PDO::PARAM_INT);
+		$stmt->bindParam(":npond", $datosModel["npond"], PDO::PARAM_INT);
+		$stmt->bindParam(":fecini", $datosModel["fecini"], PDO::PARAM_STR);
+		$stmt->bindParam(":fecfin", $datosModel["fecfin"], PDO::PARAM_STR);
+
+		if($stmt-> execute()){
+
+			return "success";
+		}
+		 else{
+
+		 	return "error";
+		 }
+		 $stmt->close();
+
+	}
+
+public function validaperiodocuenta($datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT `cue_seccionesdetalles`.`sd_fechainicio`, `cue_seccionesdetalles`.`sd_fechafinal`, `cue_seccionesdetalles`.`ser_claveservicio`,`cue_seccionesdetalles`.`sec_numseccion`, `cue_seccionesdetalles`.`sd_clavecuenta` FROM $tabla WHERE `cue_seccionesdetalles`.`ser_claveservicio` =:nser AND `cue_seccionesdetalles`.`sec_numseccion` =:nsec AND `cue_seccionesdetalles`.`sd_clavecuenta` =:ncta AND `cue_seccionesdetalles`.`sd_fechainicio` <=:fecini AND `cue_seccionesdetalles`.`sd_fechafinal` >=:fecini");
+
+		$stmt->bindParam("nser", $datosModel["nser"],PDO::PARAM_INT);
+		$stmt->bindParam("nsec", $datosModel["nsec"],PDO::PARAM_INT);
+		$stmt->bindParam("ncta", $datosModel["ncta"],PDO::PARAM_INT);
+		$stmt->bindParam("fecini", $datosModel["fecini"],PDO::PARAM_STR);	
+		
+		$stmt-> execute();
+
+		return $stmt->fetch();
+	}
+
+
 }
 

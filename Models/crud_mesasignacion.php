@@ -12,9 +12,8 @@ class DatosMesasignacion extends Conexion{
 			$stmt-> execute();
 			return $stmt->fetchall();
 		
-		
+			$stmt->close();
 	}
-	
 
 }
 

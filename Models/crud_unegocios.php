@@ -499,7 +499,7 @@ ins_generales ON i_unenumpunto=une_id
 
     public function unegociosxTipoMercado($tipomercado, $cliente, $franq) {
 
-        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios Inner Join ca_cuentas ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
+        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios Inner Join ca_cuentas ON ca_cuentas.cue_clavecuenta = ca_unegocios.cue_clavecuenta
 
 WHERE ca_cuentas.cue_tipomercado =:tipomer "
                 . "  and fc_idfranquiciacta=:fc_idfranquiciacta
@@ -509,7 +509,7 @@ WHERE ca_cuentas.cue_tipomercado =:tipomer "
 
 
         $parametros = array("tipomer" => $tipomercado,
-           
+            "scli" => $cliente,
             "fc_idfranquiciacta" => $franq);
 
         $res = Conexion::ejecutarQuery($sql, $parametros);
@@ -519,7 +519,7 @@ WHERE ca_cuentas.cue_tipomercado =:tipomer "
 
     public function unegocioxIdCuentaCuenta($idcta, $cta, $tabla) {
 
-        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios Inner Join ca_cuentas ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
+        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios Inner Join ca_cuentas ON ca_cuentas.cue_clavecuenta = ca_unegocios.cue_clavecuenta
 
 WHERE ca_unegocios.une_idcuenta =:idcta 
 
@@ -552,7 +552,7 @@ FROM
 
 ca_unegocios
 
-Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id AND ca_unegocios.ser_claveservicio = ca_cuentas.ser_claveservicio AND ca_unegocios.cli_idcliente = ca_cuentas.cli_idcliente";
+Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_clavecuenta AND ca_unegocios.ser_claveservicio = ca_cuentas.ser_claveservicio AND ca_unegocios.cli_idcliente = ca_cuentas.cli_idcliente";
 
 
 
@@ -776,26 +776,6 @@ cer_solicitud.sol_idcuenta,
         } catch (Exception $ex) {
             return "error";
         }
-    }
-    
-    public function unegocioxCuentaFranq( $cta,$fran) {
-        
-        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios 
-            
-WHERE ca_unegocios.cue_clavecuenta =:idcta and  fc_idfranquiciacta=:franqcuenta";
-        
-        
-        
-        $stmt = Conexion::conectar()->prepare($sql);
-        
-        $stmt->bindParam(":idcta", $cta,PDO::PARAM_INT);
-        $stmt->bindParam(":franqcuenta", $fran,PDO::PARAM_STR);
-        
-      
-        
-        $stmt->execute();
-       // $stmt->debugDumpParams();
-        return $stmt->fetchAll();
     }
 
 
