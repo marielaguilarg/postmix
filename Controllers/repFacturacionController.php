@@ -10,8 +10,8 @@ include_once "Models/crud_solicitudes.php";
 include_once "Models/crud_catalogoDetalle.php";
 include_once "Models/crud_inspectores.php";
 include_once "Utilerias/utilerias.php";
-require_once "libs/writeexcel/class.writeexcel_workbook.inc.php";
-require_once "libs/writeexcel/class.writeexcel_worksheet.inc.php";
+require_once "libs/PHP_XLSXWriter-master/xlsxwriter.class.php";
+
 class RepFacturacionController
 {
     private $mini;
@@ -24,6 +24,8 @@ class RepFacturacionController
     private $workbook;
     private $action;
     private $titulo;
+    private $hoja;
+    private $renglon;
    
     public function vistaRepFacturacion(){
         include "Utilerias/leevar.php";
@@ -213,47 +215,27 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         $base=substr($base, 0, strrpos($base,"\\"));
         
         $arrcolores=array("azul"=>"48","verde"=>"31","naranja"=>"orange","amarillo"=>"yellow",
-            "rojo"=>"62","verdeo"=>"30","gris"=>"gray", "blanco"=>"white", "verdef"=>"green", "rojof"=>"60" );
+            "rojo"=>"62","verdeo"=>"#0066cc","gris"=>"gray", "blanco"=>"white", "verdef"=>"green", "rojof"=>"60" );
         
-        $fname = tempnam($base."\\Archivos\\", $nomarch.".xls");
-        $this->workbook = new writeexcel_workbook($fname);
-        $this->worksheet =& $this->workbook->addworksheet('Inicio');
+        $fname = tempnam($base."\\Archivos\\", $nomarch.".xlsx");
+        $this->worksheet = new XLSXWriter();
+        $this->hoja='Inicio';
         
-        $this->worksheet->set_column(0, 0, 12);
-        $this->worksheet->set_column(1, 2, 15);
-        
-        $this->worksheet->set_column(3, 3, 35);
-        $this->worksheet->set_column(4, 4, 43);
-        $this->worksheet->set_column(5, 5, 15);
-        $this->worksheet->set_column(6, 7, 25);
-        $this->worksheet->set_column(8, 8, 50);
-        $this->worksheet->set_column(9, 10, 10);
-        $this->worksheet->set_column(11, 11, 125);
-        $this->worksheet->set_column(12, 12, 17);
-        $this->worksheet->set_column(13, 13, 15);
-        $this->worksheet->set_column(14, 14, 20);
-        $this->worksheet->set_column(15, 15, 15);
-        $this->worksheet->set_column(16, 16, 20);
-        $this->worksheet->set_column(17, 17, 35);
-        $this->worksheet->set_column(18, 18, 18);
-        $this->worksheet->set_column(19, 19, 15);
-        $this->worksheet->set_column(20, 20, 20);
-        $this->worksheet->set_column(21, 22, 15);
-        // REGISTRA DIVISION
+      
        
         
         
-        $text_format_b =& $this->workbook->addformat(array(
-            bold    => 1,
-            italic  => 0,
-            'fg_color'   =>  $arrcolores["verdeo"],
-            size    => 10,
-            font    => 'Comic Sans MS',
+        $text_format_b =array(
+            'font-style'    => 'bold',
+            
+            'fill'   =>  $arrcolores["verdeo"],
+            'font-size'    => 10,
+            font    => 'Arial Unicode MS',
       //      vAlign => 'vjustify',
-           Align => 'Center'
-        ));
+           'halign' => 'Center'
+        );
         
-     
+     	
         $letrae=65;
         
         //////////////////////////////////// nombres de cada columna o prueba//////////////////////////////
@@ -269,9 +251,9 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         $letra=65;
     
         $i=0;
-        for($i=0;$i<25;$i++) {
-            $this->worksheet->write($this->michr($letra++)."1", $enctablas[$i],$text_format_b);
-        }
+    //    for($i=0;$i<25;$i++) {
+            $this->worksheet->writeSheetRow($this->hoja, $enctablas,$text_format_b);
+   //     }
        
         
        
@@ -300,18 +282,22 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         $this->datosUNegocio($mes_asig,$mes_asig2,$diafin, $cclien, $idserv);
         $fin = microtime(true);
         $tiempo = $fin - $ini;
-        $this->workbook->close();
+       
         //
-        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"");
-        header("Content-Disposition: inline; filename=\"".$nomarch.".xls\"");
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate');
+        header("Content-Disposition: attachment; filename=\"".$nomarch.".xlsx\"");
+        $this->worksheet->writeToStdOut();
         //$fh=fopen($fname, "rb");
         //fpassthru($fh);
         //unlink($fname);
         //header("Content-Type: application/x-msexcel; name=\"example-demo.xls\"");
         //header("Content-Disposition: inline; filename=\"example-demo.xls\"");
-        $fh=fopen($fname, "rb");
-        fpassthru($fh);
-        unlink($fname);
+//         $fh=fopen($fname, "rb");
+
+//         fpassthru($fh);
+//         unlink($fname);
     }
         function datosUNegocio($mes_asig,$mes_asigfin, $diafin, $claclien,$idserv) {
       
@@ -408,21 +394,24 @@ ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B ON
             $letra=65;
             $ren_ex=2;
             
-            $text_format_det =& $this->workbook->addformat(array(
-                bold    => 0,
-                italic  => 0,
-                size    => 10,
-                font    => 'Comic Sans MS',
-                Align => 'Center'
-            ));
-            
+            $text_format_det =array(
+                
+                
+                'font-size'    => 10,
+                font    => 'Arial Unicode MS',
+                'halign' => 'Center'
+            );
+        //    var_dump($resultuneg);die();
             foreach ($resultuneg as $rowuneg) {
+            	$this->renglon=array();
                 for($i=0;$i<12;$i++) {//despliego cada columna
                     // echo $letra;
-                    $this->worksheet->write($this->michr($letra+$i).$ren_ex, $rowuneg[$i], $text_format_det);
-                }
+                  //  $this->worksheet->writeSheetRow($this->hoja, $rowuneg, $text_format_det);
+                	$this->renglon[]=$rowuneg[$i];
+               }
                 $mesasig = Utilerias::cambiaMesG($rowuneg[12]);
-                $this->worksheet->write($this->michr($letra+$i).$ren_ex, $mesasig, $text_format_det);
+                $this->renglon[]=$mesasig;
+               // $this->worksheet->writeSheetRow($this->hoja, $mesasig, $text_format_det);
                 $cveest = $rowuneg[13];
                 $fecest = $rowuneg[14];
                 $fecvis = $rowuneg[15];
@@ -471,7 +460,7 @@ WHERE cer_solicitud.sol_numrep =  '".$numrep."' AND cer_solicitud.sol_claveservi
                 $this->busest($cveest, $fecest, $fecvis, $numrep, $ren_ex);
                 $this->busaud($cveins, $nummues, $ren_ex);
                 $this->busemb($nummues, $ren_ex, $repcicd, $numrepcic, $repfin,$numfac,$repsc);
-                
+                $this->worksheet->writeSheetRow($this->hoja, $this->renglon, $text_format_det);
                 
                 $ren_ex++;
             }
@@ -479,13 +468,13 @@ WHERE cer_solicitud.sol_numrep =  '".$numrep."' AND cer_solicitud.sol_claveservi
         
         function busest($cveest1, $fecest1, $fecvis1, $numrep1, $ren_ex1){
             
-            $text_format_det =& $this->workbook->addformat(array(
-                bold    => 0,
-                italic  => 0,
-                size    => 10,
-                font    => 'Comic Sans MS',
-                Align => 'Center'
-            ));
+            $text_format_det =array(
+                
+                
+                'font-size'    => 10,
+                font    => 'Arial Unicode MS',
+                'halign' => 'Center'
+            );
             $sqltrep="SELECT
 ca_catalogosdetalle.cad_descripcionesp,
 ca_catalogosdetalle.cad_idopcion
@@ -497,24 +486,31 @@ ca_catalogosdetalle.cad_idopcion ='$cveest1'";
             //ECHO $sqltrep;
             $rstreg=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",46,$cveest1);
           
-            $this->worksheet->write($this->michr(78).$ren_ex1, $rstreg, $text_format_det);
-                $this->worksheet->write($this->michr(79).$ren_ex1, $fecest1, $text_format_det);
-                $this->worksheet->write($this->michr(80).$ren_ex1, $fecvis1, $text_format_det);
-                $this->worksheet->write($this->michr(81).$ren_ex1, $numrep1, $text_format_det);
+//             $this->worksheet->writeSheetRow($this->hoja, $rstreg, $text_format_det);
+//                 $this->worksheet->writeSheetRow($this->hoja, $fecest1, $text_format_det);
+//                 $this->worksheet->writeSheetRow($this->hoja, $fecvis1, $text_format_det);
+//                 $this->worksheet->writeSheetRow($this->hoja, $fecvis1, $text_format_det);
             
+                $this->renglon[]=$rstreg;
+                $this->renglon[]=$fecest1;
+                $this->renglon[]=$fecvis1;
+                $this->renglon[]=$fecvis1;
+                
+                
+                
         }
         
         
         
         function busaud($cveins1, $nummues1, $ren_ex1){
             
-            $text_format_det =$this->workbook->addformat(array(
-                bold    => 0,
-                italic  => 0,
-                size    => 10,
-                font    => 'Comic Sans MS',
-                Align => 'Center'
-            ));
+            $text_format_det =array(
+                
+                
+                'font-size'    => 10,
+                font    => 'Arial Unicode MS',
+                'halign' => 'Center'
+            );
             $sqltrep="SELECT
 ca_inspectores.ins_nombre
 FROM
@@ -524,19 +520,23 @@ ca_inspectores.ins_clave=$cveins1";
             //ECHO $sqltrep;
             $rowtr=DatosInspector::getInspectorxId($cveins1);
        
-                $this->worksheet->write($this->michr(82).$ren_ex1, $rowtr["ins_nombre"], $text_format_det);
-                $this->worksheet->write($this->michr(83).$ren_ex1, $nummues1, $text_format_det);
-           
+            //    $this->worksheet->writeSheetRow($this->hoja, $rowtr["ins_nombre"], $text_format_det);
+            //    $this->worksheet->writeSheetRow($this->hoja, $nummues1, $text_format_det);
+               
+                $this->renglon[]=$rowtr["ins_nombre"];
+                $this->renglon[]=$nummues1;
+                
+                
         }
         
         function busemb($nummues1, $ren_ex1,$repcic1,$numrepcic1,$repfin1,$numfac1,$repsc1){
-            $text_format_det =& $this->workbook->addformat(array(
-                bold    => 0,
-                italic  => 0,
-                size    => 10,
-                font    => 'Comic Sans MS',
-                Align => 'Center'
-            ));
+            $text_format_det =array(
+                
+                
+                'font-size'    => 10,
+                font    => 'Arial Unicode MS',
+                'halign' => 'Center'
+            );
             $sqltrep="select cad_descripcionesp
 from
 (SELECT
@@ -560,14 +560,19 @@ ca_catalogosdetalle.cad_idcatalogo =  '43') as B on  a.rm_embotelladora=B.cad_id
             $rstreg=Conexion::ejecutarQuery($sqltrep,array("nummues1"=>$nummues1));
           //  die();
             foreach ( $rstreg as $rowtr) {
-                $this->worksheet->write($this->michr(84).$ren_ex1, $rowtr[0], $text_format_det);
+               // $this->worksheet->writeSheetRow($this->hoja, $rowtr[0], $text_format_det);
+                $this->renglon[]=$rowtr[0];
             }
-            $this->worksheet->write($this->michr(85).$ren_ex1, $repcic1, $text_format_det);
-            $this->worksheet->write($this->michr(86).$ren_ex1, $numrepcic1, $text_format_det);
-            $this->worksheet->write($this->michr(87).$ren_ex1, $repfin1, $text_format_det);
-            $this->worksheet->write($this->michr(88).$ren_ex1, $numfac1, $text_format_det);
-            $this->worksheet->write($this->michr(89).$ren_ex1, $repsc1, $text_format_det);
-            
+//             $this->worksheet->writeSheetRow($this->hoja, $repcic1, $text_format_det);
+//             $this->worksheet->writeSheetRow($this->hoja, $numrepcic1, $text_format_det);
+//             $this->worksheet->writeSheetRow($this->hoja, $repfin1, $text_format_det);
+//             $this->worksheet->writeSheetRow($this->hoja, $numfac1, $text_format_det);
+//             $this->worksheet->writeSheetRow($this->hoja, $repsc1, $text_format_det);
+            $this->renglon[]=$repcic1;
+            $this->renglon[]=$numrepcic1;
+            $this->renglon[]=$repfin1;
+            $this->renglon[]=$numfac1;
+            $this->renglon[]=$repsc1;
         }
         
         

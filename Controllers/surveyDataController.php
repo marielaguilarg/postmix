@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 include "Models/crud_cuentas.php";
 include "Models/crud_surveyData.php";
-//include "Models/crud
+include "Models/crud_estandar.php";
 class SurveyDataController
 {  
    private $servicio;
@@ -63,14 +63,14 @@ class SurveyDataController
       
         $cad=$prueba->cierretabla();
    
-        $arch= "Archivos/".$nomcuenta.".xls";
+        $arch= "Archivos/".$nomcuenta.".xlsx";
   
         $this->creaarch($arch,$cad);						//se crea el archivo
      
        
-        $letrero= "pruebas.php?f=".$arch;
+       // $letrero= "pruebas.php?f=".$arch;
      //   echo     "<a href=\"".$letrero.'" title="vinculo">Descargar archivo</a>';
-         header("Content-type: application/octet-stream");
+         header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 //header("Content-type: application/force-download");
 //         // $f="calendario.ZIP";
          header("Content-Disposition: attachment; filename=\"".$arch."\"");

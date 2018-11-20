@@ -12,7 +12,7 @@ class FacturasController
     private $mensaje;
     public function actualizarFactura(){
         include "Utilerias/leevar.php";
-        echo $cserv;
+   
         if ($mesfin=1 || $mesfin=3 || $mesfin=5 || $mesfin=7 || $mesfin=8 || $mesfin=10 || $mesfin=12) {
             $diafin=31;
         } else if ($mesfin=4 || $mesfin=6 || $mesfin=9 || $mesfin=12) {
@@ -33,94 +33,120 @@ ORDER BY i_numreporte";
         foreach ($rs as $row){
             $nrep=$row["i_numreporte"];
             $comenom="numfac".$nrep;
-            //echo $comenom;
+         
             $comnom=${$comenom};
-            //echo $comnom;
+          
             $chknom="chk".$nrep;
             $valchk=${$chknom};
             // finalizar
             $finnom="fin".$nrep;
             $valfin=${$finnom};
+            $ban=0;
+            echo "<br>".$comenom."--".$valfin."--".$valchk;
+            $fact="";
+            $fin='';
             if ($valchk) {	  //si
                 //  echo "se selecciono ".$valchk;
-                $sqlv="UPDATE `ins_generales` SET `i_sincobro` = -1, `i_numfactura` = ''
-WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
-                $parametros=array("idser"=>$cserv,
-                    "numrep"=>$nrep,
-                    "cobro"=>-1,
-                    "factura"=>""
-                );
-                DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");
+//                 $sqlv="UPDATE `ins_generales` SET `i_sincobro` = -1, `i_numfactura` = ''
+// WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
+//                 $parametros=array("idser"=>$cserv,
+//                     "numrep"=>$nrep,
+//                     "cobro"=>-1,
+//                     "factura"=>""
+//                 );
+//                 DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");
+                $cobro=-1;
+                $fact="";
+                $ban=1;
             } else {   // es con cobro
-                $comnom=${$comenom};
-                if ($comnom) {
-                    $sqln="UPDATE `ins_generales` SET `i_numfactura` = '".$comnom."', `i_sincobro` =0 WHERE i_claveservicio=$cserv and i_numreporte=".$nrep.";";
-                    $parametros=array("idser"=>$cserv,
-                        "numrep"=>$nrep,
-                        "cobro"=>0,
-                        "factura"=>$comnom
-                    );
-                }else{
-                    $sqln="UPDATE `ins_generales` SET `i_numfactura` = null, `i_sincobro` =0 WHERE i_claveservicio=$cserv and i_numreporte=".$nrep.";";
-                    $parametros=array("idser"=>$cserv,
-                        "numrep"=>$nrep,
-                        "cobro"=>0,
-                        "factura"=>null
-                    );
-                    }
-                DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");
+             //   $comnom=${$comenom};
+               
+                 if ($comnom) {
+                 	$cobro=0;
+                 	$fact=$comnom;
+                 	$ban=1;
+                 }
+//                     $sqln="UPDATE `ins_generales` SET `i_numfactura` = '".$comnom."', `i_sincobro` =0 WHERE i_claveservicio=$cserv and i_numreporte=".$nrep.";";
+//                     $parametros=array("idser"=>$cserv,
+//                         "numrep"=>$nrep,
+//                         "cobro"=>0,
+//                         "factura"=>$comnom
+//                     );
+                    
+//¿¿                 }else{
+//                     $sqln="UPDATE `ins_generales` SET `i_numfactura` = null, `i_sincobro` =0 WHERE i_claveservicio=$cserv and i_numreporte=".$nrep.";";
+//                     $parametros=array("idser"=>$cserv,
+//                         "numrep"=>$nrep,
+//                         "cobro"=>0,
+//                         "factura"=>null
+//                     );
+                    
+//                     }
+//                 DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");
             }
             
             if ($valfin) {	  //si
                 //  echo "se selecciono ".$valchk;
-                $sqlf="UPDATE `ins_generales` SET `i_finalizado` = -1
-WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
-                $parametros=array("idser"=>$cserv,
-                    "numrep"=>$nrep,
-                    "fin"=>-1,
-                    "factura"=>$comnom
-                );
+//                 $sqlf="UPDATE `ins_generales` SET `i_finalizado` = -1
+// WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
+//                 $parametros=array("idser"=>$cserv,
+//                     "numrep"=>$nrep,
+//                     "fin"=>-1,
+//                     "factura"=>$comnom
+//                 );
+                $fin=-1;
+                $ban=1;
             } else {
                 //  echo "se selecciono ".$comenom;
-                $sqlf="UPDATE `ins_generales` SET `i_finalizado` = 0
-WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
-                $parametros=array("idser"=>$cserv,
-                    "numrep"=>$nrep,
-                    "fin"=>0,
-                    "factura"=>$comnom
-                );
+//                 $sqlf="UPDATE `ins_generales` SET `i_finalizado` = 0
+// WHERE i_claveservicio=$cserv and i_numreporte=$nrep";
+//                 $parametros=array("idser"=>$cserv,
+//                     "numrep"=>$nrep,
+//                     "fin"=>0,
+//                     "factura"=>$comnom
+//                 );
+                $fin=0;
+                $ban=1;
             }
             //echo $sqlf;
-            DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");
+            if($ban==1)
+            { $parametros=array("idser"=>$cserv,
+                                "numrep"=>$nrep,
+                                "cobro"=>$cobro,
+                                 "factura"=>$fact,
+            		           "fin"=>$fin
+                                );
+            DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");}
         }
-        $this->mensaje='<div class="alert aler-success" role="alert">Los datos se actualizaron correctamente</div>';
+        $this->mensaje='<div class="alert alert-success" role="alert">Los datos se actualizaron correctamente</div>';
         
         }
         catch(Exception $ex){
-            $this->mensaje='<div class="alert alert-danger">'.$ex." intente nuevamente</div>";
+            $this->mensaje='<div class="alert alert-danger">Error al actualizar, intente nuevamente</div>';
         }
         
-        header("Location: MENprincipal.php?op=panfac&fechaasig=".$mini."&fechaasig_fin=".$mfin."&cserv=".$cserv."&cclien=".$cclien);
-        
+       
     }
     public function vistaListaFacturas(){
         include "Utilerias/leevar.php";
-    switch($_GET["admin"]) {
+    switch($admin) {
         case "crear" :
             //  include('./MEIcreaponderado.php');
             $this->actualizarFactura();
          //   break;
-      
-        default:
+            $fechaasig=$mini;
+            $fechaasig_fin=$mfin;
             
-            $fechaasig=$fechainicio.".".$fechainicio2;
+    }
+        if(isset($fechainicio)) 
+        {    $fechaasig=$fechainicio.".".$fechainicio2;
             $fechaasig_fin=$fechafin.".".$fechafin2;
-            
+        
             $cclien=$claclien;
             //echo $cclien;
             $cserv=$idserv;
             $mesfin=$fechafin;
-            
+        }
           
             
             
@@ -266,16 +292,16 @@ group by ide_idmuestra";
                     
                 }
                 
-                $tipocampo="<div align='center'><input type='input' name='numfac".$row['i_numreporte']."' maxlength='10' size='10' value=".$row['i_numfactura']."></div>";
+                $tipocampo="<input type='input' name='numfac".$row['i_numreporte']."' maxlength='10' size='10' value='".$row['i_numfactura']."'>";
                 
                 $factura['numfac']=$tipocampo;
                 
-                if ($row['i_sincobro']) {
+                if ($row['i_sincobro']==-1) {
                     $cob="checked";
                 }else{
                     $cob="";
                 }
-                $tipocampo2="<div align='center'><input type='checkbox' name='chk".$row['i_numreporte']."' ".$cob." maxlength='10' size='10'></div>";
+                $tipocampo2="<div align='center'><input type='checkbox' name='chk".$row['i_numreporte']."' ".$cob." ></div>";
                 
                 $factura['sincob']=$tipocampo2;
                 //asigna finalizado	para seccion 1
@@ -295,7 +321,7 @@ group by ide_idmuestra";
                     }
                 }else{
                     //echo $row['i_finalizado'];
-                    if ($row['i_finalizado']) {
+                    if ($row['i_finalizado']==-1) {
                         $fina="checked";
                     }else{
                         $fina="";
@@ -303,7 +329,7 @@ group by ide_idmuestra";
                     //echo $fina;
                 }
                 
-                $finn="<div align='center'><input type='checkbox' name='fin".$row['i_numreporte']."' ".$fina." maxlength='10' size='10'></div>";
+                $finn="<div align='center'><input type='checkbox' name='fin".$row['i_numreporte']."' ".$fina." ></div>";
                 
             
                 $factura['final']=$finn;	  
@@ -316,7 +342,7 @@ group by ide_idmuestra";
             // }
             
             
-    } //switch
+   
     }
     /**
      * @return mixed

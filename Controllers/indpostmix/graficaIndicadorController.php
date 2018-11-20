@@ -656,25 +656,19 @@ cnfg_usuarios.cus_servicio=:servicio";
     
     
 
-    /**
-     * @return the $varnivel
-     */
+ 
     public function getVarnivel()
     {
         return $this->varnivel;
     }
 
-    /**
-     * @return the $gfilx
-     */
+  
     public function getGfilx()
     {
         return $this->gfilx;
     }
 
-    /**
-     * @return the $gfily
-     */
+  
     public function getGfily()
     {
         return $this->gfily;
@@ -688,17 +682,13 @@ cnfg_usuarios.cus_servicio=:servicio";
         $this->varnivel = $varnivel;
     }
 
-    /**
-     * @param field_type $gfilx
-     */
+   
     public function setGfilx($gfilx)
     {
         $this->gfilx = $gfilx;
     }
 
-    /**
-     * @param field_type $gfily
-     */
+  
     public function setGfily($gfily)
     {
         $this->gfily = $gfily;
@@ -785,9 +775,6 @@ cnfg_usuarios.cus_servicio=:servicio";
     }
     
 
-    /**
-     * @return the $listanivel2
-     */
     public function getListanivel2()
     {
         return $this->listanivel2;

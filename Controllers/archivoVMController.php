@@ -5,8 +5,7 @@
 //																		//
 //////////////////////////////////////////////////////////////////////////
 
- require_once "libs/writeexcel/class.writeexcel_workbook.inc.php";
- require_once "libs/writeexcel/class.writeexcel_worksheet.inc.php";
+require_once 'libs/PHPExcel-1.8/PHPExcel.php';
  require_once ('libs/php-gettext-1.0.12/gettext.inc');
 require 'Utilerias/inimultilenguaje.php';
 include "Models/crud_cuentas.php";
@@ -33,9 +32,11 @@ class ArchivoVMController
         ini_set("memory_limit","120M");
       
             
-            //    $arrcolores=array("azul"=>"#3333CC","verde"=>"#00CC00","naranja"=>"#FF9900","amarillo"=>"#FFFF33","#9933FF","rojo"=>"#FF0000","verdeo"=>"#CCFFFF","gris"=>"#999999", "verdef"=>"#006600", "rojof"=>"#AA0000" );
-            $this->arrcolores=array("azul"=>"27","verde"=>"50","naranja"=>"orange","amarillo"=>"yellow",
-                "rojo"=>"red","verdeo"=>"50","gris"=>"gray", "verdef"=>"green", "rojof"=>"60" );
+        $this->arrcolores=array("azul"=>"ff0066cc","verde"=>"ff00CC00","naranja"=>"ffFF9900",
+            "amarillo"=>"ffFFFF33","ff9933FF","rojo"=>"ffFF0000","verdeo"=>"ffCCFFFF",
+            "gris"=>"ff999999", "verdef"=>"ff006600", "rojof"=>"ffAA0000" );
+//             $this->arrcolores=array("azul"=>"27","verde"=>"50","naranja"=>"orange","amarillo"=>"yellow",
+//                 "rojo"=>"red","verdeo"=>"50","gris"=>"gray", "verdef"=>"green", "rojof"=>"60" );
             
             //    $arrcolores=array("azul"=>PHPExcel_Style_Color::COLOR_BLUE,"verde"=>PHPExcel_Style_Color::COLOR_GREEN,"naranja"=>PHPExcel_Style_Color::COLOR_DARKYELLOW,
             //        "amarillo"=>PHPExcel_Style_Color::COLOR_YELLOW,"rojo"=>PHPExcel_Style_Color::COLOR_RED,"verdeo"=>PHPExcel_Style_Color::COLOR_DARKGREEN,
@@ -48,19 +49,27 @@ class ArchivoVMController
                     
                     $arch= "../Archivos/".$nomcuenta.".xlsx";
                     
-                    $fname = tempnam("../Archivos/", $nomcuenta.".xls");
-                    $this->workbook =new writeexcel_workbook($fname);
+                    $fname = tempnam("../Archivos/", $nomcuenta.".xlsx");
+                    $this->workbook =new PHPExcel();
                 
-                    $this->worksheet =$this->workbook->addworksheet($cuenta);
+                    $this->worksheet =$this->workbook->getActiveSheet();
+                    $this->workbook->getActiveSheet()->setTitle($cuenta);
                     $this->reporte($cuenta,$arch);				//funcion que hace el reporte
                     // creaarch($arch,$cadtabla);
                     
                     $this->im=$this->ttotal=$this->ttotal2=0;
                  
-                    $this->workbook->close();
+                    $cellIterator = $this->worksheet->getRowIterator()->current()->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(true);
+                    /** @var PHPExcel_Cell $cell */
+                    foreach ($cellIterator as $cell) {
+                    	$this->worksheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+                    }
+                    $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
+                    $objWriter->save($fname);
                     
-                    header("Content-Type: application/x-msexcel; name=\"".$nomcuenta.".xls\"");
-                    header("Content-Disposition: inline; filename=\"".$nomcuenta.".xls\"");
+                    header("Content-Type: application/x-msexcel; name=\"".$nomcuenta.".xlsx\"");
+                    header("Content-Disposition: inline; filename=\"".$nomcuenta.".xlsx\"");
                     $fh=fopen($fname, "rb");
                     fpassthru($fh);
                     unlink($fname);
@@ -280,7 +289,9 @@ ORDER BY ins_generales.i_fechavisita,ins_generales.i_numreporte ASC";
             
             
             $res=Conexion::ejecutarQuery($cad,$parametros);
+            die();
             return $res;
+            
     }
     /**************Genera consulta a la base de datos para todas las cuentas
      cuando se quiera un reporte de todas *****************************/
@@ -548,12 +559,10 @@ WHERE  ins_generales.i_claveservicio=:servicio AND ins_generales.i_mesasignacion
         //    $encabezado=array("Business Unit","Market","Store Name","Survey Date-Time");
         //    /////////////////////////////////////////////////////////////////////////////////
         $this->totcol1=0; 
-        $text_format =& $this->workbook->addformat(array(
-            bold    => 0,
-            italic  => 0,
-            'fg_color'   =>  $this->arrcolores["amarillo"],
-            size    => 10,
-            font    => 'Comic Sans MS'
+        $text_format =array(
+              'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb'   =>  $this->arrcolores["amarillo"])),
+            'font' => array("size"    => 10,
+            "name"    => 'Arial Unicode MS'
         ));
       
         if ($cuenta!=-1)			//cuando cuenta es -1 significa que es un reporte de todas las cuentas
@@ -619,7 +628,8 @@ ins_generales.i_claveservicio=:servicio  ORDER BY
                             //     echo michr($letra).$ren."--". $val."<br>";
                             
                             
-                            $this->worksheet->write($this->michr($letra++).$ren, $val, $text_format);
+                            $this->worksheet->setCellValue($this->michr($letra).$ren, $val); 
+                            $this->worksheet->getStyle($this->michr($letra++).$ren)->applyFromArray($text_format);
                             
                         }
                         //$tablatemp->finren();
@@ -638,20 +648,20 @@ ins_generales.i_claveservicio=:servicio  ORDER BY
                     $fecha=explode('.',$fechaini);		//convierte la fecha en formato nombre mes año
                     $fecha2=date("F Y",mktime(0,0,0,$fecha[0],1,$fecha[1]));
                     $letra=65;
-                    $text_format = $this->workbook->addformat(array(
-                        bold    => 0,
-                        italic  => 0,
-                        'fg_color'   =>  $this->arrcolores["amarillo"],
-                        size    => 10,
-                        font    => 'Comic Sans MS'
+                    $text_format = array(
+                         'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                         		'startcolor' => array('argb'   =>  $this->arrcolores["amarillo"])),
+                        'font' => array("size"    => 10,
+                        "name"    => 'Arial Unicode MS'
                     ));
                     
-                    $this->worksheet->write($this->michr($letra++).$ren, "PV evaluados en ".$fecha2, $text_format);
+                    $this->worksheet->setCellValue($this->michr($letra).$ren, "PV evaluados en ".$fecha2); 
+                    $this->worksheet->getStyle($this->michr($letra++).$ren)->applyFromArray($text_format);
                     
+                  
                     
-              
-                    
-                    $this->worksheet->write($this->michr($letra++).$ren, $num_reg, $text_format);
+                    $this->worksheet->setCellValue($this->michr($letra).$ren, $num_reg);  
+                    $this->worksheet->getStyle($this->michr($letra++).$ren)->applyFromArray($text_format);
                     
                     $this->ttotal=$this->ttotal+$num_reg;
                     //$tablatemp->finren();
@@ -726,7 +736,8 @@ ins_generales.i_claveservicio=:servicio    AND
                 $res1=Conexion::ejecutarQuery($sSQL1,$parametros);
                
                 $total= sizeof($res1);		//numero de renglones por reporte
-                $this->worksheet->write($this->michr($letra).$renglon, $total, $text_format);
+                $this->worksheet->setCellValue($this->michr($letra).$renglon, $total);
+           //     $this->worksheet->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format);
                 
                 
                 if ($total>0) {
@@ -747,22 +758,22 @@ ins_generales.i_claveservicio=:servicio    AND
                     $a=$valores[0]/$total*100;
                     $a=round($a);
                     
-                    $this->worksheet->write($this->michr($letra++).$renglon,$a);
+                    $this->worksheet->setCellValue($this->michr($letra++).$renglon,$a);
                     
                     
                     $a=$valores[1]/$total*100;
                     $a=round($a);
-                    $this->worksheet->write($this->michr($letra++).$renglon,$a);
+                    $this->worksheet->setCellValue($this->michr($letra++).$renglon,$a);
                     
                     
                     $a=$valores[2]/$total*100;
                     $a=round($a);
-                    $this->worksheet->write($this->michr($letra++).$renglon,$a);
+                    $this->worksheet->setCellValue($this->michr($letra++).$renglon,$a);
                     
                     
                     $a=$valores[3]/$total*100;
                     $a=round($a);
-                    $this->worksheet->write($this->michr($letra++).$renglon,$a);
+                    $this->worksheet->setCellValue($this->michr($letra++).$renglon,$a);
                     
                     
                     
@@ -885,28 +896,28 @@ WHERE
                 // $tablatemp->nuevoren();
                 //$tablatemp->nuevacol(VACIO,"","");
                 
-                $this->worksheet->write($this->michr($letrai++).$renglon,"");
-                $text_format =$this->workbook->addformat(array(
-                    bold    => 0,
-                    italic  => 0,
-                    'fg_color'   =>  $this->arrcolores["rojof"],
-                    size    => 10,
-                    font    => 'Comic Sans MS'
+                $this->worksheet->setCellValue($this->michr($letrai++).$renglon,"");
+                $text_format =array(
+                    'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    		'startcolor' => array('argb'   =>  $this->arrcolores["rojof"])),
+                    'font' => array("size"    => 10,
+                    "name"    => 'Arial Unicode MS'
                 ));
                 
-                $this->worksheet->write($this->michr($letrai).$renglon,round($a*100)/100, $text_format);
+                $this->worksheet->setCellValue($this->michr($letrai).$renglon,round($a*100)/100);
+                $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                 $this->worksheet=$this->rangoCeldas($letrai++, $renglon, 2,$text_format,$this->worksheet);
                 $letrai++;
                 
-                $text_format = $this->workbook->addformat(array(
-                    bold    => 0,
-                    italic  => 0,
-                    'fg_color'   =>  $this->arrcolores["verdef"],
-                    size    => 10,
-                    font    => 'Comic Sans MS'
+                $text_format = array(
+                     'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                     		'startcolor' => array('argb'   =>  $this->arrcolores["verdef"])),
+                    'font' => array("size"    => 10,
+                    "name"    => 'Arial Unicode MS'
                 ));
                 
-                $this->worksheet->write($this->michr($letrai).$renglon,round($b*100)/100, $text_format);
+                $this->worksheet->setCellValue($this->michr($letrai).$renglon,round($b*100)/100); 
+                $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                 $this->worksheet=$this->rangoCeldas($letrai++, $renglon, 2,$text_format,$this->worksheet);
                 $letrai++;
                 
@@ -982,16 +993,15 @@ WHERE
             // $color=$arrcolores["gris"];
             $color=$this->arrcolores[$color_arr[$j++]];
             
-            $text_format =$this->workbook->addformat(array(
-                bold    => 0,
-                italic  => 0,
-                'fg_color'   => $color,
-                size    => 10,
-                font    => ''
+            $text_format =array(
+                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb'   => $color)),
+                'font' => array("size"    => 10,
+                'name'    => 'Arial Unicode MS'
             ));
             
             
-            $this->worksheet->write($this->michr($letra++).$renglon, $encabezado[$i], $text_format);
+            $this->worksheet->setCellValue($this->michr($letra).$renglon, $encabezado[$i]); 
+            $this->worksheet->getStyle($this->michr($letra++).$renglon)->applyFromArray($text_format);
             
             
         }
@@ -1028,7 +1038,7 @@ WHERE
                                     
                                     $val=$row[$i];
                                    
-                                    $this->worksheet->write($this->michr($letrait).$renglon, $val);
+                                    $this->worksheet->setCellValue($this->michr($letrait).$renglon, $val);
                                     $letrait++;
                                 }
                                 
@@ -1049,7 +1059,7 @@ WHERE
                             $color2=$this->arrcolores["verdef"];
                             $exp2=$exp1="";
                             if ($col==5) {
-                                $this->worksheet->write($this->michr($letrai++).$renglon, "");
+                                $this->worksheet->setCellValue($this->michr($letrai++).$renglon, "");
                                 $accion2='$this->worksheet=$this->rangoCeldas($letrai++, $renglon, 2,$text_format,$this->worksheet);';
                                 $exp2=2;
                                 
@@ -1067,40 +1077,42 @@ WHERE
                                 $accion1='$this->worksheet=$this->rangoCeldas($letrai++, $renglon, 2,$text_format,$this->worksheet);';
                             }
                             if($col==10||$col==11||$col==12||$col==6) {
-                                $this->worksheet->write($this->michr($letrai++).$renglon, "");
+                                $this->worksheet->setCellValue($this->michr($letrai++).$renglon, "");
                                 
                             }
                             if($col==13||$col==14) {
-                                $this->worksheet->write($this->michr($letrai++).$renglon, "");
+                                $this->worksheet->setCellValue($this->michr($letrai++).$renglon, "");
                                 $exp1=2;
                                 $accion1='$this->worksheet=$this->rangoCeldas($letrai++, $renglon, 2,$text_format,$this->worksheet);';
                                 
                                 
                             }
-                            //  echo "tot ".michr($letrai++).$renglon;
-                            //$tablatemp->nuevacol($ultren["porcr"],$color1,$exp1);
+                        
                             
-                            $text_format =$this->workbook->addformat(array(
-                                bold    => 0,
-                                italic  => 0,
-                                'fg_color'   => $color1,
-                                size    => 10,
-                                font    => 'Comic Sans MS'
+                            $text_format =array(
+                                
+                                
+                                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                		'startcolor' => array('argb'   => $color1)),
+                                'font' => array("size"    => 10,
+                                "name"    => 'Arial Unicode MS'
                             ));
                             
-                            $this->worksheet->write($this->michr($letrai).$renglon, $ultren["porcr"], $text_format);
+                            $this->worksheet->setCellValue($this->michr($letrai).$renglon, $ultren["porcr"]);
+                            $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                             eval($accion1);
                             $letrai++;
-                            $text_format = $this->workbook->addformat(array(
-                                bold    => 0,
-                                italic  => 0,
-                                'fg_color'   => $color2,
-                                size    => 10,
-                                font    => 'Comic Sans MS'
+                            $text_format = array(
+                                
+                                
+                                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                		'startcolor' => array('argb'   => $color2)),
+                                'font' => array("size"    => 10,
+                                "name"    => 'Arial Unicode MS'
                             ));
-                            
-                            $this->worksheet->write($this->michr($letrai).$renglon,$ultren["porcv"], $text_format);
-                            eval($accion2);
+                            $this->worksheet->setCellValue($this->michr($letrai).$renglon,$ultren["porcv"]);
+                            $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
+                             eval($accion2);
                             $letrai++;
                             //$tablatemp->finren();
                             
@@ -1110,32 +1122,36 @@ WHERE
                             //relleno con espacios en blanco
                             $letrait=$letrai;
                             for($i=0;$i<sizeof($res[0]);$i++) {
-                                $this->worksheet->write($this->michr($letrait).$renglon,"");
+                                $this->worksheet->setCellValue($this->michr($letrait).$renglon,"");
                                 
                                 $letrait++;
                             }
                             
                             
-                            $text_format = $this->workbook->addformat(array(
-                                bold    => 0,
-                                italic  => 0,
-                                'fg_color'   =>  $this->arrcolores["rojof"],
-                                size    => 10,
-                                font    => 'Comic Sans MS'
+                            $text_format = array(
+                                
+                                
+                                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                		'startcolor' => array('argb'   =>  $this->arrcolores["rojof"])),
+                                'font' => array("size"    => 10,
+                                "name"    => 'Arial Unicode MS'
                             ));
                             
-                            $this->worksheet->write($this->michr($letrai).$renglon,"0", $text_format);
+                            $this->worksheet->setCellValue($this->michr($letrai).$renglon,"0");
+                            $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                             
                             $letrai++;
-                            $text_format = $this->workbook->addformat(array(
-                                bold    => 0,
-                                italic  => 0,
-                                'fg_color'   =>  $this->arrcolores["verdef"],
-                                size    => 10,
-                                font    => 'Comic Sans MS'
+                            $text_format = array(
+                                
+                                
+                                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                		'startcolor' => array('argb'   =>  $this->arrcolores["verdef"])),
+                                'font' => array("size"    => 10,
+                                "name"    => 'Arial Unicode MS'
                             ));
                             
-                            $this->worksheet->write($this->michr($letrai).$renglon,"0", $text_format);
+                            $this->worksheet->setCellValue($this->michr($letrai).$renglon,"0"); 
+                            $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                             
                             $letrai++;
                             $this->aceptados[$this->im][$col]=0;
@@ -1208,15 +1224,15 @@ WHERE
          
             //$cadarchivo.="<td height='60' style='font:bold; color:#FFFFFF' bgcolor=\"".$arrcolores["azul"]."\" colspan=3>".$enctablas[0]."  DEL PERIODO:  ".$anio1."</td></tr><tr>";
             $letra=65;
-            $text_format = $this->workbook->addformat(array(
-                bold    => 1,
-                italic  => 1,
-                'fg_color'   => $this->arrcolores["verde"],
-                size    => 12,
-                font    => ''
+            $text_format = array(
+                 'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                		'startcolor' => array('argb'   => $this->arrcolores["verde"])),
+            		'font' => array('italic' => true,'bold' => true,"size"    => 12,
+                'name'    => 'Arial'
             ));
             
-            $this->worksheet->write($this->michr($letra).$ren_ex, $enctablas[0]."  DEL PERIODO:  ".$anio1, $text_format);
+            $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $enctablas[0]."  DEL PERIODO:  ".$anio1);
+            $this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, 4,$text_format);
             // $objPHPExcel->getActiveSheet()->mergeCells(rangoCeldas($letra,$ren_ex,3));
             
@@ -1227,36 +1243,38 @@ WHERE
              $nomcuenta=$res["cue_descripcion"];
             // $cadarchivo.="<td height='60' style='font:bold; color:#FFFFFF' bgcolor=\"".$arrcolores["azul"]."\" colspan=3>".$enctablas[0]."  ".$nomcuenta." DEL PERIODO:  ".$anio1."</td></tr><tr>";
             $letra=65;
-            $text_format = $this->workbook->addformat(array(
-                bold    => 1,
-                italic  => 1,
-                'fg_color'   => $this->arrcolores["verde"],
-                size    => 12,
-                font    => ''
+            $text_format = array(
+              
+                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                		'startcolor' => array('argb'   => $this->arrcolores["verde"])),
+            		'font' => array('italic' => true,'bold' => true,"size"    => 12,
+                "name"    => 'Arial Unicode MS'
             ));
             // $this->worksheet->set_column(1, 2, 20);
             $text_format->set_merge();
-            $this->worksheet->write($this->michr($letra).$ren_ex, $nomcuenta."  DEL PERIODO:  ".$anio2, $text_format);
+            $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $nomcuenta."  DEL PERIODO:  ".$anio2);
+            $this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, 4,$text_format);
             
         }
         $letra++;
         $ren_ex++;
-        $text_format = $this->workbook->addformat(array(
-            bold    => 1,
-            italic  => 1,
-            'fg_color'   => $this->arrcolores["azul"],
-            size    => 12,
-            font    => ''
+        $text_format = array(
+           
+            'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+            		'startcolor' => array('argb'   => $this->arrcolores["azul"])),
+        		'font' => array('italic' => true,'bold' => true,"size"    => 12,
+            "name"    => 'Arial Unicode MS'
         ));
-        $this->worksheet->write($this->michr($letra).$ren_ex, $enctablas[0]);
+        $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $enctablas[0]);
         $letra=69;
         for($i=1;$i<11;$i++) {
             
             //$cadarchivo.="<td style='font:bold; color:#FFFFFF' bgcolor=\"".$this->arrcolores["azul"]."\">".$enctablas[$i]."</td>";
             
             
-            $this->worksheet->write($this->michr($letra).$ren_ex, $enctablas[$i], $text_format);
+        	$this->worksheet->setCellValue($this->michr($letra).$ren_ex, $enctablas[$i]); 
+        	$this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, $arr_colxsec[$i-1],$text_format);
             // $objPHPExcel->getActiveSheet()->mergeCells(rangoCeldas($letra,$ren_ex,$arr_colxsec[$i-1]));
             
@@ -1271,15 +1289,17 @@ WHERE
         
         for($i=0;$i<4;$i++) {
             // echo michr($letra).'3'."--". $encabezadopv[$i]."<br>";
-            $text_format = $this->workbook->addformat(array(
-                bold    => 1,
-                italic  => 0,
-                'fg_color'   => $this->arrcolores["gris"],
-                size    => 10,
-                font    => ''
+            $text_format = array(
+              
+                
+                'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+                		'startcolor' => array('argb'   => $this->arrcolores["gris"])),
+            		'font' => array('italic' => true,'bold' => true,"size"    => 10,
+                "name"    => 'Arial Unicode MS'
             ));
             
-            $this->worksheet->write($this->michr($letra).'3', $encabezadopv[$i], $text_format);
+            $this->worksheet->setCellValue($this->michr($letra).'3', $encabezadopv[$i]); 
+            $this->worksheet->getStyle($this->michr($letra).'3')->applyFromArray($text_format);
             //$tablatemp->nuevacol($encabezado[$i],$this->arrcolores["gris"],"");		//despliega el nombre de cada columna
             $letra++;
             
@@ -1409,42 +1429,43 @@ WHERE
         }
         
         //$renaceptados="<tr><td height=\"15\">EVALUACION PROMEDIO ANUAL<td>";
-        $text_format =& $this->workbook->addformat(array(
-            bold    => 1,
-            italic  => 1,
-            'fg_color'   => $this->arrcolores["amarillo"],
-            size    => 10,
-            font    => 'Comic Sans MS'
+        $text_format = array(
+          
+            'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+            		'startcolor' => array('argb'   => $this->arrcolores["amarillo"])),
+        		'font' => array('italic' => true,'bold' => true,"size"    => 10,
+            "name"    => 'Arial Unicode MS'
         ));
         
-        $this->worksheet->write("A".$ren_ex,"PV Evaluados: ".$this->ttotal, $text_format);
+        $this->worksheet->setCellValue("A".$ren_ex,"PV Evaluados: ".$this->ttotal); 
+        $this->worksheet->getStyle("A".$ren_ex)->applyFromArray($text_format);
         $this->worksheet=$this->rangoCeldas(65, $ren_ex, 2,$text_format);
         // $objPHPExcel->getActiveSheet()->mergeCells(rangoCeldas(65,$ren_ex,2));
         
     
-        $this->worksheet->write("C".$ren_ex,"PROMEDIO ANUAL", $text_format);
+        $this->worksheet->setCellValue("C".$ren_ex,"PROMEDIO ANUAL"); 
+        $this->worksheet->getStyle("C".$ren_ex)->applyFromArray($text_format);
         $this->worksheet=$this->rangoCeldas(67, $ren_ex, 2,$text_format);
         //$objPHPExcel->getActiveSheet()->mergeCells(rangoCeldas(67,$ren_ex,2));
         $k=0;
         $letra=69;
-        $text_format =& $this->workbook->addformat(array(
-            bold    => 1,
-            italic  => 1,
-            'fg_color'   => $this->arrcolores["verde"],
-            size    => 10,
-            font    => 'Comic Sans MS'
+        $text_format =array(
+            'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+            		'startcolor' => array('argb'   => $this->arrcolores["verde"])),
+        		'font' => array('italic' => true,'bold' => true,"size"    => 10,
+            "name"    => 'Arial Unicode MS'
         ));
         for ($i=1;$i<sizeof($enctablas);$i++) {
             
             
-            $this->worksheet->write($this->michr($letra).$ren_ex, $enctablas[$i]." : ".$arreglot[$k++], $text_format);
+            $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $enctablas[$i]." : ".$arreglot[$k++]); 
+            $this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, $arr_colxsec[$i-1],$text_format);
             // $objPHPExcel->getActiveSheet()->mergeCells(rangoCeldas($letra,$ren_ex,$arr_colxsec[$i-1]));
             $letra+=$arr_colxsec[$i-1];
         }
         
-        
-       // $this->workbook->close();
+     
         
     }
     
@@ -1468,7 +1489,8 @@ WHERE
         
         //  echo $rango."<br>";
         for($i=1;$i<$colspan;$i++){
-            $this->worksheet->write_blank($this->michr($linicio+$i).$renglon,$text_format);
+        	$this->worksheet->setCellValue($this->michr($linicio+$i).$renglon,'');
+        	$this->worksheet->getStyle($this->michr($linicio+$i).$renglon)->applyFromArray($text_format);
         }
         
         return $this->worksheet;

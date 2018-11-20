@@ -570,4 +570,3 @@ $lonref=strlen($cadreferencia);
 	}
 
 }
-?>

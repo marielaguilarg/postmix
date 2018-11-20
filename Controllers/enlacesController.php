@@ -130,56 +130,7 @@ class enlacesController{
             
                   </a>';
         }
-//        <ul class="treeview-menu">';
-//        $resptres = Datosntres::vistatresModel(1,6, "ca_nivel3");
-//        foreach($resptres as $row => $itemtres){  
-//            echo '<li class="treeview">
-//            <a onclick="Cargar(\'u\',\''. $itemtres["n3_id"]. '\',\'5\',\'1.1.3\');" href="javascript:void(0);"><em class="fa fa-circle-o"></em>'.$itemtres["n3_nombre"] .'<span class="pull-right-container">
-//                  <em class="fa fa-angle-left pull-right"></em>
-//                </span></a>';
-//                 echo ' 
-//                 <ul class="treeview-menu">';
-//
-//                $respcua = Datosncua::vistancuaModel($itemtres["n3_id"],"ca_nivel4");
-//                foreach($respcua as $row => $itemcua){  
-//       
-//                  echo '   <li class="treeview">
-//                         <a href="javascript:Cargar(\'u\',\''.$itemcua["n4_id"].'\',\'5\',\'1.1.3\');"><em class="fa fa-circle-o"></em>'.$itemcua["n4_nombre"].' <span class="pull-right-container">
-//                  <em class="fa fa-angle-left pull-right"></em></spam></a> 
-//                    <ul class="treeview-menu">';
-//
-//                       $respcin = Datosncin::vistancinModel($itemcua["n4_id"],"ca_nivel5");
-//                      foreach($respcin as $row => $itemcin){  
-//
-//                    echo '<li class="treeview">
-//                         <a href="javascript:Cargar(\'u\',\''.$itemcin["n5_id"].'\',\'5\',\'1.1.3\');"><em class="fa fa-circle-o"></em> '.$itemcin["n5_nombre"].' <span class="pull-right-container">
-//                  <em class="fa fa-angle-left pull-right"></em></spam></a>
-//                  <ul class="treeview-menu">';
-//
-//                     $respseis = Datosnsei::vistanseiModel($itemcin["n5_id"],"ca_nivel6");
-//                     
-//                      foreach($respseis as $row => $itemseis){  
-//                  echo '
-//                    <li class="treeview">
-//                         <a href="javascript:Cargar(\'u\',\''.$itemseis["n6_id"].'\',\'5\',\'1.1.3\');"><em class="fa fa-circle-o"></em> '.$itemseis["n6_nombre"].' <span class="pull-right-container">
-//                  </spam></a>';
-//                      } // nivel seis  
-//
-//                  echo ' </li>
-//                  </ul>
-//                      </li>';
-//
-//                    } // foreach cinco
-//                   echo ' </ul> 
-//
-//                   </li>
-//                          ';
-//                }  // foreach cuatro
-//                echo '
-//                 </ul>
-//            </li>';
-//        
-//        } // foreach tres
+//   
         
         echo '</li>        ';
              

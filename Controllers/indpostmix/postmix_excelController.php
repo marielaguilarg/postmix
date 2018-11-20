@@ -3,10 +3,9 @@
 include 'Models/crud_estandar.php';
 include 'Models/crud_catalogoDetalle.php';
 include 'Models/crud_temporales.php';
-require_once "libs/writeexcel/class.writeexcel_workbook.inc.php";
-require_once "libs/writeexcel/class.writeexcel_worksheet.inc.php";
+require_once 'libs/PHPExcel-1.8/PHPExcel.php';
 
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ALL);
 
 
 class PostmixExcelController
@@ -20,85 +19,7 @@ class PostmixExcelController
     private $select2;
     private $select3,$letras;
     
-    public function prueba(){
-        $fname = tempnam(sys_get_temp_dir(), "demo.xls");
-        $workbook =new writeexcel_workbook($fname);
-        $worksheet =& $workbook->addworksheet('Demo');
-        $worksheet2 =& $workbook->addworksheet('Another sheet');
-        $worksheet3 =& $workbook->addworksheet('And another');
-        #######################################################################
-        #
-        # Write a general heading
-        #
-        $worksheet->set_column('A:B', 32);
-        $heading  =& $workbook->addformat(array(
-            "bold"    => 1,
-            "color"   => 'blue',
-            "size"    => 18,
-            "merge"   => 1,
-        ));
-        $headings = array('Features of php_writeexcel', '');
-        $worksheet->write_row('A1', $headings, $heading);
-        #######################################################################
-        #
-        # Some text examples
-        #
-        $text_format =& $workbook->addformat(array(
-            "bold"    => 1,
-            "italic"  => 1,
-            "color"   => 'red',
-            "size"    => 18,
-            "font"    => 'Comic Sans MS'
-        ));
-        $worksheet->write('A2', "Text");
-        $worksheet->write('B2', "Hello Excel");
-        $worksheet->write('A3', "Formatted text");
-        $worksheet->write('B3', "Hello Excel", $text_format);
-        #######################################################################
-        #
-        # Some numeric examples
-        #
-        $num1_format =& $workbook->addformat(array("num_format" => '$#,##0.00'));
-        $num2_format =& $workbook->addformat(array("num_format" => ' d mmmm yyy'));
-        $worksheet->write('A4', "Numbers");
-        $worksheet->write('B4', 1234.56);
-        $worksheet->write('A5', "Formatted numbers");
-        $worksheet->write('B5', 1234.56, $num1_format);
-        $worksheet->write('A6', "Formatted numbers");
-        $worksheet->write('B6', 37257, $num2_format);
-        #######################################################################
-        #
-        # Formulae
-        #
-        $worksheet->set_selection('B7');
-        $worksheet->write('A7', 'Formulas and functions, "=SIN(PI()/4)"');
-        $worksheet->write('B7', '=SIN(PI()/4)');
-        #######################################################################
-        #
-        # Hyperlinks
-        #
-        $worksheet->write('A8', "Hyperlinks");
-        $worksheet->write('B8',  'http://www.php.net/');
-        #######################################################################
-        #
-        # Images
-        #
-        $worksheet->write('A9', "Images");
-        //$worksheet->insert_bitmap('B9', 'php.bmp', 16, 8);
-        #######################################################################
-        #
-        # Misc
-        #
-        $worksheet->write('A17', "Page/printer setup");
-        $worksheet->write('A18', "Multiple worksheets");
-        $workbook->close();
-       
-        header("Content-Type: application/x-msexcel; name=\"example-demo.xls\"");
-        header("Content-Disposition: inline; filename=\"example-demo.xls\"");
-        $fh=fopen($fname, "rb");
-        fpassthru($fh);
-        unlink($fname);
-    }
+  
    public function exportar(){
        
     $ini = microtime(true);
@@ -107,7 +28,7 @@ class PostmixExcelController
    
    
     @session_start();
-   
+
     $user = $_SESSION["UsuarioInd"];
     $this->cliente=1;
     $this->servicio=1;
@@ -132,7 +53,7 @@ class PostmixExcelController
     `cus_servicio`,
     `cus_solcer` from cnfg_usuarios where cus_usuario=:idusuario";
     $param=array("idusuario"=>$user);		
-    $rsu=Conexion::ejecutarQuery($sql,$parametros);
+    $rsu=Conexion::ejecutarQuery($sql,$param);
     
    
     foreach ($rsu as $rowu) {
@@ -162,161 +83,173 @@ class PostmixExcelController
     ////echo "--".strrpos($base,"\\");
     $base=substr($base, 0, strrpos($base,"\\"));
     
-    $arrcolores=array("azul"=>"48","verde"=>"31","naranja"=>"orange","amarillo"=>"yellow",
-        "rojo"=>"62","verdeo"=>"30","gris"=>"gray", "blanco"=>"white", "verdef"=>"green", "rojof"=>"60" );
+    $arrcolores=array("azul"=>"ff0066cc","verde"=>"ff2f67d1",
+        "rojo"=>"ff5dade2","verdeo"=>"ff308cd8" );
    
-   $fname = tempnam($base."\\Archivos\\", $nomarch.".xls");
-  //  $fname = tempnam( sys_get_temp_dir(), $nomarch.".xls");
-    //$fname = tempnam("/tmp", "demo.xls");
-    $this->workbook = new writeexcel_workbook($fname);
-    $this->worksheet = $this->workbook->addworksheet('Postmix');
+   $fname = tempnam($base."\\Archivos\\", $nomarch.".xlsx");
+  //  $fname = tempnam( sys_get_temp_dir(), $nomarch.".xlsx");
+    //$fname = tempnam("/tmp", "demo.xlsx");
+    $this->workbook = new PHPExcel();
+    $this->workbook->getActiveSheet()->setTitle('Postmix');
     
-    $this->worksheet->set_column(0, 0, 40);
-    $this->worksheet->set_column(1, 2, 12);
-    $this->worksheet->set_column(3, 3, 15);
-    $this->worksheet->set_column(4, 4, 25);
-    $this->worksheet->set_column(5, 5, 10);
-    $this->worksheet->set_column(6, 6, 20);
-    
-    $this->worksheet->set_column(7, 7, 55);
-    $this->worksheet->set_column(8, 8, 25);
-    if ($gpous=="cic") {
-        $this->worksheet->set_column(9, 12, 17);
-        $this->worksheet->set_column(13, 26, 15);
-        $this->worksheet->set_column(27, 28, 20);
-        $this->worksheet->set_column(28, 28, 125);
-    } else {
-        $this->worksheet->set_column(9, 9, 55);
-        $this->worksheet->set_column(10, 10, 25);
-        $this->worksheet->set_column(11, 11, 55);
-        $this->worksheet->set_column(12, 12, 25);
-        $this->worksheet->set_column(13, 30, 15);
-        $this->worksheet->set_column(31, 46, 25);
-        $this->worksheet->set_column(47, 47, 15);
-        $this->worksheet->set_column(48, 48, 20);
-        $this->worksheet->set_column(49, 49, 20);
-        $this->worksheet->set_column(50, 52, 20);
-        $this->worksheet->set_column(53, 54, 25);
-        $this->worksheet->set_column(55, 55, 30);
-        $this->worksheet->set_column(56, 56, 125);
-    }
+    $this->workbook->setActiveSheetIndex(0);
     
     
     
     
     // REGISTRA DIVISION
-     $text_format =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["rojo"],
-        "size"    => 12,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Center'
-    ));
+     $text_format =array(
+     		'font' => array('bold' => true,'name'=>'Arial', "size"    => 12),
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+        		'startcolor' => array('argb'    =>  $arrcolores["rojo"])),
+       
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
     
     
-    $text_format_a =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["azul"],
-        "size"    => 12,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Left'
-    ));
+    $text_format_a =array(
+    		'font' => array('bold' => true,'name'=>'Arial', "size"    => 12),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["azul"])),
+       
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_LEFT)
+    );
     
-    $text_format1 =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["azul"],
-        "size"    => 12,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Center'
-    ));
-    
-    $text_format_b =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verdeo"],
-        "size"    => 10,
-        "font"    => 'Comic Sans MS',
+    $text_format1 =array(
+        'font' => array('bold' => true,'name'=>'Arial', "size"    => 12),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["azul"])),
+      
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
+      		
+    $text_format_b =array(
+    		'font' => array('bold' => true,'name'=>'Arial',"size"    => 10,),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["verdeo"])),
+       
        /* vAlign => 'vjustify',*/
-        "Align" => 'Center'
-    ));
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
-    $text_format_c =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verde"],
-        "size"    => 10,
-        "font"    => 'Comic Sans MS',
+    $text_format_c =array(
+    		'font' => array('bold' => true,'name'=>'Arial',"size"    => 10,),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["verde"])),
+        
        /* "vAlign" => 'vjustify',*/
-        "Align" => 'Center'
-    ));
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
      $letrae=65;
-  
-    $this->worksheet->write($this->michr($letrae++)."1", "",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", "DATOS",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", "DE",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", "AUDITORIA",$text_format);
+     $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "DATOS");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "DE");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "AUDITORIA");
+   
     for($i=0;$i<3;$i++) {
-        $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format);
+    	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+     
     }
     if ($gpous=="cic") {
-        $this->worksheet->write($this->michr($letrae++)."1", "ORDEN",$text_format1);
-        $this->worksheet->write($this->michr($letrae++)."1", "TRABAJO",$text_format1);
+    	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "ORDEN");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "TRABAJO");
+     
         
     } else {
         for($i=0;$i<1;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+         
         }
-        $this->worksheet->write($this->michr($letrae++)."1", "ORDEN",$text_format1);
-        $this->worksheet->write($this->michr($letrae++)."1", "DE",$text_format1);
-        $this->worksheet->write($this->michr($letrae++)."1", "TRABAJO",$text_format1);
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "ORDEN");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "DE");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", "TRABAJO"); 
+       
         for($i=0;$i<2;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+           
         }
     }
     for($i=0;$i<6;$i++) {
-        $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format);
-    }
+    	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
     
-    $this->worksheet->write($this->michr($letrae++)."1", " ATRIBUTOS ",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", " DE ",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", " LA ",$text_format);
-    $this->worksheet->write($this->michr($letrae++)."1", " BEBIDA ",$text_format);
+    }
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ATRIBUTOS ");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " DE ");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " LA "); 
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " BEBIDA ");
+  
     if ($gpous=="cic") {
         for($i=0;$i<6;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+           
         }
     } else {
         for($i=0;$i<8;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+          
         }
         for($i=0;$i<8;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+           
         }
-        
-        $this->worksheet->write($this->michr($letrae++)."1", " FISICOQUIMICO ",$text_format1);
-        $this->worksheet->write($this->michr($letrae++)."1", " AGUA ",$text_format1);
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " FISICOQUIMICO ");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " AGUA ");
+       
         for($i=0;$i<6;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+         
         }
         
         for($i=0;$i<1;$i++) {
-            $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format);
+        	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+         
         }
-        $this->worksheet->write($this->michr($letrae++)."1", " MICROBIOLOGICO ",$text_format);
-        $this->worksheet->write($this->michr($letrae++)."1", " AGUA ",$text_format);
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " MICROBIOLOGICO ");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " AGUA ");
+      
     }
     for($i=0;$i<2;$i++) {
-        $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+    	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
+       
     }
-    $this->worksheet->write($this->michr($letrae++)."1", " DATOS ",$text_format1);
-    $this->worksheet->write($this->michr($letrae++)."1", " DEL ",$text_format1);
-    $this->worksheet->write($this->michr($letrae++)."1", " ESTABLECIMIENTO ",$text_format_a);
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " DATOS ");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format1);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " DEL ");
+    $this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format_a);
+    $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ESTABLECIMIENTO "); 
+  
     for($i=0;$i<2;$i++) {
-        $this->worksheet->write($this->michr($letrae++)."1", " ",$text_format1);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae)."1", " ");
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letrae++)."1")->applyFromArray($text_format1);
     }
     
 //    hasta aqui todo correcto
@@ -340,79 +273,83 @@ class PostmixExcelController
     $arr_colxsec=array(
         4,3,3,5,3,3,3,3,3,4,4);
     
-    $text_format =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verde"],
-        "size"    => 10,
-        "font"    => 'Comic Sans MS',
+    $text_format =array(
+    		'font' => array('bold' => true,'name'=>'Arial',"size"    => 10,),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["verde"])),
+      
        /* "vAlign" => 'vjustify',*/
-        "Align" => 'center'
-    ));
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
-    $text_format1 =& $this->workbook->addformat(array(
-        "bold"    => 1,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verdeo"],
-        "size"    => 12,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Center'
-    ));
-    
-    
-    $text_format_det =& $this->workbook->addformat(array(
-        "bold"    => 0,
-        "italic"  => 0,
-        "size"    => 10,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Center'
-    ));
+    $text_format1 =array(
+    		'font' => array('bold' => true,'name'=>'Arial',"size"    => 12),
+       
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["verdeo"])),
+     
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
     
-    $text_format_det1 =& $this->workbook->addformat(array(
-        "bold"    => 0,
-        "italic"  => 0,
-        "size"    => 10,
-        "font"    => 'Comic Sans MS',
-        "Align" => 'Left'
-    ));
+    $text_format_det =array(
+         'font' => array("size"    => 10,
+        "name"    => 'Arial Unicode MS'),
+        		"alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
+    
+    
+    $text_format_det1 =array(
+       
+       
+        'font' => array("size"    => 10, "name"    => 'Arial Unicode MS'),
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_LEFT)
+    );
     // inicio en letra a=65
     $letra=65;
     $ren_ex=3;
     $i=0;
     for($i=0;$i<7;$i++) {
-        $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_b);
+        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+        $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
     }
     if ($gpous=="cic") {
         for($i=7;$i<13;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_c);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
         for($i=13;$i<31;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_b);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
     } else {
         for($i=7;$i<13;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_c);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
         for($i=13;$i<31;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_b);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
     }
     if ($gpous=="cic") {
         for($i=46;$i<53;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_c);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
     } else {
         for($i=31;$i<47;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_c);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
         
         for($i=47;$i<50;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_b);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
         
         for($i=50;$i<57;$i++) {
-            $this->worksheet->write($this->michr($letra++)."2", $enctablas[$i],$text_format_c);
+            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
     }
     
@@ -421,25 +358,22 @@ class PostmixExcelController
     //$esttablas[] = "4.24 a 5.76 (tolerancia de +- .75)";
     
     
-    $text_format_std =& $this->workbook->addformat(array(
-        "bold"    => 0,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verdeo"],
-        "size"    => 8,
-        "font"    => 'Comic Sans MS',
+    $text_format_std =array(
+    	'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+        		'startcolor' => array('argb' => $arrcolores["verdeo"],)),
+        'font' => array("size"    => 8,
+        "name"    => 'Arial Unicode MS',),
       /* vAlign => 'center',*/
-        "Align" => 'center'
-    ));
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
-    $text_format_std1 =& $this->workbook->addformat(array(
-        "bold"    => 0,
-        "italic"  => 0,
-        'fg_color'   =>  $arrcolores["verde"],
-        "size"    => 8,
-        "font"    => 'Comic Sans MS',
+    $text_format_std1 =array(
+        'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb' => $arrcolores["verde"],)),
+        'font' => array("size"    => 8,
+        "name"    => 'Arial Unicode MS',),
        /* vAlign => 'vjustify',*/
-        "Align" => 'center'
-    ));
+        "alignment" => array("horizontal"=>PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+    );
     
     $sql="SELECT
 cue_reactivosestandardetalle.red_estandar
@@ -486,44 +420,53 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
     $letra=65;
     for($i=0;$i<7;$i++) {
         $this->letras= $this->michr($letra++);
-        $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std);
+        $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+        $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
     }
     if ($gpous=="cic") {
         for($i=7;$i<13;$i++) {
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
         for($i=13;$i<31;$i++) {
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]); 
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
         }
         for($i=49;$i<59;$i++) {
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]); 
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
     } else {
         for($i=7;$i<13;$i++) {
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
         for($i=13;$i<31;$i++) {
          
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", utf8_decode($esttablas[$i]),$text_format_std);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", utf8_decode($esttablas[$i]));
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
         }
         for($i=31;$i<47;$i++) {
           
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3",utf8_decode($esttablas[$i]),$text_format_std1);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3",utf8_decode($esttablas[$i]));
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
         for($i=47;$i<50;$i++) {
            
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
         }
         for($i=50;$i<57;$i++) {
             $this->letras= $this->michr($letra++);
-            $this->worksheet->write ($this->letras."3", $esttablas[$i],$text_format_std1);
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+            $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
     }
     
@@ -564,15 +507,24 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
         $fin = microtime(true);
         $tiempo = $fin - $ini;
 
-        $this->workbook->close();
+        $sheet =  $this->workbook->getActiveSheet();
+        $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+        $cellIterator->setIterateOnlyExistingCells(true);
+        /** @var PHPExcel_Cell $cell */
+        foreach ($cellIterator as $cell) {
+        	$sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+        }
+     $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
+     $objWriter->save($fname);
         //
      
         //$fh=fopen($fname, "rb");
         //fpassthru($fh);
         //unlink($fname);
-        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xls\"; charset=iso-8859-1");
-       header("Content-Disposition: inline; filename=\"".$nomarch.".xls\"");
-      
+    
+        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xlsx\"; charset=iso-8859-1");
+       header("Content-Disposition: inline; filename=\"".$nomarch.".xlsx\"");
+    
         $fh=fopen($fname, "rb");
         fpassthru($fh);
         }catch (Exception $ex){
@@ -734,37 +686,55 @@ ins_generales.i_claveservicio=1 ";
                 
                 for($i=0;$i<3;$i++) {//despliego cada columna
                     if ($i>=1) {
-                        $this->worksheet->write($this->michr($letra).$ren_ex, $rowuneg[$i], $text_format_det);
+                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]);
+                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
                     } else {
-                        $this->worksheet->write($this->michr($letra).$ren_ex, $rowuneg[$i], $text_format_det1);
+                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]);
+                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
                     }
                     $letra++;
                 }
                 $letra++;
                 for($i=3;$i<6;$i++) {//despliego cada columna
                     if ($i>=1) {
-                        $this->worksheet->write($this->michr($letra).$ren_ex, $rowuneg[$i], $text_format_det);
+                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]); 
+                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
                     } else {
-                        $this->worksheet->write($this->michr($letra).$ren_ex, $rowuneg[$i], $text_format_det1);
+                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]); 
+                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
                     }
                     $letra++;
                 }
                 if ($grupous=="cic") {
-                    $this->worksheet->write($this->michr(88).$ren_ex, $rowuneg[5], $text_format_det1);
-                    $this->worksheet->write($this->michr(89).$ren_ex, $rowuneg[6], $text_format_det1);
-                    $this->worksheet->write($this->michr(90).$ren_ex, $rowuneg[7], $text_format_det1);
-                    $this->worksheet->write($this->michr(91).$ren_ex, $rowuneg[8], $text_format_det1);
-                    $this->worksheet->write($this->michr(92).$ren_ex, $rowuneg[9], $text_format_det1);
-                    $this->worksheet->write($this->michr(93).$ren_ex, $rowuneg[10], $text_format_det1);
-                    $this->worksheet->write($this->michr(94).$ren_ex, $rowuneg[11], $text_format_det1);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(88).$ren_ex, $rowuneg[5]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(88).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(89).$ren_ex, $rowuneg[6]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(89).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(90).$ren_ex, $rowuneg[7]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(90).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(91).$ren_ex, $rowuneg[8]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(91).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(92).$ren_ex, $rowuneg[9]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(92).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(93).$ren_ex, $rowuneg[10]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(93).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(94).$ren_ex, $rowuneg[11]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(94).$ren_ex)->applyFromArray($text_format_det);
                 } else {
-                    $this->worksheet->write($this->michr(115).$ren_ex, $rowuneg[6], $text_format_det1);
-                    $this->worksheet->write($this->michr(116).$ren_ex, $rowuneg[7], $text_format_det1);
-                    $this->worksheet->write($this->michr(117).$ren_ex, $rowuneg[8], $text_format_det1);
-                    $this->worksheet->write($this->michr(118).$ren_ex, $rowuneg[9], $text_format_det1);
-                    $this->worksheet->write($this->michr(119).$ren_ex, $rowuneg[10], $text_format_det1);
-                    $this->worksheet->write($this->michr(120).$ren_ex, $rowuneg[11], $text_format_det1);
-                    $this->worksheet->write($this->michr(121).$ren_ex, utf8_decode($rowuneg[12]), $text_format_det1);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(115).$ren_ex, $rowuneg[6]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(115).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(116).$ren_ex, $rowuneg[7]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(116).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(117).$ren_ex, $rowuneg[8]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(117).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(118).$ren_ex, $rowuneg[9]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(118).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(119).$ren_ex, $rowuneg[10]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(119).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(120).$ren_ex, $rowuneg[11]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(120).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr(121).$ren_ex, utf8_decode($rowuneg[12])); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr(121).$ren_ex)->applyFromArray($text_format_det);
                 }
                 $ren_ex++;
             }  // termina el while
@@ -794,7 +764,7 @@ ins_generales.i_claveservicio=1 ";
             } else {
                 $letra=96;
                 for($i=4;$i<sizeof($reactivos);$i++){
-                    $this->consultaEstandarRes($reactivos[$i], $letra, $text_format_det, $text_format_det1);
+                    $this->consultaEstandarRes($reactivos[$i], $letra, $text_format_det,$text_format_det);
                     $letra++;
                 }
             }
@@ -824,7 +794,7 @@ ins_generales.i_claveservicio=1 ";
         }
         
         
-        function asNumActivo($renglon,$letra, $text_format_det, $text_format_det1){
+        function asNumActivo($renglon,$letra, $text_format_det,$text_format_det1){
            
           
             // busca el numero de renglon a utilizar
@@ -851,7 +821,8 @@ group by i_numreporte order by i_numreporte;";
                 }else{
                     $numactivo="";
                 }
-                $this->worksheet->write($this->michr($letra).$renglon, $numactivo, $text_format_det1);
+                $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon, $numactivo);
+                $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format_det);
                 $renglon++;
             }
         }
@@ -913,10 +884,10 @@ and ins_detalleestandar.ide_numcaracteristica3=9)and ins_detalleestandar.ide_cla
                     }
                 }
                 $this->letras= $this->michr(72);
-                $this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $mantcor, $text_format_det);
                 
                 $this->letras= $this->michr(73);
-                $this->worksheet->write ($this->letras.$nren, $razonmant, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $razonmant, $text_format_det);
                 $nren++;
             }
         }
@@ -986,12 +957,12 @@ on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = ide_numr
                         break;
                 }
                 //$this->letras= $this->michr(70);
-                //$this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
+                //$this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $mantcor, $text_format_det);
                 $this->letras= $this->michr(74);
                
-                $this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $mantcor, $text_format_det);
                 $this->letras= $this->michr(75);
-                $this->worksheet->write ($this->letras.$nren, $razonmant, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $razonmant, $text_format_det);
                 $nren++;
             }
         }
@@ -1124,9 +1095,9 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                         break;
                 }
                 $this->letras= $this->michr(76);
-                $this->worksheet->write ($this->letras.$nren, $mantcor, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $mantcor, $text_format_det);
                 $this->letras= $this->michr(77);
-                $this->worksheet->write ($this->letras.$nren, $razonmant, $text_format_det);
+                $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $razonmant, $text_format_det);
                 $nren++;
             }
         }
@@ -1183,20 +1154,20 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                                     }
                                 
                             }
-                            $this->worksheet->write($this->michr($letra).$ren, round($row["ide_valorreal"],2), $text_format_det);
+                            $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren, round($row["ide_valorreal"],2));
+                            $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren)->applyFromArray($text_format_det);
                         }
                   
                       $letra++;
                     
                 }
                 else
-                { $this->worksheet->write($this->michr($letra).$ren, "", $text_format_det);
+                { $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren, "");
+                $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren)->applyFromArray($text_format_det);
                 $letra++;
                 }
             }
        
-            //	 $this->worksheet->write($this->michr(70).$ren, $calival, $text_format_det);
-            //	 $this->worksheet->write($this->michr(71).$ren, $sabores);
             return $sabores;
         }
         
@@ -1247,12 +1218,14 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                     $estandar = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$row["red_clavecatalogo"],$row["ide_valorreal"]);
                    
                    
-                    $this->worksheet->write($this->michr($letra).$renglon,utf8_decode($estandar), $text_format_det1);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon,utf8_decode($estandar));
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format_det);
                    
                 }
                 else
                     //echo $letra;
-                    $this->worksheet->write($this->michr($letra).$renglon, $row[0], $text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon, $row[0]); 
+                $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format_det);
                     $renglon++;
                     
             }

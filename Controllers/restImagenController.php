@@ -1,54 +1,58 @@
 <?php
+$base=getcwd();
 
+//         $pos=strrpos($base,'\\');
+//         $base=substr($base,0,$pos);
+define('RAIZ',$base."\\fotografias".DIRECTORY_SEPARATOR);
 
 class RestImagenController
 {
+	private $listaErrores;
     
     public function cargarRespaldo(){
         
         include "Utilerias/leevar.php";
         if($adm=="car"){
-        $base=getcwd();
-        
-        $pos=strrpos($base,'\\');
-        $base=substr($base,0,$pos);
-        define('RAIZ',$base."\\fotografias");
+     
         //define('RAIZ',"C:\\AppServ\\www\\Muesmerc\\fotografias");
-        
+      //  echo RAIZ;
         
         ini_set('max_execution_time', 3600);
         ini_set("memory_limit","500M");
-        
-        // var_dump($_FILES);
+        ini_set("upload_max_filesize","500M");
+       // upload_max_filesize
+         
         //
         // valido archivos
         // valido extension
-        
+   //     var_dump($_FILES);
         $nomcampo="userfile";
         $archivozip=$_FILES[$nomcampo]["name"];
         $ext=substr(strrchr($archivozip, "."),1);
-        //echo "ww".$archivozip;
+      
+       
         // valido que sea .zip
         $msg = "EL ARCHIVO DE RESPALDO ES INCORRECTO";
         $msg2 = '<table width="400" border="0"  align="center"  >' .
             '<tr><td height="30px"></td></tr><tr><td class="infocuadro" align="center">' . $msg . '</td></tr><tr><td height="30px"></td></tr>
-                <tr><td align="center"><a href="MESprincipal.php?op=respimg&adm=res">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
+                <tr><td align="center"><a href="index.php?action=srestaurarimagen&adm=res">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
         
         if($ext=='zip'){
             if($_FILES["userfile"]["type"]!="application/octet-stream"&&$_FILES["userfile"]["type"]!="application/zip"&&$_FILES["userfile"]["type"]!="application/x-zip-compressed"&&$_FILES["userfile"]["type"]!="application/binary") // el primero debe ser zip
             {
                 //finalizo con
-                //  echo $_FILES["userfile"]["type"];
+              //  echo "--".$_FILES["userfile"]["type"][0];
                 die($msg2);
             }
         }
         else
             die("err2".$msg2);
+                
             // reviso sql;
             $msg = "err2 EL ARCHIVO DE RESPALDO DE DATOS ES INCORRECTO";
             $msg2 = '<table width="400" border="0"  align="center"  >' .
                 '<tr><td height="30px"></td></tr><tr><td class="infocuadro" align="center">' . $msg . '</td></tr><tr><td height="30px"></td></tr>
-         <tr><td align="center"><a href="MESprincipal.php?op=respimg&adm=res">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
+         <tr><td align="center"><a href="index.php?action=srestaurarimagen&adm=res">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
             $nomcampo="archsql";
             $archivobk=$_FILES[$nomcampo]["name"];
             $ext=substr(strrchr($archivobk, "."),1);
@@ -62,21 +66,24 @@ class RestImagenController
             }
             else
                 die($msg2);
-                
-                if(restauraimagen())
-                //        echo "todo bien<br>";
-                {restaurabd($_FILES);
+                    
+                if($this->restauraimagen())
+            
+                {
+                $this->restaurabd();
                 $msg = "PROCESO FINALIZADO SATISFACTORIAMENTE";
+                if($this->listaErrores!="")
+                	$msg.=" PERO CON ALGUNOS ERRORES:<br>".$this->listaErrores;
                 $msg2 = '<table width="400" border="0"  align="center"  >' .
                     '<tr><td height="30px"></td></tr><tr><td class="infocuadro" align="center">' . $msg . '</td></tr><tr><td height="30px"></td></tr>
-                    <tr><td align="center"><a href="MESprincipal.php?op=respimg">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
+                    <tr><td align="center"><a href="index.php?action=srestaurarimagen">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
                 echo $msg2;
                 }
                 else
                 {
                     $msg2 = '<table width="400" border="0"  align="center"  >' .
                         '<tr><td height="30px"></td></tr>
-                    <tr><td align="center"><a href="MESprincipal.php?op=respimg">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
+                    <tr><td align="center"><a href="index.php?action=srestaurarimagen">&lt;&lt;  '."Regresar".'  </a> </td></tr></table>';
                     echo $msg2;
                 }
         }
@@ -85,9 +92,9 @@ class RestImagenController
                 //----------------------------------------------
                 //           seccion de funciones
                 //----------------------------------------------
-                function restaurabd($_FILES) {
-                    $ress=subirarchivo($_FILES , RAIZ , "archsql");
-                    $arch_bd =RAIZ."/".$_FILES ["archsql"] ["name"];
+                function restaurabd() {
+                    $ress=$this->subirarchivo(  "archsql");
+                    $arch_bd =RAIZ.$_FILES ["archsql"] ["name"];
                     $f = fopen ($arch_bd,"r");
                     $ln= 0;
                     
@@ -99,7 +106,11 @@ class RestImagenController
                         {
                         }
                         else {
-                            mysql_query($line);
+                        	try{
+                            Conexion::ejecutarInsert($line,array());
+                        	}catch(Exception $ex){
+                        		$this->listaErrores.="<br>error al ejecutar insert en la base de datos ";
+                        	}
                         }
                     }
                     fclose ($f);
@@ -113,9 +124,10 @@ class RestImagenController
                     $ress=0;
                     $resd=0;
                     /* subida de archivo a la carpeta fotografias*/
-                    $folder = "../fotografias/";
+                    $folder = RAIZ;
+                
                     $maxlimit = 5000000; // Máximo límite de tamaño (en bits)
-                    $allowed_ext = "rar,jpg,zip"; // Extensiones permitidas (usad una coma para separarlas)
+                    $allowed_ext = "rar,jpg,zip"; // Extensiones permitidas (usar una coma para separarlas)
                     $overwrite = "no"; // Permitir sobreescritura? (yes/no)
                     
                     $match = "";
@@ -149,7 +161,7 @@ class RestImagenController
                     if($error){
                         print "Se ha producido el siguiente error al subir el archivo:<br> $error"; // Muestra los errores
                     }else{
-                        //echo "subiendo..";
+                    //	echo "subiendo..". $folder.$filename;
                         if(move_uploaded_file($_FILES['userfile']['tmp_name'], $folder.$filename)){ // Finalmente sube el archivo
                             //     print "<b>$filename</b> se ha subido correctamente!"; //el mensaje que saldra cuando el archivo este subido
                             $ress=1;
@@ -163,11 +175,14 @@ class RestImagenController
                      * descomprimo archivo
                      */
                     $name = $_FILES ["userfile"] ["name"];
+                   
                     if ($ress==1) {
                         // descomprime archivo
-                        $resd=descomprime(RAIZ."/".$name );
+                       // $resd=$this->descomprime(RAIZ.$name );
+                    	
+                    	$resd=$this->descomprimir2(RAIZ.$name );
                         //borra zip
-                        unlink(RAIZ."/".$name );
+                        unlink(RAIZ.$name );
                     } else {
                         echo '<div align="center">';
                         echo "<br><h2>Error al cargar el archivo, intenta de nuevo</h2>";
@@ -180,8 +195,9 @@ class RestImagenController
                 }
                 
                 //'application/octet-stream'
-                function subirarchivo($_FILES,$carpeta_guarda,$nomcampo) {
-                    $folder = "../fotografias/";
+                function subirarchivo($nomcampo) {
+                    $folder = RAIZ;
+                   
                     $maxlimit = 5000000; // Máximo límite de tamaño (en bits)
                     
                     $overwrite = "no"; // Permitir sobreescritura? (yes/no)
@@ -262,6 +278,35 @@ class RestImagenController
                     $success=$zip->Extract(RAIZ);
                     //  print 'Success!' .$success."--".$n. "\n";
                     return $success;
+                }
+               
+                function    descomprimir2($ruta){
+                	$zip = new ZipArchive;
+                
+                	if ($zip->open($ruta) === TRUE)
+                	{
+                		$success=$zip->extractTo(RAIZ);
+//                 		for($i = 0; $i < $zip->numFiles; $i++)
+//                 		{
+//                 			//obtenemos ruta que tendrán los documentos cuando los descomprimamos
+//                 			if(substr($zip->getNameIndex($i),-1)=="/") //es directorio
+//                 			{
+//                 				//creo el directorio
+//                 				mkdir(RAIZ.$zip->getNameIndex($i));
+//                 				continue;
+                				
+//                 			}
+//                 			$zip->extractTo(RAIZ, $zip->getNameIndex($i));
+                		
+//                 			//obtenemos nombre del fichero
+//                 		//	$nombresFichZIP['name'][$i] = $zip->getNameIndex($i);
+//                 		}
+                		
+                		//descomprimimos zip
+                		//$zip->extractTo('almacen/');
+                		$zip->close();
+                	}
+                	return $success;
                 }
 }
 

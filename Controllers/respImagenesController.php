@@ -1,6 +1,6 @@
 <?php
 
-
+include "Controllers/borrarImagenesController.php";
 class RespImagenesController
 {
     private $OPCLIENTES;
@@ -16,14 +16,16 @@ class RespImagenesController
     private $fechafin;
     private $fechafin2;
     private $txt;
+    private $verligas;
     public function vistaRespladoImagenes(){
        include "Utilerias/leevar.php";  
+       $this->verligas="style='display:none'";
         switch ($adm) {
             
             case 'desc' :
                 
                 //para descargar
-                $f = $_GET["f"];
+               
                 $f="../Archivos/".$f;
                 //nombre corto
                 //$arch_zip="imagenes_".date("dmyHi").".zip";
@@ -33,9 +35,10 @@ class RespImagenesController
                 fpassthru($fp);
                 break;
             case 'del' :
-                include ('./MESborraimagenes.php');
+                $borrar=new BorrarImagenesController();
+                $borrar->borrarImagenes();
                 break;
-           
+           die();
             case 'eli' :
                 include ('./MESselecrespaldo.php');
                 break;
@@ -48,9 +51,11 @@ class RespImagenesController
                 header("prueba_respaldo2.php");
                 break;
             case 'lis':
-                include ('./MESrenrespaldoimagenes.php');
+              $this->renRespaldos();
+             
                break;
-            default :
+           
+        }
                 
                
                 
@@ -60,7 +65,7 @@ class RespImagenesController
 `ca_clientes`.`cli_nombrecliente`
 FROM `muestreo`.`ca_clientes`;";
                 $sql_cli=Datos::vistaClientesModel("ca_clientes");
-                var_dump($sql_cli);
+             
                 $this->OPCLIENTES=Utilerias::crearSelectOnChange($sql_cli,'crcliente','cargaContenidoCliente(this.id)');
                 $this->OPSERVICIOS=Utilerias::crearSelectOnChange('','crservicio','cargaContenidoCliente(this.id)');
                 $this->OPCUENTAS= Utilerias::crearSelectOnChange('', 'cuenta','cargaContenidoCliente(this.id)');
@@ -72,7 +77,7 @@ FROM `muestreo`.`ca_clientes`;";
                 }
                 $this->meses_opt=$opciones_mes;
             
-        }
+        
     }
         public function renRespaldos(){
             include "Utilerias/leevar.php";  
@@ -92,11 +97,12 @@ FROM `muestreo`.`ca_clientes`;";
             $this->fechafin=$fechafin;
             $this->fechafin2=$fechafin2;
            
-            
+            $this->verligas="style='display:block'";
         }
         
         function respaldobdImagen(){
-            include "Utilerias/leevar.php";  
+            include "Utilerias/leevar.php"; 
+            $tabla="ins_imagendetalle";
             $ruta_respaldo="bk_".$tabla.date("dmYhi").".txt";
             $array_tablas_chicas=array();//en un array junto todas las tablas chicas
             
@@ -114,9 +120,9 @@ FROM `muestreo`.`ca_clientes`;";
             
             //Recorro las tablas de la base de datos y veo cuantos registros tiene cada una de ellas
             $contador_tablas=1;//Por defecto, para llevar el orden de la que toca respaldar en cada momento
-            $search_info_tabla=Conexion::ejecutarQuery("DESCRIBE :tabla",array("tabla"=>$tabla));
+            $search_info_tabla=Conexion::ejecutarQuerysp("DESCRIBE ".$tabla);
             //La consulta sacada lanza todos los atributos de la entidad, pero solo me interesa en este caso sacar el primero el cual es la clave de la tabla
-            
+       
             $clave_obtenida='no';//para poder hacer lo anteriormente comentado
             
             foreach($search_info_tabla as $row) {
@@ -127,16 +133,17 @@ FROM `muestreo`.`ca_clientes`;";
             }//cerrando el foreach que recorre la descripccion de la tabla
             
             //consulto el total de registros que tiene la tabla
-            $sql="SELECT COUNT(:clave_principal) FROM :tabla";
+            $sql="SELECT COUNT($clave_principal) FROM $tabla";
             //echo $sql;
-            $search_total_registros_tabla=Conexion::ejecutarQuery($sql,array("tabla"=>$tabla,"clave_principal"=>$clave_principal)) ;
+            $search_total_registros_tabla=Conexion::ejecutarQuerysp($sql) ;
+           
             foreach($search_total_registros_tabla as $row ) {
                 $total_registros=$row[0];
             }//cerrando el foreach que recorre la descripccion de la tabla
             
             
             //RESPALDO TABLAS GRANDES
-            //echo $total_registros.">".$registro_tablas_chicas;
+          //  echo $total_registros.">".$registro_tablas_chicas;
             if ($total_registros>$registro_tablas_chicas) {//es una tabla grande
                 if ($paso==$contador_tablas) {//Toca respaldar la tabla !!!
                     
@@ -151,7 +158,7 @@ FROM `muestreo`.`ca_clientes`;";
                         //die();
                         if ($from<=$total_registros) {//se respalda la parte que estamos recorriendo
                             $txt='';
-                            $this->crear_respaldo($tabla,$from,'no');
+                            $this->crear_respaldo($tabla,$from,'no',$maximo_registros);
                             $this->respaldar();
                             
                             $from=$from+$maximo_registros;//Para que continue con la siguiente parte
@@ -165,7 +172,7 @@ FROM `muestreo`.`ca_clientes`;";
                         
                     }else {//se puede respaldar enterita !!!
                         $txt='';
-                        $this->crear_respaldo($tabla,'0','si');
+                        $this->crear_respaldo($tabla,'0','si',$maximo_registros);
                         $this->respaldar();
                     }//cerrando if que revisa si la tabla se respalda por parte o enterita
                     
@@ -184,7 +191,7 @@ FROM `muestreo`.`ca_clientes`;";
                 $txt='';
                 foreach ($array_tablas_chicas as $tabla) {
                     
-                    $this->crear_respaldo($tabla,'0','si');
+                	$this->crear_respaldo($tabla,'0','si',$maximo_registros);
                     $paso++;
                 }//cerrando el foreach que recorre el array de las tablas chicas
                 
@@ -193,9 +200,9 @@ FROM `muestreo`.`ca_clientes`;";
             //
             //include ('MEcon_off.php');
             
-            
+        
             $cantidad_tablas_base_datos=1;
-            //echo $paso.">=".$cantidad_tablas_base_datos;
+           // echo $paso.">=".$cantidad_tablas_base_datos;
             if ($paso>=$cantidad_tablas_base_datos) {//Proceso finalizado
                 //echo "paso".$cantidad_tablas_base_datos;
                 //
@@ -204,7 +211,7 @@ FROM `muestreo`.`ca_clientes`;";
                 //    <a href="MESprincipal.php?op=respimg&adm=del&ref='.$referencia.'&feci='.$fechainicio.'.'.$fechainicio2.'&fecf='.$fechafin.'.'.$fechafin2.'">DESCARGAR ARCHIVO</a><br/>';
                 
                 // RESPALDO
-                $this->respaldar();
+            	$this->respaldar($ruta_respaldo);
             }else {//faltan tablas por recorrer
                 $paso=$paso+1;
                 echo "<META HTTP-EQUIV='REFRESH' CONTENT=0;URL='MESrespaldobdimagen.php?paso=$paso'>";
@@ -213,36 +220,30 @@ FROM `muestreo`.`ca_clientes`;";
         }
             // FUNCIONES
             
-            function crear_respaldo($tablita,$desde,$todo) {
+        function crear_respaldo($tablita,$desde,$todo,$maximo_registros) {
                 
               
-                global $maximo_registros;
-                global $crcliente;
-                global $crservicio;
-                global $cuenta;
-                global $fechainicio;
-                global $fechafin;
-                global $fechainicio2;
-                global $fechafin2;
+           
+        	include "Utilerias/leevar.php"; 
                 
                   
                 //Datos
                 if ($todo=='si') {//se respalda toda la tabla
-                    $parametros=array("tablita"=>$tablita);
+                   
                     $consulta="SELECT ins_imagendetalle.id_imgclaveservicio,
 ins_imagendetalle.id_imgnumreporte,
 ins_imagendetalle.id_imgnumseccion,
 ins_imagendetalle.id_imgnumreactivo,
 ins_imagendetalle.id_idimagen,
-ins_imagendetalle.id_ruta FROM :tablita";
+ins_imagendetalle.id_ruta, `id_descripcion`,`id_presentar` FROM $tablita";
                 }else {//se respalda la parte que corresponde
                     $consulta="SELECT ins_imagendetalle.id_imgclaveservicio,
 ins_imagendetalle.id_imgnumreporte,
 ins_imagendetalle.id_imgnumseccion,
 ins_imagendetalle.id_imgnumreactivo,
 ins_imagendetalle.id_idimagen,
-ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
-                    $parametros["maximo_registros"]=$maximo_registros;
+ins_imagendetalle.id_ruta,`id_descripcion`,`id_presentar` FROM $tablita LIMIT $desde,$maximo_registros";
+                 
                 }//cerrando If que ve si se respalda toda la tabla o una parte de ella
                 $consulta.=" INNER JOIN ins_generales ON i_claveservicio=id_imgclaveservicio AND i_numreporte=id_imgnumreporte";
                 // armo filtros
@@ -250,7 +251,9 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
                     if($crservicio!=0) {
                         if($cuenta!=0) { //  por periodo
                             //por cuenta;
-                            $consulta.=" WHERE id_imgclaveservicio=:crservicio AND i_clavecuenta=:cuenta
+                            $consulta.=" inner join `ca_unegocios`
+ON `une_id`=`i_unenumpunto`  AND cue_clavecuenta=:cuenta
+ WHERE id_imgclaveservicio=:crservicio 
  AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechainicio,'.',:fechainicio2),'%d.%m.%Y')
  AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin ,'.',:fechafin2),'%d.%m.%Y') ;    ";
                             $parametros["crservicio"]=$crservicio;
@@ -263,7 +266,7 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
                         else // todas las cuentas
                         {
                             // con periodo y por servicio
-                            $consulta.=" WHERE id_imgclaveservicio=:crservicio'
+                            $consulta.=" WHERE id_imgclaveservicio=:crservicio
   AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechainicio ,'.',:fechainicio2),'%d.%m.%Y')
  AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin ,'.',:fechafin2),'%d.%m.%Y')  ;    ";
                             $parametros["crservicio"]=$crservicio;
@@ -279,7 +282,7 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
                 else {// todos los servicios
                     // con periodo
                     // busco los servicios
-                    $consulta.=" WHERE  ins_generales.i_idcliente=:crcliente'  AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechainicio ,'.',:fechainicio2),'%d.%m.%Y')
+                    $consulta.=" inner join `ca_servicios` ON `ser_id`=`i_claveservicio` WHERE `ser_idcliente`=:crcliente and   STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechainicio ,'.',:fechainicio2),'%d.%m.%Y')
  AND STR_TO_DATE(CONCAT('01.',i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin ,'.',:fechafin2),'%d.%m.%Y') ;     ";
                     $parametros["crcliente"]=$crcliente;
                  
@@ -327,8 +330,8 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
             //**********************************************************
             
             
-            function respaldar() {
-                global $ruta_respaldo;
+            function respaldar($ruta_respaldo) {
+                 $ruta_respaldo;
               
               
              
@@ -337,6 +340,9 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
                 echo $this->txt;
             }//fin de la funcion
 
+         
+            	
+            
             /**
              * @return mixed
              */
@@ -439,6 +445,13 @@ ins_imagendetalle.id_ruta FROM :tablita LIMIT :desde,:maximo_registros";
             {
                 return $this->meses_opt;
             }
+			/**
+			 * @return string
+			 */
+			public function getVerligas() {
+				return $this->verligas;
+			}
+		
         
                 
             

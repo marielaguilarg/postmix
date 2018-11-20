@@ -112,7 +112,7 @@ class BuscapvController
                 // nivel uno por default
                 $GradoNivel = $VarNivel2;
             $this->varnivel = $VarNivel2;
-            if ($VarNivel2 == NULL) {} else {
+            if ($VarNivel2 == NULL) { $Nivel01 = 1;} else {
                 // die($VarNivel2."--".$grupo);
                 $Nivel01 = 1;
                 
@@ -398,6 +398,7 @@ class BuscapvController
                  }
                 $referencia=array("",$Nivel01,$Nivel02,$Nivel03,$Nivel04,$Nivel05,$Nivel06);
                 $rs_cuentas = DatosCuenta::cuentasxNivel($VarNivel2,$referencia,$uscliente);
+              //  die();
                 $this->listaCuentas[] = '<select style="width:300px" class="form-control"  name="cuenta" id="cuenta" onChange="cargaContenidoCuenta(this.id,\'crcliente\',\'crservicio\');">';
                 $i = 0;
                 if (sizeof($rs_cuentas) > 1) // si tiene mas de una cuenta aparece la opcion todas
