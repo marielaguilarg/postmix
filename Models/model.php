@@ -124,7 +124,26 @@ class EnlacesPaginas{
 		    $enlacesModel == "listaestatussolicitud"||
 		    
 		    //seccion de consultas
-		    $enlacesModel=="inicio_excel"
+		    $enlacesModel=="inicio_excel"||
+            $enlacesModel=="repfacturacion" ||
+		    $enlacesModel=="listafacturas"||
+		    //seccion de configuracion
+		    $enlacesModel=="slistagrupos"||
+		    $enlacesModel=="slistapermisos" ||
+		    $enlacesModel=="slistausuarios"||
+		    $enlacesModel=="snuevogrupo"||
+		    $enlacesModel=="snuevopermiso" ||
+		    $enlacesModel=="snuevousuario"||
+		    $enlacesModel=="srangosgraffrec"||
+		    $enlacesModel=="ssecciongrafica" ||
+		    $enlacesModel=="snuevorango"||
+		    $enlacesModel=="ssurveydata"||
+		    $enlacesModel=="snuevosd"||
+		    $enlacesModel=="seditasd"||
+		    $enlacesModel=="srespaldoimagenes"||
+		    $enlacesModel=="srestaurarimagen"||
+		    $enlacesModel=="seditasd"
+		    
 			 
 			 ){
 

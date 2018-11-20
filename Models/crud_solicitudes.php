@@ -300,7 +300,7 @@ and (sol_estatussolicitud=1 or sol_estatussolicitud=2);";
 
 }
 
-?>	
+
 
 
 

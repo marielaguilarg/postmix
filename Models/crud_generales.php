@@ -359,7 +359,55 @@ public function finalizaSolicitud($idser, $numrep, $estsol, $tabla){
 			$stmt->close();
 
 	}
+
+
+
+public function getReportexPeriodo($idser, $mini, $mesfin, $mfin, $tabla){
+    $sql="SELECT  i_numreporte
+FROM ".$tabla." 
+WHERE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')) >= str_to_date(concat('01.',:mini),'%d.%m.%Y') 
+AND (str_to_date(concat(:mesfin,'.',ins_generales.i_mesasignacion),'%d.%m.%Y')) <= str_to_date(concat(:mesfin,'.',:mfin),'%d.%m.%Y') 
+and  i_claveservicio=:cserv ORDER BY i_numreporte";
+    
+    
+    $stmt=Conexion::conectar()->prepare($sql);
+    
+    $stmt-> bindParam(":cserv", $idser, PDO::PARAM_INT);
+    $stmt-> bindParam(":mini", $mini, PDO::PARAM_STR);
+    $stmt-> bindParam(":mesfin", $mesfin, PDO::PARAM_STR);
+    $stmt-> bindParam(":mfin", $mfin, PDO::PARAM_STR);
+    
+    $stmt-> execute();
+    $stmt->debugDumpParams();
+    return $stmt->fetchAll();
+    
+   
+}
+public function actualizarDatosFactura($datosModel, $tabla){
+    $sqlv="UPDATE `ins_generales` SET `i_sincobro` = :cobro, `i_numfactura` = :factura,`i_finalizado` = :fin
+WHERE i_claveservicio=:cserv and i_numreporte=:nrep";
+    try{
+        $stmt=Conexion::conectar()->prepare($sqlv);
+        $stmt->bindParam(":cserv", $datosModel["idser"], PDO::PARAM_INT);
+        $stmt->bindParam(":nrep", $datosModel["numrep"], PDO::PARAM_INT);
+       
+        $stmt->bindParam(":cobro", $datosModel["cobro"], PDO::PARAM_STR);
+        $stmt->bindParam(":factura", $datosModel["factura"], PDO::PARAM_STR);
+        $stmt->bindParam(":fin", $datosModel["fin"], PDO::PARAM_STR);
+        
+       if(!$stmt->execute())
+       { 
+       	$stmt->debugDumpParams();
+       	throw new Exception("Error al actualizar");
+       }
+     //  $stmt->debugDumpParams();
+    }catch(PDOException $ex){
+        throw new Exception("Error al actualizar");
+    }
+    
+    
 }
 
+}
 
 ?>

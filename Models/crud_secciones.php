@@ -8,13 +8,7 @@ class DatosSeccion extends Conexion {
     public function vistaSeccionModel($datosModel, $tabla) {
 
         $stmt = Conexion::conectar()->prepare("SELECT ser_claveservicio, sec_numseccion, sec_descripcionesp, sec_descripcioning, sec_nomsecesp, sec_nomsecing, sec_tiposeccion, sec_ponderacion, sec_nomsecind, sec_ordsecind, sec_indagua FROM $tabla where ser_claveservicio=:ids ");
-
-
-
         $stmt->bindParam(":ids", $datosModel, PDO::PARAM_INT);
-
-
-
         $stmt->execute();
 
 
@@ -805,7 +799,7 @@ cue_secciones.sec_numseccion =  :seccion";
 		$stmt-> execute();
 
 		return $stmt->fetch();
-	}
+}
 
  
  
