@@ -61,36 +61,38 @@
                         </ul>
                     </li>
 
-            <li class="treeview">
-                  <a href="#"><i class="fa fa-circle-o"></i> Punto de Venta
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-              <ul class="treeview-menu">
-                    <li class="treeview"><a href="#""><i class="fa fa-circle-o"></i> Agregar Punto de Venta <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                      </span></a>
-                      <ul class="treeview-menu">
-                          <?php unegocioController::listaClientesCuentas(); ?>
-                      </ul>
-                    </li>
-                
-                  <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Todos los Puntos
-                      <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                    </a>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Punto de Venta
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="index.php?action=listaunegocio"><i class="fa fa-circle-o"></i> Todos los puntos</a>
+                                <ul class="treeview-menu">
+                                    <?php
 
-                    <ul class="treeview-menu">  
-                      <?php
-                      $ingreso = new enlacesController();
-                      $ingreso -> listaserviciosCues();
-                      ?>
-                    </ul>
-                  </li>                   
-              </ul>
+                                    $ingreso = new enlacesController();
+                                    $ingreso->listaserviciosCues();
+
+                                    ?>
+
+                               
+                            </li>
+
+
+                            <li class="treeview"><a href="#" ><i class="fa fa-circle-o"></i> Agregar Punto de Venta 
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span></a>
+                                <ul class="treeview-menu">
+                                    <?php unegocioController::listaClientesCuentas(); ?>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
             </li>
             <li class="treeview"><a href="#"><em class="fa fa-file"></em> Reporte
                     <span class="pull-right-container">
@@ -117,11 +119,11 @@
                 <ul class="treeview-menu">
                     <li><a href="#"><i class="fa fa-circle-o"></i> Rep. de Resultados
                         </a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Rep. de Facturación
+                    <li><a href="index.php?action=repfacturacion"><i class="fa fa-circle-o"></i> Rep. de Facturación
                         </a></li>
                     <li><a href="index.php?action=inicio_excel"><i class="fa fa-circle-o"></i> Rep. Inicio
                         </a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Reg. Facturas
+                    <li><a href="index.php?action=repfacturacion&admin=panfac"><i class="fa fa-circle-o"></i> Reg. Facturas
                         </a></li>
                     <li><a href="index.php?action=indrepxperiodo&op=repres"><i class="fa fa-circle-o"></i> Res. Resultados
                         </a></li>
@@ -270,6 +272,36 @@
                 </li>
 
         </ul>
+        </li>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-book"></i>
+            <span>Configuracion</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+       <ul class="treeview-menu">
+                <li>
+                  <a href="index.php?action=slistagrupos"><i class="fa fa-circle-o"></i> Grupos
+                  </a>  
+                </li>
+                <li>
+                  <a href="index.php?action=ssurveydata"><i class="fa fa-circle-o"></i> Config. Survey Data
+                  </a>  
+                </li>
+                <li>
+                  <a  href="index.php?action=ssecciongrafica"><i class="fa fa-circle-o"></i> Config. Gráfica
+                  </a>  
+                </li>
+                <li>
+                  <a  href="index.php?action=srespaldoimagenes"><i class="fa fa-circle-o"></i> Respaldos
+                  </a>  
+                </li>
+               
+
+        </ul>
+        </li>
         <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

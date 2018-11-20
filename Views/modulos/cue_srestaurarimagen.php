@@ -3,7 +3,7 @@
  
 	function Activar()
 	{
-		document.uform.submit.disabled=false;
+		document.getElementById("subbutton").disabled=false;
 	}
 	function cargando(form){
 	if(document.getElementById("userfile").value.length||document.getElementById("archsql").value.length)
@@ -20,11 +20,11 @@
 </script>
 <?php
 
-include 'Controllers/restImagenController.php';
+require 'Controllers/restImagenController.php';
 
-$permisoController= new RestImagenController();
+$restaurarController= new RestImagenController();
 
-$permisoController->cargarRespaldo();
+$restaurarController->cargarRespaldo();
 
 ?>
  <section class="content-header">
@@ -40,19 +40,19 @@ $permisoController->cargarRespaldo();
               <h3 class="box-title">SELECCIONAR ARCHIVOS :</h3>
             </div>
             <div class="box-body">
-             <form role="form" name="uform" action="index.php?sresaurarimagen&adm=car" method="post" enctype="mutipart/form-data" onsubmit="cargando(this);" >
+             <form role="form" name="uform" action="index.php?action=srestaurarimagen&adm=car" method="post" enctype="multipart/form-data" onsubmit="cargando(this);" >
               
-               <input name="grupo" type="hidden" value="<?php echo $permisoController->getGrupo()?>" />
+              
 	 <div class="col-sm-10" ><label> Archivo de imagenes zip  </label>
-        <input type="file" name="userfile" id="userfile" class="form-control"   onchange="Activar();"  /></div>
+        <input type="file" name="userfile" id="userfile" class="form-control"   onchange="Activar();" accept=".zip" /></div>
         <div class="col-sm-10" ><label>
-        Archivo sql
-        <input type="file" name="archsql" id="archsql" class="form-control"   onchange="Activar();"   />
-            </label>
-	
+        Archivo sql</label>
+        <input type="file" name="archsql" id="archsql" class="form-control"   onchange="Activar();" accept=".txt"  />
+           
+	</div>
                 <div class="col-sm-12" style="padding-top: 50px; border-bottom: hidden">
-                 <button  type="button" class="btn btn-default pull-right" style="margin-left: 10px" ><a href="index.php?action=slistapermisos&id=<?php echo $permisoController->getGrupo()?>">Cancelar</a></button>
-                <button type="submit" class="btn btn-info pull-right" disabled>Guardar</button>
+                 <a class="btn btn-default pull-right" href="index.php?action=srespaldoimagenes" style="margin-left: 10px">Cancelar</a>
+                <button type="submit" id="subbutton" class="btn btn-info pull-right" disabled="disabled">Restaurar</button>
               </div>
                </form>
               </div>

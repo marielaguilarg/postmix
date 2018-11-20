@@ -1,7 +1,7 @@
 
 <?php 
 
-$estadisticasController=new EstadisticasController;
+$estadisticasController=new EstadisticasController();
 $estadisticasController->vistaIndEstadisticaRes();
         
         ?>

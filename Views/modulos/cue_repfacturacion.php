@@ -58,18 +58,16 @@ $repFacturaController=new RepFacturacionController;
 
         <div class="box-header with-border">
 
-            <h3 class="box-title">ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DEFINA EL PERIODO Y EL CLIENTE :</h3>
+            <h3 class="box-title">ESTIMADO USUARIO, PARA EXPORTAR EL ARCHIVO DEFINA EL PERIODO Y EL CLIENTE</h3>
   </div>
 
         <div class="box-body">
 <form name="form1" id="form1" method="post" action="<?php echo $repFacturaController->getAction()?>" >
    <div class="row">
-   <div class="col-md-4">
-          <input name="NomUsuario" type="hidden" id="NomUsuario" value="{USUARIO}" />
-  
-  
+   <div class="col-md-2">
+        
     <label>INDICE DE : </label></div>
-       <div class="col-md-4"><select class="form-control"  name="fechainicio" type="text" id="fechainicio" >
+       <div class="col-md-2"><select class="form-control"  name="fechainicio"  id="fechainicio" >
 	
     
          <?php foreach($repFacturaController->getMini() as $mini){ 
@@ -79,7 +77,7 @@ $repFacturaController=new RepFacturacionController;
              
        
 	</select></div>
-	<div class="col-md-4">
+	<div class="col-md-2">
 	 <select class="form-control" name="fechainicio2">
  
       
@@ -91,16 +89,16 @@ $repFacturaController=new RepFacturacionController;
       } ?>
              
        </select></div>
-          <div class="col-md-4">
+          <div class="col-md-2">
     <label>AL INDICE DE :</label></div>
-       <div class="col-md-4">
+       <div class="col-md-2">
    <select class="form-control"   id="fechafin" name="fechafin" >
     <?php foreach($repFacturaController->getMfin() as $mfin){ 
              echo $mfin;}
       
            ?>
 	</select></div>
-       <div class="col-md-4">
+       <div class="col-md-2">
        <select class="form-control" name="fechafin2">
 	  <?php foreach($repFacturaController->getPini() as $pini){
               
@@ -111,11 +109,11 @@ $repFacturaController=new RepFacturacionController;
        </select>
       
        
-  </div>
-    <div class="col-md-6">
+  </div></div>
+    <div class="col-md-2">
     <label>CLIENTE :</label></div>
-       <div class="col-md-6">
-       <select class="form-control"  type="text" id="claclien" name="claclien" onChange='cargaContenidoCliente(this.value)'>
+       <div class="col-md-4">
+       <select class="form-control" id="claclien" name="claclien" onChange='cargaContenidoCliente(this.value)'>
    
       
           <?php foreach($repFacturaController->getCinsp() as $cinsp){ 
@@ -125,9 +123,9 @@ $repFacturaController=new RepFacturacionController;
            
 	</select></div>
     
-    <div class="col-md-6">
+    <div class="col-md-2">
     <label>SERVICIO :</label></div>
-       <div class="col-md-6">
+       <div class="col-md-4">
    <select class="form-control"   id="idserv" name="idserv" >
     <option value='0'>- TODOS -</option>
   

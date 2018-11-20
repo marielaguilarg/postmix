@@ -23,7 +23,5 @@ $ingreso -> iniciopoderaseccion();
 		?> 
 
 		</table>
-
-
 </div>
- </section>                
+</section>                
