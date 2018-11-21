@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting(E_ERROR|E_NOTICE|E_WARNING);
 ini_set("display_errors", 1); 
 require_once "Controllers/usuarioController.php";
 require_once "Controllers/controller.php";
