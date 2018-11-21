@@ -91,7 +91,7 @@ class ArchivoVMController
                 
                 $cad="   SELECT ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal<3,1,'') as col1, if(ins_detalleestandar.ide_valorreal>=3
 and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.ide_valorreal>=3.4,1,'') as col3";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta,  $sec, $com, $car, $ren);
               
                 break;
             case 6:
@@ -102,7 +102,7 @@ and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.i
                 
                 $cad="SELECT
 	ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>41,1,'') as col1, if(ins_detalleestandar.ide_valorreal<=41,1,'') as col2";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta,  $sec, $com, $car, $ren);
               
                 break;
                 
@@ -112,7 +112,7 @@ and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.i
                 
                 $cad="SELECT
 if(ins_detalleestandar.ide_valorreal=1,'1','') as col1,if(ins_detalleestandar.ide_valorreal=2,'failed','') as col2,if(ins_detalleestandar.ide_valorreal=1,'N/A',ins_detalleestandar.ide_comentario)";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio,8, 1, 5, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, 8, 1, 5, $ren);
               
                 break;
                 /***************************************edad de jarabes*******************/
@@ -146,7 +146,7 @@ GROUP BY ins_detalleproducto.ip_numreporte ORDER BY ins_generales.i_fechavisita 
                 /****************************ALCALINIDAD***************************/
                 
                 $cad="SELECT ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>175,1,'') as col1, if(ins_detalleestandar.ide_valorreal<=175,1,'') as col2";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta,  $sec, $com, $car, $ren);
               
                 break;
             case 11:
@@ -185,7 +185,7 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                 $cad="SELECT
 	ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>0.5,1,'') as col1,
 	if(ins_detalleestandar.ide_valorreal<=0.5,1,'') as col2";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $sec, $com, $car, $ren);
               
                 break;
             case 13:
@@ -198,7 +198,7 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                     
 	 if(ins_detalleestandar.ide_valorreal>500 AND  ins_detalleestandar.ide_valorreal<=750,1,'') as col2,
 	 if(ins_detalleestandar.ide_valorreal<=500,1,'') as col3";
-               $res=$this->consultaEstandar($cad,$fechaini, $cuenta, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+               $res=$this->consultaEstandar($cad,$fechaini, $cuenta,  $sec, $com, $car, $ren);
                
                 break;
             case 14:
@@ -286,10 +286,11 @@ ORDER BY ins_generales.i_fechavisita,ins_generales.i_numreporte ASC";
                 "com"=>$com,
                 "car"=>$car
             );
-            
+            if($ren>0)
+            	$parametros["ren"]=$ren;
             
             $res=Conexion::ejecutarQuery($cad,$parametros);
-            die();
+           // die();
             return $res;
             
     }
@@ -308,7 +309,7 @@ ORDER BY ins_generales.i_fechavisita,ins_generales.i_numreporte ASC";
                 
                 $cad="   SELECT ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal<3,1,'') as col1, if(ins_detalleestandar.ide_valorreal>=3
 and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.ide_valorreal>=3.4,1,'') as col3";
-                $res=$this->consultaEstandarTC($cad,$fechaini, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+                $res=$this->consultaEstandarTC($cad,$fechaini,$sec, $com, $car, $ren);
                 
                 break;
             case 6:
@@ -319,7 +320,7 @@ and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.i
                 
                 $cad="SELECT
 	ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>41,1,'') as col1, if(ins_detalleestandar.ide_valorreal<=41,1,'') as col2";
-                $res=$this->consultaEstandarTC($cad,$fechaini,  $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+                $res=$this->consultaEstandarTC($cad,$fechaini,  $sec, $com, $car, $ren);
                 break;
                 
             case 8:
@@ -328,21 +329,47 @@ and ins_detalleestandar.ide_valorreal<3.4,1,'')as col2, if(ins_detalleestandar.i
                 
                 $cad="SELECT
 if(ins_detalleestandar.ide_valorreal=1,'1','') as col1,if(ins_detalleestandar.ide_valorreal=2,'failed','') as col2,if(ins_detalleestandar.ide_valorreal=1,'N/A',ins_detalleestandar.ide_comentario)";
-                $res=$this->consultaEstandarTC($cad,$fechaini, $this->cliente, $this->servicio,8, 1, 5, $ren);
+                $res=$this->consultaEstandarTC($cad,$fechaini,8, 1, 5, $ren);
                 break;
                 /***************************************edad de jarabes*******************/
             case 9:
-                $cad="SELECT Sum(if( ins_detalleproducto.ip_semana >= '20',ins_detalleproducto.ip_numcajas,0)) AS col1,
-Sum(if( ins_detalleproducto.ip_semana >= '10' AND ins_detalleproducto.ip_semana <'20',ins_detalleproducto.ip_numcajas,0)) AS col2,
-Sum(if( ins_detalleproducto.ip_semana < '10',ins_detalleproducto.ip_numcajas,0)) AS col3
-FROM ins_generales
-left join( select * from ins_detalleproducto where  ins_detalleproducto.ip_claveservicio=:servicio) ins_detalleproducto on
-ins_detalleproducto.ip_numreporte = ins_generales.i_numreporte
-           
-   WHERE ins_generales.i_mesasignacion =:fechaini 
+                $cad="SELECT col1,col2,col3 FROM
+(SELECT 
+  * 
+FROM
+  ins_generales 
+  
+WHERE ins_generales.i_mesasignacion =:fechaini
+  AND ins_generales.i_claveservicio = :servicio 
 
-            AND ins_generales.i_claveservicio=:servicio
-GROUP BY ins_detalleproducto.ip_numreporte ORDER BY ins_generales.i_fechavisita ASC";
+ORDER BY ins_generales.i_fechavisita ASC) AS b LEFT JOIN   
+(SELECT  ip_numreporte,
+  SUM(
+    IF(
+      ins_detalleproducto.ip_semana >= '20',
+      ins_detalleproducto.ip_numcajas,
+      0
+    )
+  ) AS col1,
+  SUM(
+    IF(
+      ins_detalleproducto.ip_semana >= '10' 
+      AND ins_detalleproducto.ip_semana < '20',
+      ins_detalleproducto.ip_numcajas,
+      0
+    )
+  ) AS col2,
+  SUM(
+    IF(
+      ins_detalleproducto.ip_semana < '10',
+      ins_detalleproducto.ip_numcajas,
+      0
+    )
+  ) AS col3 FROM
+   ins_detalleproducto 
+   WHERE ins_detalleproducto.ip_claveservicio =:servicio
+GROUP BY ins_detalleproducto.ip_numreporte ) AS c 
+ON c.ip_numreporte = b.i_numreporte ";
                 //              echo $cad."<br>";
                 $parametros=array("servicio"=>$this->servicio,
                    
@@ -350,6 +377,7 @@ GROUP BY ins_detalleproducto.ip_numreporte ORDER BY ins_generales.i_fechavisita 
                    
                 );
                 $res=Conexion::ejecutarQuery($cad,$parametros);
+            //    die();
                 break;
                 
                 
@@ -359,8 +387,10 @@ GROUP BY ins_detalleproducto.ip_numreporte ORDER BY ins_generales.i_fechavisita 
                 $car=6;
                 /****************************ALCALINIDAD***************************/
                 
-                $cad="SELECT ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>175,1,'') as col1, if(ins_detalleestandar.ide_valorreal<=175,1,'') as col2";
-                $res=$this->consultaEstandarTC($cad,$fechaini, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+                $cad="SELECT ins_detalleestandar.ide_valorreal, 
+if(ins_detalleestandar.ide_valorreal>175,1,'') as col1,
+ if(ins_detalleestandar.ide_valorreal<=175,1,'') as col2";
+                $res=$this->consultaEstandarTC($cad,$fechaini,  $sec, $com, $car, $ren);
                 
                 break;
             case 11:
@@ -399,7 +429,7 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                 $cad="SELECT
 	ins_detalleestandar.ide_valorreal, if(ins_detalleestandar.ide_valorreal>0.5,1,'') as col1,
 	if(ins_detalleestandar.ide_valorreal<=0.5,1,'') as col2";
-                $res=$this->consultaEstandarTC($cad,$fechaini, $this->cliente, $this->servicio, $sec, $com, $car, $ren);
+                $res=$this->consultaEstandarTC($cad,$fechaini, $sec, $com, $car, $ren);
                 break;
             case 13:
                 $sec=5;
@@ -411,7 +441,7 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                     
 	 if(ins_detalleestandar.ide_valorreal>500 AND  ins_detalleestandar.ide_valorreal<=750,1,'') as col2,
 	 if(ins_detalleestandar.ide_valorreal<=500,1,'') as col3";
-                $res=$this->consultaEstandarTC($cad,$fechaini,$this->cliente, $this->servicio, $sec, $com, $car, $ren);
+                $res=$this->consultaEstandarTC($cad,$fechaini, $sec, $com, $car, $ren);
                 break;
             case 14:
                 
@@ -616,6 +646,7 @@ ins_generales.i_claveservicio=:servicio  ORDER BY
                 );}
                 $letra=65;
                 if($res=Conexion::ejecutarQuery($sSQL,$parametros)) {
+                	
                     $num_reg = sizeof($res);
                     //$ren=2;
                     //        if($num_reg>1){

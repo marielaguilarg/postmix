@@ -38,9 +38,13 @@ private $ref;
 private $tel;
 private $numpunto;
 private $cuenta;
-
+private $mensaje;
 
 public function vistaunegocioController() {
+	$admin=filter_input(INPUT_GET, "admin",FILTER_SANITIZE_STRING);
+	if(isset($admin))
+		if($admin=="ins")
+			$this->registroUnegocioController();
     $idc=$_GET["idc"];
 		$page_size=100;
 if (isset($_GET["pages"])) {
@@ -479,36 +483,50 @@ $datosController[$nombre_campo]= filter_input(INPUT_POST,$nombre_campo, FILTER_S
 }
 
 if(isset($datosController["idpv"]))
-    $respuesta= DatosUnegocio::actualizarUnegocio($datosController, "ca_unegocios");
-        
+{   $respuesta= DatosUnegocio::actualizarUnegocio($datosController, "ca_unegocios");
+if ($respuesta == "success") {
+	
+	echo "
+          <script type='text/javascript'>
+              window.location.href='index.php?action=listaunegocio&idc=".$datosController["ncuenta"]."';
+              </script>
+                ";
+	//$this->mensaje='<div class="alert alert-success"></div>';
+	//header("location:index.php?action=ok");
+} else {
+	$this->mensaje='<div class="alert alert-danger">Error al insertar</div>';
+	//echo '<script> windows.location= "index.php?index.php" </script>';
+}
+}
 else
-$respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
+{$respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
 
             if ($respuesta == "success") {
 
-                //echo '<script> windows.location= "index.php?action=ok" </script>';
-                echo "
+            	echo "
           <script type='text/javascript'>
-              window.location.href='index.php?action=ok';
+              window.location.href='index.php?action=listaunegocio&idc=".$datosController["ncuenta"]."';
               </script>
                 ";
                 //header("location:index.php?action=ok");
             } else {
-                echo '<script> windows.location= "index.php?index.php" </script>';
+            	$this->mensaje='<div class="alert alert-danger">Error al insertar</div>';
+                //echo '<script> windows.location= "index.php?index.php" </script>';
             }
+}
 }
 }
 
 public function vistaNuevoUnegocio() {
 
 $this->cuenta= filter_input(INPUT_GET,"refer",FILTER_SANITIZE_NUMBER_INT);
-$rs_fran = DatosFranquicia::vistaFranquiciasModel("ca_franquicias");
+$rs_fran = DatosFranquicia::consultaFranquiciasxCuenta($this->cuenta,"ca_franquiciascuenta");
 
 foreach ($rs_fran as $row_fran) {
 //            if ($row_fran[0] == $franqcuenta)
 //                $this->listaFranquicias[] = "<option value='" . $row_fran[0] . "' selected='selected' >" . $row_fran[1] . "</option>";
 //            else
-$this->listaFranquicias[] = "<option value='" . $row_fran[0] . "' >" . $row_fran[1] . "</option>";
+$this->listaFranquicias[] = "<option value='" . $row_fran["fc_idfranquiciacta"] . "' >" . $row_fran["cf_descripcion"] . "</option>";
 }
 
 
@@ -619,15 +637,15 @@ $franqcta = $franqcuenta;
 $franqcta = $row["fc_idfranquiciacta"];
 }
 // llena lista de franquicias
-$rs_fran = DatosFranquicia::vistaFranquiciasModel("ca_franquicias");
+$rs_fran = DatosFranquicia::consultaFranquiciasxCuenta($this->cuenta,"ca_franquiciascuenta");
 
 foreach ($rs_fran as $row_fran) {
 
 
 if ($row_fran[0] == $franqcta)
-$this->listaFranquicias[] = "<option value='" . $row_fran[0] . "' selected='selected' >" . $row_fran[1] . "</option>";
+$this->listaFranquicias[] = "<option value='" . $row_fran["fc_idfranquiciacta"] . "' selected='selected' >" . $row_fran["cf_descripcion"] . "</option>";
 else
-$this->listaFranquicias[] = "<option value='" . $row_fran[0] . "' >" . $row_fran[1] . "</option>";
+$this->listaFranquicias[] = "<option value='" . $row_fran["fc_idfranquiciacta"] . "' >" . $row_fran["cf_descripcion"] . "</option>";
 }
 
 
@@ -744,7 +762,8 @@ public function listaClientesCuentas(){
     $respuesta =DatosCuenta::listaClientesModel("ca_clientes");
 
   foreach($respuesta as $row => $item){
-       echo '<li class="treeview"><a><i class="fa fa-circle-o"></i>'.substr($item["cli_nombre"],0,15).' <span class="pull-right-container">
+       echo '<li class="treeview">
+<a><i class="fa fa-circle-o"></i>'.substr($item["cli_nombre"],0,15).' <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span></a>';
        echo "  <ul class=\"treeview-menu\">";
@@ -1052,6 +1071,20 @@ function getListaCuentas() {
 function setListaCuentas($listaCuentas) {
     $this->listaCuentas = $listaCuentas;
 }
+/**
+	 * @return mixed
+	 */
+	public function getMensaje() {
+		return $this->mensaje;
+	}
+
+/**
+	 * @param mixed $mensaje
+	 */
+	public function setMensaje($mensaje) {
+		$this->mensaje = $mensaje;
+	}
+
 
 
 

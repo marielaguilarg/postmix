@@ -244,9 +244,9 @@ public function borrarCuentaController(){
            echo '<option value='.$item["cue_id"].'>'.$item["cue_descripcion"].'</option>';
         }  
     }
-            
+
 public function registroPonderaCuentaController(){
-          
+
 
       if (isset($_POST["cuenta"])){  
         $fecini=SubnivelController::fecha_mysql($_POST["fecini"]);
@@ -264,7 +264,7 @@ public function registroPonderaCuentaController(){
 
         if ($respuesta) {
            #mensaje de ya existe
-            } else {
+        } else {
           $datosController=array("nser"=>$nser,
                                "nsec"=>$nsec,
                                "ncta"=>$_POST["cuenta"],
@@ -295,10 +295,10 @@ public function registroPonderaCuentaController(){
             }  // if de respuestai                 
           } // else respuesta1  
         } // else de respuesta
-            } 
-      
       }
-
+      
+  }         
+  
 
 
 }

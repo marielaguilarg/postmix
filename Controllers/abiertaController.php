@@ -1,9 +1,6 @@
 <?php
 class abiertaController{
     
-   
-    
-
 	public function vistaabiertaController(){
 		//lee numero de seccion y numero de servicio
 	if (isset($_GET["sec"])) {
@@ -1262,7 +1259,7 @@ public function registrarAbiertaController(){
 
 
 
-	public function reporteAbiertaDetalleController(){
+		public function reporteAbiertaDetalleController(){
 		#lee varia{bles
 		$idser=$_GET["sv"];
 		$seccion=$_GET["sec"];
@@ -1309,7 +1306,10 @@ public function registrarAbiertaController(){
 	 	}
 
 	 	#despliega contenido
-
+echo '<div class="row">
+	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$seccion.'&sv='.$idser.'&ts=AN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+	 </div>
+	 </div>';
 	 	$respuesta =DatosAbierta::calculaNumRen($idser, $seccion, $nrep, "ins_detalleabierta");
 	 	
 	 	foreach ($respuesta as $key => $item) {
@@ -1540,10 +1540,182 @@ public function reporteAbiertaController(){
 }
 
 
+  public function nuevoReporteabierta(){
+	#lee varia{ble
+		$sv=$_GET["sv"];
+		$sec=$_GET["sec"];
+		$nrep=$_GET["nrep"];
+		$pv=$_GET["pv"];
+		$idc=$_GET["idc"];
 
+		echo ' <section class="content container-fluid">
+		<div class="row">
+		
+		<div class="col-md-12">
 
+		<div class="box box-info">
+		<div class="box-body">
+		<form role="form"  method="post">';
+   
+		echo '<input type="hidden" name="sec" value="'.$sec.'">';
+		echo '<input type="hidden" name="sv" value="'.$sv.'">';
+		echo '<input type="hidden" name="nrep" value="'.$nrep.'">';
+		echo '<input type="hidden" name="pv" value="'.$pv.'">';
+		echo '<input type="hidden" name="idc" value="'.$idc.'">';
 
+		$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, $tabla);
+		foreach ($respuesta as $key => $item) {
+			switch ($item['rad_formatoreactivo']){
+			case "C" :
+			   // busca el catalogo
+			   $numcat=$item['rad_clavecatalogo'];
+			   //echo $numcat;
+			   echo '<div class="form-group col-md-6">
+				  <label>'.$item["rad_descripcionesp"].'</label>
+				  <select class="form-control" name="desc'.$item["rad_numcaracteristica2"].'" id="desc'.$item['rad_numcaracteristica2'].'"></div>';
+			   #busca catalogo
+				  $respcat=DatosCatalogo::listaCatalogo($numcat, "ca_catalogosdetalle");
+				echo '<option value="">--- Seleccione opcion ---</option>';
 
+			   foreach ($respcat as $key => $itemc) {
+				 echo '<option value="'.$itemc["cad_idopcion"].'">'.$itemc["cad_descripcionesp"].'</option>';
+			   }
+				echo '   </select>
+			   </div>';
+			   break;
+			case "E" :
+				echo '<div class="form-group col-md-6">
+				<label>'.$item["rad_descripcionesp"].'</label>
+
+				<input type="checkbox" name="desc'.$item['rad_numcaracteristica2'].'"></div>';
+			  	break;
+			case "F":
+                 echo "<div align='left'>
+                 <label>".$item["rad_descripcionesp"]."</label>
+                 <input name='desc".$item['rad_numcaracteristica2']."' id='desc".$item['rad_numcaracteristica2']."' type='text'><button id='trigger".$item['rad_numcaracteristica2']."'>...</button>
+                     </div><script language='JavaScript' type='text/JavaScript'>Calendar.setup(
+    				{
+      				inputField  : 'desc".$item['rad_numcaracteristica2']."',         // ID of the input field
+      				ifFormat    : '%d/%m/%Y',    // the date format
+      				button      : 'trigger".$item['rad_numcaracteristica2']."'       // ID of the button
+    				}
+  					);</script></td>";
+                    break;
+
+			default:   
+				echo '<div class="form-group col-md-12">
+				  <label>'.$item["rad_descripcionesp"].'</label>
+				  <input type="text" class="form-control" name="desc'.$item["rad_numcaracteristica2"].'" id="desc'.$item['rad_numcaracteristica2'].'>
+				</div>
+				</div>';
+			 break;   
+			}  //switch      
+		} // foreach
+
+		$ingreso = new AbiertaController();
+		$ingreso ->insertaReporteAbierta();
+
+		echo ' 
+		</br>
+		<div class="row">
+		<div class="col-md-12">
+				 <button class="btn btn-default pull-right" style="margin-right: 10px"><a href="index.php?action=rsn&nrep='.$nrep.'&ts=AD&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'&sec='.$sec.'"> Cancelar </a></button>
+				 <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+			  </div>
+
+		</form>
+			  </div>
+			  </div>
+			</div>
+		</div>
+	 </section>';
+	}	
+
+	public function insertaReporteAbierta(){
+		//echo "entre a inserta";
+		//echo $_POST["sec"];
+		#lee varia{ble
+		if (isset($_POST["sv"]) && $_POST["sv"]=!"") {
+			//echo "si lo encontre";
+			foreach($_POST as $nombre_campo => $valor){
+				$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
+				eval($asignacion);
+		 		//echo ($asignacion);
+			}
+
+			#calculo numero de nuevo renglon
+			$respuesta=DatosAbierta::calculaUltimoRenglonAb($sv, $nrep, $sec, "ins_detalleabierta");
+			$numren= $respuesta["claveren"];
+			$numren++;   
+			//echo $sec;
+			#VALIDO SI SE EVALUA O NO LAS SECCION
+			$datini=SubnivelController::obtienedato($sec,1);
+			$londat=SubnivelController::obtienelon($sec,1);
+			$numsec=substr($sec,$datini,$londat);
+
+			$datini=SubnivelController::obtienedato($sec,2);
+			$londat=SubnivelController::obtienelon($sec,2);
+			$numreac=substr($sec,$datini,$londat);
+				 
+			$datini=SubnivelController::obtienedato($sec,3);
+			$londat=SubnivelController::obtienelon($sec,3);
+			$numcom=substr($sec,$datini,$londat);
+
+			$datini=SubnivelController::obtienedato($sec,4);
+			$londat=SubnivelController::obtienelon($sec,4);
+			$numcar=substr($sec,$datini,$londat);
+
+			$datini=SubnivelController::obtienedato($sec,5);
+			$londat=SubnivelController::obtienelon($sec,5);
+			$numcom2=substr($sec,$datini,$londat);
+			
+			$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "ins_detalleabierta");
+			
+			foreach ($respuesta as $key => $item) {
+				$nomcam="desc".$item['rad_numcaracteristica2'];
+  			    if (ctype_space(${$nomcam})) {
+				  $valcom="";
+			    } else {	 
+				  $valcom=${$nomcam};
+			    } 
+				if ($item['rad_tiporeactivo']=='E') {
+		       		if (($nomcam)) {
+			      		$valacepta=-1;
+			   		}else{
+			      		$valacepta=0;
+			   		}	
+		   		} else {	 
+			  		$valacepta=0;
+		   		}  // if
+		   		 $numcar2=$item['rad_numcaracteristica2'];
+
+		   		 # inserta abierta
+		   		 $datosController= array("idser"=>$sv,
+				   "numrep"=>$nrep,
+				   "numsec"=>$numsec,
+				   "numreac"=>$numreac,
+				   "numcom"=>$numcom,
+				   "numcar"=>$numcar,
+				   "numcom2"=>$numcom2,
+				   "numcar2"=>$numcar2,
+				   "valcom"=>$valcom,
+				   "valacepta"=>$valacepta,
+				   "numren"=>$numren,
+				  );
+
+		   		 $respuesta=DatosAbierta::insertaAbiertaDetalle1 ($datosController, "ins_detalleabierta");
+		   		 
+		   		 if($respuesta== "success"){
+		   			echo "<script type='text/javascript'>
+					window.location.href='index.php?action=rsn&nrep=".$nrep."&sec=".$sec."&idc=".$idc."&pv=".$pv."&ts=AD&sv=".$sv."';
+					</script>
+					";
+				} else {
+					echo "error";
+				}
+			}
+		}	      
+	}
 
 
 }
