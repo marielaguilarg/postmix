@@ -17,8 +17,10 @@
                     <input name="nombrecliente" id="nombrecliente" class="form-control" >
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
-                
+                <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacliente"> Cancelar </a></button>
+                 
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
+
               </div>
                </form>
               </div>

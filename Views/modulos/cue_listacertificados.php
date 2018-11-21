@@ -128,9 +128,9 @@ function Cargar()
 
 include 'Controllers/certificacionController.php';
 
-$facturasController=new CertificacionController();
+$certificacionController=new CertificacionController();
 
-$facturasController->vistaListaCertificados();
+$certificacionController->vistaListaCertificados();
 
 ?>
 
@@ -204,7 +204,7 @@ $facturasController->vistaListaCertificados();
 
         
 
-        <?php foreach($facturasController->getListaSolicitudes() as $solicitud){
+        <?php foreach($certificacionController->getListaSolicitudes() as $solicitud){
 
             
 

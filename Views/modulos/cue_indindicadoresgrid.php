@@ -341,44 +341,168 @@
 
 
       <!----- Inicia contenido ----->
- 
-    
- <div class="row">
-     <!-- inicia repeticion -->
-     <?php     $i=1;    $bac=1;
-    foreach($tabladinController->getListaResultados() as $resultadoxReg){    	$reg=sizeof($resultadoxReg->getListaResultadosxcuenta());
-       
-         foreach($resultadoxReg->getListaResultadosxcuenta() as $resultado ){
-//       $resultadoxReg=$tabladinController->getListaResultados()[0];
-//       $resultado=$resultadoxReg->getListaResultadosxcuenta()[0];
-         	if(($i-1)%3==0){         		echo '<div class="row">';         		$bac=0;         	}         	$clase=" ";         	//$clasec="collapsed-box";         	$icono="fa fa-minus";         	if($resultado->Estotal())         	         	{   $clase=' style="color:  red;"';         	$clasec="";         	$icono="fa fa-minus";         	}
-    echo '<div class="col-md-4" >
-          <div class="box box-info '.$clasec.'" >
-            <div class="box-header with-border">
-              <h3 class="box-title" '.$clase.'>'.$resultadoxReg->getNombreNivel().': '.$resultadoxReg->getNivel().'</h3>
-              <div class="box-tools pull-right">
-               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="'.$icono.'"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-              <!-- /.box-tools -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              
-              <div class="arrow">
-              	  <div '.$clase.'>
-                    <ul class="nav nav-stacked">
-                      <li><strong> '.$resultado->getNombrefranquicia().'</strong></li>
-                    </ul>
-                </div>
-              </div>';
-       
-           echo $resultado->getResultados1();
-            echo $resultado->getResultados2();
-            echo $resultado->getResultados3();
-
-                                    echo  ' </div>        		            <!-- /.box-body -->        		          </div>        		          <!-- /.box -->        		        </div>';            if(($i)%3==0||$reg<3){            	            	echo '</div>';            	$bac=1;            }            $i++;         }//fin x cuenta    }         ?>                       <!-- fin repeticion --><!--           /.box -->
 
-        </div>
-            	  <!----- Finaliza contenido ----->    </section>    <!-- /.content -->            
+    
+
+ 
+
+     <!-- inicia repeticion -->
+
+     <?php
+$j=1;$bac=1;
+    foreach($tabladinController->getListaResultados() as $resultadoxReg){
+        if($bac==0)
+            //cierro un row anterior
+            echo "</div>";
+       
+       ?>
+       <div class="row">
+       <div class="col-md-12" >
+
+          <div class="box box-info" id="region_<?php echo $j;?>" >
+
+            <div class="box-header with-border" id="hregion_<?php echo $j;?>" >
+
+              <h3 class="box-title"><?php echo $resultadoxReg->getNombreNivel().': '.$resultadoxReg->getNivel()?></h3>
+
+              <div class="box-tools pull-right">
+
+               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+
+                </button>
+
+                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+
+              </div>
+
+              <!-- /.box-tools -->
+
+            </div>
+
+            <!-- /.box-header -->
+
+            <div class="box-body">
+
+              
+       <?php 
+       
+         $i=1;
+         $reg=sizeof($resultadoxReg->getListaResultadosxcuenta());
+         foreach($resultadoxReg->getListaResultadosxcuenta() as $resultado ){
+
+//       $resultadoxReg=$tabladinController->getListaResultados()[0];
+
+//       $resultado=$resultadoxReg->getListaResultadosxcuenta()[0];
+         
+             if(($i-1)%3==0){
+               echo '<div class="row">';
+               $bac=0;
+             }
+              $clase=" ";
+              $clasec="collapsed-box";
+              $icono="fa fa-plus";
+              if($resultado->Estotal())
+
+              {   $clase=' style="color:  red;"';
+                  $clasec="";
+                  $icono="fa fa-minus";
+              }
+
+    echo '<div class="col-md-4" >
+
+          <div class="box box-info '.$clasec.'" id="cuenta_'.$i.'" >
+
+            <div id="hcuenta_'.$i.'" class="box-header with-border">
+
+              <div class="box-title" '.$clase.'>'.$resultado->getNombrefranquicia().'</div>
+
+              <div class="box-tools pull-right">
+
+               <button type="button" class="btn btn-box-tool" data-widget="collapse">	<i class="'.$icono.'"></i>
+
+                </button>
+
+               
+
+             </div>
+
+              <!-- /.box-tools -->
+
+           </div>
+
+            <!-- /.box-header -->
+
+            <div class="box-body">';
+
+              
+
+//               <div class="arrow">
+
+//               	  <div '.$clase.'>
+
+//                     <ul class="nav nav-stacked">
+
+//                       <li><strong> '.$resultado->getNombrefranquicia().'</strong></li>
+
+//                     </ul>
+
+//                 </div>
+
+//               </div>';
+
+       
+
+           echo $resultado->getResultados1();
+
+            echo $resultado->getResultados2();
+
+            echo $resultado->getResultados3();
+
+
+
+
+
+         echo  ' </div>
+
+            <!-- /.box-body -->
+
+          </div>
+
+          <!-- /.box -->
+
+        </div>';
+         if(($i)%3==0||$reg<3){
+             
+             echo '</div>';
+             $bac=1;
+         }
+   $i++;
+        }//fin x cuenta
+        $j++;
+?>
+</div>
+</div><!-- /div box region -->
+</div><!-- /.div col 12 --></div>
+<?php 
+     }
+
+ 
+
+         ?>     
+
+      
+
+            <!-- fin repeticion -->
+
+
+
+        
+
+    
+
+	  <!----- Finaliza contenido ----->
+
+    </section>
+
+    <!-- /.content -->
+

@@ -1,5 +1,7 @@
  <?php $unegocioContoller=new unegocioController();
                         $unegocioContoller->vistaNuevoUnegocio();
+                        $idc = filter_input(INPUT_GET, "refer",FILTER_SANITIZE_NUMBER_INT);
+                       
                     ?>﻿
 <section class="content-header">
       <h1> Punto de venta &nbsp; </h1>
@@ -8,31 +10,28 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-     <?php $unegocioContoller=new unegocioController();
-
-                        $unegocioContoller->vistaNuevoUnegocio();
-                    ?>
+    <?php echo $unegocioContoller->getMensaje()?>
       
         <div class="row">
 		
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-                 <form role="form" method="post">
+                 <form role="form" method="post" action="index.php?action=listaunegocio&admin=ins">
                 <!-- Datos iniciales alta de punto de venta -->
                 <div class="form-group col-md-12">
                   <label>NOMBRE</label>
-                  <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" >
+                  <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $idc?>" >
                   <input type="text" class="form-control" name="desuneg" id="desuneg" required>
                 
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>
-                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" >
+                  <input type="text" class="form-control" name="idpepsi" id="idpepsi" required>
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID CUENTA</label>
-                  <input type="text" class="form-control" name="idcta" id="idcta" >
+                  <input type="text" class="form-control" name="idcta" id="idcta" required >
                 </div>
                 <div class="form-group col-md-4">
                   <label>NUD</label>
@@ -201,16 +200,17 @@
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
+                 <?php
+                 echo '
+                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaunegocio&idc='.$idc.'"> Cancelar </a></button> ';
+                 ?>
                   <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
               </form>
               </div>
               </div>
             </div>
-       <?php
-
-$unegocioContoller ->registroUnegocioController();
-?>
+     
         </div>
 	 </section>
     <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
