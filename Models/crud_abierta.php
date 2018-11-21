@@ -747,4 +747,62 @@ ra_numcaracteristica,'.',ra_numcomponente2)=:nsec and ser_claveservicio= :ids");
 	}
 	
 	
+public function vistanuevoAbiertoDetalle($idser, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT * FROM `cue_reactivosabiertosdetalle` WHERE `cue_reactivosabiertosdetalle`.`ser_claveservicio` = :idser AND concat(sec_numseccion,'.', r_numreactivo,'.', ra_numcomponente,'.', ra_numcaracteristica,'.', ra_numcomponente2) =:idsec order by rad_numcaracteristica2");
+
+
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+			
+			$stmt-> execute();
+			return $stmt->fetchall();
+		
+			$stmt->close();
+
+	}
+	
+	
+
+    public function calculaUltimoRenglonAb ($idser, $nrep, $nsec, $tabla){
+        $stmt=Conexion::conectar()->prepare("select max(ida_numrenglon) as claveren FROM `ins_detalleabierta` WHERE `ins_detalleabierta`.`ida_claveservicio` =:idser AND `ins_detalleabierta`.`ida_numreporte` =:numrep AND concat(ida_numseccion,'.',ida_numreactivo,'.',ida_numcomponente,'.',ida_numcaracteristica1,'.',ida_numcaracteristica2) =:numseccom");
+
+		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $nrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":numseccom", $nsec, PDO::PARAM_STR);
+
+		$stmt-> execute();
+
+		return $stmt->fetch();
+		$stmt->close();
+    }
+
+    public function insertaAbiertaDetalle1 ($datosModel, $tabla){
+        $stmt=Conexion::conectar()->prepare("INSERT INTO ins_detalleabierta (ida_claveservicio, ida_numreporte, ida_numseccion, ida_numreactivo, ida_numcomponente, ida_numcaracteristica1, ida_numcaracteristica2, ida_numcaracteristica3, ida_descripcionreal, ida_aceptado, ida_numrenglon) values (:idser, :numrep, :numsec, :numreac, :numcom, :numcar, :numcom2, :numcar2, :valcom, :valacepta, :numren)");
+
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom2", $datosModel["numcom2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar2", $datosModel["numcar2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valacepta", $datosModel["valacepta"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
+	
+		IF($stmt-> execute()){
+
+				return "success";
+			}
+			
+			else {
+
+				return "error";
+		
+			};
+		
+			$stmt->close();
+    }
+
 }

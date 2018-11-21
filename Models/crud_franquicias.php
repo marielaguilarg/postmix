@@ -50,7 +50,6 @@ public function listaCuentasModel($tabla){
 		$stmt-> execute();
 
 
-
 		return $stmt->fetchAll();
 
 	}
@@ -399,6 +398,25 @@ FROM `ca_franquiciascuenta` where
       return $res;
 
 }
+
+//trae franquicias por cuenta
+public static function consultaFranquiciasxCuenta($datosModel, $tabla){
+	
+	$stmt = Conexion::conectar()-> prepare("SELECT  fc_idfranquiciacta, cue_clavecuenta, cf_descripcion 
+FROM $tabla WHERE cue_clavecuenta= :cuenta");
+	
+	$stmt->bindParam(":cuenta", $datosModel, PDO::PARAM_INT);
+	
+	
+	
+	$stmt-> execute();
+	
+	
+	
+	return $stmt->fetchAll();
+	
+}
+
 
 }
 

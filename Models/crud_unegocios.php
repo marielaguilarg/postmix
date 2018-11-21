@@ -218,8 +218,14 @@ une_fechaestatus= :fecest where une_id=:numunineg";
             $stmt->bindParam(":clanivel5", $datosModel["clanivel5"]);
 
             $stmt->bindParam(":clanivel6", $datosModel["clanivel6"]);
+            if($datosModel["une_dir_estado"]>0)
+            {   $reses=DatosEstado::editarEstadoModel($datosModel["une_dir_estado"],"ca_uneestados");
+            $nombre=$reses["est_nombre"];
+            
+            }
+            else $nombre="";
 
-            $stmt->bindParam(":nom_edo", $datosModel["une_dir_estado"]);
+            $stmt->bindParam(":nom_edo", $nombre);
 
             $stmt->bindParam(":franqcuenta", $datosModel["franqcuenta"]);
 
@@ -760,19 +766,24 @@ cer_solicitud.sol_idcuenta,
             $stmt->bindParam(":clanivel4", $datosModel["clanivel4"]);
             $stmt->bindParam(":clanivel5", $datosModel["clanivel5"]);
             $stmt->bindParam(":clanivel6", $datosModel["clanivel6"]);
-
-            $stmt->bindParam(":nom_edo", $datosModel["une_dir_estado"]);
+	//busco el nombre del estado
+            if($datosModel["une_dir_estado"]>0)
+            {   $reses=DatosEstado::editarEstadoModel($datosModel["une_dir_estado"],"ca_uneestados");
+            $nombre=$reses["est_nombre"];
+            
+            }
+            else $nombre="";
+            $stmt->bindParam(":nom_edo", $nombre);
             $stmt->bindParam(":franqcuenta", $datosModel["franqcuenta"], PDO::PARAM_INT);
             $stmt->bindParam(":numpun", $datosModel["numpun"], PDO::PARAM_INT);
             $stmt->bindParam(":estatuscuenta", $datosModel["estatus"], PDO::PARAM_INT);
             $stmt->bindParam(":fecest", $datosModel["fecest"]);
 
             $res = $stmt->execute();
-
-
-
-
+//$stmt->debugDumpParams();
+           if($res)
             return "success";
+           return "error";
         } catch (Exception $ex) {
             return "error";
         }

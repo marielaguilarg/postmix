@@ -395,12 +395,7 @@ WHERE i_claveservicio=:cserv and i_numreporte=:nrep";
         $stmt->bindParam(":factura", $datosModel["factura"], PDO::PARAM_STR);
         $stmt->bindParam(":fin", $datosModel["fin"], PDO::PARAM_STR);
         
-       if(!$stmt->execute())
-       { 
-       	$stmt->debugDumpParams();
-       	throw new Exception("Error al actualizar");
-       }
-     //  $stmt->debugDumpParams();
+        $stmt->execute();
     }catch(PDOException $ex){
         throw new Exception("Error al actualizar");
     }
