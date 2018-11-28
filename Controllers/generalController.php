@@ -188,7 +188,7 @@ class GeneralController{
    		echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=G"> Cancelar </a></button>';
 	}
 	
-	public function reporteGeneralController(){
+public function reporteGeneralController(){
          $sv=$_GET["sv"];
          $nrep=$_GET["nrep"];
          $sec=$_GET["sec"];
@@ -212,7 +212,7 @@ class GeneralController{
              echo '<input type="hidden" name="sec" value="'.$sec.'">';
              echo '<input type="hidden" name="pv" value="'.$pv.'">';
              echo '<input type="hidden" name="idc" value="'.$idc.'">';
-                # valida si existen datos
+                      # valida si existen datos
              $existe = DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
              if ($existe){
                 
@@ -220,6 +220,7 @@ class GeneralController{
                 #LEE VARIABLES
                   $cinsp=$registro["i_claveinspector"];
                   $fecvis=$registro["i_fechavisita"];
+                 // echo $fecvis;
                   $mesas=$registro["i_mesasignacion"];
                   $hrent=$registro["i_horaentradavis"];
                   $horaEn=$registro["HoraEn"];
@@ -238,10 +239,11 @@ class GeneralController{
                   $numrepcic=$registro["i_numreportecic"];
                   $finaliza=$registro["i_finalizado"];
 
-                  $corxy=$registro["une_coordenadasxy"];
                   $fecfin=$registro["i_fechafinalizado"];
                   $reasigna=$registro["i_reasigna"];
                   $gpo=$_SESSION["GrupoUs"];
+                  
+                
                   echo '
                   <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
@@ -255,7 +257,7 @@ class GeneralController{
                       } else {
                         echo '<option value='.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';
                       }                   
-                  }  
+                   }  
 
                    echo ' </select>
                   </div>
@@ -279,6 +281,7 @@ class GeneralController{
                         $mesnom="ABRIL";
                       break;   
                      case 5:
+
                         $mesnom="MAYO";
                       break;   
                      case 6:
@@ -357,43 +360,9 @@ class GeneralController{
                   
                   echo '</select>
                 </div>
-                <div class="form-group col-md-6">
-                  <label>HORA DE ANALISIS SENSORIAL</label>
-                   <label>Hrs</label>
-                  <select class="form-control"  name="HoraEn3">';
-                  
-                  for($j=1;$j<=24;$j++)
-                  {
-                     if ($j==$horaEn3){
-                       echo "<option value='".$j."' selected>".$j."</option>";
-                     }else{
-                       echo "<option value='".$j."'>".$j."</option>";
-                     }     
-                    
-                  }
-                 echo '</select>
-                </div>
+                
 
-                 <div class="form-group col-md-6">
-                 <label>Min</label>
-                  <select class="form-control"  name="HoraEn4">';
-                  
-                  for($j=0;$j<=60;$j++)
-                  {
-                      if ($j<10)    {
-                        $j1="0".$j;
-                      }else{
-                        $j1=$j;
-                      }
-                     if ($j==$horaEn4){
-                        echo "<option value='".$j1."' selected>".$j1."</option>";
-                     }else{
-                         echo "<option value='".$j1."'>".$j1."</option>";
-                     }  
-                    
-                  }
-                  echo '</select>
-                </div>
+                 
                 <div class="form-group col-md-6">
                   <label>HORA DE SALIDA</label>
                    <label>Hrs</label>
@@ -445,7 +414,7 @@ class GeneralController{
                   <input type="text" class="form-control pull-right" id="datepicker" name="fecvis"  value="'.$fvis.'">
                 </div>
                 <!-- /.input group -->
-                </div>';  
+              </div>';
 
                   if ($gpo=='adm'){
                     echo '<div class="form-group col-md-4">';
@@ -488,13 +457,10 @@ class GeneralController{
                   <label>NO DE REPORTE CIC</label>
                   <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic" value='.$numrepcic.'>
                 </div>
-                <div class="form-group col-md-4">
-                  <label>COORDENAADAS XY</label>
-                  <input type="text" class="form-control" placeholder="" id="coorxy" name="coorxy" value="'.$corxy.'">
-                </div>
+               
               <div class="form-group">
                 <label>FECHA DE EMISION:</label>
-                
+
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
@@ -503,7 +469,7 @@ class GeneralController{
                 </div>
                 <!-- /.input group -->
               </div>
-                
+
                 ';                
 
                 if ($finaliza==1) {
@@ -628,35 +594,7 @@ class GeneralController{
                   }
                   echo '</select>
                 </div>
-                <div class="form-group col-md-6">
-                  <label>HORA DE ANALISIS SENSORIAL</label>
-                   <label>Hrs</label>
-                  <select class="form-control"  name="HoraEn3">';
-                  
-                  for($j=1;$j<=24;$j++)
-                  {
-                    echo "<option value='".$j."'>".$j."</option>";
-                   
-                  }
-                 echo '</select>
-                </div>
-
-                 <div class="form-group col-md-6">
-                 <label>Min</label>
-                  <select class="form-control"  name="HoraEn4">';
-                  
-                  for($j=0;$j<=60;$j++)
-                  {
-                      if ($j<10)    {
-                        $j1="0".$j;
-                      }else{
-                        $j1=$j;
-                      }
-                    echo "<option value='".$j1."'>".$j1."</option>";
-                    
-                  }
-                  echo '</select>
-                </div>
+                
                 <div class="form-group col-md-6">
                   <label>HORA DE SALIDA</label>
                    <label>Hrs</label>
@@ -714,10 +652,6 @@ class GeneralController{
                   <label>NO DE REPORTE CIC</label>
                   <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic">
                 </div>
-                <div class="form-group col-md-12">
-                  <label>COORDENAADAS XY</label>
-                  <input type="text" class="form-control" placeholder="" id="coorxy" name="coorxy">
-                </div>
                 
               <div class="form-group">
                 <label>FECHA DE EMISION:</label>
@@ -729,8 +663,8 @@ class GeneralController{
                   <input type="text" class="form-control pull-right" id="datepicker2" name="fecemi">
                 </div>
                 <!-- /.input group -->
-                </div>
-                
+              </div>
+
                 </br>';
                                
                   echo '  <div class="form-group col-md-12">
@@ -749,10 +683,10 @@ class GeneralController{
                 <!-- Clasificación punto de venta -->
                 <br>
                 
-                 <div class="box-footer col-md-12">
+                <div class="box-footer col-md-12">
                   <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=editarep&sv='.$sv.'&idc='.$idc.'&nrep='.$nrep.'&pv='.$pv.'"> Cancelar </a></button>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
-              </div>
+                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                 </div>
                
               </form>
               </div>
@@ -784,10 +718,10 @@ class GeneralController{
           }else{
              $horent=$HoraEn.":".$HoraEn2;
           }
-          if ($horanasen){
-          }else{
-             $horanasen=$HoraEn3.":".$HoraEn4;
-          }
+          //if ($horanasen){
+          //}else{
+          //   $horanasen=$HoraEn3.":".$HoraEn4;
+          //}
           if ($horsal){
           }else{
              $horsal=$HoraEn5.":".$HoraEn6;
@@ -843,14 +777,14 @@ class GeneralController{
                                  "horsal"=>$horsal,
                                  "resp"=>$responsable,
                                  "cargo"=>$cargo,
-                                 "horanasen"=>$horanasen,
+                               //  "horanasen"=>$horanasen,
      
                                  "repcic1"=>$repcic1,
                                  "sincob1"=>$sincob1,
                                  "numrepcic"=>$numrepcic,
                                  "fecemis"=>$fecemis,
                                  "reasig"=>$reasig,
-                                 "coorxy"=>$coorxy,
+                                 //"coorxy"=>$coorxy,
                                  );
           //var_dump($datosController);
 
@@ -887,8 +821,7 @@ class GeneralController{
         </script>
         ";   
     } // el inspector tiene datos
-  }    
-
+  }
   public function finalizareporteController(){
      $serv=$_GET["sv"];
      $nrep=$_GET["nrep"];
