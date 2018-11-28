@@ -141,7 +141,7 @@ class EnlacesPaginas{
 		    $enlacesModel=="snuevosd"||
 		    $enlacesModel=="seditasd"||
 		    $enlacesModel=="srespaldoimagenes"||
-		    $enlacesModel=="seditasd"||
+		    $enlacesModel=="srestaurarimagen"||
 		    $enlacesModel=="seditasd"
 		    
 			 
