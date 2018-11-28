@@ -219,7 +219,7 @@ $lonref=strlen($cadreferencia);
 
 
 
-	public function vistaNombresubseccionController(){
+public function vistaNombresubseccionController(){
 
 			$seccion = $_GET["sec"];
 			$servicioController = $_GET["sv"];
@@ -395,7 +395,7 @@ $lonref=strlen($cadreferencia);
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'"><em class="fa fa-dashboard"></em>SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		   		 #busca ultimo nivel en ponderada
 		   		$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
 				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
@@ -485,7 +485,7 @@ $lonref=strlen($cadreferencia);
 		case "ED" : 	       
 			# busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -568,5 +568,4 @@ $lonref=strlen($cadreferencia);
 
 		}// fin de switch  tipo 
 	}
-
 }
