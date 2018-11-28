@@ -53,6 +53,26 @@ $imp->descargarArchivo();
     include "Models/crud_generales.php";
     $imp=new InicioExcelController();
     $imp->descargarArchivo();
+}else if($admin=="repfac")
+{
+    include 'Controllers/repFacturacionController.php';
+    include 'Controllers/subnivelController.php';
+    $repFacturaController=new RepFacturacionController;
+    $repFacturaController->generarArchivo();
+}else if($admin=="respimg")
+{
+	include 'Controllers/respImagenesController.php';
+ 	$respimgController=new RespImagenesController();
+	$respimgController->respaldobdImagen();
+	
+}else  if($admin=="desimg")
+{
+	include 'Controllers/descImagenesController.php';
+	$desimgController=new DescImagenesController();
+	//$desimgController->prueba();
+	$desimgController->descargarImagenes();
+	//require "Views/modulos/prueba.php";
+
 }else
     { 
        
