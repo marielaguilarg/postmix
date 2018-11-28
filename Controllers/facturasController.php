@@ -42,7 +42,7 @@ ORDER BY i_numreporte";
             $finnom="fin".$nrep;
             $valfin=${$finnom};
             $ban=0;
-            echo "<br>".$comenom."--".$valfin."--".$valchk;
+          //  echo "<br>".$comenom."--".$valfin."--".$valchk;
             $fact="";
             $fin='';
             if ($valchk) {	  //si
