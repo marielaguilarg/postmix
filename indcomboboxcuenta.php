@@ -83,7 +83,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
   }
 		else
                   {  
-  DatosUnegocio::unegociosxNivel("","",null,array("cta"=>$aux[0],"fra"=>$franq));
+                  	$consultaCuenta=DatosUnegocio::unegociosxNivel("","",null,array("cta"=>$aux[0],"fra"=>$franq),"","");
              
                     if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
             $aux2=explode(".", $nivel);
@@ -97,7 +97,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
 	}
 
 	// Comienzo a imprimir el select
-	echo "<select style='width:300px' name='".$selectDestinoCuenta."' id='".$selectDestinoCuenta."' onChange='cargaContenidoCuenta(this.id,\"crcliente\",\"crservicio\");'>";
+	echo "<select class='form-control' name='".$selectDestinoCuenta."' id='".$selectDestinoCuenta."' onChange='cargaContenidoCuenta(this.id,\"crcliente\",\"crservicio\");'>";
 	echo "<option value=''>- ".T_("TODOS")." -</option>";
 
 	foreach($consultaCuenta as $registroCuenta )
