@@ -119,7 +119,7 @@ $datosEstController->vistaDatosEstablecimiento();
       </div>
       <div class="row">
         <div class="col-md-4" ><span ><?php echo T_("ENTRADA")?>: <strong><?php echo $datosEstController->getInfoGeneral()["HEntrada"]?></strong></span></div>
-        <div class="col-md-4" ><?php echo T_("ANALISIS SENSORIAL")?>: <strong><?php echo $datosEstController->getInfoGeneral()["HSanalisis"]?></strong></div>
+      
         <div class="col-md-4" ><?php echo T_("SALIDA")?>: <strong><?php echo $datosEstController->getInfoGeneral()["HSalida"]?></strong></div>
       </div>
     </div>

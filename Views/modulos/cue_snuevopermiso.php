@@ -59,7 +59,7 @@ function cargaMenu(opc, grupo)
 	<div class="col-sm-10"><?php echo $permisoController->getSubmenu()?></div>
 	
                 <div class="col-sm-12" style="padding-top: 50px; border-bottom: hidden">
-                 <button  type="button" class="btn btn-default pull-right" style="margin-left: 10px" ><a href="index.php?action=slistapermisos&id=<?php echo $permisoController->getGrupo()?>">Cancelar</a></button>
+                 <a  type="button" class="btn btn-default pull-right" style="margin-left: 10px"  href="index.php?action=slistapermisos&id=<?php echo $permisoController->getGrupo()?>">Cancelar</a>
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
                </form>

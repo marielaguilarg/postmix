@@ -49,11 +49,11 @@ document.form2.action=ruta;
 	<div class="row">
 		<div class="col-md-12">
 
-			<button class="btn btn-default pull-right" style="margin-right: 18px">
-				<a href="index.php?action=srestaurarimagen"> <i class="fa fa-plus-circle"
+			<a class="btn btn-default pull-right" style="margin-right: 18px"
+				href="index.php?action=srestaurarimagen"> <i class="fa fa-plus-circle"
 					aria-hidden="true"></i> Restaurar
 				</a>
-			</button>
+			
 		</div>
 	</div>
 </section>

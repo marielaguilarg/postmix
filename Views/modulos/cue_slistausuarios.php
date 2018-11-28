@@ -6,7 +6,7 @@ $usuarioController->vistaListausuarios();
 
 <section class="content-header">
 <h1>USUARIOS</h1><h1><?php echo $usuarioController->getTITULO5()?></h1>
-<ol class="breadcrumb">        <?php Navegacion::desplegarNavegacion();?>   </ol>   <div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=snuevousuario&admin=nuevo&id=<?php echo $usuarioController->getIdnum()?>"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>       </div></div>
+<ol class="breadcrumb">        <?php Navegacion::desplegarNavegacion();?>   </ol>   <div class="row"><div class="col-md-12">    <button  class="btn btn-default pull-right" style="margin-right: 18px" type="button" onclick="document.location='index.php?action=snuevousuario&admin=nuevo&id=<?php echo $usuarioController->getIdnum()?>'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>       </div></div>
 </section>
 <!-- Main content -->
 <section class="content container-fluid">

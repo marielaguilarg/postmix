@@ -119,11 +119,11 @@
                 <ul class="treeview-menu">
                     <li><a href="#"><i class="fa fa-circle-o"></i> Rep. de Resultados
                         </a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Rep. de Facturación
+                    <li><a href="index.php?action=repfacturacion"><i class="fa fa-circle-o"></i> Rep. de Facturación
                         </a></li>
                     <li><a href="index.php?action=inicio_excel"><i class="fa fa-circle-o"></i> Rep. Inicio
                         </a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Reg. Facturas
+                    <li><a href="index.php?action=repfacturacion&admin=panfac"><i class="fa fa-circle-o"></i> Reg. Facturas
                         </a></li>
                     <li><a href="index.php?action=indrepxperiodo&op=repres"><i class="fa fa-circle-o"></i> Res. Resultados
                         </a></li>
@@ -275,7 +275,7 @@
         </li>
          <li class="treeview">
           <a href="#">
-            <i class="fa fa-book"></i>
+            <i class="fa fa-cog"></i>
             <span>Configuracion</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>

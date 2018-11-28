@@ -28,7 +28,7 @@ $grupoController->control();
                     <input name="nomesp"  id="nomesp" class="form-control" value="<?php echo $grupoController->getNOMESP()?>" required >
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
-                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=slistagrupos">Cancelar</a></button>
+                 <a  class="btn btn-default pull-right" style="margin-left: 10px"  href="index.php?action=slistagrupos">Cancelar</a>
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
                </form>
