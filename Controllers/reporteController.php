@@ -170,6 +170,13 @@ class ReporteController{
 			   $ingreso ->reporteAbiertaDetalleController();  
 			   //$ingreso -> vistaAbDetController();
 		       break;
+			case "AN" : 	       
+		      $ingreso = new abiertaController();
+		      // registra estandar
+			  $ingreso -> nuevoReporteabierta();
+			  //$ingreso -> insertaReporteEstandar();
+			  break;
+			   
 		    case "V" :       
 		       $ingreso = new ProductoController();
 			   $ingreso -> reporteProductoController();
@@ -286,6 +293,11 @@ class ReporteController{
 						       
 					     	echo ' SECCION '.$nsec.' : '.$respuesta["descomp"];
 						  break;
+						case "AN" : 
+							$respuesta =DatosAbierta::vistaNomSecAbierta($servicio, $seccion, "cue_reactivosabiertos");
+						       
+					     	echo ' SECCION '.$nsec.' : '.$respuesta["descomp"];
+						  break;  
 						case "ED" : 	   
 						$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
 					     echo ' SECCION '.$nsec.' : '.$respuesta["re_descripcionesp"]; break;
@@ -315,6 +327,11 @@ class ReporteController{
 						       
 					     	echo ' SECCION '.$nsec.' : '.$respuesta["descomp"];
 						  break;
+						case "AN" : 	       
+					      $respuesta =DatosAbierta::vistaNomSecAbierta($servicio, $seccion, "cue_reactivosabiertos");
+						       
+					     	echo ' SECCION '.$nsec.' : '.$respuesta["descomp"];
+						  break;  
 						case "ED" : 	   
 						$respuesta =DatosEst::vistaNomSecEstandar($servicio, $nsec, "cue_reactivosestandar");    
 					     echo ' SECCION '.$nsec.' : '.$respuesta["re_descripcionesp"]; break;
