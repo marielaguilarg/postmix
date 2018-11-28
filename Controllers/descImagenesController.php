@@ -85,7 +85,7 @@ class DescImagenesController
      //   echo $base;
       //  $pos=strrpos($base,'\\');
       //  $base=substr($base,0,$pos).DIRECTORY_SEPARATOR;
-       
+      // var_dump($arr_arch);die();
         foreach ($arr_arch as $key => $arrc) {
             //    echo "servicio ".$key;
             foreach ($arrc as $key2=>$value) {
@@ -97,8 +97,8 @@ class DescImagenesController
                   
                     $directorio=$value3;
                      //Llamámos a la función para comprimir
-                  
-                    $this->comprimirDirectorio($base.$directorio, $zip);
+                  //  echo "*****".$base."--".$directorio;
+                    $this->comprimirDirectorio($directorio, $zip);
                    
                 }
             }
@@ -206,11 +206,12 @@ $parametros["ricuenta"]=$ricuenta;
             }else {
                 //En el caso de que sea un archivo, lo añade al zip
                 //          $zip->addFile($dir);
-               
+            	$dir=str_replace("\\", DIRECTORY_SEPARATOR, $dir);
+            
                 if(is_file($dir))
                 {      $this->cont++;
                 $path = ($dir[0] == '\\') ? $dir : "$dir";
-                
+              //  echo " añadiendo ".$path; die();
                 $data = file_get_contents($path);
                 $file_opt="";
                 # add file to archive
