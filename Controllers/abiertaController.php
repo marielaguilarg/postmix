@@ -1266,7 +1266,7 @@ public function registrarAbiertaController(){
 		$nrep=$_GET["nrep"];
 		$pv=$_GET["pv"];
 		$idc=$_GET["idc"];
-
+		
 		$datini=SubnivelController::obtienedato($seccion,1);
 	 	$londat=SubnivelController::obtienelon($seccion,1);
 	 	$numsec=substr($seccion,$datini,$londat);
@@ -1306,7 +1306,7 @@ public function registrarAbiertaController(){
 	 	}
 
 	 	#despliega contenido
-echo '<div class="row">
+	echo '<div class="row">
 	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$seccion.'&sv='.$idser.'&ts=AN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
 	 </div>
 	 </div>';
@@ -1335,16 +1335,27 @@ echo '<div class="row">
 
 			$respDet =DatosAbierta::vistaReporteAbiertoDetalle($idser, $seccion, $nrep, $nren, "ins_detalleabierta");
 	 		#presenta info
+
 	 		foreach ($respDet as $key => $itemDet) {
+	 			 if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
+            		continue;
+
+				if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
+            		continue;
+				if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
+            		continue;
+
+				$tipocat=$itemDet["rad_formatoreactivo"];
+		        $numcat=$itemDet["rad_clavecatalogo"];
+		        $valop=$itemDet["ida_descripcionreal"];
+		        //echo $tipocat;
 
                 echo ' <div class="form-group col-md-12">
             <div class="row">
             <ul class="nav nav-stacked">
            <li><a href="#"><strong>'.$itemDet["rad_descripcionesp"].'</strong>';
 
-				$tipocat=$itemDet["rad_formatoreactivo"];
-		        $numcat=$itemDet["rad_clavecatalogo"];
-		        $valop=$itemDet["ida_descripcionreal"];
+				
 		        switch ($tipocat) {
 		            case "C" :
 		                $rowca=DatosCatalogo::opcionSelCatalogo($numcat, $valop, "ca_catalogosdetalle");
@@ -1352,6 +1363,8 @@ echo '<div class="row">
 		                    $valreal=$rowca["cad_descripcionesp"];
 		               
 		                break;
+		            case "F" :    	
+						$valreal=SubnivelController::mysql_fecha($valop);
 		            default:
 		                $valreal=$valop;
 		        }
@@ -1539,15 +1552,14 @@ public function reporteAbiertaController(){
 
 }
 
-
-  public function nuevoReporteabierta(){
+public function nuevoReporteabierta(){
 	#lee varia{ble
 		$sv=$_GET["sv"];
 		$sec=$_GET["sec"];
 		$nrep=$_GET["nrep"];
 		$pv=$_GET["pv"];
 		$idc=$_GET["idc"];
-
+//		echo "servicio";
 		echo ' <section class="content container-fluid">
 		<div class="row">
 		
@@ -1563,8 +1575,16 @@ public function reporteAbiertaController(){
 		echo '<input type="hidden" name="pv" value="'.$pv.'">';
 		echo '<input type="hidden" name="idc" value="'.$idc.'">';
 
-		$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, $tabla);
+		$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "cue_reactivosabiertosdetalle");
 		foreach ($respuesta as $key => $item) {
+			echo $item["ida_numcaracteristica3"];
+			if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+                continue;
+            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+                continue;
+            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+                continue;
+
 			switch ($item['rad_formatoreactivo']){
 			case "C" :
 			   // busca el catalogo
@@ -1592,14 +1612,17 @@ public function reporteAbiertaController(){
 			case "F":
                  echo "<div align='left'>
                  <label>".$item["rad_descripcionesp"]."</label>
-                 <input name='desc".$item['rad_numcaracteristica2']."' id='desc".$item['rad_numcaracteristica2']."' type='text'><button id='trigger".$item['rad_numcaracteristica2']."'>...</button>
-                     </div><script language='JavaScript' type='text/JavaScript'>Calendar.setup(
-    				{
-      				inputField  : 'desc".$item['rad_numcaracteristica2']."',         // ID of the input field
-      				ifFormat    : '%d/%m/%Y',    // the date format
-      				button      : 'trigger".$item['rad_numcaracteristica2']."'       // ID of the button
-    				}
-  					);</script></td>";
+ 				
+                <div class='input-group date'>
+                  <div class='input-group-addon'>
+                    <i class='fa fa-calendar'></i>
+                  </div>
+                  <input type='text' class='form-control pull-right' id='datepicker' name='desc".$item['rad_numcaracteristica2']."'>
+                </div>
+                <!-- /.input group -->
+              </div>
+
+                 ";
                     break;
 
 			default:   
@@ -1631,12 +1654,10 @@ public function reporteAbiertaController(){
 	 </section>';
 	}	
 
+	
 	public function insertaReporteAbierta(){
-		//echo "entre a inserta";
-		//echo $_POST["sec"];
 		#lee varia{ble
 		if (isset($_POST["sv"]) && $_POST["sv"]=!"") {
-			//echo "si lo encontre";
 			foreach($_POST as $nombre_campo => $valor){
 				$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
 				eval($asignacion);
@@ -1672,6 +1693,13 @@ public function reporteAbiertaController(){
 			$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "ins_detalleabierta");
 			
 			foreach ($respuesta as $key => $item) {
+			 if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+                continue;
+            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+                continue;
+            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+                continue;
+
 				$nomcam="desc".$item['rad_numcaracteristica2'];
   			    if (ctype_space(${$nomcam})) {
 				  $valcom="";
@@ -1685,7 +1713,12 @@ public function reporteAbiertaController(){
 			      		$valacepta=0;
 			   		}	
 		   		} else {	 
+		   			if ($item['rad_tiporeactivo']=='F') {
+		   				$valcom=SubnivelController::fecha_mysql($valcom);
+		   				echo $valcom;
+		   			} else {	
 			  		$valacepta=0;
+			  		}
 		   		}  // if
 		   		 $numcar2=$item['rad_numcaracteristica2'];
 
