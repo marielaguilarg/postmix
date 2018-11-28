@@ -584,11 +584,36 @@ public function editarPonderaComentController(){
     echo '<input type="hidden" name="nrep" value="'.$nrep.'">';
    echo '<input type="hidden" name="pv" value="'.$pv.'">';
    echo '<input type="hidden" name="idc" value="'.$idc.'">';
-
-
-    $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
+    
+    
+ $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
      
     foreach($respuesta as $row => $item){
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==5)
+            continue;   
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==8)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==9)
+            continue; 
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==17)
+            continue; 
+          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==18)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==19)
+            continue; 
+          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==20)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==21)
+            continue; 
       echo '
       
         <div class="col-md-4" >
@@ -719,7 +744,7 @@ public function editarPonderaComentController(){
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
-              </div> 
+              </div>
              
                    </div>
                
@@ -729,7 +754,7 @@ public function editarPonderaComentController(){
     </div>
      ';
       } //foreach
-
+   
 
   #registra reporte
               $ingreso = new PonderacionController();
@@ -801,7 +826,7 @@ public function editarPonderaComentController(){
 }
  
 
-  public function registraPonderada(){
+public function registraPonderada(){
 
     $idc=$_POST["idc"];
    
@@ -828,10 +853,10 @@ public function editarPonderaComentController(){
         //echo "no hay registro";
        #lee regsitros de seccion
       $reactivos = DatosPond::validaDatosPonderada($sec, $ser, 0, "cue_reactivos");
-      //var_dump($reactivos);
 
+      foreach($reactivos as $row => $item){
+        
 
-      foreach($reactivos as $row => $item){      
           $numreac=$item["r_numreactivo"];
           $desreac=$item["r_descripcionesp"];
           $noapnom="noap".$numreac;
@@ -881,6 +906,35 @@ public function editarPonderaComentController(){
           }  
       # vamos a ingresar EL REACTIVO
           $descom=0;
+if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==5)
+            continue;   
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==8)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==9)
+            continue; 
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==17)
+            continue; 
+          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==18)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==19)
+            continue; 
+          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==20)
+          //  echo "encontre el registro";
+            continue;
+         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==21)
+            continue;
+
+
+
+
 
         $datosController= array("idser"=>$ser,
             "numrep"=>$nrep,
@@ -894,7 +948,7 @@ public function editarPonderaComentController(){
         $respuesta = DatosPond::insertaregistroPonderado($datosController, "ins_detalle");
       }  //foreach
       // regresa
-         echo "regresa";
+        // echo "regresa";
             echo "
            <script type='text/javascript'>
              window.location.href='index.php?action=editarep&idc=".$idc."&sv=".$ser."&pv=".$pv."&nrep=".$nrep."'
@@ -903,6 +957,8 @@ public function editarPonderaComentController(){
       
          } // if validacion post 
    }    // funcion
+
+
 
 
 
