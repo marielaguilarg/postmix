@@ -110,6 +110,7 @@ $repFacturaController=new RepFacturacionController;
       
        
   </div></div>
+  <div class="row">
     <div class="col-md-2">
     <label>CLIENTE :</label></div>
        <div class="col-md-4">
@@ -133,7 +134,7 @@ $repFacturaController=new RepFacturacionController;
             
 	</select>
  </div>
- 
+ </div>
     <div class="col-md-12 form-group">
                 
                   <button type="submit" class="btn btn-info pull-right">Generar</button>  

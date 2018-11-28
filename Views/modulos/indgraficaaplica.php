@@ -7,4 +7,4 @@ include('../../Models/conexion.php');
 $grafica=new GeneradorGraficas;
 $seccion= filter_input(INPUT_GET,"numsec",FILTER_SANITIZE_SPECIAL_CHARS);
 $tiposec= filter_input(INPUT_GET,"tiposec",FILTER_SANITIZE_SPECIAL_CHARS);
-$grafica->graficaAplica($seccion, $tiposec,1);
+$grafica->graficaAplica($seccion, $tiposec);
