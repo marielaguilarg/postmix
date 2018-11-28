@@ -309,6 +309,7 @@ if($fechaasig_fin!="")
             $num_reg = sizeof($rs);
             $_SESSION["fnumrep"] = $num_reg;
               if ($num_reg >= 2) {  // pasa al resumen
+              	return true;
 //             include ('MENencabezacons.php');
 //        include ("MENresumenresultados.php");
                //     header("index.php?action=indhistorialreportes&ptv=" . $unidadnegocio . "&fily=" . $cuenta . "." . $franquiciacta);
@@ -327,6 +328,7 @@ if($fechaasig_fin!="")
                     <tr><td align="center"><a href="javascript:history.back();">&lt;&lt;  ' . T_("Regresar") . '  </a> </td></tr></table>';
                     //echo $msg2;
                    // $html->asignar('CONTENIDO', $msg2);
+                   return false;
                 }
               
             }
