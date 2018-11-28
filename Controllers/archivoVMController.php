@@ -68,7 +68,7 @@ class ArchivoVMController
                     $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
                     $objWriter->save($fname);
                     
-                    header("Content-Type: application/x-msexcel; name=\"".$nomcuenta.".xlsx\"");
+                    header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
                     header("Content-Disposition: inline; filename=\"".$nomcuenta.".xlsx\"");
                     $fh=fopen($fname, "rb");
                     fpassthru($fh);
@@ -1282,7 +1282,7 @@ WHERE
                 "name"    => 'Arial Unicode MS'
             ));
             // $this->worksheet->set_column(1, 2, 20);
-            $text_format->set_merge();
+           // $text_format->set_merge();
             $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $nomcuenta."  DEL PERIODO:  ".$anio2);
             $this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, 4,$text_format);
