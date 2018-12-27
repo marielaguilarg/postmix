@@ -8,6 +8,8 @@
 include "Models/crud_cuentas.php";
 include "Models/crud_surveyData.php";
 include "Models/crud_estandar.php";
+require_once 'libs/PHPExcel-1.8/PHPExcel.php';
+include "Utilerias/utilerias.php";
 class SurveyDataController
 {  
    private $servicio;
@@ -24,15 +26,15 @@ class SurveyDataController
         define(VACIO,"&nbsp;");
         include("tablahtml.php");
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        $this->arrcolores=array("azul"=>"#3333CC","verde"=>"#33FF66","naranja"=>"#FF9900","amarillo"=>"#FFFF33","#9933FF","rojo"=>"#FF0000","verdeo"=>"#CCFFFF","gris"=>"#999999" );
+        $this->arrcolores=array("azul"=>"ff3333CC","verde"=>"ff33FF66",
+        		"naranja"=>"ffFF9900","amarillo"=>"ffFFFF33","ff9933FF","rojo"=>"ffFF0000","verdeo"=>"ffCCFFFF",
+        		"gris"=>"ffcccccc" );
         /////////////////////////////////////////////////////////////////////////////////////////////////
-        
         
     /****************************************GENERA REPORTE POR CUENTA***************************/
    
         include ("Utilerias/leevar.php");
       
-     
         $this->servicio=1;
         //$fec1="2008-10-02";
         //$fec2="2008-12-30";
@@ -40,42 +42,51 @@ class SurveyDataController
         $fec2=$fechafin.".".$fechafin2;
         
         //$nomcuenta="algo33";
-        $idcliente=100;
-        $prueba=new tablahtml("");			//crea una nueva tabla
+        $idcliente=1;
+    //    $prueba=new tablahtml("");			//crea una nueva tabla
         //si son todas las cuentas
-       
+        $cuenta_des="CUENTAS TODAS";
         if($consulta=="t")
         {   $this->cuenta=-1;
         $nomcuenta="Surveydata".date("dmyHi");
         }else
         {
             $this->cuenta=$cuenta;
-            
+            //echo $cuenta;
             $cuenta_des=DatosCuenta::nombreCuenta($cuenta,$idcliente);
+           // echo $cuenta_des; die();
             //CREA EL ARCHIVO PARA EXPORTAR
             $nomcuenta="Surveydata".$cuenta_des.date("dmyHi")	;		//nombre del archivo
             
         }
+        $this->workbook =new PHPExcel();
         
-        $prueba->nuevoren();
-        $prueba->nuevacol($this->unegocio($fec1,$fec2),"","");		//funcion que despliega los datos de la unidad de negocio
-        $prueba->nuevacol($this->principal($fec1,$fec2),"","");		//funcion que sepliega el resto del reporte
+        $this->worksheet =$this->workbook->getActiveSheet();
+        $this->workbook->getActiveSheet()->setTitle($cuenta_des);
+        
+       // $prueba->nuevoren();
+        $letra=$this->unegocio($fec1,$fec2);		//funcion que despliega los datos de la unidad de negocio
+        $this->principal($fec1,$fec2,$letra);		//funcion que sepliega el resto del reporte
       
-        $cad=$prueba->cierretabla();
+      //  $cad=$prueba->cierretabla();
    
-        $arch= "Archivos/".$nomcuenta.".xlsx";
-  
-        $this->creaarch($arch,$cad);						//se crea el archivo
-     
-       
-       // $letrero= "pruebas.php?f=".$arch;
-     //   echo     "<a href=\"".$letrero.'" title="vinculo">Descargar archivo</a>';
-         header("Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        $arch= $nomcuenta.".xlsx";
+        $fname = tempnam("../Archivos/", $nomcuenta.".xlsx");
+        $cellIterator = $this->worksheet->getRowIterator()->current()->getCellIterator();
+        $cellIterator->setIterateOnlyExistingCells(true);
+        /** @var PHPExcel_Cell $cell */
+        foreach ($cellIterator as $cell) {
+        	$this->worksheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+        }
+        $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
+        $objWriter->save($fname);
+        
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
 //header("Content-type: application/force-download");
 //         // $f="calendario.ZIP";
          header("Content-Disposition: attachment; filename=\"".$arch."\"");
-         readfile($arch);
-           
+         readfile($fname);
+         unlink($fname);
     }
         
         function consultaRatio($fechaini,$fechafin) {
@@ -474,6 +485,12 @@ left Join ca_nivel6 ON  ca_unegocios.une_cla_franquicia = ca_nivel6.n6_id
  left Join ca_franquiciascuenta ON ca_unegocios.fc_idfranquiciacta = ca_franquiciascuenta.fc_idfranquiciacta 
  where ins_generales.i_claveservicio=:servicio ";
             $parametros=array("servicio"=>$this->servicio);
+            $text_format =array(
+            		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+            				'startcolor' => array('argb'   =>  $this->arrcolores["gris"])),
+            		'font' => array("size"    => 10,
+            				"name"    => 'Arial Unicode MS'
+            		));
             if($this->cuenta!=-1)
             {    $sSQL.="  and ca_unegocios.cue_clavecuenta=:cuenta";
             $parametros["cuenta"]=$this->cuenta;  }
@@ -484,37 +501,45 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 $parametros["fechaini"]=$fechaini;
                 $parametros["fechafin"]=$fechafin;
                 $tbltemp->nuevoren();		//se crea un nuevo renglon en la tabla tbltemp
+                $letra=65;
+                $renglon=1;
                 for($i=0;$i<sizeof($nomcolumna);$i++) {
-                    $tbltemp->nuevacol($nomcolumna[$i],$this->arrcolores["gris"],"");			//se crea una columna para cada encabezado	 con la funcion nueva col, se indica el color
+                	
+                	$this->worksheet->setCellValue(Utilerias::michr($letra).$renglon, $nomcolumna[$i]);			//se crea una columna para cada encabezado	 con la funcion nueva col, se indica el color
+                	$this->worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($text_format);
+                	
                 }
-                $tbltemp->finren();				//fin del renglon
+                $renglon++;			//fin del renglon
                 $res=Conexion::ejecutarQuery($sSQL,$parametros);
-               
+               $letra=65;
                 if($res) {
-                     
+                   
                    foreach($res  as $row) {
-                      
-                        $tbltemp->nuevoren();			//se crea un nuevo renglon en la tabla tbltemp
+                      		//se crea un nuevo renglon en la tabla tbltemp
+                   	$letra=65;
                         for ($i=0;$i<sizeof($row)/2;$i++) {
                             $val=$row[$i];
-                            $tbltemp->nuevacol($val,'',"");			//se crea una nueva columna para cada dato	devuelto por la consulta
+                           // $tbltemp->nuevacol($val,'',"");			//se crea una nueva columna para cada dato	devuelto por la consulta
+                     
+                            $this->worksheet->setCellValue(Utilerias::michr($letra++).$renglon, $val);
+                        
                         }
-                        $tbltemp->finren();
+                        $renglon++;
                         
                     }
                     
                  
                 }
              
-                   
+                   return $letra; //devuelvo la letra en que me quedé
                     
-                    return $tbltemp->cierretabla();		//funcion que cierra la tabla tbltemp
+                    //return $tbltemp->cierretabla();		//funcion que cierra la tabla tbltemp
                  
                     
         }
         /*************************************funcion que crea cada columna del reporte*********************/
         
-        function columna($fechaini,$fechafin,$tiporeac,$reactivo,$ren,$col) {
+        function columna($fechaini,$fechafin,$tiporeac,$reactivo,$ren,$col,$letraini) {
             
             //verificamos l$this->cuentartes que se hicieron en el periodo de tiempo indicado
             
@@ -551,8 +576,9 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 
                 $res=$this->consulta($tiporeac,$fechaini,$fechafin,$reactivo,$ren);		//realiza la consulta
                 // para cada columna que aparecerá en el reporte
-                $otabla=new tablahtml("");					//crea un objeto tablahtml
-                
+              //  $otabla=new tablahtml("");					//crea un objeto tablahtml
+                $letra=$letraini;
+                $ren_ex=2;
                 //echo "<br>blabla ".$recativo;
                 if($res=='-1')				//si la consulta no es de ningun tipo de reactivo
                 // busca las especificaciones en la tabla de configuracion del surveydata
@@ -561,16 +587,20 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                  
                     for($i=0;$i<$num_reg2;$i++) {
                         $band=0;
-                        $otabla->nuevoren();
+                        
                         $color='';
                         //echo "VEZ".$i;
                         $res=DatosSurveyData::getSurveyData($col,"cnfg_surveydata");
                        
                         $val=$res["res"];
-                        $otabla->nuevacol($val,$color,"");		//crea una columna para cada dato que tiene
+                      //  $otabla->nuevacol($val,$color,"");		//crea una columna para cada dato que tiene
+                      //  echo "<br>".Utilerias::michr($letra).$ren_ex."--".$val;
+                        
+                        
+                        $this->worksheet->setCellValue(Utilerias::michr($letra).$ren_ex++, $val);
                         //un valor por omisión
                         //$band=1;
-                        $otabla->finren();
+                       // $otabla->finren();
                     }
                 }
                 else						//si la consulta fue exitosa
@@ -578,7 +608,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                     //echo "<br> VEZ".$i;
                     for($i=0;$i<$num_reg2;$i++) {
                         $band=0;
-                        $otabla->nuevoren();
+                       // $otabla->nuevoren();
                         $color='';
                         //echo "<br> VEZ".$i;
                      
@@ -587,7 +617,11 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                             if($reportes[$i]==$row["rep"])			//verificamos que sea del reporte en el que vamos
                             {
                                 $val=$row["res"];
-                                $otabla->nuevacol($val,$color,"");		//despliega el resultado de cada prueba
+                              //  $otabla->nuevacol($val,$color,"");		//despliega el resultado de cada prueba
+                             //   echo "<br>x".Utilerias::michr($letra).$ren_ex."--".$val;
+                                
+                                $this->worksheet->setCellValue(Utilerias::michr($letra).$ren_ex, $val);
+                                
                                 $band=1;
                                 //	echo "sale";
                                 break;
@@ -620,16 +654,20 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                             else				//si este reporte no tiene dato en la tabla
                                 // ni valor por omisión quedará en blanco
                                 $val=VACIO;
-                                $otabla->nuevacol($val,$color,"");
+                              //  $otabla->nuevacol($val,$color,"");
+                             //   echo "<br>z".Utilerias::michr($letra).$ren_ex."--".$val;
+                                
+                                $this->worksheet->setCellValue(Utilerias::michr($letra).$ren_ex, $val);
+                                
                         }
-                        
-                        $otabla->finren();
+                        $ren_ex++;
+                     //   $otabla->finren();
                     }
                 }
                 
                 
                 
-                return $otabla->cierretabla();			//finaliza la tabla por columna
+                return $letra;			//finaliza la tabla por columna
                 //return $otabla;
                 
                 
@@ -637,7 +675,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
         
         /*************************************funcion que crea cada columna ratio del reporte*********************/
         
-        function columnasRatio($fechaini,$fechafin,$tiporeac,$reactivo,$col) {
+        function columnasRatio($fechaini,$fechafin,$tiporeac,$reactivo,$col,$letraini) {
           
             $opcion_sabor=array(1=>"RATIO PEPSI",
                 2=>  "RATIO PEPSI LIGHT",
@@ -686,8 +724,8 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 $arr_ratio=$this->consultaRatio($fechaini,$fechafin);
                 
                 // para cada columna que aparecerá en el reporte
-                $otabla=new tablahtml("");					//crea un objeto tablahtml
-                
+               // $otabla=new tablahtml("");					//crea un objeto tablahtml
+                $letra=$letraini;
                 //echo "<br>blabla ".$recativo;
                 if(sizeof($arr_ratio)<=0)				//si la consulta no es de ningun tipo de reactivo
                 // busca las especificaciones en la tabla de configuracion del surveydata
@@ -700,19 +738,23 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
 				cnfg_surveydata
 				WHERE
 				cnfg_surveydata.surv_numerocol =:col";
+                    $ren=2;
+                  
                     for($i=0;$i<$num_reg2;$i++) {
                      
-                        $otabla->nuevoren();
+                       
                         $color='';
                         //echo "VEZ".$i;
                        
                         $row=DatosSurveyData::getSurveyData($col,"cnfg_surveydata");
                         
                         $val=$row["res"];
-                        $otabla->nuevacol($val,$color,"");		//crea una columna para cada dato que tiene
+                     //   $otabla->nuevacol($val,$color,"");		//crea una columna para cada dato que tiene
+                        $this->worksheet->setCellValue(Utilerias::michr($letra++).$ren++, $val);
+                        
                         //un valor por omisión
                         //$band=1;
-                        $otabla->finren();
+                       
                     }
                 }
                 else						//si la consulta fue exitosa
@@ -729,18 +771,20 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                         
                         if($reportes[$i]==$numrep)			//verificamos que sea del reporte en el que vamos
                         {
-                            $otabla->nuevoren();
+                            
                             
                             foreach($opcion_sabor as $key=>$sabor) {
                                 $val="";
                                 $val=$arr_sab[$key];
                                 
-                                $otabla->nuevacol($val,$color,"");		//despliega el resultado de cada prueba
+                               // $otabla->nuevacol($val,$color,"");		//despliega el resultado de cada prueba
+                                $this->worksheet->setCellValue(Utilerias::michr($letra++).$ren, $val);
                                 
                             }
                         
                             $i++;
-                            $otabla->finren();
+                          
+                            $ren++;
                         }
                        
                     }//finaliza para todos los reportes
@@ -752,7 +796,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 
                 
                 
-                return $otabla->cierretabla();			//finaliza la tabla por columna
+                return $letra;			//finaliza la tabla por columna
                 //return $otabla;
                 
                 
@@ -770,8 +814,8 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
         
         /******************DESPLIEGUE DE CADA PRUEBA*****************************/
         
-        function principal($fechaini,$fechafin) {
-           
+        function principal($fechaini,$fechafin,$letra) {
+           $letraini=$letra;
             $opcion_sabor=array(1=>"RATIO PEPSI",
                 2=>  "RATIO PEPSI LIGHT",
                 4=> "RATIO MIRINDA",
@@ -783,8 +827,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 15=>"RATIO BE LIGHT MANGO",
                 13=>"RATIO LIPTON");
           
-            $tablota = new tablahtml("");			//creamos una nueva tablahtml
-            $tablota->nuevoren();				//creamos un nuevo renglon en la tabla $tablota
+          	//creamos un nuevo renglon en la tabla $tablota
             
             //consultamos la configuracion del reporte, los reactivos y las columnas
             $sql1="SELECT
@@ -802,32 +845,44 @@ cnfg_surveydata.surv_nombrecol IS NOT NULL
             
             $res1=DatosSurveyData::listaSurveyData("cnfg_surveydata");
             $num_reg = sizeof($res1);
-           
+            $text_format =array(
+            		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+            				'startcolor' => array('argb'   =>  $this->arrcolores["gris"])),
+            		'font' => array("size"    => 10,
+            				"name"    => 'Arial Unicode MS'
+            		));
+            $renglon=1;
             if ($num_reg>1) {
              foreach($res1 as $row1) {
                     $col=$row1[0];
                     
                     $encabezado=$row1[4];			//se busca el nombre de cada columna
-                    //				echo $col;
+                  //  echo "qqqqq".$row1["surv_numeroreac"];
                     if($row1["surv_numeroreac"]=='8.0.1.0.0.9')// para proporcion agua jarabe
                     {
                         foreach($opcion_sabor as $key=>$sabor) {
-                            $tablota->nuevacol($sabor,$this->arrcolores["gris"],"");		//se crea cada columna
+                        	
+                          		//se crea cada columna
+                        	$this->worksheet->setCellValue(Utilerias::michr($letra).$renglon, $sabor);
+                            $this->worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($text_format);
                             
                         }
                     }
                     else
-                        $tablota->nuevacol($encabezado,$this->arrcolores["gris"],"");		//se crea cada columna
+                    {   //$tablota->nuevacol($encabezado,$this->arrcolores["gris"],"");		//se crea cada columna
+                    $this->worksheet->setCellValue(Utilerias::michr($letra).$renglon, $encabezado);
+                    $this->worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($text_format);
+                    
+                    }
                 }
             }
             
-            $tablota->finren();
+            $renglon++;
             
         
-            $tablota->nuevoren();		//un nuevo renglon para cada reporte
-           
+          
             $fecha=$fechaini;
-            
+            $letra=$letraini;
             
             $res1=DatosSurveyData::listaSurveyData("cnfg_surveydata ");
             $num_reg = sizeof($res1);
@@ -845,21 +900,22 @@ cnfg_surveydata.surv_nombrecol IS NOT NULL
                     if($reactivo=='8.0.1.0.0.9')//
                     {
                         
-                        $tablota->nuevacol($this->columnasRatio($fecha,$fechafin,$tiporeac,$reactivo,$col),"",sizeof($opcion_sabor));
-                        
+                        $letra=$this->columnasRatio($fecha,$fechafin,$tiporeac,$reactivo,$col,$letra);
+                        $letra++;
                         
                         $aumentar=10; // aumentariamos 10 col al num de col actual
                     }
                     else
                     {
-                        $tablota->nuevacol($this->columna($fecha,$fechafin,$tiporeac,$reactivo,$renglon,$col),"","");
+                       $letra=$this->columna($fecha,$fechafin,$tiporeac,$reactivo,$renglon,$col,$letra);
+                       $letra++;
                     }
                     //}
                     
                 }
             }
-            $tablota->finren();
-            return $tablota->cierretabla();
+            $renglon++;
+            return $letra;
             
             
             
