@@ -37,8 +37,19 @@ $(document).ready(function(){
     <section class="content container-fluid">
 
       <!----- Inicia contenido ----->
-        <div class="row">
-        <?php foreach( $cponderadoController->getListaPonderados() as $resultado ) {?>
+     
+        <?php
+        
+        $i=1;
+        $bac=1;
+     
+        foreach( $cponderadoController->getListaPonderados() as $resultado ) {
+        	if(($i-1)%3==0){
+        		echo '<div class="row">';
+        		$bac=0;
+        	}
+        	
+        	?>
         <div class="col-md-4" >
           <div class="box box-info" >
             <div class="box-header with-border">
@@ -65,21 +76,7 @@ $(document).ready(function(){
                      <label><?php echo $resultado["checkreac"]?></label>
                    				  
                  </div> 
-<!--                 <div class=" col-md-4">                  -->
-<!--                     <ul class="nav nav-stacked"> 
-                      <li><label>ACEPTADO </label></li>
-                  </ul>					 -->
-<!--                 </div> -->
-<!--                 <div class=" col-md-4">                  -->
-<!--                     <ul class="nav nav-stacked">
-                      <li><label>NO ACEPTADO  </label></li>
-                   </ul>					 -->
-<!--                 </div> -->
-<!--                   <div class=" col-md-4">                 -->
-<!--                      <ul class="nav nav-stacked">  
-                     <li>NO APLICA</li>
-                   </ul>					               -->
-<!--                 </div>  -->
+          
               </div>
                <div class="row" >
                 <div class="col-sm-4 border-right">
@@ -91,11 +88,7 @@ $(document).ready(function(){
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block"><?php echo $resultado["comentario"]?>
-               
-                
-<!--                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> -->
-<!--     Button with data-target -->
-<!--   </button> -->
+              
 
 </div>
                   <!-- /.description-block -->
@@ -107,28 +100,31 @@ $(document).ready(function(){
                   </div>
                   <!-- /.description-block -->
                 </div>
-<!--                 <div class="row" > -->
-<!--                <div class="collapse col-sm-12" id="collapseExample"> -->
-<!--   <div class="card card-body"> -->
-<!--     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. -->
-<!--   </div> -->
-<!-- </div>  -->
-                <!-- /.col -->
-<!--               </div> -->
+
               </div>
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
-        <?php } //fin foreach?>
-        
-		
- </div>
+        <?php 
+        if(($i)%3==0){
+        	
+        	echo '</div>';
+        	$bac=1;
+        }
+        $i++;
+        } //fin foreach
+        if($bac==0)
+        	echo '</div>';
+        	?>
+      <div class="row">  
+	<div class="col-md-12">	
+ 
     <div class="box box-info">  <div class="box-body"><strong>
         <?php echo T_("NIVEL DE CUMPLIMIENTO").": ".$cponderadoController->getNivelCumplimiento()?>
        %</strong> </div><!-- /.box-body -->
-       </div>
+       </div></div></div>
 	  </section>
   <!-- /.content-wrapper -->
  

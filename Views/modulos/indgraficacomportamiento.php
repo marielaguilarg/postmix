@@ -8,4 +8,4 @@ include('../../Models/conexion.php');
 $grafica=new GeneradorGraficas;
 $seccion= filter_input(INPUT_GET,"numsec",FILTER_SANITIZE_SPECIAL_CHARS);
 $tiposec= filter_input(INPUT_GET,"tiposec",FILTER_SANITIZE_SPECIAL_CHARS);
-$grafica->graficaComportamiento($seccion,1, $tiposec);
+$grafica->graficaComportamiento($seccion, $tiposec);

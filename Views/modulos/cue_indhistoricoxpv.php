@@ -14,7 +14,7 @@ $basepController->vistaHistoricoPV();
         </div>
         <div class="box-body">
         <div><?php echo T_("ESTIMADO USUARIO, PARA EXPORTAR EL REPORTE, SELECCIONE EL PUNTO DE VENTA")?> </div>
-        <div class="row"><form action="#" method="post">
+        <div class="row"><form action="index.php?action=indhistoricoxpv" method="post">
         <div class="col-md-6">
         
 <label><?php echo T_("BUSCAR PUNTO DE VENTA");?></label>
