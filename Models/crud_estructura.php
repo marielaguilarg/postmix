@@ -74,4 +74,3 @@ where cnfg_estructura.mee_numnivel=$nivel";
 
 }
 
-?>	

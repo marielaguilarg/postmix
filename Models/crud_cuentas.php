@@ -119,7 +119,7 @@ function nombreCuenta($cuenta, $cliente) {
 
     $sql = "SELECT
 ca_cuentas.cue_idcliente,
-ca_cuentas.ser_claveservicio,
+
 ca_cuentas.cue_id,
 ca_cuentas.cue_descripcion,
 ca_cuentas.cue_tipomercado,
@@ -129,16 +129,19 @@ FROM
 ca_cuentas
 where ca_cuentas.cue_idcliente=:cliente ";
 
-    $sql.=" and cue_clavecuenta=:cuenta";
+    $sql.=" and cue_id=:cuenta";
     $sql.=" order by ca_cuentas.cue_id";
-    
+  
     $res = Conexion::conectar()->prepare($sql);
     $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
     $res-> bindParam(":cliente", $cliente, PDO::PARAM_INT);
+    $res->execute();
+  
+    
     foreach ($res as $row) {
         $nombre = $row["cue_descripcion"];
     }
-   
+
     return $nombre;
 }
 

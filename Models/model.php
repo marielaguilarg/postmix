@@ -127,6 +127,10 @@ class EnlacesPaginas{
 		    $enlacesModel=="inicio_excel"||
             $enlacesModel=="repfacturacion" ||
 		    $enlacesModel=="listafacturas"||
+			$enlacesModel=="consultaResultados"||
+			$enlacesModel=="resultadosxrep"||
+			$enlacesModel=="listaconsultaRep"||
+			$enlacesModel=="resumenresultados"||
 		    //seccion de configuracion
 		    $enlacesModel=="slistagrupos"||
 		    $enlacesModel=="slistapermisos" ||
