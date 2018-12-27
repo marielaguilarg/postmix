@@ -928,7 +928,9 @@ ca_unegocios.fc_idfranquiciacta,
 ca_unegocios.une_id,
 
 sum(if(ins_detalleestandar.ide_aceptado=-1,1,0)) AS pasa,
-sum(1) as tot,";
+sum(1) as tot,
+cue_reactivosestandardetalle.red_parametroesp, cue_reactivosestandardetalle.red_parametroing,
+cue_reactivosestandardetalle.red_estandar,";
         if ($auxper[0] && $auxper[0] != 0) {
             $sql .= " if(ins_generales.i_mesasignacion=:fmes_consulta,1,0) as mes,";
         }
@@ -944,6 +946,10 @@ sum(1) as tot,";
 , convert(substring_index(i_mesasignacion,'.',1),unsigned) as mes_asig,  substring_index(i_mesasignacion,'.',-1) as anio_asig
 FROM
 ins_detalleestandar
+Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion 
+   AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica 
+   AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
+
 Inner Join ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
 where ins_generales.i_claveservicio=:servicio ";
@@ -1803,10 +1809,7 @@ ca_unegocios.une_cla_estado";
                             //  var_dump($totalreg);
                             $totalreg[$reg][$per]["tot"] += $total;
                             $totalreg[$reg][$per]["acep"] += $acept;
-                            // $totalreg[$reg][$per]["muestra"]+=$matrizmuestra[$cuen][$reg][$per]["muestra"];
-//             
-//                     $tab_cuenta->nuevacolest(VACIO,$clase,"");   }
-//                else
+                       
                         }
                       
                         $totalreg[$reg][$per]["muestra"] += $matrizmuestra[$cuen][$reg][$per]["muestra"];
@@ -2073,456 +2076,7 @@ ca_unegocios.une_cla_estado";
         return $output;
     }
 
-    /*     * *
-     * pinta tabla del semaforo
-     */
-
-//     function pintaTablaSem($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo) {
-
-//         global $html;
-//         global $vidiomau;
-//         global $ureg;
-
-//         //$x = inputbox($filx);
-//         $auxper = explode(".", $fperiodo);
-
-
-
-//         $campNivel[2] = "une_cla_pais";
-//         $campNivel[3] = "une_cla_zona";
-//         $campNivel[4] = "une_cla_estado";
-//         $campNivel[5] = "une_cla_ciudad";
-//         $campNivel[6] = "une_cla_franquicia";
-//         $campNivel[7] = "une_id";
-//         $campGrup["C"] = "cue_clavecuenta";
-//         $campGrup["F"] = "fc_idfranquiciacta";
-//         $campGrup["P"] = "une_id";
-//         $campGrup["PP"] = "une_id";
-//         $nivel = $tx;
-//         $edo = $filx["reg"];
-//         $cuenta = $_GET["cta"];
-//         $cd = $filx["ciu"];
-//         $niv6 = $filx["niv6"];
-//         $zona = $filx["zon"];
-
-//         $clave_cue = 1;
-//         $acumtot = 0;
-//         $acumacep = 0;
-//         $totalreg = array();
-//         $auxdatamos = explode(".", $rdata); //guarda los datos que se muestran si num pruebas tam muestra o %
-//         $total_cuen = array();
-
-//         //verifico que haya resultados si no consulto el nombre de la seccion
-//         $nomAux = null;
-//         for ($i = 0; $i < 3; $i++) { //lo repito 3 eces para cada periodo
-//             if ($auxper[$i] == 1) //para el mes
-//                 $rs = $this->ConsultaSemaforo($mes_asig, $referencia, $permiso, $filx, $fily, $colorsem, ($i + 1));
-
-//             if (sizeof($rs) > 0)
-//                 foreach ($rs as $row) {
-//                     $periodo = $acept = $acumtot = 0;
-//                     $cuenta = $row[$campGrup[$ty]]; //sera eje y
-//                     $region = $row[$campNivel[$tx]]; //ser� eje x
-
-//                     if ($vidiomau == 2) {
-//                         $nomseccion = $row["red_parametroing"];
-//                     } else {
-//                         $nomseccion = $row["red_parametroesp"];
-//                     }
-//                     $estandar = $row["red_estandar"];
-
-//                     $periodo = ($i + 1);
-//                     $acept = $row["pasa"];
-//                     $acumtot = $row["tot"];
-
-
-//                     if ($cuenta > 0 && $region > 0) {
-//                         $matriz[$cuenta][$region][$periodo]["acep"] = $acept;
-//                         $matriz[$cuenta][$region][$periodo]["tot"] = $acumtot;
-//                         $total_cuen[$cuenta][$periodo]["acep"] += $acept;
-//                         //     echo   "<br>".$cuenta."..".$region."..".$periodo."..".$total_cuen[$cuenta][$periodo]["tot"]."--".$acumtot;
-//                         $total_cuen[$cuenta][$periodo]["tot"] += $acumtot;
-//                     }
-//                     //        //inicializo
-//                     //        $totalreg[$region][$periodo]["tot"]=0;
-//                     //        $totalreg[$region][$periodo]["acep"]=0;
-//                     //        $totalreg[$region][$periodo]["muestra"]=0;
-//                 }
-//         }//termina para los periodos
-//         //var_dump( $matriz);
-//         $rs = null;
-//         $renglones = array();
-//         switch ($tx) {
-//             case 2: //busco estados
-//                 $columnas = $this->unidadesNeg($mes_asig, $referencia, $filx, $fily);
-
-//                 break;
-//             case 3: //busco estados
-//                 $columnas = $this->zonas($mes_asig, $referencia, $filx, $fily);
-
-//                 break;
-//             case 4: //busco estados
-//                 $columnas = $this->regiones($mes_asig, $referencia, $filx, $fily);
-//                 break;
-//             case 5:
-//                 $columnas = $this->ciudades($mes_asig, $referencia, $permiso, $filx, $fily);
-//                 break;
-//             case 6:
-
-//                 $columnas = $this->niv6($mes_asig, $referencia, $permiso, $filx, $fily);
-//                 break;
-//         }
-//         $num_regs = count($columnas);
-//         // var_dump($columnas);
-//         if ($ty == "C") {
-//             $renglones = $this->cuentas($permiso, $filx);
-//             $nty = "F";
-//             $indy = "cta";
-//         }
-// //    var_dump($fily);
-//         if ($ty == "F") {
-
-//             $renglones = $this->franquicias($fily["cta"], $filx);
-//             $aty = "C";
-//             $nty = "P";
-//             $indy = "fra";
-//         }
-//         if ($ty == "P") {
-//             $aty = "F";
-//             $renglones = $this->puntosVenta($zona, $filx, $fily);
-//         }
-//         if ($ty == "PP") {
-//             $aty = "P";
-//             $renglones = $this->puntoVenta($zona, $filx, $fily);
-//         }
-
-
-//         /*
-//          * Output
-//          */
-//         $output = array(
-//             "sEcho" => intval($_GET['sEcho']),
-//             "iTotalRecords" => 10,
-//             "iTotalDisplayRecords" => 10,
-//             "aaData" => array()
-//         );
-//         if ($num_regs > 1)// si son todas empiezo en 0
-//             $ini = 1;
-//         else
-//             $ini = $permiso;
-
-//         $rowdata = array();
-
-//         $permiso = 0;
-//         //  $rs=cuentas($permiso); 
-//         //busco tama�o de muestra
-//         if ($auxdatamos[0] == 1) {
-
-//             $arrmuestra = $this->tamanioMuestra($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty);
-//             $matrizmuestra = $arrmuestra[0];
-//             $totalmuestra = $arrmuestra[1];
-//         }
-//         $totalfin = array();
-//         //  var_dump($renglones);
-//         for ($r = 0; $r < count($renglones); $r++) {
-//             $rowdata = array();
-//             $cuen = $renglones[$r][0];
-//             $fily[$indy] = $cuen;
-//             $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $filx["niv6"];
-//             $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-
-//             $ligay = $fily["cta"] . "." . $fily["fra"];
-//             $href = 'index.php?action=indindicadoresgrid&mes=' . $mes_asig . "&sec=" . $tiposec . "&filx=" . $ligax . "&fily=" . $ligay . "&ren=" . $nty .
-//                     "&niv=" . $tx . "&rdata=" . $rdata . "&ref=" . $referencia . "&filuni=" . $ligauni;
-//             if ($ty != "P" && $ty != "PP")
-//                 $tab_cuenta = '<a href="' . $href . '" >' . $renglones[$r][1] . '</a>';
-//             else
-//                 $tab_cuenta = '<a href="MENindprincipal.php?op=mindi&admin=consulta2&mes=' . $mes_asig . "&filx=" . $ligax . '&ptv=' . $renglones[$r][0] . '&fily=' . $ligay . "&ref=" . $referencia . "&filuni=" . $ligauni . '" >' . $renglones[$r][1] . '</a>';
-
-//             $rowdata[] = "&nbsp;&nbsp;" . $tab_cuenta;
-
-//             for ($k = 0; $k < sizeof($columnas); $k++) {
-//                 $reg = $columnas[$k][0];
-//                 for ($per = 1; $per < 4; $per++) { //despliego cada periodo
-//                     $porcm = 0;
-//                     $porc = 0;
-//                     $ligax = "";
-//                     $ligay = "";
-//                     $reng3 = "";
-//                     $reng2 = "";
-//                     $reng1 = "";
-// //         
-//                     //   echo "<br>".$cuen."][".$reg."][".$per."--".$matriz[$cuen][$reg][$per]["tot"];
-//                     //     echo "--".$auxper[$per - 1]."-- ".$per;
-//                     if ($auxper[$per - 1] == 1) {
-//                         $matriz[$cuen][$reg][$per]["tot"] = $matriz[$cuen][$reg][$per]["tot"];
-//                         $matriz[$cuen][$reg][$per]["acep"] = $matriz[$cuen][$reg][$per]["acep"];
-//                         //     echo "<br>acep ".$cuen."][".$reg."][".$per."]".$matriz[$cuen][$reg][$per]["acep"];
-//                         //      echo "<br>tot ".$cuen."][".$reg."][".$per."]".$matriz[$cuen][$reg][$per]["tot"];
-
-//                         $acept = $matriz[$cuen][$reg][$per]["acep"];
-//                         $total = $matriz[$cuen][$reg][$per]["tot"];
-
-//                         $reng1 = $reng2 = $reng3 = "";
-//                         //calculo % tama�o muestra
-//                         //   echo "<br>".$matrizmuestra[$cuen][$reg][$per]["muestra"]." /". $matrizmuestra[$cuen][$reg]["muestratot"];
-//                         if ($auxdatamos[0] == 1) {
-
-//                             if ($matrizmuestra[$cuen][$reg]["muestratot"] != 0 && $total > 0) {
-//                                 $porcm = $matrizmuestra[$cuen][$reg][$per]["muestra"] / $matrizmuestra[$cuen][$reg]["muestratot"];
-//                                 $porcm = round($porcm * 100, 1);
-//                             } else
-//                                 $porcm = "";
-
-
-//                             $reng1 = '<span style="color:#999999" title="% ' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
-//                         }
-//                         if ($auxdatamos[1] == 1) {
-//                             if ($total == 0) {
-//                                 $total = "";
-//                             }
-//                             $reng2 = '<span style="color:#999999" title="' . T_("no. pruebas") . '">' . $total . '</span><br>';
-//                         }
-// //                    if ($auxdatamos[2] == 1) {
-//                         if ($total > 0) {
-//                             $porc = $acept / $total * 100;
-//                             $porc = round($porc, 1);
-//                             //   echo $cuen."--".$reg."--".$per."--".$porc."<br>";
-//                         } else
-//                             $porc = "";
-//                         $ligax = "";
-//                         $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//                         if ($tx == 2)
-//                             $ligauni = $filx["pais"] . "." . $filx["uni"];
-//                         if ($tx == 3) {
-//                             $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//                         }
-//                         if ($tx == 4)
-//                             $ligax = $reg . ".";
-//                         if ($tx == 5)
-//                             $ligax = $filx["reg"] . "." . $reg;
-//                         if ($tx == 6 || $tx == 7)
-//                             $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $reg;
-//                         $ligay = $fily["cta"] . "." . $fily["fra"];
-//                         if ($ty == "P" || $ty == "PP")
-//                             $reng3 = '<span title="% ' . T_("cumple") . '">' . $porc . '</span>';
-//                         else
-//                             $reng3 = '<span title="% ' . T_("cumple") . '"><a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" >' . $porc . '</a></span>';
-//                         //  }
-//                         $rowdata[] = $reng2 . $reng1 . $reng3;
-//                         //   echo $reg."][".$per."--".$total."--". $totalreg[$reg][$per]["tot"]."<br>";
-//                         //acumulo por mes
-//                         $totalreg[$reg][$per]["tot"] += $total;
-//                         $totalreg[$reg][$per]["acep"] += $acept;
-//                         // $totalreg[$reg][$per]["muestra"]+=$matrizmuestra[$cuen][$reg][$per]["muestra"];
-// //             
-// //                     $tab_cuenta->nuevacolest(VACIO,$clase,"");   }
-// //                else
-//                     }
-//                     $totalreg[$reg][$per]["muestra"] += $matrizmuestra[$cuen][$reg][$per]["muestra"];
-//                 } //fin periodos
-//                 $totalreg[$reg]["muestratot"] += $matrizmuestra[$cuen][$reg]["muestratot"];
-//             }
-//             //despliego totales por cuenta
-//             $ligax = "";
-//             $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//             if ($tx == 2)
-//                 $ligauni = $filx["pais"] . "." . $filx["uni"];
-//             if ($tx == 3) {
-//                 $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//             }
-//             if ($tx == 4)
-//                 $ligax = "";
-
-//             if ($tx == 5)
-//                 $ligax = $filx["reg"] . ".";
-//             if ($tx == 6)
-//                 $ligax = $filx["reg"] . "." . $filx["ciu"];
-//             if ($tx == 7)
-//                 $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $filx["niv6"];
-
-//             for ($per = 1; $per < 4; $per++) {
-//                 $porc = 0;
-//                 $porcm = 0;
-//                 $reng3 = "";
-//                 $reng2 = "";
-//                 $reng1 = "";
-//                 if ($auxper[$per - 1] == 1) {
-//                     $total_cuen[$cuen][$per]["acep"] = $total_cuen[$cuen][$per]["acep"];
-//                     $total_cuen[$cuen][$per]["tot"] = $total_cuen[$cuen][$per]["tot"];
-
-//                     if ($total_cuen[$cuen][$per]["tot"] > 0) {
-//                         $porc = $total_cuen[$cuen][$per]["acep"] / $total_cuen[$cuen][$per]["tot"] * 100;
-//                         $porc = round($porc, 1);
-//                         $totaltemp = $total_cuen[$cuen][$per]["tot"];
-//                     } else {
-//                         $porc = " ";
-//                         $totaltemp = "";
-//                     }
-//                     $reng1 = $reng2 = $reng3 = "";
-//                     //calculo % tama�o muestra
-//                     if ($auxdatamos[0] == 1) {
-//                         if ($totalmuestra[$cuen]["muestratot"] != 0 && $total_cuen[$cuen][$per]["tot"] > 0) {
-//                             $porcm = $totalmuestra[$cuen][$per]["muestra"] / $totalmuestra[$cuen]["muestratot"];
-//                             $porcm = round($porcm * 100, 1);
-//                         } else
-//                             $porcm = "";
-
-
-//                         $reng1 = '<strong><span style="color:#999999" title="% ' . T_("tam. muestra") . '">' . $porcm . '</span></strong><br>';
-//                     }
-//                     if ($auxdatamos[1] == 1) {
-//                         $reng2 = '<strong><span style="color:#999999"  title="' . T_("no. pruebas") . '">' . $totaltemp . '</span></strong><br>';
-//                     }
-//                     if ($auxdatamos[2] == 1) {
-//                         if ($ty == "P" || $ty == "PP")
-//                             $reng3 = '<strong><span title="% ' . T_("cumple") . '">' . $porc . "</span></strong>";
-//                         else
-//                             $reng3 = '<strong><span title="% ' . T_("cumple") . '">
-//                             <a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" >  ' . $porc . "</a></span></strong>";
-//                     }
-//                     $rowdata[] = $reng2 . $reng1 . $reng3;
-//                     $totalfin[$per]["acep"] += $total_cuen[$cuen][$per]["acep"];
-//                     $totalfin[$per]["tot"] += $total_cuen[$cuen][$per]["tot"];
-//                     $totalfin[$per]["muestra"] += $totalmuestra[$cuen][$per]["muestra"];
-//                     // $totalfin[$per]["muestra"]+=$totalmuestra[$cuen][$per]["muestra"];
-//                 }
-//             }
-//             $totalfin["muestratot"] += $totalmuestra[$cuen]["muestratot"];
-
-//             $contest++;
-//             $output['aaData'][] = array_map(utf8_encode, $rowdata);
-//         }
-//         //despliego totales por region
-//         $rowdata = array();
-//         $rowdata[] = T_("TOTALES");
-//         // var_dump($columnas);
-//         for ($k = 0; $k < sizeof($columnas); $k++) {
-//             $reg = $columnas[$k][0];
-//             //   echo "--".$reg;
-//             $ligax = "";
-//             $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//             if ($tx == 2)
-//                 $ligauni = $filx["pais"] . "." . $reg;
-//             if ($tx == 3) {
-//                 $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $reg;
-//             }
-//             if ($tx == 4)
-//                 $ligax = $reg . ".";
-//             if ($tx == 5)
-//                 $ligax = $filx["reg"] . "." . $reg;
-//             if ($tx == 6 || $tx == 7)
-//                 $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $reg;
-//             if ($ty != "C")
-//                 $ligay = $fily["cta"];
-//             else if ($ty != "P")
-//                 $ligay = $fily["cta"];
-//             else
-//                 $ligay = "";
-//             for ($per = 1; $per < 4; $per++) {
-//                 if ($auxper[$per - 1] == 1) {
-//                     $reng1 = $reng2 = $reng3 = "";
-//                     if ($auxdatamos[0] == 1) {
-
-//                         if ($totalreg[$reg]["muestratot"] != 0 && $totalreg[$reg][$per]["tot"] > 0) {
-//                             $porcm = $totalreg[$reg][$per]["muestra"] / $totalreg[$reg]["muestratot"];
-//                             $porcm = round($porcm * 100, 1);
-//                         } else
-//                             $porcm = "";
-
-//                         //  $rowdata[] =$totalreg[$reg][$per]["tot"].'-'.round($porc,1);
-//                         $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
-//                     }
-//                     //  echo $reg."--".$per."--".$totalreg[$reg][$per]["tot"]."<br>";
-//                     if ($auxdatamos[1] == 1) {
-//                         if ($totalreg[$reg][$per]["tot"] > 0) {
-
-
-//                             $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '" >' . $totalreg[$reg][$per]["tot"] . '</span><br>';
-//                         } else {
-//                             $reng2 = '<br>';
-//                         }
-//                     }
-//                     if ($auxdatamos[2] == 1) {
-//                         if ($totalreg[$reg][$per]["tot"] != 0) {
-//                             $porc = $totalreg[$reg][$per]["acep"] / $totalreg[$reg][$per]["tot"] * 100;
-//                             $porc = round($porc, 1);
-//                         } else {
-//                             $porc = "";
-//                         }
-//                         if ($ty == "P")
-//                             $reng3 = '<span title="% ' . T_("cumple") . '"><strong>' . $porc . "</strong></span>";
-//                         else
-//                             $reng3 = '<span title="% ' . T_("cumple") . '">
-//                             <a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" ><strong>' . $porc . "</strong></a></span>";
-//                     }
-//                     $rowdata[] = $reng2 . $reng1 . $reng3;
-//                 }
-//             }
-//         }
-
-//         //  var_dump($rowdata);
-//         //despliego totales finales
-//         $ligax = "";
-//         $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//         if ($tx == 2)
-//             $ligauni = $filx["pais"] . "." . $filx["uni"];
-//         if ($tx == 3) {
-//             $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-//         }
-//         if ($tx == 4)
-//             $ligax = $filx["reg"];
-
-//         if ($tx == 5)
-//             $ligax = $filx["reg"] . ".";
-//         if ($tx == 6)
-//             $ligax = $filx["reg"] . "." . $filx["ciu"];
-//         if ($tx == 7)
-//             $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $filx["niv6"];
-
-//         if ($ty == "F")
-//             $ligay = $fily["cta"];
-//         else if ($ty == "P")
-//             $ligay = $fily["cta"] . "." . $fily["fra"];
-//         else if ($ty == "PP")
-//             $ligay = $fily["cta"] . "." . $fily["fra"] . "." . $fily["pv"];
-//         else
-//             $ligay = "";
-//         for ($per = 1; $per < 4; $per++) {
-//             $reng1 = $reng2 = $reng3 = "";
-//             if ($auxper[$per - 1] == 1) {
-//                 if ($auxdatamos[0] == 1) {
-//                     if ($totalfin["muestratot"] != 0 && $totalfin[$per]["tot"] > 0)
-//                         $porcm = $totalfin[$per]["muestra"] / $totalfin["muestratot"];
-
-//                     $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . round($porcm * 100, 1) . '</span><br>';
-//                 }
-//                 if ($auxdatamos[1] == 1) {
-//                     $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '">' . $totalfin[$per]["tot"] . '</span><br>';
-//                 }
-//                 if ($auxdatamos[2] == 1) {
-//                     if ($totalfin[$per]["tot"] > 0) {
-//                         $porc = $totalfin[$per]["acep"] / $totalfin[$per]["tot"] * 100;
-//                         $porc = round($porc, 1);
-//                     } else
-//                         $porc = "";
-// //                if ($ty == "P")
-// //                    $reng3 = '<span title="% ' . T_("cumple") . '"> <strong>' . $porc . "</strong></span>";
-// //                else
-//                     $reng3 = '<span title="% ' . T_("cumple") . '">
-//                             <a href="index.php?action=indestadisticares&mes=' . $mes_asig . '&refer=' . $referencia . '&tcons=gr&fily=' . $ligay . '&filx=' . $ligax . '&per=' . $per . "&filuni=" . $ligauni . '" ><strong>' . $porc . "</strong></a></span>";
-//                 }
-//                 $rowdata[] = $reng2 . $reng1 . $reng3;
-//             }
-//         }
-
-
-
-
-//         $output['aaData'][] = $rowdata;
-
-//         return $output;
-//     }
+  
 
     function cuentas($cuenta, $filx) {
         $grupo = $_SESSION["GrupoUs"];
@@ -2737,16 +2291,16 @@ where 1=1 ";
 
   
     
-    public function exportarExcel(){
+    public function exportarExcel($worksheet){
         
 
 $nomarch = "Indicadores" . date("dmyHi");
- $this->servicio = $_SESSION["servicioind"]=1;
+ $this->servicio = $_SESSION["servicioind"];
  $this->cliente=1;
 //$this->servicio=1;
 
 
-define("VACIO", "&nbsp;");
+define("VACIO", "");
 if ($_POST) {
     $keys_post = array_keys($_POST);
     foreach ($keys_post as $key_post) {
@@ -2792,7 +2346,8 @@ if ($permiso == -1) {
   
   //  $html->asignar('veo_res', "none");
     //$html->asignar('noveo_res', "table-row");
-    $this->mensaje_erro= T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION");
+    $this->mensaje_error= T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION");
+    echo $this->mensaje_error;
 } else {
     $nivel = $niv;
     $gnivel = $niv;
@@ -2879,27 +2434,43 @@ if ($permiso == -1) {
     $fily["fra"] = $auxy[1];
      $fily["pv"] = $auxy[2];
 //busco si eligio una opcion del semaforo
-
+     $indiTit1=array(
+     		'alignment' => array(
+     				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+     		),
+     		
+     		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+     				'startcolor' => array('argb'   =>"ff6B9EDC")),
+     		'font' => array("size"    => 16,
+     				"name"    => 'Arial Unicode MS'
+     		));
+   
     $colorsem = $sem;
     $fperiodo = $per;
+    $worksheet->setCellValue("A2",T_("INDICADORES POST MIX")." ".$this->mes_asig);
+    $worksheet->getStyle("A2")->applyFromArray($indiTit1);
+     
    // die($referencia);
-    $tabla =$this->pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $fperiodo);
- 
-    $this->listaResultados=$tabla;
+    $letra =$this->pintaTablaExcel($worksheet,$mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $fperiodo);
+    $worksheet->mergeCells("A3:".Utilerias::michr($letra-1)."3");
+    $worksheet->mergeCells("A2:".Utilerias::michr($letra-1)."2");
+    $worksheet->mergeCells("A4:".Utilerias::michr($letra-1)."4");
+    $worksheet->getRowDimension('1')->setRowHeight(70);
+  //  $this->listaResultados=$tabla;
    
 }
 
         
     }
 
-function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo) {
+function pintaTablaExcel($worksheet,$mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo) {
    
      $vidiomau = $_SESSION["idiomaus"];
    
   
     $rs = $this->Consulta($mes_asig, $referencia, $permiso, $filx, $fily, $fperiodo);
 
-    $tab_cuenta = new Tablahtml("tablabord");
+  //  $tab_cuenta = new Tablahtml("tablabord");
     $clave_cue = 1;
     $acumtot = 0;
     $acumacep = 0;
@@ -2928,7 +2499,6 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
 
     //verifico que haya resultados si no consulto el nombre de la seccion
     $nomAux = null;
-   
     if (sizeof($rs) <= 0) {
         $nomAux = DatosEst::buscaIndicadores($referencia, $vidiomau,$this->servicio);
 
@@ -2937,7 +2507,9 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
         $estandar = $indicador[2];
         }
     }else
-    {  foreach ($rs as $row) {
+    { 
+    	
+    	foreach ($rs as $row) {
 
             $periodo = $acept = $acumtot = 0;
             $cuenta = $row[$campGrup[$ty]]; //sera eje y
@@ -2978,11 +2550,23 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
             $totalreg[$region][$periodo]["acep"] = 0;
         }
 }
+$indiTit2=array(
+		'alignment' => array(
+				'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+		),
+		
+		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'startcolor' => array('argb'   =>"ff6B9EDC")),
+		'font' => array("size"    => 14,
+				"name"    => 'Arial Unicode MS'
+		));
 
+$worksheet->setCellValue("A3",$nomseccion);
+$worksheet->setCellValue("A4",$estandar);
+$worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
 
  
-    $this->nombreSeccion=$nomseccion;
-    $this->estandar= $estandar;
+   
     if ($ty == "C") {
         $gupcta = T_("CUENTA");
         $renglones =$this->cuentas($permiso, $filx);
@@ -3002,13 +2586,33 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
         $gupcta = T_("PUNTO VENTA");
         $renglones = $this->puntoVenta($zona, $filx, $fily);
     }
+    $cabcols=array(
+    		"bold"=>true,
+    		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb'   => "ffC5D9F1")),
+    		'font' => array("size"    => 12,
+    				'name'    => 'Arial Unicode MS',
+    				"color"=>array('argb'   => "ff000000")
+    		));
+    
+    $cabcol=array(
+    		
+    		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,'startcolor' => array('argb'   => "ffC5D9F1")),
+    		'font' => array("size"    => 12,
+    				'name'    => 'Arial Unicode MS',
+    				"color"=>array('argb'   => "ff000000")
+    		));
+    		
+    		
+    
+    
 
-
-    $tab_cuenta->nuevoren();
+  //  $tab_cuenta->nuevoren();
+    $renglon=5;
     //$tab_cuenta->nuevacol($nomseccion."<br>".$estandar, "", "");
-
-    $tab_cuenta->nuevacolestanch(Estructura::nombreNivel($nivel, $vidiomau), "cabcols", "", "16%");
-  
+	$letra=65;
+   // $tab_cuenta->nuevacolestanch(Estructura::nombreNivel($nivel, $vidiomau), "cabcols", "", "16%");
+    $worksheet->setCellValue(Utilerias::michr($letra).$renglon,Estructura::nombreNivel($nivel, $vidiomau));
+    $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
   
     //busco nombre de regiones
     $num_regs = 0;
@@ -3047,19 +2651,31 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
 
     for ($i = 0; $i < count($columnas); $i++) {
 
-        $tab_cuenta->nuevacolestanch($columnas[$i][1], "cabcol", "3", "12%");
+       // $tab_cuenta->nuevacolestanch($columnas[$i][1], "cabcol", "3", "12%");
+        $worksheet->setCellValue(Utilerias::michr($letra).$renglon,$columnas[$i][1]);
+         $worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra+2).$renglon);
+        $worksheet->getStyle(Utilerias::michr($letra).$renglon)->applyFromArray($cabcol);
+        $letra=$letra+3;
         $num_regs++; //cuento el num. de regiones
     }
+   
 //    while($row_reg=mysql_fetch_array($rs_reg)) {
 //        $tab_cuenta->nuevacolestanch($row_reg["est_nombre"], "cabcol", "3","12%");
 //
 //    }
-    $tab_cuenta->nuevacolestanch(T_("TOTALES"), "cabcols", "3", "12%");
-
+   // $tab_cuenta->nuevacolestanch(T_("TOTALES"), "cabcols", "3", "12%");
+    $worksheet->setCellValue(Utilerias::michr($letra).$renglon,T_("TOTALES"));
+    $worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra+2).$renglon);
+    $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
+ $letra=65;
+    $renglon++;
     // despliego tit de meses
-    $tab_cuenta->nuevoren();
+   
 //    $num_regs=mysql_num_rows($rs_reg);
-    $tab_cuenta->nuevacolest($gupcta, "cabcol", "");
+   // $tab_cuenta->nuevacolest($gupcta, "cabcol", "");
+    $worksheet->setCellValue(Utilerias::michr($letra).$renglon,$gupcta);
+  
+    $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcol);
       $auxper=explode(".", $fperiodo);
      $periodos = array();
    // if($auxper[0])
@@ -3070,7 +2686,11 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
               array_push($periodos, "12M");
     for ($reg = 0; $reg < $num_regs + 1; $reg++) {
         for ($per = 0; $per < 3; $per++) {
-            $tab_cuenta->nuevacolestanch($periodos[$per], "cabcol", "", "4%");
+           // $tab_cuenta->nuevacolestanch($periodos[$per], "cabcol", "", "4%");
+            $worksheet->setCellValue(Utilerias::michr($letra).$renglon,$periodos[$per]);
+            
+            $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcol);
+            
         }
     }
     //despliego la matriz
@@ -3078,8 +2698,24 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
     $totales_cue = 0;
     $totace_cue = 0;
     $contest = 0;
-    $estilo1 = "rencrema";
-    $estilo2 = "renazul";
+    $estilo1 =array(
+    		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+    				'startcolor' => array('argb'   =>"ffFFFFDD")),
+    		'font' => array("size"    => 10,
+    				"name"    => 'Arial Unicode MS'
+    		));
+    $estilo2 =array(
+    		'fill' => array('type' => PHPExcel_Style_Fill::FILL_SOLID,
+    				'startcolor' => array('argb'   =>"ffC4DAF2")),
+    		'font' => array("size"    => 10,
+    				"name"    => 'Arial Unicode MS',
+    				"color"=>array('argb'   =>"00000000")
+    		));
+    $gris =array(
+    		
+    				"color"=>array('argb'   =>"00999999")
+    		);
+  
     $r = 0;
     //busco tamaño de muestra
     if ($auxdatamos[0] == 1) {
@@ -3096,16 +2732,40 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
         else
             $clase = $estilo2;
         $cuen = $renglones[$r][0];
-        $tab_cuenta->nuevoren();
-        $tab_cuenta->nuevacolest($renglones[$r][1], $clase, "");
+        $letra=65;
+        $renglon++;
+      //  $tab_cuenta->nuevacolest($renglones[$r][1], $clase, "");
+        $worksheet->setCellValue(Utilerias::michr($letra).$renglon,$renglones[$r][1]);
+        //   $worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra+3).$renglon);
+        $worksheet->getStyle(Utilerias::michr($letra).$renglon)->applyFromArray($clase);
+        if ($auxdatamos[0] == 1) {
+        	
+        	$col=Utilerias::michr($letra);
+        
+         
+           if ($auxdatamos[1] == 1) {
+           	$worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra).($renglon+2));
+           	
+           }
+           else  $worksheet->mergeCells($col.$renglon.":".$col.($renglon+1));
+        }else
+        	if ($auxdatamos[1] == 1) {
+        		$worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra).($renglon+1));
+        		
+        	}
+        $letra++;
         if ($num_regs > 1)// si son todas empiezo en 0
             $ini = 1;
         else
             $ini = $permiso;
+            $renglonini=$renglon;
         for ($k = 0; $k < sizeof($columnas); $k++) {
                $reng1 = $reng2 = $reng3 = "";
             $reg = $columnas[$k][0];
-            for ($per = 1; $per < 4; $per++) { //despliego cada periodo
+            $renglon=$renglonini;
+            for ($per = 1; $per < 4; $per++) {
+            	$renglon=$renglonini;
+            	//despliego cada periodo
 //                if($matriz[$cuen][$reg][$per]["acep"]!=""){
                 $matriz[$cuen][$reg][$per]["tot"] = $matriz[$cuen][$reg][$per]["tot"] + $matriz[$cuen][$reg][$per - 1]["tot"];
                 $matriz[$cuen][$reg][$per]["acep"] = $matriz[$cuen][$reg][$per]["acep"] + $matriz[$cuen][$reg][$per - 1]["acep"];
@@ -3126,13 +2786,19 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
                             $porcm = "";
 
 
-                        $reng1 = '<span style="color:#999999" >' . $porcm . '</span><br>';
+                      
+                        $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm);
+                        $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                        
                  }
                   if ($auxdatamos[1] == 1) {
                         if ($total == 0) {
                             $total = "";
                         }
-                        $reng2 = '<span style="color:#999999" ">' . $total . '</span><br>';
+                        $reng2 =  $total;
+                        $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $total);
+                        $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                        
                     }
                 if ($total != 0)
                 {    $porc = $acept / $total * 100;
@@ -3141,7 +2807,9 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
                 else
                     $porc = "";
                 
-                $tab_cuenta->nuevacolest($reng2.$reng1.' <span >' .$porc  . '</span>', $clase, "");
+              //  $tab_cuenta->nuevacolest($reng2.$reng1.' <span >' .$porc  . '</span>', $clase, "");
+                $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porc );
+                $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($clase);
                 //acumulo por mes
                 $totalreg[$reg][$per]["tot"]+=$total;
                 $totalreg[$reg][$per]["acep"]+=$acept;
@@ -3153,8 +2821,10 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
             }
               $totalreg[$reg]["muestratot"]+=$matrizmuestra[$cuen][$reg]["muestratot"];
         }
+       
         //despliego totales por cuenta
         for ($per = 1; $per < 4; $per++) {
+        	$renglon=$renglonini;
                $reng1 = $reng2 = $reng3 = "";
             $total_cuen[$cuen][$per]["acep"] = $total_cuen[$cuen][$per]["acep"] + $total_cuen[$cuen][$per - 1]["acep"];
             $total_cuen[$cuen][$per]["tot"] = $total_cuen[$cuen][$per]["tot"] + $total_cuen[$cuen][$per - 1]["tot"];
@@ -3179,12 +2849,21 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
                         $porcm = "";
 
 
-                    $reng1 = '<strong><span style="color:#999999" >' . $porcm . '</span></strong><br>';
+                  //  $reng1 = '<strong><span style="color:#999999" >' . $porcm . '</span></strong><br>';
+                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
+                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                    
                 }
                 if ($auxdatamos[1] == 1) {
-                    $reng2 = '<strong><span style="color:#999999"  >' . $totaltemp . '</span></strong><br>';
+                 //   $reng2 = '<strong><span style="color:#999999"  >' . $totaltemp . '</span></strong><br>';
+                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $totaltemp );
+                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                    
                 }
-            $tab_cuenta->nuevacolest($reng2.$reng1.'<strong> <span >  ' . $porc. "</span></strong>", $clase, "");
+            //$tab_cuenta->nuevacolest($reng2.$reng1.'<strong> <span >  ' . $porc. "</span></strong>", $clase, "");
+            $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porc);
+            $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($clase);
+            
             $totalfin[$per]["acep"]+=$total_cuen[$cuen][$per]["acep"];
             $totalfin[$per]["tot"]+=$total_cuen[$cuen][$per]["tot"];
         }
@@ -3193,13 +2872,33 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
     }
       
     //despliego totales por region
-    $tab_cuenta->nuevoren();
-    $tab_cuenta->nuevacolest(T_("TOTALES"), "cabcols", "");
+    
+   $renglon++;
+   $letra=65;
+   // $tab_cuenta->nuevacolest(T_("TOTALES"), "cabcols", "");
+    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, T_("TOTALES"));
+    $worksheet->getStyle(Utilerias::michr($letra).$renglon)->applyFromArray($cabcols);
+     if ($auxdatamos[0] == 1) {
+    	if ($auxdatamos[1] == 1) {
+    		$worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra).($renglon+2));
+    		
+    	}else 
+    		$worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra).($renglon+1));
+    	
+    	
+    }else
+    	if ($auxdatamos[1] == 1) {
+    		$worksheet->mergeCells(Utilerias::michr($letra).$renglon.":".Utilerias::michr($letra).($renglon+1));
+    		
+    	}
+    $letra++;
+    $renglonini=$renglon;
     for ($k = 0; $k < sizeof($columnas); $k++) {
            $reng1 = $reng2 = $reng3 = "";
         $reg = $columnas[$k][0];
+     $renglon=$renglonini;
         for ($per = 1; $per < 4; $per++) {
-
+        	$renglon=$renglonini;
             if ($totalreg[$reg][$per]["tot"] != 0)
             {     $porc = $totalreg[$reg][$per]["acep"] / $totalreg[$reg][$per]["tot"] * 100;
                   $porc=round($porc, 1);
@@ -3217,46 +2916,71 @@ function pintaTablaExcel($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $t
                         $porcm = "";
 
                     //  $rowdata[] =$totalreg[$reg][$per]["tot"].'-'.round($porc,1);
-                    $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
-                }
+                 //   $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
+                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
+                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                    
+             }
                 //  echo $reg."--".$per."--".$totalreg[$reg][$per]["tot"]."<br>";
                 if ($auxdatamos[1] == 1) {
                     if ($totalreg[$reg][$per]["tot"] > 0) {
 
 
-                        $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '" >' . $totalreg[$reg][$per]["tot"] . '</span><br>';
+                        $reng2 = $totalreg[$reg][$per]["tot"] ;
                     } else {
-                        $reng2 = '<br>';
+                        $reng2 = '';
                     }
+                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $reng2 );
+                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                    
                 }
-            $tab_cuenta->nuevacolest($reng2.$reng1.' <span >  ' . $porc . "</span>", "cabcols", "");
+         //   $tab_cuenta->nuevacolest($reng2.$reng1.' <span >  ' . $porc . "</span>", "cabcols", "");
+            $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porc);
+            $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
+            
         }
     }
+    
     //despliego totales finales
+   // $renglonini=$renglon
     for ($per = 1; $per < 4; $per++) {
-           $reng1 = $reng2 = $reng3 = "";
+    	$porcm = $porc = 0;
+           $renglon=$renglonini;
           if ($auxdatamos[0] == 1) {
                 if ($totalfin["muestratot"] != 0 && $totalfin[$per]["tot"] > 0)
                     $porcm = $totalfin[$per]["tot"] / $totalfin["muestratot"];
 
-                $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . round($porcm * 100, 1) . '</span><br>';
-            }
+               // $reng1 =  round($porcm * 100, 1) . '</span><br>';
+                $worksheet->setCellValue(Utilerias::michr($letra).$renglon, round($porcm * 100, 1)  );
+                $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                
+          }
             if ($auxdatamos[1] == 1) {
-                $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '">' . $totalfin[$per]["tot"] . '</span><br>';
+               // $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '">' . $totalfin[$per]["tot"] . '</span><br>';
+                $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $totalfin[$per]["tot"]   );
+                $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                
+            
             }
 
         if ($totalfin[$per]["tot"]) {
             $porc = $totalfin[$per]["acep"] / $totalfin[$per]["tot"] * 100;
             
-            $tab_cuenta->nuevacolest($reng2.$reng1 . round($porc, 1), "cabcols", "");
+         //   $tab_cuenta->nuevacolest($reng2.$reng1 . round($porc, 1), "cabcols", "");
+            $worksheet->setCellValue(Utilerias::michr($letra).$renglon, round($porc, 1));
+            $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
+            
         } else {
-            $tab_cuenta->nuevacolest(VACIO, "cabcols", "");
+         //   $tab_cuenta->nuevacolest(VACIO, "cabcols", "");
+            $worksheet->setCellValue(Utilerias::michr($letra).$renglon,VACIO);
+            $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
+            
         }
     }
 
-    $cad = $tab_cuenta->cierretabla();
     
-    return $cad;
+    
+    return $letra;
 }
     function getNombreSeccion() {
         return $this->nombreSeccion;

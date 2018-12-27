@@ -1,5 +1,7 @@
 <?php
 
+
+
 class ResumenResultadosController {
 
     private $filtros_indi;
@@ -17,9 +19,15 @@ class ResumenResultadosController {
         private $tit_secciones;
         private $cuenta;
 
-    
+    private $filtrosNivel;
   
-    
+   
+    private $periodo;
+    private $fecha_cons;
+    private $tipomerc;
+    private $franquiciacta;
+    private $NOMPTO_VTA;
+    private $total_res;
 
   
     public function vistaResumenResultados() {
@@ -38,8 +46,14 @@ class ResumenResultadosController {
         }
         if($action=="indindicadores")
         {$consutacontrl=new GenerarBusquedaController;
-        $consutacontrl->generarBusquedaRes();}
-
+        $rescon=$consutacontrl->generarBusquedaRes();}
+        else if($action=="resumenresultados")
+        	if($admin==prin){
+        	$consutacontrl=new GeneraBusqResController();
+        	$rescon=$consutacontrl->generarBusquedaRes();
+        }else $rescon=true;
+    
+        if($rescon==false) die();
         $usuario_act = $_SESSION["UsuarioInd"];
 
         // genera info gr14fica
@@ -53,21 +67,19 @@ class ResumenResultadosController {
 
         $usuario = $_SESSION["UsuarioInd"];
 
-        $this->vcliente = 100;
+        $this->vcliente = 1;
         $this->vservicio = 1;
 
         /*         * ******************************************************************* */
         $i = 0;
 
         $sec_calbebida = array('8.0.2.6', '8.0.2.9', '8.0.1.9');
-        $sec_condiciones = array('6', '7', '3.3', '8.0.2.5', '3.6', '3.7', '3.9', '3.10', '3.2', '3.4');
+      
 //$sec_condiciones = array (array('6','V'), array('7','V'),array('8.0.2.5','P'),'3.6', '3.7', '3.9', '3.10', '3.2', '3.3', '3.4' );
 //$tit_secciones = array ('CALIDAD DE LA BEBIDA', 'CALIDAD DEL AGUA', 'FRESCURA DE JARABES', 'PRESIONES DE OPERACION', 'CONDICIONES DE OPERACION' );
 
 
         $seccion3 = array('8.0.1.1', '8.0.1.2', '8.0.1.3', '8.0.1.4', '8.0.1.5');
-
-
 
 
 // recupero variables de sesion
@@ -80,6 +92,7 @@ class ResumenResultadosController {
 
 
         $num_reg = $_SESSION["fnumrep"];
+        $this->total_res= T_("TOTAL DE REPORTES").": ".$num_reg;
         if ($ptv != "") {
             $sql_titulo = "SELECT * 
     FROM ins_generales
@@ -103,9 +116,11 @@ class ResumenResultadosController {
                 /*                 * ************************************************************************ */
             }
         }
+   
            $this->filtros_indi = new ConsultaIndicadores;
     $this->filtros_indi->setNombre_franquicia($nomunegocio);
      $this->ptv=$ptv;
+   
      //  $html->asignar("INFOAREA2", $nomunegocio);
         if ($action== "indindicadores") {
 
@@ -143,7 +158,7 @@ class ResumenResultadosController {
                 $nompais = Datosnuno::nombreNivel1($filx["pais"],"ca_nivel1");
             }
 
-//var_dump($filx);
+          
             if ($filx["uni"] != "" && $filx["uni"] != 0) {
 
                 $nomuni = Datosndos::nombreNivel2( $filx["uni"],"ca_nivel2");
@@ -212,7 +227,9 @@ class ResumenResultadosController {
             if($consutacontrl!=null)
                 $this->filtros_indi->setPeriodo( $consutacontrl->getFiltrosSel()->getPeriodo());
         }
-
+        /* * ****** calidad de la bebida***************** */
+        $tabla =$this->ConsultaSeccion($usuario_act, $sec_calbebida, '');
+        $this->lista_tablas[]=$this->creaTabla(1, $tabla);;
 
         /*         * *********** calidad del agua ********************** */
 //$seccion2 = ConsultaAtributos('5.0.2');
@@ -220,7 +237,7 @@ class ResumenResultadosController {
             "5.0.2.1", "5.0.2.2", "5.0.2.3", "5.0.2.4", "5.0.2.6", "5.0.2.7", "5.0.2.8", "5.0.2.10",
             "5.0.2.11", "5.0.2.12", "5.0.2.13", "5.0.2.16", "5.0.2.19", "5.0.2.20");
         $tabla =$this->ConsultaSeccion($usuario_act, $seccion2, '');
-        $this->lista_tablas[]=$tabla;
+        $this->lista_tablas[]= $this->creaTabla(2, $tabla);
         /*         * ************** frescura de jarabes ******************* */
         /*
           $tabla = ConsultaSeccion ( $usuario_act, array(6,7), 'V' );
@@ -228,25 +245,34 @@ class ResumenResultadosController {
           $html->expandir ( 'SECCIONES', '+listasec' ); */
         /*         * ************************* presiones ********************** */
         $seccion2 = $this->ConsultaAtributos('2.8.1');
-
+        $tiempo_fin = microtime(true);
+        
+     //   echo "a la mitad 2 " . ($tiempo_fin - $tiempo_inicio); 
         $tabla = $this->ConsultaSeccion($usuario_act, $seccion2, '');
-        $this->lista_tablas[]=$tabla;
+        $this->lista_tablas[]=$this->creaTabla(3, $tabla);;
         /*         * ************************buenos habitos *********************************** */
-        $tabla = $this->ConsultaSeccion($usuario_act, $sec_condiciones, 'P');
-         $this->lista_tablas[]=$tabla;
-
+        $sec_condiciones = array('6', '7');
+        $tabla="";
+        $tabla = $this->ConsultaSeccion($usuario_act, $sec_condiciones, 'Pro');
+        $tabla.= $this->ConsultaSeccion($usuario_act, array('3.3'), 'P');
+        $sec_condiciones = array(  '3.6', '3.7', '3.9', '3.10', '3.2', '3.4');
+        $tabla.= $this->ConsultaSeccion($usuario_act,array( '8.0.2.5'), '');
+        $tabla.= $this->ConsultaSeccion($usuario_act, $sec_condiciones, 'P');
+        $this->lista_tablas[]=$this->creaTabla(4, $tabla);;
+        
        
-        if ($_GET["admin"] == "indindicadores") {
+        if ($_GET["action"] == "indindicadores") {
             Navegacion::borrarRutaActual("b");
             $rutaact = $_SERVER['REQUEST_URI'];
             // echo $rutaact;
              Navegacion::agregarRuta("b", $rutaact, T_("INDICADORES"));
         } else {
-             Navegacion::borrarRutaActual("c");
+             Navegacion::borrarRutaActual("b");
             $rutaact = $_SERVER['REQUEST_URI'];
             // echo $rutaact;
-             Navegacion::agregarRuta("c", $rutaact, $nomunegocio);
+             Navegacion::agregarRuta("b", $rutaact, T_("RESULTADOS"));
         }
+      
     }
 
     function creaTabla($num, $resultados) {
@@ -280,29 +306,23 @@ class ResumenResultadosController {
 
     function ConsultaSeccion($usuario, $secciones, $tipo) {
       
-        static $num = 1;
       
-         $num++;
         $cont = 0;
-
-        foreach ($secciones as $sec) {
-           
-            if ($tipo == 'P') {
+      
+       
+           if($tipo=="Pro")
+           	$lista = $this->CumplimientoProducto($secciones, $usuario);
+            else if ($tipo == 'P') {
                 //condicion para altura del hielo
-                if ($sec == '8.0.2.5')
-                    $res = $this->CumplimientoEstandar($sec, $usuario);
-                else
-                if ($sec == 7 || $sec == 6)
-                    $res = $this->CumplimientoProducto($sec, $usuario);
-                else
-                    $res = $this->CumplimientoPonderada($sec, $usuario);
+            	
+            	$lista = $this->CumplimientoPonderada($secciones, $usuario);
             }
             else if ($tipo == 'V')
-                $res = $this->CumplimientoProducto($sec, $usuario);
+            	$lista = $this->CumplimientoProducto($secciones, $usuario);
             else
-                $res = $this->CumplimientoEstandar($sec, $usuario);
-       
-
+            	$lista = $this->CumplimientoEstandar($secciones, $usuario);
+      
+            	foreach ($lista as $res) {
             if ($cont % 2 == 0) {
                 $color = "subtitulo3";
             } else { //class="subtitulo31"
@@ -332,11 +352,15 @@ class ResumenResultadosController {
         <a href="index.php?action=indestadisticares&admin=1&mes=' .  $this->mes_asig . '&refer=' . $res[3] . '&ptv=' . $this->ptv . '&cta=' . $this->cuenta . '&tit=' . $num . '" title="' . strtoupper(T_("Consultar estadisticas")) . '"><span class="liga_esp">' . $res [2] . '</span></a></td> </tr>';
           
         }
-          $tabla.= $this->creaTabla($num, $resultados.$liga);
-        return $tabla;
+       
+         
+        return $resultados.$liga;
     }
 
     function CumplimientoEstandar($referencia, $usuario) {
+    	foreach($referencia as $sec){
+    		$listasec.="'".$sec."' ,";
+    	}
    
         $sql_reporte_e = "SELECT
 sum(If(re_tipoevaluacion=1,If(ide_numrenglon=1,if(ide_aceptado<0,100,0),0),if(ide_aceptado<0,100,0)))/sum(if(re_tipoevaluacion=1,if( ide_numrenglon=1,1, 0),1)) as nivaceptren,
@@ -348,10 +372,10 @@ ins_detalleestandar
 Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandar.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandar.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandar.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandar.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandar.re_numcaracteristica
 Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
 Inner Join tmp_estadistica ON ins_detalleestandar.ide_numreporte = tmp_estadistica.numreporte
-Inner Join ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 WHERE cue_reactivosestandar.re_tipoevaluacion > 0 AND ide_valorreal<>'' AND
 ins_detalleestandar.ide_claveservicio=:vserviciou AND
-concat(cue_reactivosestandar.sec_numseccion,'.', ins_detalleestandar.ide_numreactivo,'.' ,ins_detalleestandar.ide_numcomponente,'.',ins_detalleestandar.ide_numcaracteristica3 )=:referencia and cue_reactivosestandardetalle.red_grafica=-1 and tmp_estadistica.usuario=:usuario
+concat(cue_reactivosestandar.sec_numseccion,'.', ins_detalleestandar.ide_numreactivo,'.' ,ins_detalleestandar.ide_numcomponente,'.',ins_detalleestandar.ide_numcaracteristica3 ) in (".substr($listasec,0,strlen($listasec)-1).")
+ and cue_reactivosestandardetalle.red_grafica=-1 and tmp_estadistica.usuario=:usuario
   GROUP BY
 
 ins_detalleestandar.ide_numseccion,
@@ -360,7 +384,8 @@ ins_detalleestandar.ide_numreactivo,
 ins_detalleestandar.ide_numcomponente,
 ins_detalleestandar.ide_numcaracteristica3,
 tmp_estadistica.usuario";
-        $parametros = array("vserviciou" => $this->vservicio, "referencia" => $referencia, "usuario" => $usuario);
+     $parametros = array("vserviciou" => $this->vservicio, "usuario" => $usuario);
+       // echo "<br>***********************************************<br>";
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
        
         //$res = 0;
@@ -391,30 +416,34 @@ ca_catalogosdetalle.cad_idopcion =  '" . $row_rs_sql_reporte_e ["red_valormin"] 
                
             } else
                 $res [1] = $row_rs_sql_reporte_e ['red_estandar'];
-            $res [2] = Utilerias::redondear($row_rs_sql_reporte_e ['nivaceptren']);
+                
+            $res [2] = Utilerias::redondear2($row_rs_sql_reporte_e ['nivaceptren'],1);
             $res[3] = $row_rs_sql_reporte_e ['refer'];
+            $resultados[]=$res;
         }
     
-        return $res;
+        return $resultados;
     }
 
     function cumplimientoPonderada($sec, $usuario) {
-     
+    	foreach($sec as $opcion){
+    		$listasec.=$opcion." ,";
+    	}
         $sql_reporte_e = "SELECT
 Sum(if(ins_detalle.id_aceptado=-1,1,0)) /(count(ins_detalle.id_noaplica))*100 AS nivaceptren,
 cue_reactivos.r_descripcionesp,
-cue_reactivos.r_descripcioning
+cue_reactivos.r_descripcioning,concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) as ref
 FROM
 ins_detalle
 Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
 Inner Join tmp_estadistica ON ins_detalle.id_numreporte = tmp_estadistica.numreporte
 where 
-concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo)=:sec
+concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) in (".substr($listasec,0,strlen($listasec)-1).")
 and id_noaplica>-1 and tmp_estadistica.usuario=:usuario 
     and ins_detalle.id_claveservicio=:vserviciou
 group by ins_detalle.id_numseccion,
 ins_detalle.id_numreactivo;";
-        $parametros = array("vserviciou" => $this->vservicio, "sec" => $sec, "usuario" => $usuario);
+        $parametros = array("vserviciou" => $this->vservicio, "usuario" => $usuario);
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
 
         //$res = 0;
@@ -426,33 +455,36 @@ ins_detalle.id_numreactivo;";
                 $res [0] = $row_rs_sql_reporte_e ['r_descripcionesp'];
             }
             $res [1] = "";
-            $res [2] = Utilerias::redondear($row_rs_sql_reporte_e ['nivaceptren']);
-            $res[3] = $sec;
+            $res [2] = Utilerias::redondear2($row_rs_sql_reporte_e ['nivaceptren'],1);
+            $res[3] = $row_rs_sql_reporte_e ['ref'];
+            $resultados[]=$res;
         }
-
-        return $res;
+        
+        return $resultados;
     }
 
     /*     * ***********************para jarabes ***************************** */
 
     function cumplimientoProducto($sec, $usuario) {
-       
+    	foreach($sec as $opcion){
+    		$listasec.=$opcion." ,";
+    	}
         $sql_reporte_e = "SELECT
 (((SUM(if(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0)))*100)/(SUM(`ins_detalleproducto`.`ip_numcajas`))) AS NIVELACEPTACION,
 cue_secciones.sec_descripcionesp,
-cue_secciones.sec_descripcioning
+cue_secciones.sec_descripcioning,ins_detalleproducto.ip_numseccion as secc
 FROM
 ins_detalleproducto
 Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
 Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE
-	 ins_detalleproducto.ip_numseccion = :sec 
+	 ins_detalleproducto.ip_numseccion in (".substr($listasec,0,strlen($listasec)-1).")
 AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario 
     and ins_detalleproducto.ip_claveservicio=:vserviciou
 GROUP BY
 ins_detalleproducto.ip_numseccion
 ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_numreporte` ASC";
-        $parametros = array("vserviciou" => $this->vservicio, "sec" => $sec, "usuario" => $usuario);
+        $parametros = array("vserviciou" => $this->vservicio,  "usuario" => $usuario);
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
         //$res = 0;
         foreach ($rs_sql_reporte_e as $row_rs_sql_reporte_e) {
@@ -462,11 +494,12 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
             else
                 $res [0] = $row_rs_sql_reporte_e ['sec_descripcionesp'];
             $res [1] = "<10 " . strtoupper(T_("semanas"));
-            $res [2] = Utilerias::redondear($row_rs_sql_reporte_e ['NIVELACEPTACION']);
-            $res[3] = $sec;
+            $res [2] = Utilerias::redondear2($row_rs_sql_reporte_e ['NIVELACEPTACION'],1);
+            $res[3] = $row_rs_sql_reporte_e ['secc'];
+            $resultados[]=$res;
         }
-
-        return $res;
+        
+        return $resultados;
     }
 
     function consultaAtributos($referencia) {
@@ -495,6 +528,62 @@ $parametros=array("vserviciou"=>$this->vservicio,"referencia"=>$referencia);
             $secciones [$i++] = $row [0] . '.' . $row [1] . '.' . $row [2] . '.' . $row [3];
         }
         return $secciones;
+    }
+    public function encabezaConsulta(){
+    	
+    	
+    	
+    	$vclienteu=1;
+    	$vserviciou=1;
+    	$cuenta=$_SESSION["fcuenta"];
+    	
+    	if ($cuenta != 0) {
+    		$this->cuenta=DatosCuenta::nombreCuenta(intval($cuenta), intval($vclienteu));
+    		
+    		
+    	} else
+    		$this->cuenta=T_('TODAS') ;
+   
+    		$periodo=$_SESSION["fperiodo"];
+    		$this->periodo=$periodo ;
+    		$this->fecha_cons=strtoupper(date ( 'd-M-Y', time () ) );
+    		$unidadnegocio=$_SESSION["fpuntov"];
+    		$filtros = array('unidadneg', "franquicia", "region", "zona", "cedis");
+    		
+    		if ($_SESSION["ftipomerc"])
+    			$this->tipomerc= T_('TIPO MERCADO').': ' . $_SESSION["ftipomerc"];
+    			if ($_SESSION["ffrancuenta"])
+    				$this->franquiciacta= T_('FRANQUICIA CUENTA').': ' . $_SESSION["ffrancuenta"];
+    			$this->filtrosNivel="";
+    			$i=1;
+    			foreach ($filtros as $fil) {
+    				if(($i-1)%2==0){
+    					$this->filtrosNivel.='<div class="row">';
+    					$bac=0;
+    				}
+    				
+    					$this->filtrosNivel.=Utilerias::creaFiltro($fil);
+    				
+    				if(($i)%2==0){
+    					
+    					$this->filtrosNivel.= '</div>';
+    					$bac=1;
+    				}
+    				$i++;
+    			}
+    	
+    				if($unidadnegocio!=""&&$unidadnegocio>0)
+    				{
+    					$query_une="SELECT ca_unegocios.une_descripcion FROM ca_unegocios
+	 where ca_unegocios.cli_idcliente='" . $vclienteu . "' and
+ca_unegocios.ser_claveservicio='" . $vserviciou . "' and
+ca_unegocios.cue_clavecuenta= '" . $cuenta . "' and
+ca_unegocios.une_claveunegocio=".$unidadnegocio.";";
+    					
+    					
+    					
+    					$this->NOMPTO_VTA='<div>PUNTO DE VENTA: '.DatosUnegocio::nombrePV($unidadnegocio).'</div>';
+    				}
     }
     function getFiltros_indi() {
         return $this->filtros_indi;
@@ -526,13 +615,100 @@ $parametros=array("vserviciou"=>$this->vservicio,"referencia"=>$referencia);
     }
 
   
-    function setVservicio($vservicio) {
-        $this->vservicio = $vservicio;
-    }
+	/**
+	 * @return string
+	 */
+	public function getTotal_res() {
+		return $this->total_res;
+	}
 
-    function setVcliente($vcliente) {
-        $this->vcliente = $vcliente;
-    }
+	
+	
+	/**
+	 * @return string
+	 */
+	public function getFiltrosNivel() {
+		return $this->filtrosNivel;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getPeriodo() {
+		return $this->periodo;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFecha_cons() {
+		return $this->fecha_cons;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getTipomerc() {
+		return $this->tipomerc;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getFranquiciacta() {
+		return $this->franquiciacta;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getNOMPTO_VTA() {
+		return $this->NOMPTO_VTA;
+	}
+	/**
+	 * @return Ambigous <number, unknown>
+	 */
+	public function getVservicio() {
+		return $this->vservicio;
+	}
+
+	/**
+	 * @return Ambigous <number, unknown>
+	 */
+	public function getVcliente() {
+		return $this->vcliente;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getMes_asig() {
+		return $this->mes_asig;
+	}
+
+	/**
+	 * @return Ambigous <unknown, mixed>
+	 */
+	public function getPtv() {
+		return $this->ptv;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getTit_secciones() {
+		return $this->tit_secciones;
+	}
+
+	/**
+	 * @return Ambigous <string, PDOStatement>
+	 */
+	public function getCuenta() {
+		return $this->cuenta;
+	}
+
+	
+	
 
 
 

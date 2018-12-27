@@ -29,6 +29,7 @@ class EstadisticasController {
     private $notaEstabl;
     private $tit_cumplaj;
     private $busqueda;
+    private $mostrar;
 
     public function vistaIndEstadisticaRes() {
         $maxte=ini_get('max_execution_time');
@@ -194,7 +195,10 @@ class EstadisticasController {
 //if ($numop != '') //si hay datos muestra la grafica
 //{
 //echo "hola  ".$numop;
+
         $this->generarEstadisticas($tiposec, $numop, $mes, $filx, $fily,$ptv);
+        
+       
           if (isset($ptv)) {
             $unidadnegocio = $ptv;
 
@@ -719,7 +723,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
             $unegocio->setPuntoVenta($rowu["une_descripcion"]);
             //busco en catalogo para las estandar
             if ($tiposec == "E" && $rowu["red_tipodato"] == 'C')
-                $valreal = $this->buscaenCatalogo($rowu["valor"], $rowu["red_clavecatalogo"]);
+                $valreal = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$rowu["valor"], $rowu["red_clavecatalogo"]);
             else
             if ($rowu["valor"] != "") {
                 
@@ -1174,12 +1178,12 @@ tmp_estadistica.mes_asignacion ASC;	";
         $parametros = array("vserviciou" => $this->vserviciou, "numop" => $numop, "usuario_act" => $usuario_act);
       
         $result = Conexion::ejecutarQuery($sqlt, $parametros);
-         
+       
         $this->estadisticas = new ResumenResultado;
         foreach ($result as $rowt) {
             $this->estadisticas->setTotalresultados($rowt ["total"]);
             if ($tiposec == 'E' && $rowt["red_tipodato"] == "C") {
-                $this->estadisticas->setEstandar(buscaEstandarCatalogo($rowt["red_clavecatalogo"], $rowt["red_valormin"]));
+            	$this->estadisticas->setEstandar(DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$rowt["red_clavecatalogo"], $rowt["red_valormin"]));
             } else
                 $this->estadisticas->setEstandar($rowt ["estandar"]);
 
@@ -1228,6 +1232,11 @@ tmp_estadistica.mes_asignacion ASC;";
             else
                 $this->ligano = "#";
             $this->estadisticas->setTipo_seccion($rowt ["tipografica"]);
+            $this->mostrar='<script type="text/javascript">
+            		
+        	MuestraOculta("'.$rowt ["tipografica"].'");
+        			
+        	</script>';
             $tipografica = $rowt ["tipografica"];
             // echo $rowt["tipografica"]; 
             if($this->busqueda){
@@ -1284,10 +1293,10 @@ tmp_estadistica.mes_asignacion ASC;";
 
             if ($tiposec == "E") {
                 if ($numop == '8.0.1.0.0.9') { //grafica para proporcion agua jarabe
-                    $this->tit_frec = '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO");
+                    $this->tit_frec = T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO");
                     $this->graficafrec = "views/modulos/indgraficacumplimientoaj.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
                 } else {
-                    $this->tit_frec = '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("HISTOGRAMA DE FRECUENCIAS");
+                    $this->tit_frec = T_("HISTOGRAMA DE FRECUENCIAS");
                     $this->graficafrec = "views/modulos/indgraficafrecuencia.php?numsec=" . $numop . "&usu=$usuario_act" . "&tiposec=" . $tiposec . "&cgserv=" . $this->vserviciou;
                 }
             }
@@ -1309,8 +1318,16 @@ tmp_estadistica.mes_asignacion ASC;";
     function getNivel() {
         return $this->nivel;
     }
+    
 
-    function getNombreSeccion() {
+    /**
+	 * @return string
+	 */
+	public function getTit_frec() {
+		return $this->tit_frec;
+	}
+
+	function getNombreSeccion() {
         return $this->nombreSeccion;
     }
 
@@ -1373,6 +1390,13 @@ tmp_estadistica.mes_asignacion ASC;";
     function getTit_cumplaj() {
         return $this->tit_cumplaj;
     }
+	/**
+	 * @return mixed
+	 */
+	public function getMostrar() {
+		return $this->mostrar;
+	}
+
 
 
 

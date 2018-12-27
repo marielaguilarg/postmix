@@ -16,6 +16,7 @@ class ResumenResxRepController
     private $ligaconsultarRep;
 
     private $listaImagenes;
+    private $lb_notita_img;
 
     public function vistaResumenResxRep()
     {
@@ -35,9 +36,7 @@ class ResumenResxRepController
         $this->numreporte = T_("NO. DE REPORTE") . ":" . $numrep;
         // creo xml para imagenes
         include "MENindcrearimagesxml.php";
-        $ancho1 = "58%";
-        $ancho2 = "22%";
-        $ancho3 = "20%";
+      
         
         $tache = "<img src='img/tache.png' width='20' height='20' border='0' alt='Ver resultados' title='" . T_('Ver resultados') . "'>";
         $paloma = "<img src='img/palomita.png' width='20' height='20' border='0' alt='Ver resultados' title='" . T_('Ver resultados') . "'>";
@@ -68,51 +67,11 @@ class ResumenResxRepController
         $rs_isec = DatosImagenDetalle::getImagenDetalle($vservicio, $numrep, "ins_imagendetalle");
         foreach ($rs_isec as $row_isec) {
             $this->listaImagenes[] = "fotografias/".$row_isec["id_ruta"];
-            // if ($row_isec[0] > 0)//si hay imagenes
-            // {
-            // $objimagenes="<script language=\"javascript\">
-            //
-            // if (AC_FL_RunContent == 0) {
-            // alert(\"This page requires AC_RunActiveContent.js.\");
-            // } else {
-            // AC_FL_RunContent(
-            // 'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0',
-            // 'width', '800',
-            // 'height', '500',
-            // 'src', 'imageViewer',
-            // 'quality', 'high',
-            // 'pluginspage', 'http://www.macromedia.com/go/getflashplayer',
-            // 'align', 'middle',
-            // 'play', 'true',
-            // 'loop', 'true',
-            // 'scale', 'showall',
-            // 'wmode', 'window',
-            // 'devicefont', 'false',
-            // 'id', 'imageViewer',
-            // 'bgcolor', '#ffffff',
-            // 'name', 'imageViewer',
-            // 'menu', 'true',
-            // 'flashVars', 'xmlURL=../Archivos/images".$numrep.".xml',
-            // 'allowFullScreen', 'false',
-            // 'allowScriptAccess','sameDomain',
-            // 'movie', 'imageViewer',
-            // 'salign', ''
-            // ); //end AC code
-            // }
-            // </script>".
-            //
-            // '<noscript>
-            // <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0" width="800" height="500" id="imageViewer" align="middle">
-            // <param name="allowScriptAccess" value="sameDomain" />
-            // <param name="allowFullScreen" value="false" />
-            // <param name="movie" value="../libs/imageViewer/imageViewer.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" />
-            // <embed src="../libs/imageViewer/imageViewer.swf" quality="high" bgcolor="#ffffff" width="800" height="500" name="imageViewer" align="center" allowScriptAccess="sameDomain" allowFullScreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
-            // </object>
-            // </noscript>';
-            //
-            //
-            // }
+           
         }
+        if (sizeof($rs_isec) > 0)//si hay imagenes
+        	$this->lb_notita_img= "(" . strtoupper(T_("Este reporte contiene imagenes")) . ")";
+        	
         
         /* * ******************************************************* */
         
@@ -349,10 +308,18 @@ class ResumenResxRepController
         Navegacion::agregarRuta("c", $rutaact, "NO. REP. " . $numrep);
     }
 
-    /* * ********************************************************* */
+    /**
+	 * @return string
+	 */
+	public function getLb_notita_img() {
+		return $this->lb_notita_img;
+	}
+
+	/* * ********************************************************* */
     
     // seccion de funciones //
     /* * ******************************************************** */
+    
     
     /**
      *
@@ -397,4 +364,5 @@ class ResumenResxRepController
     {
         return $this->ligaconsultarRep;
     }
+    
 }

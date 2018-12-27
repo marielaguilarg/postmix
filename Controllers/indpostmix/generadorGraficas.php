@@ -2,7 +2,7 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 class GeneradorGraficas {
 
-    public function graficaAplica($subseccion, $tiposec, $vserviciou) {
+    public function graficaAplica($subseccion, $tiposec) {
 
         $usuario_act = $_SESSION["UsuarioInd"];
         if ($tiposec == 'E') { //consulta para secciones tipo estandar
@@ -49,7 +49,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
 GROUP BY
 ins_detalleproducto.ip_numseccion, ip_condicion;	";
 
-        $parametros = array("subseccion" => $subseccion, "usuario_act" => $usuario_act, "vserviciou" => $vserviciou);
+        $parametros = array("subseccion" => $subseccion, "usuario_act" => $usuario_act, "vserviciou" => $_SESSION["idiomaus"]);
 
 //echo $sql_val;
      
@@ -81,7 +81,7 @@ ins_detalleproducto.ip_numseccion, ip_condicion;	";
    print json_encode($chart);
     }
 
-    public function graficaComportamiento($subseccion, $vserviciou, $tiposec) {
+    public function graficaComportamiento($subseccion,  $tiposec) {
 
         $usuario_act = $_SESSION["UsuarioInd"];
 
@@ -165,7 +165,7 @@ ORDER BY
 tmp_estadistica.mes_asignacion ASC;	";
                 break;
         }
-        $parametros = array("subseccion" => $subseccion, "usuario_act" => $usuario_act, "vserviciou" => $vserviciou);
+        $parametros = array("subseccion" => $subseccion, "usuario_act" => $usuario_act, "vserviciou" => $_SESSION["idiomaus"]);
 
 //echo "<br>comportamiento<br>";
 //echo $sqlt;
@@ -195,7 +195,7 @@ tmp_estadistica.mes_asignacion ASC;	";
 print json_encode($chart);
     }
 
-    public function graficaCumplimiento($seccion, $vserviciou, $tiposec) {
+    public function graficaCumplimiento($seccion,  $tiposec) {
 
         $usuario_act = $_SESSION["UsuarioInd"];
 
@@ -279,7 +279,7 @@ tmp_estadistica.mes_asignacion ASC;	";
                 break;
         }
 
-        $parametros = array("seccion" => $seccion, "usuario_act" => $usuario_act, "vserviciou" => $vserviciou);
+        $parametros = array("seccion" => $seccion, "usuario_act" => $usuario_act, "vserviciou" => $_SESSION["idiomaus"]);
 
         $result = Conexion::ejecutarQuery($sql_reporte_e,$parametros);
         $i = 0;
@@ -375,7 +375,7 @@ if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
 </noscript>";
     }
 
-    public function graficaCumpliminetoAJ($seccion, $vserviciou) {
+    public function graficaCumpliminetoAJ($seccion) {
 
         $usuario_act = $_SESSION["UsuarioInd"];
 
@@ -480,7 +480,7 @@ order by nivaceptren desc; ";
        
     }
 
-    public function graficaFrecuencia($subseccion, $vserviciou) {
+    public function graficaFrecuencia($subseccion) {
 
         $unidades = array("8.0.1.0.0.9" => T_("Partes de agua por cada una de jarabe"),
             "8.0.2.0.0.9" => T_("Volumenes de CO2"),
@@ -515,7 +515,7 @@ order by cnfg_rangosgrafica.rg_valinicial";
         $res = Conexion::ejecutarQuery($sqlrangos, $parametros);
 
 
-        $i = 1;
+        $i = 0;
 
         if (sizeof($res) > 0) {
             foreach ($res as $rowr) {
@@ -538,7 +538,7 @@ order by cnfg_rangosgrafica.rg_valinicial";
      and cue_reactivosestandardetalle.red_grafica=-1 and tmp_estadistica.usuario=:usuario_act
          and ins_detalleestandar.ide_claveservicio=:vserviciou
     and ide_valorreal>=:min  and ide_valorreal<:max ;";
-                $parametros2 = array("vserviciou" => $vserviciou, "usuario_act" => $usuario_act, "min" => $min, "max" => $max,"subseccion"=>$subseccion );
+                $parametros2 = array("vserviciou" => $_SESSION["idiomaus"], "usuario_act" => $usuario_act, "min" => $min, "max" => $max,"subseccion"=>$subseccion );
                 $result = Conexion::ejecutarQuery($sqlt, $parametros2);
 
 
@@ -566,7 +566,7 @@ order by cnfg_rangosgrafica.rg_valinicial";
 	
     }
 
-    public function graficaPromedioJarabe($seccion, $vserviciou) {
+    public function graficaPromedioJarabe($seccion) {
 
         $usuario_act = $_SESSION["UsuarioInd"];
 
@@ -597,7 +597,7 @@ ORDER BY
 nivaceptren ASC;";
 
 
-        $parametros = array("seccion" => $seccion, "usuario_act" => $usuario_act, "vserviciou" => $vserviciou);
+        $parametros = array("seccion" => $seccion, "usuario_act" => $usuario_act, "vserviciou" => $_SESSION["idiomaus"]);
 
 
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e,$parametros);
