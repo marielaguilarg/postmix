@@ -72,7 +72,7 @@ if(validaSelect2($selectDestinoCuenta))
   }
 		else
                   {  
-  DatosUnegocio::unegociosxNivel("","",null,array("cta"=>$aux[0],"fra"=>$franq));
+  DatosUnegocio::unegociosxNivel("","",null,array("cta"=>$aux[0],"fra"=>$franq),"","");
              
                     if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
             $aux2=explode(".", $nivel);
