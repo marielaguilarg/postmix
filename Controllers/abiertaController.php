@@ -1267,6 +1267,7 @@ public function registrarAbiertaController(){
 		$pv=$_GET["pv"];
 		$idc=$_GET["idc"];
 		
+			
 		$datini=SubnivelController::obtienedato($seccion,1);
 	 	$londat=SubnivelController::obtienelon($seccion,1);
 	 	$numsec=substr($seccion,$datini,$londat);
@@ -1310,10 +1311,12 @@ public function registrarAbiertaController(){
 	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$seccion.'&sv='.$idser.'&ts=AN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
 	 </div>
 	 </div>';
+	 
 	 	$respuesta =DatosAbierta::calculaNumRen($idser, $seccion, $nrep, "ins_detalleabierta");
 	 	
 	 	foreach ($respuesta as $key => $item) {
 	 		$nren=$item["claveren"];
+	
 	 		# busca detalle
 	 		
 	 		echo '
@@ -1332,24 +1335,28 @@ public function registrarAbiertaController(){
 
 
                 <div class="box-body no-padding">';
-
 			$respDet =DatosAbierta::vistaReporteAbiertoDetalle($idser, $seccion, $nrep, $nren, "ins_detalleabierta");
 	 		#presenta info
 
 	 		foreach ($respDet as $key => $itemDet) {
-	 			 if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
+	 			   if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
             		continue;
-
-				if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
+					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
             		continue;
-				if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
+					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
             		continue;
-
+					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
+            		continue;
+					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
+            		continue;
+					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
+            		continue;
+          
 				$tipocat=$itemDet["rad_formatoreactivo"];
 		        $numcat=$itemDet["rad_clavecatalogo"];
 		        $valop=$itemDet["ida_descripcionreal"];
 		        //echo $tipocat;
-
+		        
                 echo ' <div class="form-group col-md-12">
             <div class="row">
             <ul class="nav nav-stacked">
@@ -1376,14 +1383,15 @@ public function registrarAbiertaController(){
                   </div>
                 </div>';
             }
+            
              echo ' </div>
               </div>
             </div>
   </section>';
 	 	}
 
-
 	}
+
 
 
 	public function botonRegresaAbController(){		
@@ -1578,12 +1586,18 @@ public function nuevoReporteabierta(){
 		$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "cue_reactivosabiertosdetalle");
 		foreach ($respuesta as $key => $item) {
 			echo $item["ida_numcaracteristica3"];
+			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+                continue;
+            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+                continue;
+            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+                continue;
 			if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==2)
                 continue;
             if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==3)
                 continue;
             if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
-                continue;
+                continue;	
 
 			switch ($item['rad_formatoreactivo']){
 			case "C" :
@@ -1699,6 +1713,12 @@ public function nuevoReporteabierta(){
                 continue;
             if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
                 continue;
+			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+                continue;
+            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+                continue;
+            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+                continue;	
 
 				$nomcam="desc".$item['rad_numcaracteristica2'];
   			    if (ctype_space(${$nomcam})) {
