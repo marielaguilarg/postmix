@@ -153,34 +153,7 @@ class BuscapvController
                     if(isset($select6)&&$select6!=0){
                         $this->listanivel6= Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6,  $select5,$select6),"");
                     }
-//                     foreach ($rs as $row) {
-//                         // if ($row["n1_id"] == $clanivel1) {
-//                         // $this->listanivel1[] = "<option value='" . $row["reg_clave"] . "' selected='selected'>" . $row["reg_nombre"] . "</option>";
-//                         // } else {
-//                         $this->listanivel1[] = "<option value='" . $row[0] . "'>" . $row[1] . "</option>";
-//                         // }
-//                     }
-                    // $this->listanivel1[] = "</select>";
-                    
-//                     $this->nombrenivel2 = Estructura::nombreNivel(2, $_SESSION["idiomaus"]);
-//                     $this->nombrenivel3 = Estructura::nombreNivel(3, $_SESSION["idiomaus"]);
-                    
-//                     $this->nombrenivel4 = Estructura::nombreNivel(4, $_SESSION["idiomaus"]);
-                    
-//                     $this->nombrenivel5 = Estructura::nombreNivel(5, $_SESSION["idiomaus"]);
-//                     $this->nombrenivel6 = Estructura::nombreNivel(6, $_SESSION["idiomaus"]);
-//                     $this->listanivel3 = Utilerias::crearOpcionesNivel($Nivel01, $select2, $select3);
-                    
-//                     if (isset($select3) && $select3 != 0) {
-//                         $this->listanivel4 = Utilerias::crearOpcionesNivel($Nivel01, $select3, $select4);
-//                     }
-//                     if (isset($select4) && $select4 != 0) {
-//                         $this->listanivel5 = Utilerias::crearOpcionesNivel($Nivel01, $select4, $select5);
-//                     }
-                    
-//                     if (isset($select5) && $select5 != 0) {
-//                         $this->listanivel6 = Utilerias::crearOpcionesNivel($Nivel01, $select5, $select6);
-//                     }
+//                 
                 }
                 if ($VarNivel2 == 2) {
                     
@@ -337,64 +310,7 @@ class BuscapvController
             if ($banserv == 0) {
                 if ($grupo == 'cli' || $grupo == 'muf') {
                     
-//                     $sql_cuentas = "SELECT
-// ca_cuentas.cue_descripcion,
-// ca_cuentas.cue_id
-// FROM
-// ca_unegocios
-// Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id 
-//  ";
-                    
-//                     switch ($VarNivel2) {
-//                         case 6:
-//                             $filtro = "
-// ca_unegocios.une_cla_franquicia=:Nivel ";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel06
-//                             );
-//                             break;
-//                         case 5:
-//                             $filtro = " 
-// ca_unegocios.une_cla_ciudad=:Nivel ";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel05
-//                             );
-//                             break;
-//                         case 4:
-//                             $filtro = " 
-// ca_unegocios.une_cla_estado=:Nivel ";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel04
-//                             );
-//                             break;
-//                         case 3:
-//                             $filtro = "
-// ca_unegocios.une_cla_zona=:Nivel  ";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel03
-//                             );
-//                             break;
-//                         case 2:
-//                             $filtro = "
-// ca_unegocios.une_cla_pais=:Nivel";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel02
-//                             );
-//                             break;
-//                         case 1:
-//                             $filtro = "ca_unegocios.une_cla_region=:Nivel";
-//                             $parametros = array(
-//                                 "Nivel" => $Nivel01
-//                             );
-//                             break;
-//                     } // fin switch
-                    
-//                     $sql_cuentas .= " where " . $filtro . " and ca_cuentas.cli_idcliente=:uscliente";
-//                     // si tiene servicio lo pongo si no todos
-//                     $parametros["uscliente"] = $uscliente;
-                    
-//                     $sql_cuentas .= " GROUP BY ca_unegocios.cue_clavecuenta;";
-//                     // echo $sql_cuentas;
+//      
                  }
                 $referencia=array("",$Nivel01,$Nivel02,$Nivel03,$Nivel04,$Nivel05,$Nivel06);
                 $rs_cuentas = DatosCuenta::cuentasxNivel($VarNivel2,$referencia,$uscliente);
