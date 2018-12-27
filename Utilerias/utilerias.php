@@ -303,6 +303,13 @@ static function redondear($valor) {
 $float_redondeado=round($valor*1000)/1000;
 return $float_redondeado;
 }
+static function redondear2($valor,$cifras) {
+	if($cifras==1)
+		$float_redondeado=round($valor*10)/10;
+	if($cifras==2)
+		$float_redondeado=round($valor*100)/100;
+	return $float_redondeado;
+}
 
 
   public static function crearOpcionesNivel($nivel,$id,$select) {
@@ -346,7 +353,7 @@ foreach ($res as $registro) {
 static function crearSelect($nombresel,$RS_SQM_TE,$select2){
      
          $listanivel[] = "<select class='form-control' name='$nombresel' id='$nombresel' onChange='cargaContenido(this.id)'>
-                               <option value=''>- ".strtoupper(T_("Todos"))." -</option>";
+                               <option value=''>- ".strtoupper(T_("TODOS"))." -</option>";
             
             foreach ($RS_SQM_TE as $registro) {
       
@@ -414,8 +421,8 @@ public static function crearSelectCascada($nombreNivel,$nivel,$opciones,$activo)
                                     data-target="niv-'.($nivel+1).'"
                                     data-url="getNivelUnegocio.php?"
                                     data-replacement="container1"
-                                    data-default-label="-TODOS-" '.$activo.'>
-                                <option value="">-TODOS-</option>
+                                    data-default-label="-'.T_("TODOS").'-" '.$activo.'>
+                                <option value="">-'.T_("TODOS").'-</option>
 '.$texto.'
                             </select>
                         </div>';
@@ -524,4 +531,29 @@ static function fecha_comp($fecha){
     return $lafecha;
 }
 
+function creaFiltro($filtro) {
+	
+	$titulo_fil = array('unidadneg' => "UNIDAD DE NEGOCIO: ", "franquicia" => "FRANQUICIA: ", "region" => "REGION/GRUPO: ", "zona" => "ZONA/ESTADO: ", "cedis" => "CEDIS/CIUDAD: ");
+	$clase="Titulo2";
+	if (isset ($_SESSION["f" . $filtro])&&$_SESSION["f" . $filtro]!="")
+	{ 
+		
+	 return '<div class="col-md-6">' . $titulo_fil[$filtro] . $_SESSION["f" . $filtro] . "</div>";
+	}
+}
+
+function michr($indice){
+	if($indice>=65&&$indice<=90){
+		return chr($indice);
+	}
+	if($indice>142){
+		return "C".chr($indice-(78));
+	}
+	if($indice>116){
+		return "B".chr($indice-52);
+	}
+	if($indice>90){
+		return "A".chr($indice-26);
+	}
+}
 }
