@@ -101,8 +101,8 @@ class InicioExcelController
         $tiempo = $fin - $ini;
       
         //
-        header("Content-Type: application/x-msexcel; name=\"".$nomarch.".xlsx\"");
-        header("Content-Disposition: inline; filename=\"".$nomarch.".xlsx\"");
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
+        header("Content-Disposition: attachment; filename=\"".$nomarch.".xlsx\"");
         $this->worksheet->writeToStdOut();
         //$fh=fopen($fname, "rb");
         //fpassthru($fh);
