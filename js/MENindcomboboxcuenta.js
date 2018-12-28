@@ -30,10 +30,11 @@ function CuentaAjax()
 var listadoSelectsCuenta=new Array();
 listadoSelectsCuenta[0]="cuenta";
 listadoSelectsCuenta[1]="franquiciacta";
-
+listadoSelectsCuenta[2]="unidadnegocio";
 
 function buscarEnArrayCuenta(array, dato)
 {
+	
 	// Retorna el indice de la posicion donde se encuentra el elemento en el array o null si no se encuentra
 	var x=0;
 	while(array[x])
@@ -41,6 +42,8 @@ function buscarEnArrayCuenta(array, dato)
 		if(array[x]==dato) return x;
 		x++;
 	}
+	if(dato=="mercado")
+		return -1;
 	return null;
 }
 
@@ -94,7 +97,8 @@ campo=eval("document.form1."+lisNiveles[i]);
 		// Obtengo el elemento del select que debo cargar
 		var idSelectDestino=listadoSelectsCuenta[posicionSelectDestino];
 		var selectDestino=document.getElementById(idSelectDestino);
-                 if(posicionSelectDestino>2)    // envio cta y franquicia
+		
+                 if(posicionSelectDestino>1)    // envio cta y franquicia
                   {
                     idSelectOrigen=listadoSelectsCuenta[posicionSelectDestino-2];
                     selectOrigen=document.getElementById(idSelectOrigen);
@@ -196,6 +200,7 @@ campo=eval("document.form1."+lisNiveles[i]);
 				}
 				if (ajax2.readyState==4)
 				{
+					
 					selectDestino2.parentNode.innerHTML=ajax2.responseText;
 				} 
 			}
