@@ -1,5 +1,5 @@
 <?php
-
+include "Models/crud_temporales.php";
 class GeneraBusqResController {
 	
 	public function generarBusquedaRes(){
@@ -12,9 +12,9 @@ class GeneraBusqResController {
 	$_SESSION["UsuarioInd"]=$Usuario;
 	$vclienteu = 1;
 	$vserviciou = 1;
-	$sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =  '$Usuario'";
-	//	echo "<br>3".$sql_porcuenta;
-	$rs_sql_us = Conexion::ejecutarQuerysp($sql_del_us);
+	$sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
+	//echo "<br>3".$sql_del_us;
+	 DatosTemporales::eliminarEstadistica($Usuario);
 	
 	/* creo consulta  generica */
 	$sql_porcuenta = "insert into tmp_estadistica (usuario, numreporte,mes_asignacion) select :Usuario, ins_generales.i_numreporte, str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y')
@@ -110,7 +110,7 @@ where ca_tipomercado.tm_clavetipo=:mercado";
 	//	echo $select6;
 	
 	////inserta reportes en la tabla temporal tmp_estadistica
-	$rs_sql_us = Conexion::ejecutarQuery($sql_porcuenta,$parametros);
+	$rs_sql_us = Conexion::ejecutarInsert($sql_porcuenta,$parametros);
 
 	//valido si hay mas de un reporte
 	$sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";

@@ -182,7 +182,7 @@ FROM `muestreo`.`ca_servicios`
 		
 			
 			$this->lb_Servicio=T_("SERVICIO");
-			$this->OPSERVICIOS=buscaServicio($uscliente, $usservicio, $_SESSION["idiomaus"]).'  <input type="hidden" value="'.$usservicio.'" name="crservicio" id="crservicio">'.
+			$this->OPSERVICIOS=$this->buscaServicio($uscliente, $usservicio, $_SESSION["idiomaus"]).'  <input type="hidden" value="'.$usservicio.'" name="crservicio" id="crservicio">'.
 			'<input type="hidden" value="'.$uscliente.'" name="crcliente" id="crcliente">';
 		}
 		

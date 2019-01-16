@@ -1,7 +1,9 @@
 <?php
+
 class muestrasController{
-
-
+	private $TITULO;
+	private $listamuestras;
+	private $pages;
   public function listaMuestrasPendientes(){
         $gpo = UsuarioController::Obten_grupo();
     
@@ -44,7 +46,7 @@ class muestrasController{
                       <div class="box-footer no-padding">
                       
                         <ul class="nav nav-stacked">
-                        <li><a>SERVICIO : <strong>'. $item["ser_descripcionesp"].'</strong></a></li>
+                        <li>SERVICIO : <strong>'. $item["ser_descripcionesp"].'</strong></li>
                         </ul>
                     </div>
                   </div>
@@ -55,7 +57,7 @@ class muestrasController{
                       <div class="box-footer no-padding">
                       
                         <ul class="nav nav-stacked">
-                        <li><a>PUNTO DE VENTA : <strong>'. $item["une_descripcion"].'</strong></a></li>
+                        <li>PUNTO DE VENTA : <strong>'. $item["une_descripcion"].'</strong></li>
                         </ul>
                     </div>
                   </div>
@@ -70,28 +72,31 @@ class muestrasController{
                       <div class="box-footer no-padding">
                       
                         <ul class="nav nav-stacked">
-                        <li><a>LABORATORIO : <strong>'. $catnombre.'</strong></a></li>
+                        <li>LABORATORIO : <strong>'. $catnombre.'</strong></li>
                         </ul>
                     </div>
                   </div>
             </div>
 
-                   <div class="row" col-sm-12>
+                   <div class="row col-sm-12  ">
+    <div class="box-footer no-padding">
                     <div class="col-sm-4 border-right">
                       <div class="description-block">
+                   
+  <ul class="nav nav-stacked">
+                       ANALISIS <br>FISICOQUIMICO :
+</ul>
                      
-                       ANALISIS FISICOQUIMICO :
-
-                      </div>
                       <!-- /.description-block -->
                     </div>
                     <!-- /.col -->
+</div>
                     <div class="col-sm-4 border-right">
                       <div class="description-block">';
                   
                   if ($item["mue_estatusFQ"]==1) {
                       echo '
-                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="javascript:imprimirFQ('.$item["mue_idmuestra"].');"> IMPRIMIR </a></span></button>';
+                    <button type="button" class="btn btn-block btn-info" style="font-size: 12px" onclick="javascript:imprimirFQ('.$item["mue_idmuestra"].');"> IMPRIMIR </button>';
                   }  
                   echo '
                       </div>
@@ -102,7 +107,8 @@ class muestrasController{
                       <div class="description-block">';
                       if ($item["mue_estatusFQ"]==2) {
                         echo '
-                          <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"> Detalle </a></span></button>';
+                          <button type="button" class="btn btn-block btn-info"
+ style="font-size: 12px" onclick="detalle(\'FQ\',\''.$item["mue_idmuestra"].'\')"> Detalle </button>';
                       }    
                       echo '    
                       </div>
@@ -110,12 +116,13 @@ class muestrasController{
                     </div>
                     <!-- /.col -->
                   </div> 
-
-                  <div class="row" col-sm-12>
+</div>
+                  <div class="row col-sm-12 ">
+  <div class="box-footer no-padding">
                     <div class="col-sm-4 border-right">
                       <div class="description-block">
                      
-                       ANALISIS MICROBIOLOGICO :
+                       ANALISIS<br> MICROBIOLOGICO :
 
                       </div>
                       <!-- /.description-block -->
@@ -125,7 +132,7 @@ class muestrasController{
                       <div class="description-block">';
                       if ($item["mue_estatusMB"]==1) { 
                         echo '
-                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="javascript:imprimirMB('.$item["mue_idmuestra"].');"> IMPRIMIR </a></span></button>';
+                    <button type="button" class="btn btn-block btn-info" style="font-size: 12px" onclick="javascript:imprimirMB('.$item["mue_idmuestra"].');"> IMPRIMIR </button>';
                   }
                      echo '
                       </div>
@@ -137,7 +144,8 @@ class muestrasController{
 
                       if ($item["mue_estatusMB"]==2) {
                           echo '
-                          <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"> Detalle </a></span></button>';
+                          <button type="button" class="btn btn-block btn-info" style="font-size: 12px" 
+onclick="detalle(\'MB\','.$item["mue_idmuestra"].')"> Detalle </button>';
                       }
                       echo '    
   </div>
@@ -145,23 +153,145 @@ class muestrasController{
                     </div>
                     <!-- /.col -->
                   </div> 
-
-
-
-
+</div>
 
                        </div>
                 <!-- /.box-body -->
               </div>
               <!-- /.box -->
            
-            
-        </div>';
+          </div>';
                  
 
       }
+      Navegacion::iniciar();
+      Navegacion:: borrarRutaActual("a");
+      $rutaact = $_SERVER['REQUEST_URI'];
+      // echo $rutaact;
+      Navegacion::agregarRuta("a", $rutaact, T_("MUESTRAS POR ANALIZAR"));
    } 
 
+   
+   public function listaMuestrasRealizadas(){
+   	$gpo = UsuarioController::Obten_grupo();
+   	
+   	$idusuario=UsuarioController::Obten_Usuario();
+   
+  
+   	
+   	if ($gpo=="lab") {
+   		//busca laboratorio
+   		$usuario =UsuarioModel::getUsuarioId($idusuario,"cnfg_usuarios");
+   		#presrenta datos de unegocio
+   		//var_dump($usuario);
+   		
+   		$tipocons = $usuario["cus_tipoconsulta"];
+   		// busca descripcion de laboratorio
+   		$numcat=43;
+   		$this->TITULO=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", $numcat, $tipocons);
+   		
+   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, 
+rm_embotelladora,mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp, cad_descripcionesp FROM (SELECT aa_muestras.mue_numreporte, 
+aa_muestras.mue_nomanalistaFQ,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
+aa_recepcionmuestra.rm_embotelladora,aa_muestras.mue_idmuestra,cad_descripcionesp FROM aa_muestras
+INNER JOIN aa_recepcionmuestradetalle ON aa_recepcionmuestradetalle.mue_idmuestra = aa_muestras.mue_idmuestra
+INNER JOIN aa_recepcionmuestra ON aa_recepcionmuestradetalle.rm_idrecepcionmuestra = aa_recepcionmuestra.rm_idrecepcionmuestra
+LEFT JOIN `ca_catalogosdetalle` ON `cad_idcatalogo`=43 AND `cad_idopcion`=rm_embotelladora
+ WHERE aa_muestras.mue_estatusmuestra = '5'  AND
+aa_recepcionmuestra.rm_embotelladora =  :tipocons
+ GROUP BY aa_muestras.mue_idmuestra) AS A LEFT JOIN (SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_claveservicio,
+ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_numreactivo,
+ins_detalleestandar.ide_numcomponente, ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi,
+ca_servicios.ser_descripcionesp FROM ins_detalleestandar INNER JOIN ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio 
+AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
+INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra ");
+   		$parametros=array("tipocons"=>$tipocons);
+   		
+   	} else {
+   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
+mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp,cad_descripcionesp FROM 
+(SELECT aa_muestras.mue_numreporte, aa_muestras.mue_nomanalistaFQ,
+aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
+aa_recepcionmuestra.rm_embotelladora,cad_descripcionesp,
+aa_muestras.mue_idmuestra FROM aa_muestras
+INNER JOIN aa_recepcionmuestradetalle ON aa_recepcionmuestradetalle.mue_idmuestra = aa_muestras.mue_idmuestra
+INNER JOIN aa_recepcionmuestra ON aa_recepcionmuestradetalle.rm_idrecepcionmuestra = aa_recepcionmuestra.rm_idrecepcionmuestra
+ LEFT JOIN `ca_catalogosdetalle` ON `cad_idcatalogo`=43 AND `cad_idopcion`=rm_embotelladora
+WHERE aa_muestras.mue_estatusmuestra = '5' GROUP BY aa_muestras.mue_idmuestra) AS A LEFT JOIN (
+SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_claveservicio,
+ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_numreactivo,
+ins_detalleestandar.ide_numcomponente, ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi,
+ca_servicios.ser_descripcionesp FROM ins_detalleestandar 
+INNER JOIN ins_generales ON  ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id 
+INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC ");
+   	}
+   	
+   	$this->listamuestras=Conexion::ejecutarQuery($ssql,$parametros);
+   	$this->pages = new Paginator(sizeof($this->listamuestras), 9, array(
+   			10,
+   			25,
+   			50,
+   			100,
+   			250,
+   			'All'
+   	));
+   	if ($gpo=="lab") {
+   	  		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB,
+rm_embotelladora,mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp, cad_descripcionesp FROM (SELECT aa_muestras.mue_numreporte,
+aa_muestras.mue_nomanalistaFQ,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
+aa_recepcionmuestra.rm_embotelladora,aa_muestras.mue_idmuestra,cad_descripcionesp FROM aa_muestras
+INNER JOIN aa_recepcionmuestradetalle ON aa_recepcionmuestradetalle.mue_idmuestra = aa_muestras.mue_idmuestra
+INNER JOIN aa_recepcionmuestra ON aa_recepcionmuestradetalle.rm_idrecepcionmuestra = aa_recepcionmuestra.rm_idrecepcionmuestra
+LEFT JOIN `ca_catalogosdetalle` ON `cad_idcatalogo`=43 AND `cad_idopcion`=rm_embotelladora
+ WHERE aa_muestras.mue_estatusmuestra = '5'  AND
+aa_recepcionmuestra.rm_embotelladora =  :tipocons
+ GROUP BY aa_muestras.mue_idmuestra) AS A LEFT JOIN (SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_claveservicio,
+ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_numreactivo,
+ins_detalleestandar.ide_numcomponente, ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi,
+ca_servicios.ser_descripcionesp FROM ins_detalleestandar INNER JOIN ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio
+AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
+INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra limit ".$this->pages->limit_start.",".$this->pages->limit_end);
+   		$parametros=array("tipocons"=>$tipocons);
+   		
+   	} else {
+   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
+mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp,cad_descripcionesp FROM
+(SELECT aa_muestras.mue_numreporte, aa_muestras.mue_nomanalistaFQ,
+aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
+aa_recepcionmuestra.rm_embotelladora,cad_descripcionesp,
+aa_muestras.mue_idmuestra FROM aa_muestras
+INNER JOIN aa_recepcionmuestradetalle ON aa_recepcionmuestradetalle.mue_idmuestra = aa_muestras.mue_idmuestra
+INNER JOIN aa_recepcionmuestra ON aa_recepcionmuestradetalle.rm_idrecepcionmuestra = aa_recepcionmuestra.rm_idrecepcionmuestra
+ LEFT JOIN `ca_catalogosdetalle` ON `cad_idcatalogo`=43 AND `cad_idopcion`=rm_embotelladora
+WHERE aa_muestras.mue_estatusmuestra = '5' GROUP BY aa_muestras.mue_idmuestra) AS A LEFT JOIN (
+SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_claveservicio,
+ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_numreactivo,
+ins_detalleestandar.ide_numcomponente, ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi,
+ca_servicios.ser_descripcionesp FROM ins_detalleestandar
+INNER JOIN ins_generales ON  ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
+INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC limit ".$this->pages->limit_start.",".$this->pages->limit_end);
+   	}
+   	$this->listamuestras=Conexion::ejecutarQuery($ssql,$parametros);
+   	Navegacion::iniciar();
+   	Navegacion:: borrarRutaActual("a");
+   	$rutaact = $_SERVER['REQUEST_URI'];
+   	// echo $rutaact;
+   	Navegacion::agregarRuta("a", $rutaact, T_("MUESTRAS ANALIZADAS"));
+   
+   }
+   
   public function tomaMuestraRep(){
     #lee varia{ble
     $gpous = UsuarioController::Obten_grupo();
@@ -603,6 +733,27 @@ class muestrasController{
        } // if regproceso
     }  // fin del if
   }  // fin de la funcion
+
+/**
+	 * @return mixed
+	 */
+	public function getTITULO() {
+		return $this->TITULO;
+	}
+
+/**
+	 * @return array
+	 */
+	public function getListamuestras() {
+		return $this->listamuestras;
+	}
+	/**
+	 * @return mixed
+	 */
+	public function getPages() {
+		return $this->pages;
+	}
+
 
 
 

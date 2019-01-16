@@ -416,8 +416,8 @@ as a ON a.ide_numreporte = ins_generales.i_numreporte
 ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                 $parametros=array("servicio"=>$this->servicio,
                     "sec"=>$sec,
-                    "fechaini"=>$fechaini
-                   
+                    "fechaini"=>$fechaini,
+                   "com"=>$com
                     );
                 $res=Conexion::ejecutarQuery($cad,$parametros);
                 break;

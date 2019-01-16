@@ -484,6 +484,7 @@ $datosController[$nombre_campo]= filter_input(INPUT_POST,$nombre_campo, FILTER_S
 
 if(isset($datosController["idpv"]))
 {   $respuesta= DatosUnegocio::actualizarUnegocio($datosController, "ca_unegocios");
+
 if ($respuesta == "success") {
 	
 	echo "

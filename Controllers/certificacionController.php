@@ -885,7 +885,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
         }
         
         public function insertarsolicitud(){
-            define('RAIZ',"../solicitudes");
+            define('RAIZ',"solicitudes");
             $user = $_SESSION["UsuarioInd"];
            include 'Utilerias/leevar.php';
           
@@ -999,7 +999,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
           
           public function insertarDetalle(){
               
-              define('RAIZ',"../solicitudes");
+              define('RAIZ',"solicitudes");
               $user = $_SESSION["UsuarioInd"];
              
               
@@ -1009,7 +1009,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
               $status=1;
                // valida si hay archivo para ingresar
           
-               if ($_FILES ["pictures1"]){
+               if ($_FILES ["pictures1"]&&$reporte){
                   $carpeta=$this->verificaCarpeta($servicio,$reporte);
                  
                   if($carpeta!=-1)
@@ -1020,6 +1020,11 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                           
                           if ($error == UPLOAD_ERR_OK) {
                               $tmp_name = $_FILES ["pictures1"] ["tmp_name"] [$key];
+                              //reviso tamaña
+                              if( $_FILES ["pictures1"] ["size"] [$key]>1048576)
+                              {	$this->msg="<div class='alert alert-danger' role='alert'><br>El tamaño de los archivos no puede ser mayor a 1Mb</div>";
+                             	return false;
+                              }
                               $uploadfile =RAIZ."/".$carpeta . '/'.basename ( $name );
                               if(!is_file($uploadfile))
                               {
@@ -1048,7 +1053,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                               }
                           }
                           else if ($error == UPLOAD_ERR_FORM_SIZE) {
-                              $this->msg='<div class="alert alert-danger" role="alert"><br>El archivo "' . $name . '" excede el tamaño maximo</div>';
+                              $this->msg='<div class="alert alert-danger" role="alert"><br>El archivo "' . $name . '" excede el tamaño máximo</div>';
                               //$html->asignar('msg',$msg);
                               $ban=1;
                           }else
@@ -1181,7 +1186,7 @@ cer_solicitud.sol_estatussolicitud = :estatus, cer_solicitud.sol_fechainicio=".$
           }
           
           public function descargarArchivo(){
-              define('RAIZ',"../solicitudes");
+              define('RAIZ',"solicitudes");
               /*foreach($_GET as $nombre_campo => $valor){
                $asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
                eval($asignacion);
