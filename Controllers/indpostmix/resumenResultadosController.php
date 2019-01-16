@@ -44,15 +44,20 @@ class ResumenResultadosController {
                 //error_log("variable $key_get viene desde $ _GET"); 
             }
         }
+        $rescon=false;
+        if($action=="indhistorialreportes")
+        	$rescon=true;
+        else
         if($action=="indindicadores")
-        {$consutacontrl=new GenerarBusquedaController;
+        {
+        	$consutacontrl=new GenerarBusquedaController;
         $rescon=$consutacontrl->generarBusquedaRes();}
         else if($action=="resumenresultados")
         	if($admin==prin){
         	$consutacontrl=new GeneraBusqResController();
         	$rescon=$consutacontrl->generarBusquedaRes();
         }else $rescon=true;
-    
+        
         if($rescon==false) die();
         $usuario_act = $_SESSION["UsuarioInd"];
 
@@ -247,7 +252,7 @@ class ResumenResultadosController {
         $seccion2 = $this->ConsultaAtributos('2.8.1');
         $tiempo_fin = microtime(true);
         
-     //   echo "a la mitad 2 " . ($tiempo_fin - $tiempo_inicio); 
+        //echo "a la mitad 2 " . ($tiempo_fin - $tiempo_inicio); 
         $tabla = $this->ConsultaSeccion($usuario_act, $seccion2, '');
         $this->lista_tablas[]=$this->creaTabla(3, $tabla);;
         /*         * ************************buenos habitos *********************************** */

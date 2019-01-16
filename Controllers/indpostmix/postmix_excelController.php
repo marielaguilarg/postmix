@@ -484,7 +484,7 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
     if($consulta=="t")
         $cuenta=-1;
         
-        if (isset($tipo_consulta)) {
+    if (isset($tipo_consulta)) {
             $tcons=$tipo_consulta;
         } else {
             $tcons=filter_input(INPUT_GET,"tipo_consulta", FILTER_SANITIZE_STRING) ;
@@ -528,7 +528,8 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
         $fh=fopen($fname, "rb");
         fpassthru($fh);
         }catch (Exception $ex){
-            echo $ex;
+            echo $ex->getMessage();
+            
         }
      //   unlink($fname);
    }  
@@ -668,12 +669,12 @@ ins_generales.i_claveservicio=1 ";
                 $parametros["fechar"]=$fechar;
             }
             //echo $sqluneg;
-            //die();
+            try{
             $resultuneg=Conexion::ejecutarQuery($sqluneg,$parametros);
         
             //comenzamos en a
             $ren_ex=4;
-            try{
+           
             Conexion::ejecutarQuerysp("truncate table tmp_generales");
           
             foreach($resultuneg as $rowuneg) {
@@ -741,8 +742,8 @@ ins_generales.i_claveservicio=1 ";
            
             }
             catch(Exception $ex){
-          
-                throw new Exception ("Hubo un error al hacer su consulta, intente otra");
+        
+                throw new Exception ("Hubo un error al hacer su consulta, intente otra con un periodo más reducido");
             }
             
             //busco resultados de estandar

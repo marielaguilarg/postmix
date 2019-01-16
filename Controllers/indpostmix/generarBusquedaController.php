@@ -1,7 +1,7 @@
 <?php
 
 
-
+include "Models/crud_temporales.php";
 class GenerarBusquedaController {
 
  
@@ -151,7 +151,7 @@ ini_set('max_execution_time',400);
             $sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
 //	echo "<br>3".$sql_porcuenta;
             $parametros = array("Usuario" => $Usuario);
-            $rs_sql_us = Conexion::ejecutarQuery($sql_del_us, $parametros);
+            $rs_sql_us = DatosTemporales::eliminarEstadistica($Usuario);
 
             /* creo consulta  generica */
             $sql_porcuenta = "insert into tmp_estadistica (usuario, numreporte,mes_asignacion)
