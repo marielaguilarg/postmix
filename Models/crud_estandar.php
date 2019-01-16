@@ -1458,4 +1458,187 @@ where red_grafica=-1 and re_tipoevaluacion <>0 and cue_reactivosestandardetalle.
 	    return $res;
 	}
 	
+	function ConsultaAgua($muestra) {
+		
+		$sqlfq="SELECT ins_detalleestandar.ide_numrenglon, ins_detalleestandar.ide_numreporte,
+ins_detalleestandar.ide_claveservicio FROM
+ins_detalleestandar Inner Join cue_secciones ON ins_detalleestandar.ide_claveservicio = cue_secciones.ser_claveservicio
+AND ins_detalleestandar.ide_numseccion = cue_secciones.sec_numseccion 
+WHERE
+cue_secciones.sec_indagua =  '1' AND
+ins_detalleestandar.ide_idmuestra =  :ntoma
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
+		
+		$stmt = Conexion::conectar()-> prepare($sqlfq);
+		
+		$stmt->bindParam(":ntoma", $muestra, PDO::PARAM_INT);
+		$stmt->execute();
+		
+		$res=$stmt->fetchAll();
+		
+		
+		return $res;
+	}
+	
+	function ConsultaDetalleAgua($muestra,$serv,$carac,$reporte) {
+		
+		$sql="SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_valorreal FROM ins_detalleestandar
+		WHERE ins_detalleestandar.ide_idmuestra =:muestra
+		AND ins_detalleestandar.ide_claveservicio = :serv
+		AND ins_detalleestandar.ide_numcaracteristica3 = :caracteristica
+		AND ins_detalleestandar.ide_numreporte = :reporte";
+		$stmt = Conexion::conectar()-> prepare($sql);
+		
+		$stmt->bindParam(":muestra", $muestra, PDO::PARAM_INT);
+		$stmt->bindParam(":serv", $serv, PDO::PARAM_INT);
+		$stmt->bindParam(":caracteristica", $carac, PDO::PARAM_INT);
+		
+		$stmt->bindParam(":reporte", $reporte, PDO::PARAM_INT);
+		$stmt->execute();
+		
+		$res=$stmt->fetchAll();
+		
+		
+		return $res;
+	}
+	
+	
+	
+	public function borraestandarDetalle($idser, $numrep,$numren, $idsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("DELETE FROM $tabla WHERE ide_claveservicio = :idser AND ide_numrenglon =:numren AND ide_numreporte = :numrep AND concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2) =:idsec");
+		
+		
+		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+		$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
+		
+		IF($stmt-> execute()){
+			
+			return "success";
+		}
+		
+		else {
+			
+			return "error";
+			
+		}
+		
+	}
+	public function calculaUltimoRenglon($idser, $nrep, $nsec, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT max(ide_numrenglon) as claveren FROM $tabla WHERE ide_claveservicio =:idser AND ide_numreporte =:numrep AND concat(ide_numseccion,'.',ide_numreactivo,'.',ide_numcomponente,'.',ide_numcaracteristica1,'.',ide_numcaracteristica2) =:nsec");
+		
+		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $nrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_STR);
+		
+		$stmt-> execute();
+		
+		return $stmt->fetch();
+		$stmt->close();
+	}
+	
+	public function calculaVolumen($a, $b, $tabla){
+		$stmt=Conexion::conectar()->prepare("SELECT cav_volumen from $tabla where cav_presion=:A and cav_temperatura=:B");
+		
+		$stmt-> bindParam(":A", $a, PDO::PARAM_INT);
+		$stmt-> bindParam(":B", $b, PDO::PARAM_INT);
+		
+		$stmt-> execute();
+		
+		return $stmt->fetch();
+		$stmt->close();
+	}
+	
+	public function insertaRepEstandarDetalleToma($datosModel, $tabla){
+		$stmt=Conexion::conectar()->prepare("INSERT INTO ins_detalleestandar (ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon, ide_ponderacion, ide_aceptado, ide_numcolarc, ide_idmuestra) VALUES (:idser, :numrep, :numsec, :numreac, :numcom, :numcar, :numcom2, :numcar2, :valcom, :numren, :pondreal, :aceptado, :numcolarc,:ntoma)");
+		
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom2", $datosModel["numcom2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar2", $datosModel["numcar2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
+		$stmt-> bindParam(":pondreal", $datosModel["pondreal"], PDO::PARAM_INT);
+		$stmt-> bindParam(":aceptado", $datosModel["aceptado"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcolarc", $datosModel["numcolarc"], PDO::PARAM_INT);
+		$stmt-> bindParam(":ntoma", $datosModel["ntoma"], PDO::PARAM_INT);
+		
+		IF($stmt-> execute()){
+			
+			return "success";
+		}
+		
+		else {
+			
+			return "error";
+			
+		};
+		
+		$stmt->close();
+		
+		
+	}
+	
+	
+	
+	
+	public function insertaRepEstandarDetalle($datosModel, $tabla){
+		$stmt=Conexion::conectar()->prepare("INSERT INTO ins_detalleestandar (ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon, ide_ponderacion, ide_aceptado, ide_numcolarc) VALUES (:idser, :numrep, :numsec, :numreac, :numcom, :numcar, :numcom2, :numcar2, :valcom, :numren, :pondreal, :aceptado, :numcolarc)");
+		
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_STR);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcom2", $datosModel["numcom2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcar2", $datosModel["numcar2"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
+		$stmt-> bindParam(":pondreal", $datosModel["pondreal"], PDO::PARAM_INT);
+		$stmt-> bindParam(":aceptado", $datosModel["aceptado"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numcolarc", $datosModel["numcolar"], PDO::PARAM_INT);
+		
+		
+		
+		
+		
+		
+		IF($stmt-> execute()){
+			
+			return "success";
+		}
+		
+		else {
+			
+			return "error";
+			
+		}
+		
+		$stmt->close();
+	}
+	
+	
+
+	public function buscarEstandarMuestra($ntoma, $tabla){
+		
+		$stmt=Conexion::conectar()->prepare("SELECT ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numcomponente
+ FROM
+$tabla
+ WHERE ins_detalleestandar.ide_idmuestra =:ntoma 
+GROUP BY
+ins_detalleestandar.ide_claveservicio");
+		
+		$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+			
+		$stmt-> execute();
+	
+		return $stmt->fetchAll();
+	}
+	
 }

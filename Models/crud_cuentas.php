@@ -133,12 +133,13 @@ where ca_cuentas.cue_idcliente=:cliente ";
     $sql.=" order by ca_cuentas.cue_id";
   
     $res = Conexion::conectar()->prepare($sql);
-    $res-> bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
-    $res-> bindParam(":cliente", $cliente, PDO::PARAM_INT);
+    $res->bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
+    $res->bindParam(":cliente", $cliente, PDO::PARAM_INT);
     $res->execute();
-  
+   
+  $reg=$res->fetchAll();
     
-    foreach ($res as $row) {
+    foreach ($reg as $row) {
         $nombre = $row["cue_descripcion"];
     }
 

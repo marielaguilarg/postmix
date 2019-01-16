@@ -751,8 +751,8 @@ cue_secciones.sec_numseccion =  :seccion";
 
 		$stmt = Conexion::conectar()->prepare("UPDATE ins_seccion set is_nivelcum=:nivelacep, is_pondreal=:valreal where is_claveservicio=:idser AND is_numreporte=:numrep AND is_numseccion=:numsec");
 
-			$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_INT);
-			$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_INT);
+			$stmt-> bindParam(":nivelacep", $datosModel["nivacep"], PDO::PARAM_STR);
+			$stmt-> bindParam(":valreal", $datosModel["valreal"], PDO::PARAM_STR);
 			$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
 			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
 			$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
@@ -807,6 +807,62 @@ cue_secciones.sec_numseccion =  :seccion";
 		return $stmt->fetch();
 	}
 
- 
+	public function actualizarSeccion($datosModel, $tabla){
+		
+		$stmt = Conexion::conectar()->prepare("    UPDATE $tabla
+SET 
+  `is_comentario` = :comentario,
+  `is_nivelcum` = :nivelcum,
+  `is_pondreal` = :pondreal
+WHERE `is_numreporte` = :numrep
+    AND `is_numseccion` = :numseccion
+    AND `is_claveservicio` = :idser;");
+		
+		$stmt-> bindParam(":nivelcum", $datosModel["nivacep"], PDO::PARAM_STR);
+		$stmt-> bindParam(":pondreal", $datosModel["valreal"], PDO::PARAM_STR);
+		$stmt-> bindParam(":numseccion", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":comentario", $datosModel["comentario"], PDO::PARAM_STR);
+		
+		
+		if(!$stmt-> execute()){
+			
+			throw new Exception("Error al actualizar");
+			
+		}
+	}
+	
+	public function insertarSeccion($datosModel, $tabla){
+		$sql="INSERT INTO tabla
+            (`is_claveservicio`,
+             `is_numreporte`,
+             `is_numseccion`,
+             `is_comentario`,
+             `is_nivelcum`,
+             `is_pondreal`)
+VALUES (:servicio,
+        :numreporte,
+        :numseccion,
+        :comentario,
+        :nivelcum,
+        :pondreal)";
+		$stmt = Conexion::conectar()->prepare($sql);
+		
+		
+		$stmt-> bindParam(":numreporte", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nivelcum", $datosModel["nivacep"], PDO::PARAM_STR);
+		$stmt-> bindParam(":pondreal", $datosModel["valreal"], PDO::PARAM_STR);
+		$stmt-> bindParam(":numseccion", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":servicio", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":comentario", $datosModel["comentario"], PDO::PARAM_STR);
+		
+		if(!$stmt-> execute()){
+			
+		throw new Exception("Error al insertar");
+		
+		}
+	}
+	
  
 }

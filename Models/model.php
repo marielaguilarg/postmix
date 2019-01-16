@@ -56,13 +56,20 @@ class EnlacesPaginas{
 
 			$enlacesModel == "nvorep" ||
 			
-			#AQUI INICIA SECCION REPORTE	
+			#AQUI INICIA SECCION muestras	
 			$enlacesModel == "anapend" ||
 			$enlacesModel == "anarealiza" ||
 			$enlacesModel == "estanalisis" ||
+			$enlacesModel == "nuevoanalisis" ||
 			$enlacesModel == "recepcion" ||
 			$enlacesModel == "prueba" ||
-
+			$enlacesModel == "listapruebasdet" ||
+			$enlacesModel == "analisisFQ" ||
+			$enlacesModel == "listarecepcion" ||
+			$enlacesModel == "recepciondetalle" ||
+			$enlacesModel == "nuevarecepcion" ||
+			$enlacesModel == "nuevaprueba" ||
+			$enlacesModel == "nuevarecepciondet" ||
 
 			#AQUI INICIA LA SECCION DE SEGURIDAD
 			$enlacesModel == "login" ||			

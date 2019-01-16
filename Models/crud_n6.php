@@ -85,9 +85,3 @@ class Datosnsei extends Conexion{
         }
 
 }
-
-
-
-
-
-?>

@@ -103,9 +103,3 @@ public function vistatresModel($datosModel,$idn3,$tabla){
         }
 
 }
-
-
-
-
-
-?>

@@ -81,9 +81,3 @@ class Datosncua extends Conexion{
         }
 
 }
-
-
-
-
-
-?>

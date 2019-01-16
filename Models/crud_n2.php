@@ -102,8 +102,3 @@ public function vistadosModel($idn1, $idn2, $tabla){
 
 }
 
-
-
-
-
-?>

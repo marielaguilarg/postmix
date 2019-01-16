@@ -378,8 +378,8 @@ public function getUsuarioId($id,$tabla){
   `cus_cliente`,
   `cus_servicio`,
   `cus_solcer` from $tabla where cus_email=:idusuario");
-		$stmt->bindParam("idusuario", $id,PARAM_STR);		
-		$stmt-> execute();
+		$stmt->bindParam("idusuario", $id,PDO::PARAM_STR);		
+		$stmt->execute();
 
 		return $stmt->fetch();
 		

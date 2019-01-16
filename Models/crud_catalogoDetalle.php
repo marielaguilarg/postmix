@@ -63,5 +63,43 @@ public function listaCatalogoDetalleOpc($datosModel, $op, $tabla){
 
     return $stmt->fetch();
   }
+  
+  public function borrarCatalogoDetalle($idcatalogo,$idopcion,$tabla){
+  	$stmt = Conexion::conectar()-> prepare("DELETE
+FROM $tabla
+WHERE `cad_idcatalogo` = :idcatalogo
+    AND `cad_idopcion` =:idopcion");
+  	
+  	$stmt->bindParam(":idcatalogo", $idcatalogo, PDO::PARAM_INT);
+  	$stmt->bindParam(":idopcion", $idopcion, PDO::PARAM_INT);
+ 
+  	
+  	if(!$stmt-> execute()){
+  		throw new Exception("Error al eliminar opcion");
+  	}
+  	
+  	
+  }
 
+  
+  public function actualizarCatalogoDetalle($idcatalogo,$idopcion,$descripcionesp,$descripcioning,$otro,$tabla){
+  	
+  	$stmt = Conexion::conectar()-> prepare("UPDATE $tabla SET 
+  `cad_descripcionesp` =:descripcionesp,
+  `cad_descripcioning` =:descripcioning,
+  `cad_otro` =:otro
+WHERE `cad_idcatalogo` =:idcatalogo
+    AND `cad_idopcion` =:idopcion");
+  	
+  	$stmt->bindParam(":idcatalogo", $idcatalogo, PDO::PARAM_INT);
+  	$stmt->bindParam(":idopcion", $idopcion, PDO::PARAM_INT);
+  	$stmt->bindParam(":descripcionesp", $descripcionesp, PDO::PARAM_INT);
+  	$stmt->bindParam(":descripcioning", $descripcioning, PDO::PARAM_INT);
+  	$stmt->bindParam(":otro", $otro, PDO::PARAM_INT);
+  	
+  	if(!$stmt-> execute()){
+  		throw new Exception("Error al eliminar opcion");
+  	}
+  	
+  }
 }

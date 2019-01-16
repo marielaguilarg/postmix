@@ -37,6 +37,26 @@ where i_idcliente = :i_idcliente
        
 
     }
+    
+    public function eliminarEstadistica($Usuario){
+    	
+    	$sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
+    	
+    	
+    	
+    	$resulti=Conexion::conectar()->prepare($sql_del_us);
+    	
+    
+    	
+    	$resulti->bindParam(":Usuario", $Usuario);
+    	
+    	if (!$resulti->execute())
+    		
+    		throw new Exception("Hubo un error al eliminar");
+    		
+    		
+    		
+    }
 
 }
 
