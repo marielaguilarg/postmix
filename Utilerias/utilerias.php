@@ -556,4 +556,17 @@ function michr($indice){
 		return "A".chr($indice-26);
 	}
 }
+
+static function mensajeError($ex){
+	
+	return "<div class='alert alert-danger'>".$ex."</div>";
+
+
+}
+
+static function mensajeExito($mensaje){
+	return "<div class='alert alert-success'>".$mensaje."</div>";
+	
+
+}
 }

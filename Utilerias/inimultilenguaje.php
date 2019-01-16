@@ -10,14 +10,16 @@ define('DEFAULT_LOCALE', 'es_ES');
 
 
 $encoding = 'UTF-8';
-// if(isset($_GET["lan"]))
-//     {
-//     if($_GET["lan"]=="en")
-//          $_SESSION["idiomaus"]=2;
-//     else
-//             $_SESSION["idiomaus"]=1;
+
+if(isset($_GET["lan"]))
+    {
+    	$lan=filter_input(INPUT_GET,"lan", FILTER_SANITIZE_STRING);
+    if($lan=="en")
+         $_SESSION["idiomaus"]=2;
+    else
+            $_SESSION["idiomaus"]=1;
     
-// }
+}
 $locale = (isset($_SESSION["idiomaus"])&&$_SESSION["idiomaus"]==2)? "en_US" : DEFAULT_LOCALE;
 
 
@@ -29,7 +31,7 @@ T_bindtextdomain($domain, LOCALE_DIR);
 T_bind_textdomain_codeset($domain, $encoding);
 T_textdomain($domain);
 //echo $locale;
-
+//echo T_("CUENTA");
 //----------------------------
 // incializo variables y librerias para traduccion
 //--------------------------------------------------
@@ -68,4 +70,4 @@ T_textdomain($domain);
 // T_textdomain($domain);
 // //----------------------------------------------
 // echo _("ESTADO");
-?>
+
