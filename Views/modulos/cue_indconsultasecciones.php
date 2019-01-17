@@ -46,6 +46,7 @@ $seccionesController->vistaListaSecciones();
 
 <!----- Inicia contenido ----->
 
+<div class="row">
 
 <?php
 
@@ -175,7 +176,7 @@ if(($i)%3==0){
 $i++;
 } //fin foreach?>
 
-
+</div>
 
 <!-- /.box -->
 

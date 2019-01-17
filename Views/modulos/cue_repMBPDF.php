@@ -1,6 +1,6 @@
 <?php
 
-require('fpdf/fpdf.php');
+require('libs/fpdf/fpdf.php');
 
 foreach($_GET as $nombre_campo => $valor){
 	$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";

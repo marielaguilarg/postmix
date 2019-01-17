@@ -115,7 +115,7 @@ $resumenRes->encabezaConsulta();
               <div class="tab-pane active" id="tab_1">
                  <div class="box">
             <div class="box-header">
-              <h3 class="box-title">  <?php echo $resumenRes->getTotal_res() ;?></h3>
+              <h3>  <?php echo $resumenRes->getTotal_res() ;?></h3>
             </div>
  
 

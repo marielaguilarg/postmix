@@ -13,6 +13,12 @@ function imprimirMB(nsec){
 	 window.open("index2.php?action=repMBPDF&ntoma="+nsec);
 }
 
+function detalle(tipo,nsec){
+	//var mform = document.form1;
+	//   alert (mform.numsecc.value);
+		 window.location.href="index.php?action=analisisFQ&tipo="+tipo+"&ntoma="+nsec;
+	}
+
 function imprimirPDF(){
 	 window.open('MEZprincipal.php?op=pdfFQ');
 }
@@ -26,19 +32,16 @@ function imprimirPDF(){
 
    <h1 style="font-size:25px; margin-left: 15px; ">
 
-   muestras <small></small></h1>  
+   
+
+MUESTRAS POR ANALIZAR <small></small></h1>  
 
 
 </div>
      
-<ol class="breadcrumb" >
-
-<?php
-//$ingreso = new ReporteController();
-//$ingreso -> vistaRnomservController();
-?>        
-        
-</ol>
+  <ol class="breadcrumb">
+            <?php Navegacion::desplegarNavegacion();?>
+      </ol>
  </section>     
 
     <section class="content container-fluid">
@@ -63,6 +66,5 @@ $ingreso -> listaMuestrasPendientes();
 
        
 
-    </section>
     
    <!-- /.content-wrapper -->

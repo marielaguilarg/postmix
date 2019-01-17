@@ -117,7 +117,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="index.php?action=consultaResultados"><i class="fa fa-circle-o"></i> Resultados
+                    <li><a href="index.php?action=consultaResultados"><i class="fa fa-circle-o"></i> Rep. de Resultados
                         </a></li>
                     <li><a href="index.php?action=repfacturacion"><i class="fa fa-circle-o"></i> Rep. de Facturación
                         </a></li>
@@ -263,7 +263,7 @@
                   </a>  
                 </li>
                 <li>
-                  <a  href="index.php?action=recepcion"><i class="fa fa-circle-o"></i> Recepción
+                  <a  href="index.php?action=listarecepcion"><i class="fa fa-circle-o"></i> Recepción
                   </a>  
                 </li>
                 <li>

@@ -104,11 +104,13 @@ var elementos = document.getElementsByName(Fila);
       </div>
       
  <?php if($generarbusquedacont->getMensaje()==""){
+ 
      $resumenRes=new ResumenResultadosController;
-     
+   
      $resumenRes->vistaResumenResultados();
      
      include "cue_indresumenresultados.php";
+    
 }?>
 
 

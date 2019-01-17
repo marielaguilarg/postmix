@@ -341,7 +341,12 @@
 
 
       <!----- Inicia contenido ----->
-  <!-- inicia repeticion -->
+
+    
+
+ 
+
+     <!-- inicia repeticion -->
 
      <?php
 $j=1;$bac=1;
@@ -394,7 +399,7 @@ $j=1;$bac=1;
                $bac=0;
              }
               $clase=" ";
-           //   $clasec="collapsed-box";
+              $clasec="collapsed-box";
               $icono="fa fa-plus";
               if($resultado->Estotal())
 
@@ -411,7 +416,15 @@ $j=1;$bac=1;
 
               <div class="box-title" '.$clase.'>'.$resultado->getNombrefranquicia().'</div>
 
-              
+              <div class="box-tools pull-right">
+
+               <button type="button" class="btn btn-box-tool" data-widget="collapse">	<i class="'.$icono.'"></i>
+
+                </button>
+
+               
+
+             </div>
 
               <!-- /.box-tools -->
 
