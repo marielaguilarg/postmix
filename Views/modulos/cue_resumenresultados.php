@@ -1,5 +1,3 @@
-
-
 <style >
 
     .los_demas {
@@ -58,24 +56,15 @@ var elementos = document.getElementsByName(Fila);
 
 	//alert(objeto);
 
-	
-
 	//	objeto.parent.innerHTML="otra cosa";
 
 }
-
-
-
-	
-
-
-
-
-
 </script>
 
 <?php
+
 include "Controllers/generaBusqResController.php";
+
 $resumenRes=new ResumenResultadosController;
 
 $resumenRes->vistaResumenResultados();

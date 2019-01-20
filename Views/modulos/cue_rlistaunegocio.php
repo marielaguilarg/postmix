@@ -1,10 +1,76 @@
+<script type="text/javascript">
+<!--
+function nuevoAjax()
+{ 
+	/* Crea el objeto AJAX. Esta funcion es generica para cualquier utilidad de este tipo, por
+	lo que se puede copiar tal como esta aqui */
+	var xmlhttp=false;
+	try
+	{
+		// Creacion del objeto AJAX para navegadores no IE
+		xmlhttp=new ActiveXObject("Msxml2.XMLHTTP");
+	}
+	catch(e)
+	{
+		try
+		{
+			// Creacion del objet AJAX para IE
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		catch(E)
+		{
+			if (!xmlhttp && typeof XMLHttpRequest!='undefined') xmlhttp=new XMLHttpRequest();
+		}
+	}
+	return xmlhttp; 
+}
+function buscaCiudades(estado, referuni)
+{
+	/*if(estado!=0)
+	{*/
+		var ajax=nuevoAjax();
+		
+		ajax.open("GET", "comboestado_ciudad.php?estado="+estado+"&referuni="+referuni, true);
+		selectDestino=document.getElementById("ciudad");
+		
+		ajax.onreadystatechange=function() 
+		{ 
+			if (ajax.readyState==1)
+			{
+				// Mientras carga elimino la opcion "Selecciona Opcion..." y pongo una que dice "Cargando..."
+				selectDestino.length=0;
+				var nuevaOpcion=document.createElement("option");
+				nuevaOpcion.value=0;
+				nuevaOpcion.innerHTML="Cargando...";
+				selectDestino.appendChild(nuevaOpcion); selectDestino.disabled=true;	
+			}
+			if (ajax.readyState==4)
+			{
+			
+			opcion=ajax.responseText;
+			
+				selectDestino.parentNode.innerHTML=opcion;
+				
+				selectDestino.disabled=false;
+			} 
+		}
+		ajax.send(null);
+	
+	//}
+}
+//-->
+</script>
 <section class="content-header">
   <h1>Reporte <small></small></h1>
 <ol class="breadcrumb" >
 
 <?php
 $ingreso = new seccionController();
+
 $ingreso -> vistanomRservController();
+
+$ingreso = new unegocioController();
+$ingreso->iniciarFiltros();
 ?>        
         
 </ol>
@@ -24,15 +90,26 @@ $ingreso -> vistanomRservController();
             <div class="box-body">
               <div class="form-group">
               <form role="form" method="post">
-                 <div class="col-sm-12">
-                 <div class="input-group input-group-sm">
+                  <div class="col-sm-3">
+               <label>ESTADO </label>
+   <div> <select class="form-control" name="estado" id="estado" onChange="buscaCiudades(this.value,'<?php echo $ingreso->getRef()?>');">
+    <option value="0">Todos</option><?php echo $ingreso->getListaEstados()?></select>
+    </div>
+    </div>
+    <div class="col-sm-3">
+      <label>CIUDAD</label>
+     <div> <select class="form-control" name="ciudad" id="ciudad"><option value="">Todas</option><?php echo $ingreso->getCiudades()?></select>
+      </div></div>
+      <div class="col-sm-3">
+       <label>PUNTO DE VENTA</label>
                  <input type="text" name="opcionuneg" id="opcionuneg" class="form-control" placeholder="Escribe palabra relacionada con el punto de venta" >
-
+  </div>
+  <div class="col-sm-3">
                  <span class="input-group-btn">
                       <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>Buscar</button>
                     </span>
                 </div>
-                </div>
+         
                 </form>
               </div>
             </div>
@@ -59,7 +136,6 @@ $ingreso -> vistanomRservController();
               
 <?php
 
-$ingreso = new unegocioController();
 $ingreso -> vistarunegocioController();
 
 ?>

@@ -7,14 +7,14 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Nuevo cliente</h3>
+              <h3 class="box-title">NUEVO CLIENTE</h3>
             </div>
             <div class="box-body">
              <form role="form" method="post">
               
-                <label for="NuevoCliente" class="col-sm-2 control-label">Nombre del cliente</label>
+                <label for="NuevoCliente" class="col-sm-2 control-label">NOMBRE DEL CLIENTE</label>
                 <div class="col-sm-10">
-                    <input name="nombrecliente" id="nombrecliente" class="form-control" >
+                    <input name="nombrecliente" id="nombrecliente" class="form-control" required>
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacliente"> Cancelar </a></button>

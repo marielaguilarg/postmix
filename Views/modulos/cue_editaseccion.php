@@ -1,7 +1,14 @@
  <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1> MODIFICAR SECCION</h1>
-      
+      <ol class="breadcrumb" >
+
+<?php
+$ingreso = new seccionController();
+$ingreso -> vistaNomServicioController();
+?>        
+        
+</ol>  
     </section>
 
     <!-- Main content -->

@@ -1,5 +1,5 @@
     <section class="content-header">
-      <h1>Secciones <small></small></h1>
+      <h1>SECCIONES <small></small></h1>
 <ol class="breadcrumb" >
 
 <?php

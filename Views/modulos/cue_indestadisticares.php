@@ -1,7 +1,7 @@
 
 <?php 
 
-$estadisticasController=new EstadisticasController;
+$estadisticasController=new EstadisticasController();
 $estadisticasController->vistaIndEstadisticaRes();
         
         ?>
@@ -38,6 +38,7 @@ cumplen.labels(true);
     chart = anychart.line();
     var series=chart.line(data);
     series.markers(true);
+    series.name("");
  var yAxis = chart.yAxis();
     //yAxis.title("%Establecimientos que cumplen con el estandar");
      yAxis.labels().format('{%value}%');
@@ -48,11 +49,21 @@ cumplen.labels(true);
   
 });
   anychart.data.loadJsonFile("<?php echo $estadisticasController->getGraficagen(); ?>", function (data) {
+datos=new Array(data.length);
+		  for(x=0;x<data.length;x++){
+		datos[x]=new Array(data[x][0],data[x][1]);
+		
+		um=data[x][2];
+	  }
+		
 	// create a chart and set loaded data
     chart = anychart.line();
-    var series=chart.line(data);
+    var series=chart.line(datos);
  var yAxis = chart.yAxis();
+ //chart.xAxis().title("Month");
+ chart.yAxis().title(um);
       series.markers(true);
+      series.name(um);
         //yAxis.title("%Establecimientos que cumplen con el estandar"); //poner el estandar
   //   yAxis.labels().format('{%value}%');
   //  chart.title("%Establecimientos que cumplen con el estandar");
@@ -61,12 +72,16 @@ cumplen.labels(true);
     chart.draw();
   
 });
-  anychart.data.loadJsonFile("<?php echo $estadisticasController->getGraficafrec(); ?>", function (data) {
+  var liga="<?php echo $estadisticasController->getGraficafrec(); ?>";
+  if(liga!="")
+  anychart.data.loadJsonFile(liga, function (data) {
 	// create a chart and set loaded data
     chart = anychart.column();
+   
     var series=chart.column(data);
+    series.name("frecuencia");
       var splineSeries = chart.line(data);
-  splineSeries.name('Spline');
+  splineSeries.name('Frecuencia');
   splineSeries.markers(true);
     chart.barGroupsPadding(0);
  var yAxis = chart.yAxis();
@@ -85,6 +100,7 @@ if(urlcj!=""){
 	// create a chart and set loaded data
     chart = anychart.column();
     var series=chart.column(data);
+    series.name("cumplen");
  var yAxis = chart.yAxis();
     yAxis.title("%Establecimientos que cumplen con el estandar");
      yAxis.labels().format('{%value}%');
@@ -112,8 +128,9 @@ function MuestraOculta(opcion)
 	{
 
 		document.getElementById('promedio').style.display='none';
-		document.getElementById('promedio2').style.display='none';
+	//	document.getElementById('promedio2').style.display='none';
 		 document.getElementById('graficas2').style.display='none';
+		 document.getElementById('graficas22').style.display='none';
 		
 	}
 	
@@ -195,7 +212,7 @@ function abrirVentana()
                   <tr>
                     <td style="font-weight: bold"><?php echo T_("ESTANDAR")?></td>                  
                     <td>
-                      <div class="sparkbar pull-right" data-height="20"><?php echo $estadisticasController->getEstadisticas()->getEstandar(); ?><</div>
+                      <div class="sparkbar pull-right" data-height="20"><?php echo $estadisticasController->getEstadisticas()->getEstandar(); ?></div>
                     </td>
                   </tr>
 			</tbody>
@@ -273,7 +290,7 @@ function abrirVentana()
             <div class="box-header with-border">
               <h3 class="box-title">
         
-           '.$estadisticasController->getNombreSeccion().'</h3>
+           '.$estadisticasController->getFiltrosSel()->getNombre_seccion().'</h3>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -305,7 +322,7 @@ function abrirVentana()
         <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+              <h3 class="box-title">'.$estadisticasController->getFiltrosSel()->getNombre_seccion().'</h3>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -337,7 +354,7 @@ function abrirVentana()
         <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+              <h3 class="box-title">'.$estadisticasController->getFiltrosSel()->getNombre_seccion().'</h3>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -362,12 +379,14 @@ function abrirVentana()
         </div>
         <!-- /.col -->
       </div>
-      <!-- /.row -->
-          <div class="row">
+      <!-- /.row -->';
+                if($estadisticasController->getGraficafrec()){
+                	
+                echo '<div class="row" id="graficas22">
         <div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">'.$estadisticasController->getNombreSeccion().'</h3>
+              <h3 class="box-title">'.$estadisticasController->getFiltrosSel()->getNombre_seccion().'</h3>
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                 </button>
@@ -376,7 +395,7 @@ function abrirVentana()
               <div class="box-body">
               <div class="row">
                 <div class="col-md-12">
-                  <p class="text-center"> <strong>'.T_("PORCENTAJE DE PRUEBAS QUE CUMPLEN CON EL ESTANDAR POR PRODUCTO").'</strong></p>
+                  <p class="text-center"> <strong>'.$estadisticasController->getTit_frec().'</strong></p>
                   <div class="chart">
 					                   
                     <div id="graficafrec"></div>
@@ -394,7 +413,7 @@ function abrirVentana()
         </div>
         <!-- /.col -->
       </div>
-      <!-- /.row -->';
+      <!-- /.row -->';}
   if($estadisticasController->getTit_cumplaj()!=""){
       
        echo '<div class="row" >
@@ -439,11 +458,6 @@ function abrirVentana()
     </div>
 </section>
 
+<?php echo $estadisticasController->getMostrar()?>
 
 
-
-<script type="text/javascript">
-if(document.form1.tipo_reactivo.value!="")
-	MuestraOculta(document.form1.tipo_reactivo.value);
-
-</script>

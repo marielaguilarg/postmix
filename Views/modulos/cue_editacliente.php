@@ -7,12 +7,12 @@
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Edita cliente</h3>
+              <h3 class="box-title">EDITA CLIENTE</h3>
             </div>
             <div class="box-body">
              <form role="form" method="post">
               
-                <label for="NuevoCliente" class="col-sm-2 control-label">Nombre del cliente</label>
+                <label for="NuevoCliente" class="col-sm-2 control-label">NOMBRE DEL CLIENTE</label>
                 <div class="col-sm-10">
 <?php
 

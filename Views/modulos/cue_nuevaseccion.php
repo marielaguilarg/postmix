@@ -1,7 +1,14 @@
 <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1> NUEVA SECCION</h1>
-      
+    <ol class="breadcrumb" >
+
+<?php
+$ingreso = new seccionController();
+$ingreso -> vistaNomServicioController();
+?>        
+        
+</ol>  
     </section>
 
     <!-- Main content -->
@@ -26,19 +33,19 @@
               ?>
 
           <label>NOMBRE DE SECCION EN ESPAÑOL</label>
-           <input type="text" class="form-control" name="nomesp"  >
+           <input type="text" class="form-control" name="nomesp"  required>
            </div>
            <div class="form-group col-md-6">
            <label>NOMBRE DE SECCION EN INGLES</label>
-           <input type="text" class="form-control" name="noming"  >
+           <input type="text" class="form-control" name="noming"  required>
           </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN ESPAÑOL</label>
-           <input type="text" class="form-control" name="desesp" >
+           <input type="text" class="form-control" name="desesp" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="desing" >
+           <input type="text" class="form-control" name="desing" required>
            </div>
            <div class="form-group col-md-6">
           <label>ORDEN MENU INDICADORES</label>
@@ -60,7 +67,7 @@
               $registro-> botonRegresaSeccionController();
               //$registro->  actualizarSeccionController();
               ?>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                  </div>
 
                  <!-- Pie de formulario -->

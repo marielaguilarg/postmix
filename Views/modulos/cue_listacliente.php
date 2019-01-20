@@ -1,5 +1,5 @@
-<section class="content container-fluid">
- <h1>Clientes &nbsp; &nbsp;</h1>
+<section class="content-header">
+ <h1>CLIENTES &nbsp; &nbsp;</h1>
 
 <?php
 

@@ -14,19 +14,19 @@
                 <label >NOMBRE EN ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="sernombreesp" id="sernombreesp" class="form-control" value>
+                    <input name="sernombreesp" id="sernombreesp" class="form-control" value required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >NOMBRE EN INGLES</label>
                <div class="col-sm-10">
-                    <input name="sernombreing" id="sernombreing" class="form-control" >
+                    <input name="sernombreing" id="sernombreing" class="form-control" required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >CLIENTE</label>
                
-                    <select class="form-control" name="seridcliente" id="seridcliente" >
+                    <select class="form-control" name="seridcliente" id="seridcliente" required>
                     <option value="">-- Elija el cliente  --</option>
 
               <?php

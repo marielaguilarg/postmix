@@ -37,7 +37,7 @@ $analisisController->nuevoAnalisisMB();
     <section class="content container-fluid">
 
   <div class="box">
-       <form id="form1" name="form1" method="post" action="index.php?action=analisisFQ&tipo=MB&&admin=insertar&ntoma=<?php echo $analisisController->getNmues()?>" onSubmit="return validar();">
+       <form id="form1" name="form1" method="post" action="index.php?action=analisisFQ&tipo=<?php echo $tipo?>&admin=insertar<?php echo $tipo?>&ntoma=<?php echo $analisisController->getNmues()?>" onSubmit="return validar();">
           
             <div class="box-header">
 NUEVO REGISTRO

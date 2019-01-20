@@ -114,7 +114,7 @@ $repFacturaController=new RepFacturacionController;
     <div class="col-md-2">
     <label>CLIENTE :</label></div>
        <div class="col-md-4">
-       <select class="form-control" required id="claclien" name="claclien" onChange='cargaContenidoCliente(this.value)'>
+       <select class="form-control" id="claclien" name="claclien" onChange='cargaContenidoCliente(this.value)'>
    
       
           <?php foreach($repFacturaController->getCinsp() as $cinsp){ 
@@ -127,7 +127,7 @@ $repFacturaController=new RepFacturacionController;
     <div class="col-md-2">
     <label>SERVICIO :</label></div>
        <div class="col-md-4">
-   <select class="form-control"   id="idserv" name="idserv" required >
+   <select class="form-control"   id="idserv" name="idserv" >
     <option value='0'>- TODOS -</option>
   
       
