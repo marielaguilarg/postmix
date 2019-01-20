@@ -372,7 +372,7 @@ ins_detalleestandar.ide_claveservicio";
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
     
     	$stmt-> execute();
-    	//$stmt->debugDumpParams();
+    	
     	return $stmt->fetchAll();
     }
     

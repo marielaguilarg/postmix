@@ -19,17 +19,42 @@ class DatosUnegocio extends Conexion {
         return $stmt->fetchAll();
     }
 
-	public function vistaFiltroUnegocioModel($cta, $datosbus, $tabla){
+	public function vistaFiltroUnegocioModel($cta, $datosbus,$estado,$ciudad, $tabla){
 
-		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where cue_clavecuenta=:cta and une_descripcion LIKE :opbusqueda ");
-
-
-
+		$sql="SELECT une_id, une_descripcion, une_idpepsi,
+ une_idcuenta FROM $tabla
+where cue_clavecuenta=:cta and une_descripcion
+LIKE :opbusqueda ";
+	
+		// agregando filtros
+		if(isset($estado)&&$estado!="0") {
+			$sql.=" and ca_unegocios.une_dir_idestado=:estado";
+		
+		}
+		      
+		if(isset($ciudad)){
+			
+			if($ciudad!="") {
+				$sql.=" and ca_unegocios.une_dir_municipio=:ciudad";
+			
+			}
+		}
+		$stmt = Conexion::conectar()-> prepare($sql);
+		if(isset($estado)&&$estado!="0") {
+			
+			$stmt-> bindParam(":estado", $estado, PDO::PARAM_INT);
+		}
+		
+		if(isset($ciudad)){
+			
+			if($ciudad!="") {
+			
+				$stmt-> bindParam(":ciudad", $ciudad, PDO::PARAM_STR);
+			}
+		}
         $stmt->bindParam(":opbusqueda", $datosbus, PDO::PARAM_STR);
 		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);
         $stmt->execute();
-
-
 
         return $stmt->fetchAll();
     }
@@ -543,6 +568,8 @@ AND ca_unegocios.cue_clavecuenta =:cta";
 
         return $stmt->fetchAll();
     }
+    
+  
 
     public function unegociosxNivelxTipoMer($VarNivel2, $referencianivel, $tipoMercado, $cliente, $franquicia) {
 
@@ -809,6 +836,26 @@ WHERE ca_unegocios.cue_clavecuenta =:idcta and  fc_idfranquiciacta=:franqcuenta"
         return $stmt->fetchAll();
     }
 
+    
+    public function unegocioEstado($cta){
+    	$ssqe="SELECT ca_unegocios.une_dir_idestado, ca_uneestados.est_id,
+ ca_uneestados.est_nombre FROM ca_unegocios
+	Inner Join ca_uneestados ON ca_unegocios.une_dir_idestado = ca_uneestados.est_id
+ 	where cue_clavecuenta=:numcuen
+	group by ca_unegocios.une_dir_idestado";
+    	   	
+    	
+    	$stmt = Conexion::conectar()->prepare($ssqe);
+    	
+    	$stmt->bindParam(":numcuen", $cta,PDO::PARAM_INT);
+    	
+    	
+    	
+    	$stmt->execute();
+    	// $stmt->debugDumpParams();
+    	return $stmt->fetchAll();
+    	
+    }
 
 }
 
