@@ -22,10 +22,10 @@ class AnalisisController{
 		include "Utilerias/leevar.php";
 		
 		switch($admin) {
-			case "insertar" :
+			case "insertarMB" :
 				$this->insertarAnalisisMB();
 				break;
-			case "insdatFQ" :
+			case "insertarFQ" :
 				$this->insertarAnalisisFQ();
 				break;
 			case "eliminar" :
@@ -304,7 +304,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 		$i=1;
 		foreach ($rsd as $rowd){
 			
-				$tipocampo="<td height='30' class='subtitulo3p'>".$i."</td>";
+				$tipocampo="<td height='30' >".$i."</td>";
 		
 			//verifico para no poner el campo de volumenes de CO2
 			if($idserv==1&&$secc=="8.0.2.0.0"&& $rowd["red_numcaracteristica2"]==9)
@@ -324,19 +324,19 @@ ins_detalleestandar.ide_numcomponente =:componente";
 									$opcionc=$opcionc."<option value=".$rowca[cad_idopcion].">".$rowca[cad_descripcionesp]."</option>";
 								}
 							}
-							$tipocampo="<td  height='30' title='".$rowd["red_refinternacinal"]."'><select name='desc".$rowd['red_numcaracteristica2']."' id='desc".$rowd['red_numcaracteristica2']."'>".$opcionc."</select></div></td>";
+							$tipocampo="<td  height='30' title='".$rowd["red_refinternacinal"]."'><select name='desc".$rowd['red_numcaracteristica2']."' id='desc".$rowd['red_numcaracteristica2']."'>".$opcionc."</select></td>";
 							break;
 						case "E" :
-							$tipocampo="<td height='30'  title='".$rowd["red_refinternacinal"]."'><input type='checkbox' name='desc".$rowd['rad_numcaracteristica2']."'></div></td>";
+							$tipocampo="<td height='30'  title='".$rowd["red_refinternacinal"]."'><input type='checkbox' name='desc".$rowd['rad_numcaracteristica2']."'></td>";
 							break;
 						default:
-							$tipocampo="<td  height='40'  title='".$rowd["red_refinternacinal"]."'><input name='desc".$rowd['red_numcaracteristica2']."' type='text' size='15'></div></td>";
+							$tipocampo="<td  height='40'  title='".$rowd["red_refinternacinal"]."'><input name='desc".$rowd['red_numcaracteristica2']."' type='text' size='15'></td>";
 					}
 					$estandar="<td  height='40'  title='".$rowd["red_metodopepsi"]."'>".$rowd["red_estandar"]."</td>";
 					
 				//	$documentoay= "<a href='MEZprincipal.php?op=Tana&admin=impayMB&n=:=".$row["mue_idmuestra"]."' tabindex='-1'><img src='../img/agregar.gif' width='27' height='21' border='0'></a>";
 					
-				//	$celdadoc="<td class='subtitulo3p'>".$documentoay."</div></td>";
+				//	$celdadoc="<td >".$documentoay."</td>";
 					
 					
 						$tipocampo=$estandar.$tipocampo."</tr>";
@@ -349,7 +349,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 		}
 
 		
-		$this->Nmues=$ntoma;
+		//$this->Nmues=$ntoma;
 		
 	}
 	
@@ -414,18 +414,17 @@ cue_reactivosestandardetalle.re_numcomponente =  :idcomp";
 		$rsd=Conexion::ejecutarQuery($sqld,array("idserv"=>$idserv,"idcomp"=>$idcomp));
 		$i=1;
 		foreach( $rsd as $rowd){
-			if (($i % 2)>0) {
-				$tipocampo="<tr><td height='30' class='subtitulo3p'>".$i."</td>";
-			} else {
-				$tipocampo="<td height='30' class='subtitulo3p'>".$i."</td>";
-			}
+			
+				//$tipocampo="<tr>";
+				$tipocampo="<td >".$i."</td>";
+			
 			//verifico para no poner el campo de volumenes de CO2
 			if($idser==1&&$secc=="8.0.2.0.0"&& $rowd["red_numcaracteristica2"]==9)
 				continue;
 				if($idser==1&&$secc=="8.0.1.0.0"&& $rowd["red_numcaracteristica2"]==9)
 					continue;
-					$this->listaEstandar[]= $tipocampo."<td  height='30' width='15%' class='subtitulo3p'>
-<div align='right'><span class='EtiAreatxt'>".$rowd["red_parametroesp"]." :   "."</div></td>";
+					$tipocampo= $tipocampo."<td   >
+".$rowd["red_parametroesp"]." :   "."</td>";
 					switch ($rowd['red_tipodato']){
 						case "C" :
 							// busca el catalogo
@@ -444,26 +443,26 @@ cue_reactivosestandardetalle.re_numcomponente =  :idcomp";
 									$opcionc=$opcionc."<option value=".$rowca[cad_idopcion].">".$rowca[cad_descripcionesp]."</option>";
 								}
 							}
-							$tipocampo="<td  height='30' class='subtitulo3p' title='".$rowd["red_refinternacinal"]."'><div align='center'><select name='desc".$rowd['red_numcaracteristica2']."' id='desc".$rowd['red_numcaracteristica2']."'>".$opcionc."</select></div></td>";
+							$tipocampo2="<td  height='30'  title='".$rowd["red_refinternacinal"]."'><select name='desc".$rowd['red_numcaracteristica2']."' id='desc".$rowd['red_numcaracteristica2']."'>".$opcionc."</select></td>";
 							break;
 						case "E" :
-							$tipocampo="<td height='30' width='10%' class='subtitulo3p' title='".$rowd["red_refinternacinal"]."'><div align='center'><input type='checkbox' name='desc".$rowd['rad_numcaracteristica2']."'></div></td>";
+							$tipocampo2="<td height='30'  title='".$rowd["red_refinternacinal"]."'><input type='checkbox' name='desc".$rowd['rad_numcaracteristica2']."'></td>";
 							break;
 						default:
-							$tipocampo="<td  height='40' width='10%' class='subtitulo3p' title='".$rowd["red_refinternacinal"]."'><div align='center'><input name='desc".$rowd['red_numcaracteristica2']."' type='text' size='15'></div></td>";
+							$tipocampo2="<td  height='40' title='".$rowd["red_refinternacinal"]."'><input name='desc".$rowd['red_numcaracteristica2']."' type='text' size='15'></td>";
 					}
-					$estandar="<td  height='40' width='20%' class='subtitulo3p' title='".$rowd["red_metodopepsi"]."'><div align='center'><span class='subtitulo3p'>".$rowd["red_estandar"]."</div></td>";
+					$estandar="<td  height='40'  title='".$rowd["red_metodopepsi"]."'><span >".$rowd["red_estandar"]."</td>";
 					
 					$documentoay= "<a href='MEZprincipal.php?op=Tana&admin=impayFQ&ntoma=".$rowd["mue_idmuestra"]."' tabindex='-1'><img src='../img/agregar.gif' width='27' height='21' border='0'></a>";
 					
-					$celdadoc="<td class='subtitulo3p'><div align='center'>".$documentoay."</div></td>";
+					$celdadoc="<td >".$documentoay."</td>";
 					
-					if (($i % 2)>0) {
-						$tipocampo=$estandar.$tipocampo;
-					}else{
-						$tipocampo=$estandar.$tipocampo."</tr>";
-					}
 					
+						$tipocampo.=$estandar.$tipocampo2;
+					
+						//$tipocampo=$tipocampo."</tr>";
+					
+				
 					
 					$this->listaEstandar[] =$tipocampo;
 					
@@ -512,7 +511,7 @@ cue_reactivosestandardetalle.re_numcomponente =  :idcomp";
 			
 // 			$this->listaEstandar[]= "<td  height='30' width='50%'class='EtiAreatxt'><span class='EtiAreatxt'>".$rowd["pa_nomprueba"]." :   "."</td>";
 			
-// 			$tipocampo="<td  height='30' width='60%'><div align='left'><input name='desc".$rowd['pa_numprueba']."' type='text'></div></td>";
+// 			$tipocampo="<td  height='30' width='60%'><div align='left'><input name='desc".$rowd['pa_numprueba']."' type='text'></td>";
 // 			$this->listaEstandar[]=  $tipocampo;
 		
 // 		}
@@ -534,7 +533,7 @@ AND ins_detalleestandar.ide_numseccion = cue_secciones.sec_numseccion
 WHERE cue_secciones.sec_indagua =  '1' AND
 ins_detalleestandar.ide_idmuestra =:ntoma
 GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
-				
+	//		echo $sqlfq."--".$ntoma;	
 		$rsfq=Conexion::ejecutarQuery($sqlfq,array("ntoma"=>$ntoma));
 		
 		if(sizeof($rsfq)!=0) {   // existen resultados de analisis
@@ -557,7 +556,7 @@ cue_secciones.sec_indagua =  '1' AND
 cue_reactivosestandardetalle.re_numcomponente =:ncomp AND
 aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 		
-		//echo $sqltr;
+	//	echo $sqltr;
 		
 		$rsc=Conexion::ejecutarQuery($sqltr,array("idserv"=>$idserv,"ncomp"=>$ncomp));
 		
@@ -573,7 +572,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 				$valcom=${$nomcam};
 				
 			}
-			
+			echo $valcom;
 			if($valcom!=""){
 				$band=1;
 				if (is_numeric($valcom)) {
@@ -1056,7 +1055,7 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 					//  2.- guarda o actualiza la seccion
 					// if ($operac=="nueva") {
 					$numcar2=$rowc['red_numcaracteristica2'];
-					  echo "otra ".$valcom."  --";
+					
 					
 					if(strlen($valcom)>0){
 						   //    echo "otra2 ".$valcom."  --";
@@ -1144,7 +1143,7 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 	
 	public function insertarAnalisisFQ(){
 		include "Utilerias/leevar.php";
-		$ntoma=$nmuestra;
+		//$ntoma=$nmuestra;
 		
 	
 		
@@ -1158,6 +1157,7 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		
 		
 		$rsfq=DatosEst::ConsultaAgua($ntoma);
+	//	var_dump($rsfq);
 		if(sizeof($rsfq)!=0) {   // existen resultados de analisis
 			foreach ( $rsfq as  $rownr){
 				$numren=$rownr['ide_numrenglon'];
@@ -1190,7 +1190,7 @@ cue_secciones.sec_indagua =  '1' AND
 cue_reactivosestandardetalle.re_numcomponente =:ncomp AND
 aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 		
-		//echo $sqltr;
+		//echo $sqltr."--".$idserv."--".$ncomp;
 		try{
 		$rsc=Conexion::ejecutarQuery($sqltr, array("idserv"=>$idserv,"ncomp"=>$ncomp));
 		foreach ($rsc as $rowc){
@@ -1204,7 +1204,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 				$valcom=${$nomcam};
 				
 			}
-			
+		//	echo "********".$valcom;
 			if($valcom!=""){
 				$band=1;
 				if (is_numeric($valcom)) {

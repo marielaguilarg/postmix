@@ -4,7 +4,7 @@ class UsuarioController{
 	public function validarUsuarioController(){
 		//var_dump(($_POST["g-recaptcha-response"]));
 			//echo "validausuario";
-		//if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
+		if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
 			//echo "entre a validacion de captcha";
 						// validar el captcha
 			//$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
@@ -35,9 +35,9 @@ class UsuarioController{
 
 			$json = json_decode($output, TRUE);
 	       
-// 	       if ($json ["success"]==TRUE)
-// 	       //IF ($json)
-// 	       {
+	       if ($json ["success"]==TRUE)
+	       //IF ($json)
+	       {
 		       	//echo "si eres humano";
 		       		# vamos a validar el mail y el password
 	       		$logemail=$_POST["logemail"];
@@ -80,15 +80,15 @@ class UsuarioController{
 					
 					header("location:index.php");
 					
-// 				} else {
-// 						echo "El usuario o la contrasena son incorrectos";
-// 				} 	    
+				} else {
+						echo "El usuario o la contrasena son incorrectos";
+				} 	    
 	       	 	
 	       }  else {
 	       		       }
-// 	     } else {
-// 	     	//echo "no paso el captcha";	
-// 		}  // captcha
+	     } else {
+	     	//echo "no paso el captcha";	
+		}  // captcha
 	}	
 
 	

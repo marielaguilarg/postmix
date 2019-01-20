@@ -9,7 +9,12 @@ public function vistanomservController(){
 }
 
 public function vistaNomServicioController(){
-    $numser = $_GET["idser"];
+    if (isset($_GET["idser"])) {
+	$numser = $_GET["idser"];
+	}
+	if (isset($_GET["sv"])) {
+	$numser = $_GET["sv"];
+	}
     #buscar el nombre del servicio
     $respuesta =DatosServicio::vistaNomServicioModel($numser,"ca_servicios");
 
@@ -32,7 +37,7 @@ public function vistaNomServSeccController(){
 
     $respuesta =DatosSeccion::vistaSeccionModel($numser,"cue_secciones");
 
-echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevaseccion&idser='.$numser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevaseccion&idser='.$numser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>
 
@@ -64,12 +69,12 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
               	  <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
                     <input type="hidden" name="idsereditar" value="'.$item["sec_tiposeccion"].'">
-                      <li><a href="#"><strong>Sección:</strong> '. $item["sec_nomsecesp"].'</a></li>
+                      <li><a href="#"><strong>SECCION:</strong> '. $item["sec_nomsecesp"].'</a></li>
                     </ul>
                 </div>
                  <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                      <li><a href="index.php?action=editaseccion&id='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'"><strong>Descripción:</strong> '. $item["sec_descripcionesp"].'</a></li>
+                      <li><a href="index.php?action=editaseccion&id='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'"><strong>DESCRIPCION:</strong> '. $item["sec_descripcionesp"].'</a></li>
                     </ul>
                 </div>
               </div>
@@ -97,7 +102,7 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
 				
       <div class="box-footer no-padding col-sm-6">
                     <ul class="nav nav-stacked">
-                      <li><a href="index.php?action=ponderaseccion&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'"><strong> Ponderación  </strong>    %</a></li>
+                      <li><a href="index.php?action=ponderaseccion&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'"><strong> PONDERACION  </strong>    %</a></li>
                     </ul>
                 </div>
         </div>      
@@ -105,7 +110,7 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
                  
-                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'"> Detalle </a></span></button>
+                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'"> DETALLE </a></span></button>
 
 
                   </div>
@@ -114,7 +119,7 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
-                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">Comentario </a></span></button>
+                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">COMENTARIO </a></span></button>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -150,19 +155,19 @@ public function editarSeccionController(){
           <input type="hidden" name="idsersec" value="'.$respuesta["ser_claveservicio"].'">
           <input type="hidden" name="idseced" value="'.$respuesta["sec_numseccion"].'">
            <label>NOMBRE DE SECCION EN ESPAÑOL</label>
-           <input type="text" class="form-control" name="nomesp" value="'.$respuesta["sec_nomsecesp"].'" >
+           <input type="text" class="form-control" name="nomesp" value="'.$respuesta["sec_nomsecesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>NOMBRE DE SECCION EN INGLES</label>
-           <input type="text" class="form-control" name="noming" value="'.$respuesta["sec_nomsecing"].'" >
+           <input type="text" class="form-control" name="noming" value="'.$respuesta["sec_nomsecing"].'" required>
           </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN ESPAÑOL</label>
-           <input type="text" class="form-control" name="desesp" value="'.$respuesta["sec_descripcionesp"].'" >
+           <input type="text" class="form-control" name="desesp" value="'.$respuesta["sec_descripcionesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="desing" value="'.$respuesta["sec_descripcioning"].'" >
+           <input type="text" class="form-control" name="desing" value="'.$respuesta["sec_descripcioning"].'" required>
            </div>
            <div class="form-group col-md-6">
           <label>ORDEN MENU INDICADORES</label>
@@ -183,8 +188,8 @@ public function editarSeccionController(){
            <input type="checkbox" name="indmues" id="indmues" '. $indagua .' />
             </div> 
            <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaseccion&idser='.$respuesta["ser_claveservicio"].'"> Cancelar </a></button>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaseccion&idser='.$respuesta["ser_claveservicio"].'"> CANCELAR </a></button>
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                  </div>';
                
 
@@ -216,7 +221,7 @@ public function editarSeccionController(){
        // if($respuesta=="success"){
           echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=listaseccion&idser=".$_POST["idsersec"]."
+              window.location='index.php?action=listaseccion&idser=".$_POST["idsersec"]."'
                 </script>
                   ";
         //} else {
@@ -230,7 +235,7 @@ public function editarSeccionController(){
 public function botonRegresaSeccionController(){
     
 $datosController = $_GET["idser"];  
-   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaseccion&idser='.$datosController.'"> Cancelar </a></button>';
+   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaseccion&idser='.$datosController.'"> CANCELAR </a></button>';
 }
 
 
@@ -270,13 +275,14 @@ public function registrarSeccionController(){
                               ); 
           
           $respuesta=DatosSeccion::registrarSeccionModel($datosController, "cue_secciones");
-           echo $respuesta; 
+           //echo $respuesta; 
         if($respuesta=="success"){
             echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=listaseccion&idser=".$datosServicio."
+              window.location='index.php?action=listaseccion&idser=".$datosServicio."'
                 </script>
                   ";
+				    
         } else {
           echo "error";
         }
@@ -685,6 +691,190 @@ public function vistanomRservController(){
   //}
 }
 
+public function ingresaimagen(){
+      //$ser = $_GET["sv"];
+      //$sec = $_GET["sec"];
+  
+    echo '
+<div class="row">
+   <div class="col-md-12">
+    <div class="box box-info">
+    <div class="box-header with-border">ARCHIVOS</div>
+    <div class="box-body">  
+    <div class="row">
+<div class="col-md-12">
+<form  name="bform"  method="post" enctype="multipart/form-data"> 
+
+   <div class="form-group">
+    <input type="hidden" name="servicio" size="20" maxlength="100" value="'.$idserv.'">
+   <input type="hidden" name="reporte" size="20" maxlength="100" value="'.$nsol.'">
+    <input type="hidden" name="MAX_FILE_SIZE" value="600000">                     
+   
+   <input class="form-control-file"  type="file" name="pictures1" id="pictures1" accept="image/gif,image/jpeg,image/x-png" />
+   <br /> 
+   Descripci&oacute;n 1 : 
+   <input type="text" name="descripcion1" id="descripcion1" class="campoTxt" size="100" maxlength="500"   />
+
+   <br />
+   Incluir en Certificado:   <input name="incluir1" type="checkbox"/><br />
+<br />
+<input class="form-control-file"  type="file" name="pictures2" id="pictures2" accept="image/gif,image/jpeg,image/x-png" />
+   <br /> 
+   Descripci&oacute;n 2 : 
+   <input type="text" name="descripcion2" id="descripcion2" class="campoTxt" size="100" maxlength="500"   />
+
+   <br />
+   Incluir en Certificado:   <input name="incluir2" type="checkbox"/><br />
+    <br />
+   <input class="form-control-file"  type="file" name="pictures3" id="pictures3" accept="image/gif,image/jpeg,image/x-png" />
+   <br /> 
+   Descripci&oacute;n 3 : 
+   <input type="text" name="descripcion3" id="descripcion3" class="campoTxt" size="100" maxlength="500"   />
+
+   <br />
+   Incluir en Certificado:   <input name="incluir3" type="checkbox"/><br />
+
+
+
+</div> <div class="form-group">
+   <button type="submit" name="submit"  class="btn btn-info pull-right"> Guardar   </button>
+        
+</div> 
+  </form> </div></div>       
+         <div class="row">     
+          <div class="col-md-12 table-responsive">         
+       <table class="table">    
+<tr>             
+<th>No.</th><th>NOMBRE</th></tr>';
+
+//           $rsar=DatosSolicitud::listaSolicitudDetalle($nsol,$idserv,"cer_solicituddetalle");
+        
+          //$band=1;
+  //        foreach($rsar as $rowa){
+   //           $detalle=array();
+    //          $detalle['id_arc_exist']='<tr><td >'.$rowa["sde_idarchivo"].'</td>';
+     //         $detalle['arc_exist']="<td >".
+       //           "<a href='imprimirReporte.php?admin=descarc&nserv=".$idserv."&nsol=".$nsol."&narc=".
+      //            $rowa["sde_idarchivo"] ."'>".$rowa["sde_ruta"]."</a></td></tr>";
+      //        $this->listaSolDet[]=$detalle;
+             // $html->expandir ( 'ARCHIVOS_EX', '+PanelbusquedaA' );
+      //    }
+       //   $this->listaSolDet[]=array('id_arc_exist'=>"</table></div></div>");
+
+
+echo '
+                    </table></div></div>
+    </div>
+</div>           
+</div>
+</div>
+';
+
+  }
+
+
+ public function subeimagen(){
+        define('RAIZ',"../fotografias");
+
+              //echo $ncuenta;
+              include ('Utilerias/leevar.php');
+              $carpeta=verificaCarpeta($servicio,$reporte);
+             if($carpeta!=-1)
+             {
+               $ban=0;
+               $contdes=1; /* para los campos de descripcion*/      // valida si hay archivo para ingresar
+          
+               foreach ( $_FILES ["pictures"] ["error"] as $key => $error ) {
+            $name = $_FILES ["pictures"] ["name"] [$key];
+            if ($error == UPLOAD_ERR_OK) {
+
+                $tmp_name = $_FILES ["pictures"] ["tmp_name"] [$key];
+
+
+
+                $uploadfile =RAIZ."/".$carpeta . '/'.basename ( $name );
+                if(!is_file($uploadfile))
+                 {
+                    $tipo=$_FILES["pictures"]["type"] [$key];
+                    if($tipo=='image/gif'||$tipo=='image/jpeg'||$tipo=='image/x-png'||$tipo=='image/pjpeg'||$tipo=='application/octet-stream')
+                        {if (@move_uploaded_file ( $tmp_name, $uploadfile )) {
+                            $des="descripcion".$contdes;
+              $presen="incluir".$contdes;
+              if ($$presen) { 
+                                $pres=-1;
+              } else {
+                  $pres=-0;
+              }
+                            InsertaImagenDetalle($servicio, $reporte, $seccion, $reactivo, $carpeta . '/'.basename ( $name ),$$des,$pres);
+                            //me regreso
+                           
+                          //  echo "<br>El archivo '" . $name . "' fue cargado exitosamente.\n";
+                            //guardar en la bd
+
+                        } else {    echo '<div align="center">';
+                            echo "<br><h2>Error al cargar el archivo, intenta de nuevo</h2>";
+                            $ban=1;
+
+                        }}
+                    else
+                        {    echo '<div align="center">';
+                         echo "<br><h2>El archivo '" . $name . "' no es válido.\n</h2>";
+                         $ban=1;
+                        }
+                    }
+                else
+                   {     echo '<div align="center">';
+                    echo "<br><h2>La imagen '" . $name . "' ya existe</h2>";
+                    $ban=1;
+                   }
+
+            }
+            else if ($error == UPLOAD_ERR_FORM_SIZE) {
+                 echo '<div align="center">';
+                echo '<br><h2>El archivo "' . $name . '" excede el tamaño maximo</h2>';
+                $ban=1;
+            }else
+            if ($error == UPLOAD_ERR_CANT_WRITE) {
+                 echo '<div align="center">';
+                echo '<br><h2>No se encontró el directorio especificado</h2>';
+                $ban=1;
+            }
+            $contdes++;
+        } //termin
+      }
+ }
+
+ function verificaCarpeta($servicio,$reporte)
+            {
+                
+                
+                $ruta=$servicio."/".$reporte;
+                
+                if(!is_dir(RAIZ."/".$servicio))
+                {
+                    try{
+                        mkdir(RAIZ."/".$ruta,0777,true);
+                    }
+                    catch(Exception $ex){
+                        throw  $ex;
+                        
+                    }
+                }
+                
+                if(!is_dir(RAIZ."/".$servicio."/".$reporte))
+                {
+                    // creo la carpeta
+                    try{
+                        mkdir(RAIZ."/".$ruta,0777,true);
+                    }
+                    catch(Exception $ex){
+                        throw  $ex;
+                        
+                    }
+                }
+                
+                return $ruta; //si existe
+          }
 
 
 }

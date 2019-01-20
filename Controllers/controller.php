@@ -117,8 +117,8 @@ class MvcController{
 		$datosController = $_GET["id"];
 		$respuesta = Datos::editarClienteModel($datosController, "ca_clientes");
 	    	
-			echo '<input type="hidden" name="ideditar" value="'.$respuesta["cli_id"].'">
-				 <input name="nombreeditar" id="nombreeditar" class="form-control" value="'.$respuesta["cli_nombre"].'">';	
+			echo '<input type="hidden" name="ideditar" value="'.$respuesta["cli_id"].'" >
+				 <input name="nombreeditar" id="nombreeditar" class="form-control" value="'.$respuesta["cli_nombre"].'" required>';	
 	}	
 	public function actualizarClienteController(){
 		

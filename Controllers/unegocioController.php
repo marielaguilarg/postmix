@@ -39,6 +39,7 @@ private $tel;
 private $numpunto;
 private $cuenta;
 private $mensaje;
+private $ciudades;
 
 public function vistaunegocioController() {
 	$admin=filter_input(INPUT_GET, "admin",FILTER_SANITIZE_STRING);
@@ -46,7 +47,7 @@ public function vistaunegocioController() {
 		if($admin=="ins")
 			$this->registroUnegocioController();
     $idc=$_GET["idc"];
-		$page_size=100;
+		$page_size=20;
 if (isset($_GET["pages"])) {
 $pages = $_GET["pages"];
 $init = ($pages - 1) * $page_size;
@@ -56,13 +57,19 @@ $pages = 1;
 }
 		$totuneg=Datosunegocio::cuentaUnegocioModel($idc, "ca_unegocios");
 $totpages = ceil($totuneg / $page_size);
+$estado=filter_input(INPUT_POST, "estado",FILTER_SANITIZE_STRING);
+$ciudad=filter_input(INPUT_POST, "ciudad",FILTER_SANITIZE_STRING);
+if (isset($_POST["opcionuneg"])||$estado!=0) 
+{
 
-if (isset($_POST["opcionuneg"])) {
-$op = "%" . $_POST["opcionuneg"] . "%";
-//echo $op;
-$respuesta = Datosunegocio::vistaFiltroUnegocioModel($op, "ca_unegocios");
-} else {
-			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idc, "ca_unegocios");
+ 
+ 	$op = "%" . $_POST["opcionuneg"] . "%";
+
+	$respuesta = Datosunegocio::vistaFiltroUnegocioModel($idc, $op,$estado,$ciudad, "ca_unegocios");
+	$totpages = ceil(sizeof($respuesta)/ $page_size);
+}
+	else{
+		$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idc, "ca_unegocios");
 }
 
 
@@ -117,7 +124,7 @@ echo '</ul>
 
 
 public function vistarunegocioController() {
-	$page_size=100;
+	$page_size=30;
 $sv = $_GET["sv"];
   $idcta=$_GET["idc"];
 if (isset($_GET["pages"])) {
@@ -129,12 +136,18 @@ $pages = 1;
 }
 		$totuneg=Datosunegocio::cuentaUnegocioModel($idcta,"ca_unegocios");
 $totpages = ceil($totuneg / $page_size);
-
-if (isset($_POST["opcionuneg"])) {
+$estado=filter_input(INPUT_POST, "estado",FILTER_SANITIZE_STRING);
+$ciudad=filter_input(INPUT_POST, "ciudad",FILTER_SANITIZE_STRING);
+if (isset($_POST["opcionuneg"])||$estado!=0) {
 $op = "%" . $_POST["opcionuneg"] . "%";
 //echo $op;
-			$respuesta =Datosunegocio::vistaFiltroUnegocioModel($idcta, $op, "ca_unegocios");
-} else {
+
+	$respuesta =Datosunegocio::vistaFiltroUnegocioModel($idcta, $op, $estado,$ciudad,"ca_unegocios");
+	$totpages = ceil(sizeof($respuesta)/ $page_size);
+
+} else
+
+{
 			$respuesta =Datosunegocio::vistaUnegocioModel($init,$page_size, $idcta, "ca_unegocios");
 }
 
@@ -759,6 +772,68 @@ $lista[] = "<option value='" . $item["n" . $nivel . "_id"] . "'>" .  $item["n" .
 return $lista;
 }
 
+public function iniciarFiltros(){
+	include "Utilerias/leevar.php";
+	$numcuen=$idc;
+	if ($numcuen) {
+		if (!isset($_SESSION['cuenta'])) {
+			$_SESSION['cuenta']=$numcuen;
+		} else {
+			$_SESSION['cuenta']=$numcuen;
+		}
+	}else {
+		$numcuen=$_SESSION['cuenta'];
+	}
+	
+	//        echo $ssqe;
+	$rse=DatosUnegocio::unegocioEstado($numcuen);
+	$cad="";
+	foreach($rse as $row) {
+		
+		//preselecciono el estado
+		if($estado==$row["est_id"])
+			$cad=$cad."<option value=\"".$row["est_id"]."\" selected >".
+			$row["est_nombre"]."</option>";
+			else
+				$cad=$cad."<option value=\"".$row["est_id"]."\" >".
+				$row["est_nombre"]."</option>";
+				
+	}
+	$this->listaEstados=$cad;
+	
+	//busca ciudades
+	
+	$sqlc="SELECT ca_unegocios.une_dir_municipio FROM
+ca_unegocios where cue_clavecuenta=:numcuen ";
+	$parametros["numcuen"]=$numcuen;
+	if(isset($estado)&&$estado!="0")//si ya hay seleccionado un estado
+	{	$sqlc.=" and une_dir_idestado=:estado";
+		$parametros["estado"]=$estado;
+	}
+		
+		$sqlc.=" group by ca_unegocios.une_dir_municipio";
+		
+		//echo $sqlc;
+		$rs=Conexion::ejecutarQuery($sqlc,$parametros);
+		$cad="";
+		foreach ($rs as $row) {
+			
+			if(isset($ciudad)&&$ciudad==$row["une_dir_municipio"])		//si ya hay selec una ciudad
+				$cad=$cad."<option value=\"".$row["une_dir_municipio"]."\" selected >".
+				$row["une_dir_municipio"]."</option>";
+				else
+					$cad=$cad."<option value=\"".$row["une_dir_municipio"]."\" >".
+					$row["une_dir_municipio"]."</option>";
+					
+		}
+		
+		$this->ciudades=$cad;
+		
+		//                        $html->asignar('refer',$idclien.'.'.$idserv.".".$cve_cuenta);
+		$this->ref=$numcuen;
+	
+}
+
 public function listaClientesCuentas(){
     $respuesta =DatosCuenta::listaClientesModel("ca_clientes");
 
@@ -1085,6 +1160,20 @@ function setListaCuentas($listaCuentas) {
 	public function setMensaje($mensaje) {
 		$this->mensaje = $mensaje;
 	}
+	/**
+	 * @return mixed
+	 */
+	public function getCiudades() {
+		return $this->ciudades;
+	}
+
+	/**
+	 * @param mixed $ciudades
+	 */
+	public function setCiudades($ciudades) {
+		$this->ciudades = $ciudades;
+	}
+
 
 
 

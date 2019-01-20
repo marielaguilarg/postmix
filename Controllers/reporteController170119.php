@@ -84,7 +84,7 @@ class ReporteController{
 	                <!-- /.col -->
 	                <div class="col-sm-4">
 	                  <div class="description-block">
-	                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts=IM&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"><i class="fa fa-image"></i></a></button>
+	                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=repimg&idb='.$item["sec_numseccion"].'&idser='.$item["ser_claveservicio"].'"><i class="fa fa-image"></i></a></button>
 	                  </div>
 	                  <!-- /.description-block -->
 	                </div>
@@ -176,10 +176,7 @@ class ReporteController{
 			  $ingreso -> nuevoReporteabierta();
 			  //$ingreso -> insertaReporteEstandar();
 			  break;
-			case "IM" :
-		       $ingreso = new seccionController();
-			   $ingreso -> ingresaimagen();
-			   break;   
+			   
 		    case "V" :       
 		       $ingreso = new ProductoController();
 			   $ingreso -> reporteProductoController();

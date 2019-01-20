@@ -44,7 +44,7 @@ class ResumenResultadosController {
                 //error_log("variable $key_get viene desde $ _GET"); 
             }
         }
-        $rescon=false;
+        $rescon=true;
         if($action=="indhistorialreportes")
         	$rescon=true;
         else

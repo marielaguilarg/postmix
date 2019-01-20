@@ -269,7 +269,7 @@ Inner Join ca_inspectores ON ins_generales.i_claveinspector = ca_inspectores.ins
 WHERE
 ins_generales.i_claveservicio =".$servicio." AND
 ins_generales.i_numreporte = :numrep";
-        //echo $ssql;
+
         $rs=Conexion::ejecutarQuery($ssql,array("numrep"=>$numrep));
        //die();
         foreach($rs as $row) {
@@ -421,12 +421,13 @@ ins_detalle Inner Join cue_reactivos ON  ins_detalle.id_numseccion = cue_reactiv
 WHERE ins_detalle.id_claveservicio =  :servicio AND ins_detalle.id_numseccion = :seccion AND
 ins_detalle.id_numreporte = :numrep";
         $rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$servicio,"seccion"=>5,"numrep"=>$numrep));
-     
+   
        $i=173;
         $j=174;
         $x=1;
         foreach($rs as $row) {
             // RECUADRO CINCO
+           
             if ($x<=3) {
                 $pdf->Rect(15,$i,175,10,F);
                 $pdf->Rect(195,$i+2,12,6,F);
@@ -441,7 +442,7 @@ ins_detalle.id_numreporte = :numrep";
                     $pdf->SetTextColor(255, 0,0);
                     $resas="NO";
                 }
-                
+              
                 $pdf->SetY($j+3);
                 $pdf->SetX(199);
                 $pdf->MultiCell(8,2,$resas, 0 ,'L', TRUE);
@@ -471,7 +472,9 @@ ins_detalle.id_numreporte = :numrep";
                 $pdf->MultiCell(8,2,$resas, 0 ,'L', TRUE);
                 $pdf->SetTextColor(0, 0,0);
             }
+            if($x==4)break;
         }
+       
         
         // pagina 2
         
@@ -594,7 +597,7 @@ ON  ide_idmuestra=mue_idmuestra";
         // detalle de muestra de agua
         $pdf->SetFont('Arial','',8);
         
-        
+
         if ($nversion==1) {
             // nuevo formato
             /*$ssql="SELECT ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion,ins_detalleestandar.ide_valorreal, ins_detalleestandar.ide_idmuestra, cue_reactivosestandardetalle.red_estandar, cue_reactivosestandardetalle.red_parametroesp, ins_detalleestandar.ide_numcaracteristica3,cue_reactivosestandardetalle.red_clavecatalogo, cue_reactivosestandardetalle.red_tipodato, ins_detalleestandar.ide_aceptado FROM ins_detalleestandar Inner Join cue_reactivosestandardetalle ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1 AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2 AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3
@@ -708,6 +711,7 @@ ins_detalleestandar.ide_claveservicio =  ".$servicio." AND ins_detalleestandar.i
 cue_secciones.sec_indagua =  '1' AND ins_detalleestandar.ide_numrenglon =  '1'
 ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
             $rs=Conexion::ejecutarQuery($ssql,array("numrep"=>$numrep));
+          
             $i=86;
             $j=87;
             $np=1;
@@ -795,7 +799,7 @@ ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
                         break;
                 }
                 
-                
+               
                 $pdf->SetFillColor(184,211,235);
                 $pdf->Rect(13,$i,14,6,F);
                 $pdf->SetY($j);
@@ -813,6 +817,7 @@ ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
                 $pdf->multiCell(58,4,$nomestandar, 0, 'C' , TRUE);
                 
                 $tipocat=$row["red_tipodato"];
+          
                 switch ($tipocat) {
                     case "C" :
                         //            $valop=round($row["ide_valorreal"],1);
@@ -821,15 +826,16 @@ ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
                         $valop=$row["ide_valorreal"];
                         $numcat=$row["red_clavecatalogo"];
                         // busca el valor en el catalogo
-                       
-                        $valreal=DatosCatalogoDetalle::getCatalogoDetalle($numcat,$valop,"ca_catalogosdetalle");
-                       
+                     
+                        $valreal=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$numcat,$valop);
+                     
                         break;
                     case "N" :
                         $numreac=$row["ide_numcaracteristica3"];
                         $valreal=round($row["ide_valorreal"],3);
                         break;
                 }
+               
                 $pdf->SetFillColor(216,231,243);
                 $pdf->Rect(149,$i,58,6,F);
                 if ($row["ide_aceptado"]) {
@@ -837,6 +843,7 @@ ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
                 }else{
                     $pdf->SetTextColor(255, 0,0);
                 }
+           
                 if (($row["ide_numcaracteristica3"]==14) || ($row["ide_numcaracteristica3"]==21)) {
                     $pdf->SetFont('Arial','',7);
                 } else {
@@ -850,15 +857,16 @@ ORDER BY ins_detalleestandar.ide_numcaracteristica3 ASC";
                 }else{
                     $pdf->multiCell(58,4,$valreal, 0, 'C' , TRUE);
                 }
-                
+               
                 $i=$i+8;
                 $j=$j+8;
                 $pdf->SetTextColor(0, 0,0);
                 $pdf->SetFont('Arial','',8);
                 $np++;
             }
+          
         }
-        // pagina 3
+        // pagina 4
         
         
         $pdf->AddPage();
@@ -876,6 +884,7 @@ WHERE ins_detalle.id_claveservicio =  '3' AND ins_detalle.id_numreporte =  '$num
 GROUP BY ins_detalle.id_numreactivo";
         
         $rs=DatosPond::listaReactivos($servicio,2,$numrep);
+    
        $i=69;
         $j=70;
         foreach($rs as $row) {
@@ -915,7 +924,7 @@ GROUP BY ins_detalle.id_numreactivo";
         
         
         
-        // pagina 4
+        // pagina 5
         
         $pdf->AddPage();
         // SUBTITULOS
@@ -931,10 +940,11 @@ GROUP BY ins_detalle.id_numreactivo";
         
         
         $pdf->SetFont('Arial','',8);
+      
         $ssql="SELECT ins_imagendetalle.id_ruta, ins_imagendetalle.id_descripcion FROM ins_imagendetalle WHERE
 ins_imagendetalle.id_imgclaveservicio =  '3' AND ins_imagendetalle.id_imgnumreporte =  '$numrep' AND ins_imagendetalle.id_presentar =  '-1'";
         $rs=DatosImagenDetalle::getImagenDetallePresentar($servicio,$numrep,"ins_imagendetalle");
-     
+    
          $x=14;
         $y=60;
         $cont=0;
@@ -942,7 +952,7 @@ ins_imagendetalle.id_imgclaveservicio =  '3' AND ins_imagendetalle.id_imgnumrepo
       //  $rs=null;
         foreach($rs as $row) {
             $ee = RAIZ."/".$row["id_ruta"];
-           
+  //         echo "<br>".$ee;
             if ($cont<6) {
                 
                 if (($cont==0) || ($cont==3)){

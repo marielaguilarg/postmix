@@ -92,18 +92,18 @@ echo '<div class="form-group col-md-6">
                 <label >NOMBRE EN ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="sernombreesp" id="sernombreesp" class="form-control" value="'.$respuesta["ser_descripcionesp"].'">
+                    <input name="sernombreesp" id="sernombreesp" required class="form-control" value="'.$respuesta["ser_descripcionesp"].'">
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >NOMBRE EN INGLES</label>
                <div class="col-sm-10">
-                    <input name="sernombreing" id="sernombreing" class="form-control" value="'.$respuesta["ser_descripcioning"].'">
+                    <input name="sernombreing" id="sernombreing" required class="form-control" value="'.$respuesta["ser_descripcioning"].'">
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                 <label >CLIENTE</label>
-                <select class="form-control" name="seridcliente" id="seridcliente" >
+                <select class="form-control" name="seridcliente" id="seridcliente" required>
 ';
                 foreach($listaclien as $row => $itemc){                 
                   if($itemc[0] == $respuesta['ser_idcliente']){
@@ -134,7 +134,7 @@ echo '<div class="form-group col-md-6">
         if($respuesta=="success"){
           echo "
             <script type='text/javascript'>
-                window.location.href='index.php?action=listaservicio'
+                window.location='index.php?action=listaservicio'
                 </script>
                   ";} else {
           echo "error";

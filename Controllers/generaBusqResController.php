@@ -1,5 +1,5 @@
 <?php
-include "Models/crud_temporales.php";
+
 class GeneraBusqResController {
 	
 	public function generarBusquedaRes(){
