@@ -73,6 +73,15 @@ $imp->descargarArchivo();
 	$desimgController->descargarImagenes();
 	//require "Views/modulos/prueba.php";
 
+}else if($admin=="recibomue")
+{
+	include 'Controllers/recepcionController.php';
+	include "Utilerias/utilerias.php";
+	include "Models/crud_catalogodetalle.php";
+	include "Models/crud_muestras.php";
+	$recController=new RecepcionController();
+	$recController->imprimir();
+	
 }else
     { 
        
