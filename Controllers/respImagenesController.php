@@ -26,12 +26,12 @@ class RespImagenesController
                 
                 //para descargar
                
-                $f="../Archivos/".$f;
+                $f="../Archivos/";
                 //nombre corto
                 //$arch_zip="imagenes_".date("dmyHi").".zip";
                 header("Content-type: application/octet-stream");
                 header("Content-Disposition: attachment; filename=\"$f\"\n");
-                $fp=fopen("$f", "r");
+                $fp=fopen($f, "r");
                 fpassthru($fp);
                 break;
             case 'del' :
