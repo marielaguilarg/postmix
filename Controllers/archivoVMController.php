@@ -47,32 +47,32 @@ class ArchivoVMController
                      //CREA EL ARCHIVO PARA EXPORTAR
               $nomcuenta="Resumen_de_resultados".date("dmyHi");
                     
-                    $arch= "../Archivos/".$nomcuenta.".xlsx";
+              $arch= "../Archivos/".$nomcuenta.".xlsx";
                     
-                    $fname = tempnam("../Archivos/", $nomcuenta.".xlsx");
-                    $this->workbook =new PHPExcel();
+              $fname = tempnam("../Archivos/", $nomcuenta.".xlsx");
+              $this->workbook =new PHPExcel();
                 
-                    $this->worksheet =$this->workbook->getActiveSheet();
-                    $this->workbook->getActiveSheet()->setTitle($cuenta);
-                    $this->reporte($cuenta,$arch);				//funcion que hace el reporte
+             $this->worksheet =$this->workbook->getActiveSheet();
+              $this->workbook->getActiveSheet()->setTitle($cuenta);
+             $this->reporte($cuenta,$arch);				//funcion que hace el reporte
                     // creaarch($arch,$cadtabla);
-                    
-                    $this->im=$this->ttotal=$this->ttotal2=0;
+              
+              $this->im=$this->ttotal=$this->ttotal2=0;
                  
-                    $cellIterator = $this->worksheet->getRowIterator()->current()->getCellIterator();
-                    $cellIterator->setIterateOnlyExistingCells(true);
+              $cellIterator = $this->worksheet->getRowIterator()->current()->getCellIterator();
+           $cellIterator->setIterateOnlyExistingCells(true);
                     /** @var PHPExcel_Cell $cell */
-                    foreach ($cellIterator as $cell) {
+          foreach ($cellIterator as $cell) {
                     	$this->worksheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
-                    }
-                    $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
-                    $objWriter->save($fname);
+           }
+             $objWriter = PHPExcel_IOFactory::createWriter(   $this->workbook, 'Excel2007');
+            $objWriter->save($fname);
                     
-                    header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
-                    header("Content-Disposition: inline; filename=\"".$nomcuenta.".xlsx\"");
-                    $fh=fopen($fname, "rb");
-                    fpassthru($fh);
-                    unlink($fname);
+             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
+             header("Content-Disposition: inline; filename=\"".$nomcuenta.".xlsx\"");
+             $fh=fopen($fname, "rb");
+             fpassthru($fh);
+             unlink($fname);
     
     }
     
@@ -222,7 +222,7 @@ INNER JOIN `ca_unegocios` ON `une_id`=i_unenumpunto
 and  ins_generales.i_claveservicio=:servicio and
  ins_generales.i_mesasignacion =:fechaini
         
- group by ins_detalle.id_numreporte ORDER BY ins_generales.i_fechavisita ASC, ins_detalle.id_numseccion ASC";
+ group by ins_generales.i_numreporte  ORDER BY ins_generales.i_fechavisita ASC, ins_detalle.id_numseccion ASC";
                 $parametros=array("fechaini"=>$fechaini,
                     "servicio"=>$this->servicio,
                     "cuenta"=>$cuenta
@@ -460,11 +460,12 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
             and ins_detalle.id_numseccion=9
 and ins_detalle.id_numreactivo in(1,2,3,4,5,6,7,8) )  as ins_detalle on ins_generales.i_numreporte = ins_detalle.id_numreporte
 WHERE  ins_generales.i_claveservicio=:servicio AND ins_generales.i_mesasignacion =:fechaini
-  group by ins_detalle.id_numreporte ORDER BY ins_generales.i_fechavisita ASC, ins_detalle.id_numseccion ASC";
+  group by ins_generales.i_numreporte  ORDER BY ins_generales.i_fechavisita ASC, ins_detalle.id_numseccion ASC";
                 $parametros=array("servicio"=>$this->servicio,
                     
                     "fechaini"=>$fechaini
                 );
+              
                 $res=Conexion::ejecutarQuery($cad,$parametros);
                 break;
                 
@@ -848,7 +849,7 @@ ins_generales.i_claveservicio=:servicio    AND
 	 AND ins_detalleestandar.ide_numseccion =  '8' AND
 	 ins_detalleestandar.ide_numcomponente =  '1' AND
 	 ins_detalleestandar.ide_numcaracteristica3 =  '9' GROUP BY
-	 ins_detalleestandar.ide_numreporte ORDER BY ins_generales.i_fechavisita ASC";
+	 ins_generales.i_numreporte ORDER BY ins_generales.i_fechavisita ASC";
         $parametros=array("fechaini"=>$fechaini,
           
             "servicio"=>$this->servicio);
@@ -1048,8 +1049,8 @@ WHERE
         $totcol1=0;
         $totcol2=0;
         $totcol3=0;
-        
-     
+      //  echo "+++++".$renglon;
+     $rengini=$renglon;
         if($col!=7) {
             if($cuenta=='-1')		//consulta todas las cuentas
                 $res=$this->consulta_gral($col,$fechaini,$this->servicio,$this->cliente);
@@ -1057,8 +1058,9 @@ WHERE
                  $res=$this->consulta($col,$cuenta,$fechaini,$this->servicio,$this->cliente);
                    
                     if($res!=0) {
-                       
-                        
+//                        echo "<pre>";
+//                         print_r($res);
+//                         echo "<pre>";
                         $num_reg = sizeof($res);		//numero de reportes por mes
                         if($num_reg!=0) {
                             foreach($res as $row) {
@@ -1079,7 +1081,8 @@ WHERE
                             }
                             
                             // $renglon++;
-                            
+                           // echo "<br>***".$num_reg;
+                            $renglon=$rengini+$num_reg;
                             $ultren=$this->totales($col,$num_reg,$res);
                             $this->aceptados[$this->im][$col]=$ultren["tverde"];
                             //echo "<br>total col ".$col." ".$ultren["tverde"];
@@ -1128,7 +1131,7 @@ WHERE
                                 'font' => array("size"    => 10,
                                 "name"    => 'Arial Unicode MS'
                             ));
-                            
+                          // echo "<br>".$color1."--".$this->michr($letrai).".".$renglon."--". $ultren["porcr"];
                             $this->worksheet->setCellValue($this->michr($letrai).$renglon, $ultren["porcr"]);
                             $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                             eval($accion1);
@@ -1141,6 +1144,7 @@ WHERE
                                 'font' => array("size"    => 10,
                                 "name"    => 'Arial Unicode MS'
                             ));
+                           // echo "pppp".$this->michr($letrai).".".$renglon."--".$ultren["porcv"];
                             $this->worksheet->setCellValue($this->michr($letrai).$renglon,$ultren["porcv"]);
                             $this->worksheet->getStyle($this->michr($letrai).$renglon)->applyFromArray($text_format);
                              eval($accion2);
