@@ -4,6 +4,7 @@ if (isset($_SESSION['UsuarioInd'])) { //valido que este logeado
     
 require_once "Controllers/indpostmix/tablaDinamicaController.php";
 require_once "Controllers/tablahtml.php";
+require_once 'libs/PHPExcel-1.8/PHPExcel.php';
 require_once 'libs/php-gettext-1.0.12/gettext.inc';
 include('Utilerias/inimultilenguaje.php');
 include('Utilerias/utilerias.php');
@@ -12,9 +13,12 @@ require_once "Models/conexion.php";
 include "Models/crud_estandar.php";
 include "Models/crud_estructura.php";
 $nomarch="Indicadores".date("dmyHi");
+$workbook =new PHPExcel();
 
+$worksheet =$workbook->getActiveSheet();
+$workbook->getActiveSheet()->setTitle(T_("INDICADORES"));
 $tabladin=new TablaDinamicaController();
-$tabladin->exportarExcel();
+$tabladin->exportarExcel(false);
 
 
 ?>
@@ -109,7 +113,7 @@ border:#CCCCCC solid;
 	 <script language="javascript" type="text/javascript">
 
 	
-		window.print();
+		//window.print();
 	
 	
 
