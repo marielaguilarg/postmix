@@ -293,7 +293,7 @@ ca_regiones.cli_idcliente='$uscliente'";
                             if($RS_SQM_TE)
                                 $row=$RS_SQM_TE[0];
                                 $region=$row[0];
-                                echo "............".$select1;
+                             //   echo "............".$select1;
                                 
                                 $this->Posicion01= '<select class="form-control cascada" name="select1" id="select1"
                                 data-group="niv-1"
@@ -1392,7 +1392,7 @@ data-group='niv-1'
         }
         
         $op2=$grupo;
-        echo "+++".$op2;
+      //  echo "+++".$op2;
         try{
         if($op2=='cli' ){
             $sql2 = "INSERT INTO cnfg_usuarios(cus_usuario,cus_contrasena,cus_nombreusuario,cus_empresa,cus_cargo,cus_telefono,cus_email,cus_clavegrupo,
