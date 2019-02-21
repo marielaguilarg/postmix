@@ -86,7 +86,7 @@ $inicioController->vistaArchivoInicio();
     <div class="box box-info">
         <div class="box-header with-border">
         
-            <h3 class="box-title">EXTRAER ARCHIVO DE INICIO</h3>
+            <h3 class="box-title">REPORTE INICIO</h3>
         </div>
         <div class="box-body">
 <form name="form1" id="form1" method="post" action="imprimirReporte.php?admin=Cinid" >

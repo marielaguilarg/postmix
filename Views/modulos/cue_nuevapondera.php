@@ -23,13 +23,13 @@
                 <label >DESCRIPCION ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="descripesp" id="descripesp" class="form-control" value>
+                    <input name="descripesp" id="descripesp" class="form-control" value required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >DESCRIPCION INGLES</label>
                <div class="col-sm-10">
-                    <input name="descriping" id="descriping" class="form-control" >
+                    <input name="descriping" id="descriping" class="form-control" required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -51,7 +51,7 @@
                  $registro = New PonderacionController();     
                  $registro->botonRegresaSeccionController();
                   ?>
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
               </div>
               </form>
               </div>

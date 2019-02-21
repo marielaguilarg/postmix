@@ -61,7 +61,7 @@ function buscaCiudades(estado, referuni)
 //-->
 </script>
 <section class="content-header">
-  <h1>Reporte <small></small></h1>
+  <h1>REPORTE <small></small></h1>
 <ol class="breadcrumb" >
 
 <?php
@@ -85,7 +85,7 @@ $ingreso->iniciarFiltros();
 		<div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Búsqueda de punto de venta</h3>
+              <h3 class="box-title">BUSQUEDA DE PUNTO DE VENTA</h3>
             </div>
             <div class="box-body">
               <div class="form-group">
@@ -93,12 +93,12 @@ $ingreso->iniciarFiltros();
                   <div class="col-sm-3">
                <label>ESTADO </label>
    <div> <select class="form-control" name="estado" id="estado" onChange="buscaCiudades(this.value,'<?php echo $ingreso->getRef()?>');">
-    <option value="0">Todos</option><?php echo $ingreso->getListaEstados()?></select>
+    <option value="0">TODOS</option><?php echo $ingreso->getListaEstados()?></select>
     </div>
     </div>
     <div class="col-sm-3">
       <label>CIUDAD</label>
-     <div> <select class="form-control" name="ciudad" id="ciudad"><option value="">Todas</option><?php echo $ingreso->getCiudades()?></select>
+     <div> <select class="form-control" name="ciudad" id="ciudad"><option value="">TODAS</option><?php echo $ingreso->getCiudades()?></select>
       </div></div>
       <div class="col-sm-3">
        <label>PUNTO DE VENTA</label>
@@ -106,7 +106,7 @@ $ingreso->iniciarFiltros();
   </div>
   <div class="col-sm-3">
                  <span class="input-group-btn">
-                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>Buscar</button>
+                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>BUSCAR</button>
                     </span>
                 </div>
          
@@ -122,15 +122,15 @@ $ingreso->iniciarFiltros();
            <div class="col-md-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Resultado de búsqueda</h3>
+              <h3 class="box-title">RESULTADO DE BUSQUEDA</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
               <table class="table">
                 <tr>
-                  <th style="width: 20%">No.</th>
-                  <th style="width: 20%">ID PEPSI</th>
-                  <th style="width: 24%">ID CUENTA</th>
+                  <th style="width: 20%">ESTADO </th>
+                  <th style="width: 24%">MUNICIPIO</th>
+                  <th style="width: 20%">NUD</th>
                   <th style="width: 56%">NOMBRE</th>
                 </tr>
               

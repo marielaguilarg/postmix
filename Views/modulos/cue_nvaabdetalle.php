@@ -22,16 +22,16 @@
                 <!-- Datos alta de cuenta -->
                 <div class="form-group col-md-6">
                   <label>DESCRIPCION EN ESPAÑOL</label>
-                  <input type="text" class="form-control" name="descesp" >
+                  <input type="text" class="form-control" name="descesp" required>
                 </div>
                 <div class="form-group col-md-6">
                   <label>DESCRIPCION EN INGLES</label>
-                  <input type="text" class="form-control" name="descing" >
+                  <input type="text" class="form-control" name="descing" required>
                 </div>
 
                 <div class="form-group col-md-6">
                   <label>FORMATO DE REACTIVO</label>
-                  <select class="form-control" name="tiporeac">
+                  <select class="form-control" name="tiporeac" required>
                       <option value="">--- Elija el formato ---</option>
                       <option value="F">Fecha</option>
                       <option value="H">Hora</option>
@@ -85,7 +85,7 @@
                    <?php
                  $registro = New abiertaController();
                   $registro->botonRegresaabdetController() ?>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                   <?php
                  $registro = New abiertaController();     
                  $registro-> registraabdetController();  

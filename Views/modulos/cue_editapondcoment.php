@@ -1,5 +1,5 @@
 <section class="content-header">
-  <h1> EDITA COMENTARIO</h1>
+  <h1> EDITA COMENTARIO PONDERADO</h1>
    
    </section>
   <section class="content container-fluid">
@@ -9,8 +9,8 @@
 
 
               <?php
-              $opcion = new seccionController();
-              $opcion ->inicioEditComentController();
+              $opcion = new PonderacionController();
+              $opcion ->EncComentPondController();
             //  $opcion ->registrarComentController();
               ?>
 
@@ -20,13 +20,13 @@
 
 
               <?php
-              $opcion = new seccionController();
-              $opcion ->editarComentController();
-              $opcion ->actualizarComentController();
+              $opcion = new PonderacionController();
+              $opcion ->editarPonderaComentController();
+              $opcion ->actualizarPondComentController();
               ?>
               <?php
-              $opcion = new seccionController();
-              $opcion ->botonRegresaEditComentario();
+              $opcion = new PonderacionController();
+              $opcion ->botonRegresaComPondController();
               ?>
                    
                 <button type="submit" class="btn btn-info pull-right">GUARDAR</button>

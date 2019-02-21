@@ -1,4 +1,11 @@
+<style>
+<!--
+.filtros{
+font-size:12px;
 
+}
+-->
+</style>
 <div class="modal fade" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
 
 <div class="modal-dialog modal-sm">

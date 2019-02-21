@@ -1,5 +1,5 @@
 <section class="content-header">
-      <h1>Franquicias &nbsp; &nbsp; <small></small></h1>
+      <h1>FRANQUICIAS &nbsp; &nbsp; <small></small></h1>
      
     </section>
 

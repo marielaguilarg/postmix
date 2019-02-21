@@ -1,7 +1,11 @@
 <section class="content-header">
-      <h1>Comentarios Ponderado <small></small></h1>
+      <h1>COMENTARIOS PONDERADO <small></small></h1>
 <ol class="breadcrumb" >
-
+<?php
+				$ingreso = new PonderacionController();
+				$ingreso -> tituloPonderaController();
+				?>
+        
         
 </ol>
 				<?php
@@ -9,7 +13,7 @@
 				$ingreso -> botonnuevorcoment();
 				?>
           
-       
+    </section>   
 	<section class="content container-fluid">
 		<div class="box">
 	 			

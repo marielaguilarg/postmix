@@ -20,7 +20,10 @@ PRUEBAS PARA EL ANALISIS DE AGUA <br><small><?php echo $pruebaController->getTIT
 
 
 </div>
- 
+    
+<ol class="breadcrumb">
+            <?php Navegacion::desplegarNavegacion();?>
+  </ol>  
  </section>     
 
     <section class="content container-fluid">

@@ -75,9 +75,9 @@ $rangoGController->vistaNuevoRango();
 ?>
  <section class="content-header">
 
-<h3>
-RANGOS PARA GRAFICA DE FRECUENCIAS</h3>
-
+<h1>
+RANGOS PARA GRAFICA DE FRECUENCIAS</h1>
+<h1>SECCION:<?php echo $rangoGController->getNombreSeccion() ?></h1>
 
 </section>
    <section class="content container-fluid">
@@ -85,7 +85,7 @@ RANGOS PARA GRAFICA DE FRECUENCIAS</h3>
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">NUEVO PARAMETRO</h3>
+              <h3 class="box-title">NUEVO PARAMETRO <?php echo $rangoGController->getComponentes()?></h3>
             </div>
             <div class="box-body">
              <form role="form" name="form1" method="post" action="index.php?action=srangosgraffrec&secc=<?php echo $rangoGController->getSeccion() ?>&admin=insertar">

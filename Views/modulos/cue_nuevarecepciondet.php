@@ -172,7 +172,7 @@ $nueva->vistaNuevo();
 <div class="box box-footer">
 <div class="pull-right">
  <button type="submit" name="Submit" id="guardar" disabled="disabled" class="btn btn-info">GUARDAR</button>
-      <button name="Submit22" type="button"  onClick="history.go(-1);" class="btn btn-info " >CANCELAR</button>
+      <button name="Submit22" type="button"  onClick="history.go(-1);" class="btn btn-default" >CANCELAR</button>
 	   <button name="nuevo" type="button" onclick="window.location='index.php?action=nuevarecepciondet&nuevo=S&refer=<?php echo $nueva->getNumrec()?>';" class="btn btn-info ">NUEVO</button>
    </div>
    </div>

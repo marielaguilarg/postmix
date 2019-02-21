@@ -102,7 +102,7 @@ foreach ($seccionesController->getListaSecciones() as $seccion){
 
 <ul class="nav nav-stacked">
 
-<li><a href="#"><strong><?php echo $seccion["nomsec"]?></strong></a></li>
+<li><a ><strong><?php echo $seccion["nomsec"]?></strong></a></li>
 
 </ul>
 
@@ -129,9 +129,6 @@ foreach ($seccionesController->getListaSecciones() as $seccion){
 <div class="col-sm-4 border-right">
 
 <div class="description-block"><?php echo $seccion["celdaComent"]?>
-
-
-
 </div>
 
 <!-- /.description-block -->

@@ -2,7 +2,7 @@
   
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Cuentas &nbsp; &nbsp; <small></small></h1>
+      <h1>CUENTAS &nbsp; &nbsp; <small></small></h1>
       
     </section>
 

@@ -87,13 +87,10 @@ $grupoController->control();
 
 <a class="btn btn-block btn-info" href='index.php?action=slistapermisos&id=<?php echo $grupo["clavep"]?>'>
 <span style="font-size: 12px">PERMISOS</span></a>
-
 </div>
 
 <!-- /.description-block -->
-
 </div>
-
 <!-- /.col -->
 
 <div class="col-sm-6 border-right">
@@ -102,22 +99,12 @@ $grupoController->control();
 <a class="btn btn-block btn-info" href='index.php?action=slistausuarios&id=<?php echo $grupo["clavep"]?>'>
 <span style="font-size: 12px">USUARIOS</span></a>
 
-
-
 </div>
-
 <!-- /.description-block -->
-
 </div>
-
 <!-- /.col -->
-
 </div>
-
-
-
 </div>
-
 <!-- /.box-body -->
 
 </div>

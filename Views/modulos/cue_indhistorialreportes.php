@@ -49,10 +49,11 @@ var elementos = document.getElementsByName(Fila);
 </script>
 
 <section class="content-header">
-   
-    <h3><?php echo $historialRepController->getUnidadneg(); ?></h3>
+   <div style="padding:10px">
+    <h3><?php echo $historialRepController->getUnidadneg(); ?></h3></div>
     <ol class="breadcrumb">
              <?php Navegacion::desplegarNavegacion();?>
+             </ol>
 </section>
 
 <!-- Main content -->

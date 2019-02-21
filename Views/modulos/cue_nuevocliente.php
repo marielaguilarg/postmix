@@ -17,7 +17,7 @@
                     <input name="nombrecliente" id="nombrecliente" class="form-control" required>
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
-                <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacliente"> Cancelar </a></button>
+                <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listacliente"> Cancelar </a>
                  
                 <button type="submit" class="btn btn-info pull-right">Guardar</button>
 

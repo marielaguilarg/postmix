@@ -22,7 +22,7 @@ $grupoController->control();
             <div class="box-body">
              <form role="form" method="post" action="index.php?action=slistagrupos&admin=<?php echo $grupoController->getAdmin()?>">
               
-                <label for="nomesp" class="col-sm-2 control-label">Nombre</label>
+                <label for="nomesp" class="col-sm-2 control-label">NOMBRE</label>
                 <div class="col-sm-10">
               	<input name="idper" type="hidden" value="<?php echo $grupoController->getIDS()?>">
                     <input name="nomesp"  id="nomesp" class="form-control" value="<?php echo $grupoController->getNOMESP()?>" required >

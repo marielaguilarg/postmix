@@ -24,8 +24,9 @@ function Validar(form){
 			return false;
 		}
 	}
-	return true;
 	
+	
+return true;	
 
 }
 function selectVacio(campo, nombre)
@@ -111,7 +112,11 @@ function cargaContenidoServ(clave, campo,accion)
 	document.form1.submit();
 	
 }
-
+function validarEmail(email) 
+{ 
+ var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ 
+ return email.match(re) 
+}
 </script>
 <?php include 'Controllers/usuarioPermisosController.php';
 
@@ -206,7 +211,7 @@ $usuarioCon->vistaNuevoUsuario();
       <div class="form-group col-md-6">
                   <label>EMAIL :</label>
         
-          <input name="email" type="text" class="form-control"  id="email" value="<?php echo $usuarioCon->getUsuario()['correo']?>" size="35" maxlength="40" />
+          <input name="email" type="email" class="form-control"  id="email" value="<?php echo $usuarioCon->getUsuario()['correo']?>" size="35" maxlength="40" required />
         </div>
      
       <!-- inicioBloque: solicitudes -->

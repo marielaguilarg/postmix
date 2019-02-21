@@ -4,7 +4,7 @@
                        
                     ?>﻿
 <section class="content-header">
-      <h1> Punto de venta &nbsp; </h1>
+      <h1>AGREGAR PUNTO DE VENTA </h1>
 
     </section>
 
@@ -200,11 +200,12 @@
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
+                 
                  <?php
                  echo '
-                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaunegocio&idc='.$idc.'"> Cancelar </a></button> ';
+                 <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listaunegocio&idc='.$idc.'"> CANCELAR </a> ';
                  ?>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
               </div>
               </form>
               </div>

@@ -85,7 +85,7 @@ RANGOS PARA GRAFICA DE FRECUENCIAS</h1>
    <?php echo "<td>".$rango['numval']."</td>";
    echo "<td>".$rango['valmin']."</td>";
    echo "<td>".$rango['valmax']."</td>";?>
-	<td><a href='index.php?action=srangosgraffrec&admin=borrar&id=<?php echo $rango['celdaDelsec']."&numop=".$rangoGController->getNumop()?>' onClick="return validar(this);">
+	<td><a href='index.php?action=srangosgraffrec&admin=borrar&id=<?php echo $rango['celdaDelsec']."&numop=".$rangoGController->getNumop()."&secc=".$rangoGController->getSeccion()?>' onClick="return validar(this);">
 	<i class="fa fa-times"></i></a></td>
   </tr>
 <?php }?>

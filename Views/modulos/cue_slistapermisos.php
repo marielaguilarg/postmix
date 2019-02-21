@@ -16,6 +16,7 @@ function confirmar(){
 include 'Controllers/permisosController.php';
 $permisoController= new PermisosController();
 $permisoController->vistaListaPermisos();
+
 ?>
 <section class="content-header">
 

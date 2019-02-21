@@ -9,19 +9,24 @@ function validar(form){
 }</script>
 
 
+<?php
+include "Controllers/recepcionDetalleController.php";
+$detalle= new RecepcionDetalleController();
+$detalle -> vistaDetalle();
 
+?>
  <section class="content-header">
   <div class="row" style="margin-top:-40px;" >
 
    <h1 style="font-size:25px; margin-left: 15px; ">
 
-   
-
-RECEPCION DE MUESTRAS DETALLE <small></small></h1>  
-
+RECEPCION DE MUESTRAS DETALLE</h1>  
 
 </div>
-     
+   
+<ol class="breadcrumb">
+            <?php Navegacion::desplegarNavegacion();?>
+  </ol>  
 <ol class="breadcrumb" >
      
         
@@ -29,13 +34,8 @@ RECEPCION DE MUESTRAS DETALLE <small></small></h1>
  </section>     
 
     <section class="content container-fluid">
+<?php echo $detalle->getMensaje();?>
 
-<?php
-include "Controllers/recepcionDetalleController.php";
-$detalle= new RecepcionDetalleController();
-$detalle -> vistaDetalle();
-echo $detalle->getMensaje();
-?>
 	<!----- Inicia contenido ----->
 <div class="row">
 <div class="col-md-12">

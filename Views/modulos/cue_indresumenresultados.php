@@ -35,7 +35,7 @@ var elementos = document.getElementsByName(Fila);
 </script>
 
 
-<section class="content container-fluid">
+
 <form id="form1" name="form1" method="post" action="">
   <input name="fechainicio" type="hidden" id="fechainicio" value="<?php echo $resumenRes->getFiltros_indi()->getMes_indice(); ?>"  >
  <input type='hidden' name='select3' value="1">
@@ -67,6 +67,4 @@ var elementos = document.getElementsByName(Fila);
 	
 	
 
-
-</section>
  

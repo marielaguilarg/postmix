@@ -101,17 +101,20 @@ function validar1(dform){
 }	
 //-->
 </script>
-<section class="content-header">
-      <h1> NUEVA SOLICITUD</h1>
-      
-    </section>
-<section class="content container-fluid">
-     <?php 
+   <?php 
      include 'Controllers/certificacionController.php';
      $certificacionController=new CertificacionController();
      $certificacionController->vistaEditaSolicitud();
    echo  $certificacionController->getMsg();
                     ?>
+<section class="content-header">
+      <h1> NUEVA SOLICITUD</h1>
+         <ol class="breadcrumb">
+             <?php Navegacion::desplegarNavegacion();?>
+             </ol>
+    </section>
+<section class="content container-fluid">
+  
       
         <div class="row">
 		

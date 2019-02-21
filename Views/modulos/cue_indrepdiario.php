@@ -21,7 +21,7 @@ $basepController->vistaReportediario();
     <div class="box box-info">
         <div class="box-header with-border">
         
-            <h3 class="box-title"><?php echo T_("Reporte diario")?></h3>
+            <h3 class="box-title"><?php echo T_("REPORTE DIARIO")?></h3>
         </div>
         <div class="box-body">
 <form name="form1" id="form1" method="post" action="imprimirReporte.php" >

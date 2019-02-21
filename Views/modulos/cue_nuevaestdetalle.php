@@ -22,9 +22,6 @@ else if(op=="N")
 }
 });
 
-$("#estandar").click(function() {
-	  alert( "Handler for .change() called." );
-	});
 });
 //-->
 </script>
@@ -61,7 +58,7 @@ $("#estandar").click(function() {
                 </div>
                 <div class="form-group col-md-6">
                   <label>DESCRIPCION EN INGLES</label>
-                  <input type="text" class="form-control" name="descing" >
+                  <input type="text" class="form-control" name="descing" required>
                 </div>
 
                 <div class="form-group col-md-6">
@@ -223,7 +220,7 @@ $("#estandar").click(function() {
                   <?php
                  $registro = New EstandarController();
                   $registro->botonRegresaEstDetController() ?>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                   <?php
                  $registro = New EstandarController();     
                  $registro-> registraestdetController();  

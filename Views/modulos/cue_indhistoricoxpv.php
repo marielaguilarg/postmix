@@ -10,7 +10,7 @@ $basepController->vistaHistoricoPV();
 <!--  filtros -->
     <div class="box box-info">
         <div class="box-header with-border">
-            <h3 class="box-title"><?php echo T_("Histórico por punto de venta")?></h3>
+            <h3 class="box-title"><?php echo T_("HISTORICO POR PUNTO DE VENTA")?></h3>
         </div>
         <div class="box-body">
         <div><?php echo T_("ESTIMADO USUARIO, PARA EXPORTAR EL REPORTE, SELECCIONE EL PUNTO DE VENTA")?> </div>
@@ -51,8 +51,8 @@ echo $basepController->getListanivel6();
                 <table class="table table-striped">
                     <tr>
                         <th><?php echo T_("PUNTO DE VENTA")?></th>
-                        <th ><?php echo T_("ID PEPSI")?></th>
                         <th ><?php echo T_("CIUDAD")?></th>
+                          <th ><?php echo T_("NUD")?></th>
                         <th ><?php echo T_("DIRECCION") ?></th>
                     </tr>
 
@@ -60,8 +60,9 @@ echo $basepController->getListanivel6();
                   foreach($basepController->getListaUnegocios() as $renglon){
                      echo " <tr>";
                       echo $renglon["NomPuntoVenta"];
-                       echo $renglon["Pepsi"];
+                     
                        echo $renglon["CiudadN"];
+                       echo $renglon["NUD"];
                        echo $renglon["Direccion"];
                        echo  "</tr>";
                       

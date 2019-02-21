@@ -41,7 +41,7 @@ $muestrasController->listaMuestrasRealizadas()?>
   <div class="box">
           
             <div class="box-header">
-<form name="formfiltro" action="index.php?action=listaconsultaRep" method="post" > 
+<form name="formfiltro" action="#" method="post" > 
   
  
               <h3 class="box-title"><?php echo "BUSCAR PUNTO DE VENTA"?></h3>

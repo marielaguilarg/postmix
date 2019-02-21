@@ -61,7 +61,7 @@ function buscaCiudades(estado, referuni)
 //-->
 </script>
     <section class="content-header">
-      <h1>Puntos de venta &nbsp; &nbsp; <small></small></h1>
+      <h1>PUNTOS DE VENTA &nbsp; &nbsp; <small></small></h1>
       
     </section>
 
@@ -77,7 +77,7 @@ $ingreso->iniciarFiltros();
 		<div class="col-md-12">
         <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Búsqueda de punto de venta</h3>
+              <h3 class="box-title">BUSQUEDA DE PUNTO DE VENTA</h3>
             </div>
             <div class="box-body">
               <div class="form-group">
@@ -85,7 +85,7 @@ $ingreso->iniciarFiltros();
                <div class="col-sm-3">
                <label>ESTADO </label>
    <div> <select class="form-control" name="estado" id="estado" onChange="buscaCiudades(this.value,'<?php echo $ingreso->getRef()?>');">
-    <option value="0">Todos</option><?php echo $ingreso->getListaEstados()?></select>
+    <option value="0">TODOS</option><?php echo $ingreso->getListaEstados()?></select>
     </div>
     </div>
     <div class="col-sm-3">
@@ -95,11 +95,9 @@ $ingreso->iniciarFiltros();
       <div class="col-sm-3">
        <label>PUNTO DE VENTA</label>
                  <input type="text" name="opcionuneg" id="opcionuneg" class="form-control" placeholder="Escribe palabra relacionada con el punto de venta" >
-</div>
-<div class="col-sm-3">
-               
-                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>Buscar</button>
-                   
+		</div>
+		<div class="col-sm-3">           
+                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>BUSCAR</button>           
                 </div>
                
                 </form>
@@ -114,15 +112,16 @@ $ingreso->iniciarFiltros();
            <div class="col-md-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Resultado de búsqueda</h3>
+              <h3 class="box-title">RESULTADO DE BUSQUEDA</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
               <table class="table">
                 <tr>
-                  <th style="width: 20%">No.</th>
-                  <th style="width: 20%">ID PEPSI</th>
-                  <th style="width: 24%">ID CUENTA</th>
+                  
+                  <th style="width: 20%">ESTADO </th>
+                  <th style="width: 24%">MUNICIPIO</th>
+                  <th style="width: 20%">NUD</th>
                   <th style="width: 56%">NOMBRE</th>
                 </tr>
               
@@ -132,6 +131,7 @@ $ingreso -> vistaUnegocioController();
 
 ?>
 
+  
                </table>
             </div>
             <!-- /.box-body -->
@@ -156,44 +156,30 @@ $ingreso -> vistaUnegocioController();
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
-    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-      <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <!-- Home tab content -->
-      <div class="tab-pane active" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:;">
-              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+   
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="js/jquery.cascading-drop-down.js"></script>
+    <script>
+    $('.form-control').ssdCascadingDropDown({
+        nonFinalCallback: function(trigger, props, data, self) {
 
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+            trigger.closest('form')
+                    .find('input[type="submit"]')
+                    .attr('disabled', true);
 
-                <p>Will be 23 on April 24th</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
+        },
+        finalCallback: function(trigger, props, data) {
 
-        <h3 class="control-sidebar-heading">Tasks Progress</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:;">
-              <h4 class="control-sidebar-subheading">
-                Custom Template Design
-                <span class="pull-right-container">
-                    <span class="label label-danger pull-right">70%</span>
-                </span>
-              </h4>
+            if (props.isValueEmpty()) {
+                trigger.closest('form')
+                        .find('input[type="submit"]')
+                        .attr('disabled', true);
+            } else {
+                trigger.closest('form')
+                        .find('input[type="submit"]')
+                        .attr('disabled', false);
+            }
 
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-              </div>
-            </a>
-          </li>
-        </ul>
+        }
+    });
+</script>

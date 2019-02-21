@@ -20,13 +20,13 @@
                 <label >DESCRIPCION EN ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="nombreesp" id="sernombreesp" class="form-control" value>
+                    <input name="nombreesp" id="sernombreesp" class="form-control" value required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >DESCRIPCION EN INGLES</label>
                <div class="col-sm-10">
-                    <input name="nombreing" id="sernombreing" class="form-control" >
+                    <input name="nombreing" id="sernombreing" class="form-control" required>
                 </div>
                 </div>
                 
@@ -36,7 +36,7 @@
                   $registro = New AbiertaController();
                   $registro-> botonRegresaAbController();
                  ?>
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
               </div>
               </form>
               </div>

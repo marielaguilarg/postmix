@@ -1,6 +1,10 @@
 <section class="content-header">
-      <h1>Comentarios Estandar<small></small></h1>
+      <h1>COMENTARIOS ESTANDAR<small></small></h1>
 <ol class="breadcrumb" >
+<?php
+				$ingreso = new EstandarController();
+				$ingreso -> titestcom();
+				?>
         
 </ol>
 				<?php

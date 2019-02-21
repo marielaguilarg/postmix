@@ -10,7 +10,9 @@
 <section class="content-header">
 
 	<h1>TIPO DE AGUA</h1>
-
+<ol class="breadcrumb">
+            <?php Navegacion::desplegarNavegacion();?>
+  </ol>  
 </section>
 
 <!-- Main content -->

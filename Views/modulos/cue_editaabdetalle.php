@@ -32,7 +32,7 @@
                    <?php
                  $registro = New abiertaController();
                   $registro->botonRegresaabdetEController() ?>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                   <?php
                  $registro = New abiertaController();     
                  //$registro-> registraabdetController();  

@@ -17,11 +17,11 @@
                 <!-- Datos alta de cuenta -->
                 <div class="form-group col-md-6">
                   <label>NOMBRE</label>
-                  <input type="text" class="form-control" name="nomcuen" >
+                  <input type="text" class="form-control" name="nomcuen" required>
                 </div>
                 <div class="form-group col-md-6">
                   <label>CLIENTE</label>
-                  <select class="form-control" name="cliencuen">
+                  <select class="form-control" name="cliencuen" required>
                     
                     <option value="">-- Elija el cliente  --</option>
 
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label>TIPO DE MERCADO</label>
-                  <select class="form-control" name="tipomercuen">
+                  <select class="form-control" name="tipomercuen" required>
                     <option value=1>ON PREMISE</option>
                     <option value=2>TRADICIONAL</option>
                     <option value=3>MODELO</option>
@@ -54,8 +54,8 @@
 
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
-                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacuenta"> Cancelar </a></button>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                 <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacuenta"> CANCELAR </a></button>
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
 
                  </div>
               </form>

@@ -20,19 +20,19 @@
                 <label >NOMBRE EN ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="nombreesp" id="sernombreesp" class="form-control" value>
+                    <input name="nombreesp" id="sernombreesp" class="form-control" value required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >NOMBRE EN INGLES</label>
                   <div class="col-sm-10">
-                    <input name="nombreing" id="sernombreing" class="form-control" >
+                    <input name="nombreing" id="sernombreing" class="form-control" required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >TIPO DE EVALUACION</label>
                
-                    <select class="form-control" name="tipoeval" id="tipoeval" >
+                    <select class="form-control" name="tipoeval" id="tipoeval" required>
                     <option value="">-- Elija el tipo de evaluacion  --</option>
                     <option value=0>Ninguna</option>
                     <option value=1>Una linea</option>
@@ -46,7 +46,7 @@
                  $registro = New EstandarController();
               $registro-> botonRegresaEstController();
                  ?>
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
               </div>
               </form>
               </div>
