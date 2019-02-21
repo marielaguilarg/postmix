@@ -53,9 +53,13 @@ class MvcController{
     }
     	#vista clientes
 		public function vistaClientesController(){
-			
+			$i=$bac=1;
 			$respuesta =Datos::vistaClientesModel("ca_clientes");
 			foreach($respuesta as $row => $item){
+				if(($i-1)%3==0){
+					echo '<div class="row">';
+					$bac=0;
+				}
 			echo '
 		        <div class="col-md-4" >
 		          <div class="box box-info" >
@@ -110,6 +114,12 @@ class MvcController{
 			 
 		    <!-- /.content -->
 		';
+			if(($i)%3==0){
+				
+				echo '</div>';
+				$bac=1;
+			}
+			$i++;
 		}
 	}	
 	public function editarClienteController(){

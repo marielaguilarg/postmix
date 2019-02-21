@@ -4,6 +4,8 @@
 //	codigo para generar reporte anual de agua en excel   			//
 //																		//
 //////////////////////////////////////////////////////////////////////////
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1); 
 include "Models/crud_usuario.php";
 include "Controllers/subnivelController.php";
 include "Models/crud_inspectores.php";
@@ -19,6 +21,8 @@ include "Models/crud_servicios.php";
 include "Models/crud_estandar.php";
 require_once 'libs/PHPExcel-1.8/PHPExcel.php';
 class ArchivoAguaController {
+	
+	private $conexion;
 
 	
 	private  $arrcolores;
@@ -34,7 +38,7 @@ class ArchivoAguaController {
 		$arrcolores=array("azul"=>"48","verde"=>"31","naranja"=>"orange","amarillo"=>"yellow",
 				"rojo"=>"62","verdeo"=>"30","gris"=>"gray", "blanco"=>"white", "verdef"=>"green", "rojof"=>"60" );
 		
-		$this->arrcolores=array("azul"=>"ff0066cc","verde"=>"ff2f67d1",
+		$this->arrcolores=array("azul"=>"ff0066cc","verde"=>"ffd3c9da",
 				"rojo"=>"ff5dade2","verdeo"=>"ff308cd8" );
 		try{
 			$rsu=UsuarioModel::getUsuario($user, "cnfg_usuarios");
@@ -43,7 +47,7 @@ class ArchivoAguaController {
 				if ($gpous=='lab')
 					$tipocons= $rowu[cus_tipoconsulta];
 			}
-				
+			$rsu=$null;
 		// si es adm nada
 		// si es lab busca el laboratorio
 		// si es
@@ -142,6 +146,7 @@ cue_reactivosestandardetalle.red_numcaracteristica2+3,cue_reactivosestandardetal
 				//		$nomres=$nomres.$row[0].',';
 			}
 		}
+		$res0=null;
 		$arr_colxsec=array(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 		
 		
@@ -195,7 +200,7 @@ if (cue_reactivosestandardetalle.red_numcaracteristica2=20,15,cue_reactivosestan
 				$esttablas[] = $row[0];
 			}
 		}
-		
+		$res0=0;
 		for($i=0;$i<54;$i++) {
 			$letra++;
 			 $this->workbook->getActiveSheet()->setCellValue(Utilerias::michr($letra)."2", $esttablas[$i], $text_format_std1);
@@ -396,6 +401,7 @@ FROM
       ON aa_muestras.mue_numreporte = ins_generales.i_numreporte 
     INNER JOIN ca_unegocios 
       ON ins_generales.`i_unenumpunto`= ca_unegocios.une_id 
+
     WHERE DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))>= str_to_date(concat('01.',:fechaasig_i),'%d.%m.%Y') AND
 DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))<= str_to_date(concat(:diafin,'.',:fechaasig_fin),'%d.%m.%Y')) AS A LEFT JOIN
  (SELECT aa_recepcionmuestra.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestra.rm_fechahora, aa_recepcionmuestra.rm_embotelladora 
@@ -411,7 +417,6 @@ GROUP BY aa_recepcionmuestra.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.m
 		
 		$res1=Conexion::ejecutarQuery($sql,$parametros);
 		
-		//die();
 		$total= sizeof($res1);
 		$letra=65;
 		$renglon=3;
@@ -438,16 +443,16 @@ GROUP BY aa_recepcionmuestra.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.m
 				$clafrancta=$row["fc_idfranquiciacta"];
 				$clacta=$row["cue_clavecuenta"];
 				$mesasig=Utilerias::cambiaMesG($row["mesas"]);
-						
+				$this->conexion=Conexion::conectar();
 				// actualiza tipo de muestra;
-				$destipomue=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",41,$tipomue);
+				$destipomue=$this->miCatalogoDetalle("ca_catalogosdetalle",41,$tipomue);
 				
 				
 				//origen de la muestra
 				$sqlorimu="SELECT ca_catalogosdetalle.cad_idcatalogo, ca_catalogosdetalle.cad_idopcion, ca_catalogosdetalle.cad_descripcionesp, ca_catalogosdetalle.cad_descripcioning
  FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '21' AND ca_catalogosdetalle.cad_idopcion =  ".$origen;
 				
-				$orimue=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", 21, $origen);
+				$orimue=$this->miCatalogoDetalle("ca_catalogosdetalle", 21, $origen);
 				
 				
 				//numero de toma
@@ -455,7 +460,7 @@ GROUP BY aa_recepcionmuestra.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.m
 ca_catalogosdetalle.cad_descripcionesp, ca_catalogosdetalle.cad_descripcioning 
 FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '42' 
 AND ca_catalogosdetalle.cad_idopcion =  ".$numtoma;
-				$toma= DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", 42, $numtoma);
+				$toma= $this->miCatalogoDetalle("ca_catalogosdetalle", 42, $numtoma);
 						
 				//fuente de abastecimiento
 				$sqlnum="SELECT ca_catalogosdetalle.cad_idcatalogo, 
@@ -464,21 +469,21 @@ ca_catalogosdetalle.cad_descripcioning FROM ca_catalogosdetalle
 WHERE ca_catalogosdetalle.cad_idcatalogo =  '45' 
 AND ca_catalogosdetalle.cad_idopcion =  ".$fuenab;
 				
-				$fabas=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",45,$fuenab);
+				$fabas=$this->miCatalogoDetalle("ca_catalogosdetalle",45,$fuenab);
 							
 				//auditor
 				$sqlnum="SELECT ca_inspectores.ins_clave, ca_inspectores.ins_nombre FROM ca_inspectores WHERE
 ca_inspectores.ins_clave =  ".$audit;
 				
 				$rownum=DatosInspector::getInspectorxId($audit);
-				$nomaudit= $rownum["ins_nombr"];
-							
+				$nomaudit= $rownum["ins_nombre"];
+				$rownum=null;
 				//laboratorio
 				if ($labor) {
-					;
 					
-					$nomlab=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",43,$labor);
-					
+				
+					$nomlab=$this->miCatalogoDetalle("ca_catalogosdetalle",43,$labor);
+				
 				} else {
 					$nomlab="";
 				}
@@ -495,7 +500,7 @@ ca_inspectores.ins_clave =  ".$audit;
 				
 				//causa de cancelacion
 				if ($causa) {
-					$nomcau= DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", 44, $causa);
+					$nomcau= $this->miCatalogoDetalle("ca_catalogosdetalle", 44, $causa);
 					
 				}else {
 					$nomcau="";
@@ -504,7 +509,7 @@ ca_inspectores.ins_clave =  ".$audit;
 				// actualiza region
 				$sqlnum="SELECT ca_regiones.reg_clave, ca_regiones.reg_nombre, ca_regiones.cli_idcliente FROM ca_regiones
 WHERE ca_regiones.cli_idcliente =  '$clacli' AND ca_regiones.reg_clave =  '$clareg'";
-				$nomreg=Datosnuno::nombreNivel1($clareg,"ca_nivel1");
+			//	$nomreg=Datosnuno::nombreNivel1($clareg,"ca_nivel1");
 				
 			
 				// actualiza pais
@@ -512,20 +517,20 @@ WHERE ca_regiones.cli_idcliente =  '$clacli' AND ca_regiones.reg_clave =  '$clar
 ca_paises.pais_clave =  '$clapais'";
 				
 				
-			   $nompais=Datosndos::nombreNivel2($clapais, "ca_nivel2");
+			   //$nompais=Datosndos::nombreNivel2($clapais, "ca_nivel2");
 				
 				
 				// actualiza zona
 				$sqlnum="SELECT ca_zonas.zona_nombre FROM ca_zonas WHERE ca_zonas.reg_clave =  '$clareg' AND
 ca_zonas.pais_clave =  '$clapais' AND ca_zonas.zona_clave =  '$clazona'";
 				
-				$nomzona= Datosntres::nombreNivel3($clazona, "ca_nivel3");
+				$nomzona= $this->anombreNivel3($clazona, "ca_nivel3");
 								
 				// actualiza estado
 				$sqlnum="SELECT ca_estados.est_nombre FROM ca_estados WHERE ca_estados.reg_clave =  '$clareg' AND
 ca_estados.pais_clave =  '$clapais' AND ca_estados.zona_clave =  '$clazona' AND ca_estados.est_clave =  '$claestado'";
 							
-				$nomedo=Datosncua::nombreNivel4($claestado, "ca_nivel4");
+				$nomedo=$this->anombreNivel4($claestado, "ca_nivel4");
 						
 				// actualiza ciudad
 				$sqlnum="SELECT ca_ciudades.ciu_nombre 
@@ -534,7 +539,7 @@ AND ca_ciudades.pais_clave =  '$clapais' AND ca_ciudades.zona_clave =  '$clazona
 AND ca_ciudades.est_clave =  '$claestado' AND ca_ciudades.ciu_clave =  '$claciudad'";
 				//echo $sqlnum;
 				
-				$nomciu= Datosncin::nombreNivel5($claciudad, "ca_nivel5");
+				$nomciu= $this->anombreNivel5($claciudad, "ca_nivel5");
 			
 				
 				// actualiza cuentas
@@ -542,7 +547,7 @@ AND ca_ciudades.est_clave =  '$claestado' AND ca_ciudades.ciu_clave =  '$claciud
 ca_cuentas.cue_clavecuenta =  '$clacta'";
 				
 				
-			   $nomcuen= DatosCuenta::nombreCuenta($clacta,$this->cliente );
+			   $nomcuen= $this->anombreCuenta($clacta,$this->cliente );
 				
 				
 				//actualiza ciudad
@@ -550,7 +555,7 @@ ca_cuentas.cue_clavecuenta =  '$clacta'";
 FROM ca_nivelseis WHERE ca_nivelseis.reg_clave =  '$clareg' 
 AND ca_nivelseis.pais_clave = '$clapais' AND ca_nivelseis.zona_clave =  '$clazona' AND ca_nivelseis.est_clave =  '$claestado' AND ca_nivelseis.ciu_clave =  '$claciudad' AND ca_nivelseis.niv6_clave =  '$clafran'";
 				
-				$nomniv6= Datosnsei::nombreNivel6($clafran, "ca_nivel6");
+				$nomniv6= $this->anombreNivel6($clafran, "ca_nivel6");
 				
 				
 				//actualiza franquicia cuenta
@@ -565,11 +570,11 @@ ca_franquiciascuenta.fc_idfranquiciacta =  '$clafrancta'";
 				
 				//actuaiza servicio
 				$sqlser="SELECT ca_servicios.ser_descripcionesp FROM ca_servicios WHERE ca_servicios.ser_claveservicio =  '$idserv'";
-				$rsse=DatosServicio::vistaNomServicioModel($idserv, "ca_servicios");
+				$rsse=$this->avistaNomServicioModel($idserv, "ca_servicios");
 				
 				$nomser= $rsse["ser_descripcionesp"];
 				
-				
+				$rsse=null;
 				$dattablas=array($nomser,$row[1],$destipomue,$orimue,$toma,$fabas, $row[6],$row[7],$row[8],$row[9],
 						$row[10],$row[11],$row[12],$mesasig,$nomaudit,$row[15],$row[16],$row[17],$nomlab,$nomstatus,
 						$nomcau,$row[21],$row[22],$row[23],$row[24],$row[25],$row[26],$nomzona,$nomcuen,$nomedo,
@@ -590,26 +595,23 @@ if(cue_reactivosestandardetalle.red_numcaracteristica2>3
 and cue_reactivosestandardetalle.red_numcaracteristica2<14,cue_reactivosestandardetalle.red_numcaracteristica2+3,
 cue_reactivosestandardetalle.red_numcaracteristica2))))))) ASC";
 				 $parametros=array("claser"=>$claser,"comp"=>$row[2]);
-				 echo "+++";
-				 $rsnum=Conexion::ejecutarQuery($sqlnum,$parametros);
-				 echo "fin";
+				
+				 $rsnum=$this->aejecutarQuery($sqlnum,$parametros);
+			
 				 foreach ($rsnum as $rown) {
 				 	$numcar2= $rown[0];
 				 	$tipodat= $rown[1];
 				 	$numcat=$rown[2];
 				 	// obten resultado
-				 	$sqlres="SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_valorreal FROM ins_detalleestandar
-WHERE ins_detalleestandar.ide_idmuestra =  '".$row[1]."' 
-AND ins_detalleestandar.ide_claveservicio =  '$claser' 
-AND ins_detalleestandar.ide_numcaracteristica3 =  '".$numcar2."' 
-AND ins_detalleestandar.ide_numreporte =  '".$row[12]."'";
+				 	
 				 	//echo $sqlres;
-				 	$rsr=DatosEst::ConsultaDetalleAgua($row[1], $claser, $numcar2, $row[12]);
+				 	$rsr=$this->aConsultaDetalleAgua($row[1], $claser, $numcar2, $row[12]);
 				 	$totalre= sizeof($rsr);
 				 	if ($totalre>0) {
 				 		foreach ($rsr as $rowr) {
 				 			$valre= $rowr[1];
 				 		}
+				 		$rsr=null;
 				 		switch($tipodat) {
 				 			case "C" :
 				 				if (($valre) and ($numcat)) {
@@ -618,9 +620,10 @@ ca_catalogosdetalle.cad_descripcionesp, ca_catalogosdetalle.cad_descripcioning
  FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '".$numcat."' 
 AND ca_catalogosdetalle.cad_idopcion =  ".$valre;
 				 					
-				 					$valfin=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$numcat,$valre);
+				 					$valfin=$this->miCatalogoDetalle("ca_catalogosdetalle",$numcat,$valre);
 				 					
 				 				}
+				 				
 				 				break;
 				 			case "N" :
 				 				$valfin=$valre;
@@ -638,19 +641,21 @@ AND ca_catalogosdetalle.cad_idopcion =  ".$valre;
 				 	
 				 }  // while
 				 // AGREGA A ARREGLO;
-				 
+				 $rsnum=null;
 				 // guarda en archivo
 				 for($j=0;$j<54;$j++) {
+				 //	echo "<br>".Utilerias::michr($letra+$j).".".$renglon."---".$dattablas[$j];
 				 	if ($j==33) {
-				 		 $this->workbook->getActiveSheet()->setCellValue(Utilerias::michr($letra+$j).$renglon,$dattablas[$j], $text_format_det1);
+				 		 $this->workbook->getActiveSheet()->setCellValue(Utilerias::michr($letra+$j).$renglon,$dattablas[$j]);
 				 		 $this->workbook->getActiveSheet()->getStyle(Utilerias::michr($letra+$j).$renglon)->applyFromArray($text_format_det1);
 				 	} else {
-				 		 $this->workbook->getActiveSheet()->setCellValue(Utilerias::michr($letra+$j).$renglon,$dattablas[$j], $text_format_det);
+				 		 $this->workbook->getActiveSheet()->setCellValue(Utilerias::michr($letra+$j).$renglon,$dattablas[$j]);
 				 		 $this->workbook->getActiveSheet()->getStyle(Utilerias::michr($letra+$j).$renglon)->applyFromArray($text_format_det);
 				 	}
 				 }  // for
 				 $renglon++;
 			}
+			$res1=null;
 		}
 		$sheet =  $this->workbook->getActiveSheet();
 		$cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
@@ -661,8 +666,7 @@ AND ca_catalogosdetalle.cad_idopcion =  ".$valre;
 		}
  		$objWriter = PHPExcel_IOFactory::createWriter($this->workbook, 'Excel2007');
 		$objWriter->save($fname);
-		//
-	//	die();
+		//	die();
 		
 		//$fh=fopen($fname, "rb");
 		//fpassthru($fh);
@@ -674,7 +678,7 @@ AND ca_catalogosdetalle.cad_idopcion =  ".$valre;
 		$fh=fopen($fname, "rb");
 		fpassthru($fh);
 		}catch(Exception $ex){
-			echo "Hubo un error al generar el archivo ".$ex->getMessage();
+			echo "Hubo un error al generar el archivo ".$ex."--".$ex->getMessage();
 		}
 		//unlink($fname);
 }
@@ -779,6 +783,236 @@ AND ca_catalogosdetalle.cad_idopcion =  ".$valre;
 			
 		}
 		
+		public function miCatalogoDetalle($tabla,$catalogo,$opcion){
+			
+			$sql_cat = "SELECT
+ca_catalogosdetalle.cad_descripcionesp,
+ca_catalogosdetalle.cad_descripcioning FROM ".
+$tabla."
+WHERE
+ca_catalogosdetalle.cad_idcatalogo =  :clavecatalogo AND
+ca_catalogosdetalle.cad_idopcion =  :opcion";
+//  echo "<br> oo ".$sql_cat;
+$stmt = $this->conexion->prepare($sql_cat);
+
+$stmt-> bindParam(":clavecatalogo", $catalogo, PDO::PARAM_INT);
+$stmt-> bindParam(":opcion",$opcion , PDO::PARAM_INT);
+$stmt-> execute();
+
+$result_cat=$stmt->fetchall();
+foreach($result_cat as $row_cat) {
+	if ($_SESSION["idiomaus"] == 2)
+		$res= $row_cat["cad_descripcioning"];
+		else
+			$res = $row_cat["cad_descripcionesp"];
+}
+$result_cat=null;
+return $res;
+		}
+		
+		public function anombreNivel3($id,$tabla) {
+			
+			
+			
+			$sql = "SELECT n3_id, n3_nombre FROM $tabla where n3_id=:id ";
+			
+			
+			
+			$stmt =$this->conexion->prepare($sql);
+			
+			$stmt->bindParam(":id",$id,PDO::PARAM_INT);
+			
+			$stmt->execute();
+			
+			$res=$stmt->fetchAll();
+			
+			foreach ($res as $row) {
+				
+				$nombre = $row["n3_nombre"];
+				
+			}
+			$res=null;
+			$stmt->closeCursor();
+			$stmt=null;
+			return $nombre;
+			
+		}
+		
+		public function anombreNivel4($id,$tabla) {
+			
+			
+			
+			$sql = "SELECT n4_id, n4_nombre FROM $tabla where n4_id=:id ";
+			
+			
+			
+			$stmt = $this->conexion->prepare($sql);
+			
+			$stmt->bindParam(":id",$id,PDO::PARAM_INT);
+			
+			$stmt->execute();
+			
+			$res=$stmt->fetchAll();
+			
+			foreach ($res as $row) {
+				
+				$nombre = $row["n4_nombre"];
+				
+			}
+			$res=null;
+			$stmt->closeCursor();
+			$stmt=null;
+			return $nombre;
+			
+		}
+		
+		public function anombreNivel6($id,$tabla) {
+			
+			
+			
+			$sql = "SELECT n6_id, n6_nombre FROM $tabla where n6_id=:id ";
+			
+			
+			
+			$stmt = $this->conexion->prepare($sql);
+			
+			$stmt->bindParam(":id",$id,PDO::PARAM_INT);
+			
+			$stmt->execute();
+			
+			$res=$stmt->fetchAll();
+			
+			foreach ($res as $row) {
+				
+				$nombre = $row["n6_nombre"];
+				
+			}
+			$stmt=null;
+			$res=null;
+			return $nombre;
+			
+		}
+		
+		public function anombreNivel5($id,$tabla) {
+			
+			
+			
+			$sql = "SELECT n5_id, n5_nombre FROM $tabla where n5_id=:id ";
+			
+			
+			
+			$stmt =  $this->conexion->prepare($sql);
+			
+			$stmt->bindParam(":id",$id,PDO::PARAM_INT);
+			
+			$stmt->execute();
+			
+			$res=$stmt->fetchAll();
+			
+			foreach ($res as $row) {
+				
+				$nombre = $row["n5_nombre"];
+				
+			}
+			
+			return $nombre;
+			
+		}
+		
+		function anombreCuenta($cuenta, $cliente) {
+			
+			$sql = "SELECT
+ca_cuentas.cue_idcliente,
+					
+ca_cuentas.cue_id,
+ca_cuentas.cue_descripcion,
+ca_cuentas.cue_tipomercado,
+ca_cuentas.cue_siglas,
+ca_cuentas.cue_lugar
+FROM
+ca_cuentas
+where ca_cuentas.cue_idcliente=:cliente ";
+			
+			$sql.=" and cue_id=:cuenta";
+			$sql.=" order by ca_cuentas.cue_id";
+			
+			$res = $this->conexion->prepare($sql);
+			$res->bindParam(":cuenta", $cuenta, PDO::PARAM_INT);
+			$res->bindParam(":cliente", $cliente, PDO::PARAM_INT);
+			$res->execute();
+			
+			$reg=$res->fetchAll();
+			
+			foreach ($reg as $row) {
+				$nombre = $row["cue_descripcion"];
+			}
+			$res->closeCursor();$reg=null;
+			return $nombre;
+		}
+		public function aejecutarQuery($sql, $listParam) {
+			try {
+				
+				$stmt =$this->conexion->prepare($sql);
+				
+				foreach ($listParam as $key => $param) {
+					if ($param == null)
+						$stmt->bindValue(":" . $key, NULL, PDO::PARAM_NULL);
+						else
+							$stmt->bindValue(":" . $key, $param, PDO::PARAM_STR);
+				}
+				
+				$stmt->execute();
+				
+				
+				//   $stmt->debugDumpParams();
+				
+				
+				$respuesta = $stmt->fetchAll();
+				
+				if ($stmt->errorInfo()[1] != null) {
+					
+					//var_dump($stmt->errorInfo());
+					
+					throw new Exception("Error al ejecutar consulta en la bd");
+				}
+				
+				return $respuesta;
+			} catch (PDOException $e){
+				
+				throw new Exception("Error al ejecutar consulta en la bd");
+			}
+		}
+		
+		function aConsultaDetalleAgua($muestra,$serv,$carac,$reporte) {
+			
+			$sql="SELECT ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_valorreal FROM ins_detalleestandar
+		WHERE ins_detalleestandar.ide_idmuestra =:muestra
+		AND ins_detalleestandar.ide_claveservicio = :serv
+		AND ins_detalleestandar.ide_numcaracteristica3 = :caracteristica
+		AND ins_detalleestandar.ide_numreporte = :reporte";
+			$stmt =$this->conexion-> prepare($sql);
+			
+			$stmt->bindParam(":muestra", $muestra, PDO::PARAM_INT);
+			$stmt->bindParam(":serv", $serv, PDO::PARAM_INT);
+			$stmt->bindParam(":caracteristica", $carac, PDO::PARAM_INT);
+			
+			$stmt->bindParam(":reporte", $reporte, PDO::PARAM_INT);
+			$stmt->execute();
+			
+			$res=$stmt->fetchAll();
+			
+			
+			return $res;
+		}
+	public function avistaNomServicioModel($datosModel, $tabla){
+		$stmt = $this->conexion->prepare("SELECT ser_id, ser_descripcionesp FROM $tabla WHERE ser_id=:ids");
+			
+		$stmt-> bindParam(":ids", $datosModel, PDO::PARAM_INT);
+			
+		$stmt-> execute();
+			
+		return $stmt->fetch();
+	}
 	
 }
 

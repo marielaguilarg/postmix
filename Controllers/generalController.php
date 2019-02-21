@@ -5,6 +5,9 @@ class GeneralController{
 		if (isset($_GET["sec"])) {
 			$seccion = $_GET["sec"];
 			$servicioController = $_GET["sv"];
+			$tiposec="G";
+
+	$respuesta =DatosAbierta::actualizatiporeac($seccion, $servicioController,$tiposec, "cue_secciones");
 
 	echo '<div class="row">
     <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevageneral&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>

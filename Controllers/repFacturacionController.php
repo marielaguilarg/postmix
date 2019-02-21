@@ -40,7 +40,7 @@ class RepFacturacionController
          $this->titulo="REGISTRO DE FACTURACION";
          $this->action="index.php?action=listafacturas";
       }else{
-          $this->titulo="EXTRAER ARCHIVO DE TRABAJO";
+          $this->titulo="REPORTE DE FACTURACION";
           $this->action="imprimirReporte.php?admin=repfac";
       }
         set_time_limit(360);
@@ -107,7 +107,7 @@ class RepFacturacionController
             $i=0;
             foreach ($rs as $row) {
                 if ($i<1) {
-                    $inicio='<option value="0" select>- '.strtoupper(T_("Todos")).' -</option>';
+                    $inicio='<option value="" >- Seleccione un cliente -</option>';
                 } else {
                     $inicio="";
                 }
@@ -165,7 +165,7 @@ class RepFacturacionController
                 
                 
                 if ($i<1) {
-                    $inicio='<option value="0" select>- '.strtoupper(T_("Todos")).' -</option>';
+                    $inicio='<option value="" >-Seleccione un cliente-</option>';
                 } else {
                     $inicio="";
                 }

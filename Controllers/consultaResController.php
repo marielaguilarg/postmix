@@ -61,7 +61,7 @@ class consultaResController {
 		$arr_meses=array(strtoupper(T_("Enero")),strtoupper(T_("Febrero")),strtoupper(T_("Marzo")),strtoupper(T_("Abril")),strtoupper(T_("Mayo")),strtoupper(T_("Junio")),strtoupper(T_("Julio")),strtoupper(T_("Agosto")),strtoupper(T_("Septiembre")),strtoupper(T_("Octubre")),strtoupper(T_("Noviembre")),strtoupper(T_("Diciembre")));
 		if ($_GET ['bandera'] == 1) {
 			$sql_drop2 = "DROP table tempgeneral";
-			$rs_sql_drop2 = mysql_query($sql_drop);
+			$rs_sql_drop2 = Conexion::ejecutarQuerysp($sql_drop);
 		}
 		
 		/*         * ************************************** */
@@ -69,6 +69,8 @@ class consultaResController {
 		/*         * ************************************** */
 		
 		//reinicio variables de session
+		$_SESSION["fperiodo"] = "";
+		$_SESSION["fcuenta"] = "";
 		
 		$_SESSION["fnumrep"]="";
 		

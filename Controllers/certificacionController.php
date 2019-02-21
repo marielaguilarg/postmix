@@ -298,7 +298,7 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
             $nrep=$row_rs_sql_sol ["sol_numrep"];
           
            
-            $rs_sql_rep = DatosMuestras::listaMuestrasxRep($nserv,$nrep,"aa_muestras");
+            $rs_sql_rep = DatosMuestra::listaMuestrasxRep($nserv,$nrep,"aa_muestras");
             $num_reg = sizeof($rs_sql_rep);
             if ($num_reg>0) {
                 foreach ($rs_sql_rep as $row_rs_sql_rep) {
@@ -492,6 +492,11 @@ cer_solicitud.sol_numpunto =:Nivel03";
                 $this->listaSolicitudes[]=$solicitud;
                 $contl++;
             }
+            Navegacion::iniciar();
+          //  Navegacion::borrarRutaActual("b");
+            $rutaact = $_SERVER['REQUEST_URI'];
+            // echo $rutaact;
+            Navegacion::agregarRuta("a", $rutaact, "SOLICITUDES");
             
             
         }
@@ -645,7 +650,7 @@ cer_solicitud.sol_numpunto =:Nivel03";
                
                 // edicion
                 
-             
+           
                 //$html->definirBloque('Panelbusqueda2', 'wpanel');
                 
                 // busca datos del establecimiento elegido nsol
@@ -708,7 +713,7 @@ cer_solicitud.sol_numpunto =:Nivel03";
                     }  // while cuenta
                     
              
-              
+                   
                 //   $_SESSION["GrupoUs"]="adm";
                 if($_SESSION["GrupoUs"]=="adm"||$_SESSION["GrupoUs"]=="cli"||$_SESSION["GrupoUs"]=="muf"){
                   //  $this->msg=$msg;
@@ -873,6 +878,11 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                     $this->autor_ex=$autoriza;
                     
                 } // if administrador
+                
+                Navegacion::borrarRutaActual("b");
+                $rutaact = $_SERVER['REQUEST_URI'];
+                // echo $rutaact;
+                Navegacion::agregarRuta("b", $rutaact, "NO. SOLICITUD ".$nsol);
             } // if edit
             
          
@@ -1161,7 +1171,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                        
                       DatosUnegocio::insertarUnegociodesdeSolicitud($servicio,$reporte);
                   }catch(Exception $ex){
-                      $this->msg="Error al insertar, intente de nuevo";
+                      $this->msg=Utilerias::mensajeError("Error al insertar, intente de nuevo");
                   }
                   // actualiza punto de venta;
                   
@@ -1175,6 +1185,7 @@ cer_solicitud.sol_estatussolicitud = :estatus, cer_solicitud.sol_fechainicio=".$
               //$msg=$sSQLa;
               try{
              Conexion::ejecutarInsert($sSQLabis,array("estatus"=>$estatus,"INSPECTOR"=>$INSPECTOR,"servicio"=>$servicio,"npunto"=>$npunto,"reporte"=>$reporte));
+             $this->msg=Utilerias::mensajeExito("Se modificó el estatus correctamente");
              
               }catch(Exception $ex){
                   $this->msg=$ex->getMessage();
@@ -1202,11 +1213,11 @@ cer_solicitud.sol_estatussolicitud = :estatus, cer_solicitud.sol_fechainicio=".$
                   $file_name=$rowa["sde_ruta"];
               }
               $file_name =RAIZ."/".$file_name;
-              
+            //  echo "**********".$file_name;die();
               If (file_exists($file_name)) {
                   header('Content-Description: File Transfer');
                   header('Content-Type: application/octet-stream');
-                  header('Content-Disposition: attachment; filename='.basename($file_name));
+                  header('Content-Disposition: attachment; filename="'.basename($file_name).'"');
                   header('Expires: 0');
                   header('Cache-Control: must-revalidate');
                   header('Pragma: public');

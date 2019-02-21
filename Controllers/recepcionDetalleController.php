@@ -90,6 +90,10 @@ group by  mue_idmuestra;");
 			
 		}
 		
+		Navegacion:: borrarRutaActual("b");
+		$rutaact = $_SERVER['REQUEST_URI'];
+		// echo $rutaact;
+		Navegacion::agregarRuta("b", $rutaact, "MUESTRA NO.".$numcat);
 		
 	}
 	public function vistaNuevo(){
@@ -127,6 +131,7 @@ aa_recepcionmuestradetalle.rm_idrecepcionmuestra =:numrecibo
 		
 		$ulpar++;
 		}
+		else $ulpar=1;
 	
 		if(isset($_SESSION["Usuario"]))
 		
@@ -173,13 +178,15 @@ tmp_recepcion GROUP BY tmp_recepcion.idmuestra) as a
 group by nummuestra";
 			
 			//tmp_recepcion GROUP BY tmp_recepcion.idmuestra";
+			//echo $SQLL;
 			$rsnr=Conexion::ejecutarQuerysp($SQLL);
+		
 			$num_reg = sizeof($rsnr);
-			//echo $num_reg;
+			
 			foreach ($rsnr as $rownr) {
 				$nmues= $rownr["nummuestra"];
 				$totmb=$rownr["totmb"];
-				//echo $totmb;
+			
 				$totfq=$rownr["totfq"];
 				//echo $totfq;
 				
@@ -190,21 +197,22 @@ aa_muestras WHERE aa_muestras.mue_idmuestra =  :nmues'";
 				
 				$rsntt=DatosMuestra::listaMuestrasxIdMuestra($nmues,"aa_muestras");
 				$num_regt = sizeof($rsntt);
+			
 				foreach ($rsntt as $rowtt) {
-					//  ECHO $rowtt["mue_estatusmuestra"];
+				
 					if  ($rowtt["mue_estatusmuestra"]==2) {  // listo para recibirse
-						//echo $rowtt["mue_numunidadesMB"];
-						//echo $totmb;
-						//echo $rowtt["mue_numunidadesFQ"];
-						//echo $$totfq;
+// 						echo $rowtt["mue_numunidadesMB"];
+// 						echo "--".$totmb;
+// 						echo "....".$rowtt["mue_numunidadesFQ"];
+// 						echo "---".$totfq;
 						if ($totmb==$rowtt["mue_numunidadesMB"] and $totfq==$rowtt["mue_numunidadesFQ"]) {  // listo para recibirse
 							//procedimiento de insercion del recibo
 							// insert FQ
 							$sSQL= "insert into aa_recepcionmuestradetalle
 (aa_recepcionmuestradetalle.rmd_partida, aa_recepcionmuestradetalle.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_tipoanalisis,
 aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus) VALUES ($ulpar, '$numrecibo','$nmues','FQ', '$totfq',1)";
-							//echo $sSQL;
-							DatosRecepcionMuestra::insertarRecepcionDet($ulpar, $numrecibo, $nmues, $totmb,"FQ");
+							
+							DatosRecepcionMuestra::insertarRecepcionDet(0,$ulpar, $numrecibo, $nmues, $totmb,"FQ");
 							
 							$i++;
 							$ulpar++;
@@ -213,7 +221,7 @@ aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus)
 (aa_recepcionmuestradetalle.rmd_partida, aa_recepcionmuestradetalle.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_tipoanalisis,
 aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus) VALUES ($ulpar, '$numrecibo','$nmues','MB', '$totmb',1)";
 							//echo $sSQLM;
-							DatosRecepcionMuestra::insertarRecepcionDet($ulpar, $numrecibo, $nmues, $totmb,"MB");
+							DatosRecepcionMuestra::insertarRecepcionDet(0,$ulpar, $numrecibo, $nmues, $totmb,"MB");
 							
 							$i++;
 							$ulpar++;
@@ -221,6 +229,7 @@ aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus)
 							// actualiza estatus de la muestra
 							$sSQLu1="update aa_muestras set mue_estatusmuestra=3, mue_fecharecepcion=now() where mue_idmuestra=$nmues";
 							$rs1=DatosMuestra::actualizarFechaRecepcion($nmues);
+							//echo "todo ok";
 						} else {   // LAS MUESTRAS NO COINCIDEN
 							// SI NO, PRESENTA MENSAJE
 							$this->mensaje=Utilerias::mensajeError('No es posible recibir. El numero de unidades que intenta entregar, no coincide con las recolectadas');
@@ -245,7 +254,7 @@ aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus)
 				//$fecvis=date("Y-m-d H:i:s")
 				$fecvis=date("Y-m-d H:i:s");
 				$sSQLu="update aa_recepcionmuestra set aa_recepcionmuestra.rm_fechahora='$fecvis', aa_recepcionmuestra.rm_estatus=2 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra=".$numrecibo;
-				$rs=DatosMuestra::actualizarFechaRecepcion($fecvis,$numrecibo);
+				$rs=DatosRecepcionMuestra::actualizarFechaRecepcion($fecvis,$numrecibo);
 				
 			} else {
 				// elimina registro de recibo

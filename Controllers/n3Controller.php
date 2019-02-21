@@ -28,9 +28,14 @@ class NtresController{
 	}
 
 	public function asignavar(){
+		
+		//busco el idn2
+		
 		if (isset($_GET["idnd"])) {
 			$datosController = $_GET["idnd"];
-			echo '<li><a href="index.php?action=listan2&idnuno='.$datosController.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
+			$reg=Datosndos::vistaN2opcionModel($datosController,"ca_nivel2");
+			$id2=$reg["n2_idn1"];
+			echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
 		} else
 			echo '<li><a href="index.php?action=listan2&idnuno=1"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
 	}

@@ -1,6 +1,5 @@
 <?php
 include "Models/crud_grupo.php";
-include "Models/crud_permisos.php";
 
 class PermisosController
 {
@@ -122,12 +121,20 @@ class PermisosController
             $bordata=0;
         }
         try{
+        	
         if($subop>0)
         {
             $sSQL= "insert into cnfg_permisos(cpe_grupo,cpe_claveopcion,cpe_insertar,cpe_modificar,cpe_borrar)
  values ('$grupo','$combito',$insdata,$moddata,$bordata);";
             //echo $sSQL;
+            //busco que no exista
+            $res=DatosPermisos::getPermisosxGrupoOp($grupo,$combito,"cnfg_permisos");
+           
+            if(sizeof($res)>0){
+            
+            }else{
             DatosPermisos::insertarPermisos($grupo,$combito,$bordata,$moddata,$insdata,"cnfg_permisos");
+            }
             for($j=0;$j<$subop;$j++)
             {
                 $val="submen_".$j;
@@ -135,14 +142,25 @@ class PermisosController
                 {$sSQL= "insert into cnfg_permisos(cpe_grupo,cpe_claveopcion,cpe_insertar,cpe_modificar,cpe_borrar) 
 values ('$grupo','".$$val."',$insdata,$moddata,$bordata);";
                 
-                DatosPermisos::insertarPermisos($grupo,$$val,$bordata,$moddata,$insdata,"cnfg_permisos");}
-            }
+				//busco que no exista
+                $res2=DatosPermisos::getPermisosxGrupoOp($grupo,$$val,"cnfg_permisos");
+             
+                if(sizeof($res2)>0){
+                }
+                else
+				DatosPermisos::insertarPermisos($grupo,$$val,$bordata,$moddata,$insdata,"cnfg_permisos");}
+             }
+            
+            
         }
         else
         {
             $sSQL= "insert into cnfg_permisos(cpe_grupo,cpe_claveopcion,cpe_insertar,cpe_modificar,cpe_borrar) 
 values ('$grupo','$combito',$insdata,$moddata,$bordata);";
             //echo $sSQL;
+            $res2=DatosPermisos::getPermisosxGrupoOp($grupo,$combito,"cnfg_permisos");
+            if(sizeof($res2)>0){
+            }else
             DatosPermisos::insertarPermisos($grupo,$combito,$bordata,$moddata,$insdata,"cnfg_permisos");
         }
         

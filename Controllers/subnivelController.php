@@ -10,6 +10,7 @@ class SubnivelController{
 		if (isset($_GET["ts"])) {
 			switch($_GET["ts"]) {
 			case "G" : 	       
+			
 		      $ingreso = new GeneralController();
 		      $ingreso -> borrageneralController();
 			  $ingreso -> vistaGeneralController();
@@ -445,13 +446,20 @@ public function vistaNombresubseccionController(){
 			 	$londat=SubnivelController::obtienelon($seccion,2);
 			 	$numreac=substr($seccion,$datini,$londat);	
 
+                $datini=SubnivelController::obtienedato($seccion,3);
+			 	$londat=SubnivelController::obtienelon($seccion,3);
+			 	$numcom=substr($seccion,$datini,$londat);	
+
 		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
 		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    $respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
 			//echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P"><em class="fa fa-dashboard"></em>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
-		    
+					    	#nivel tres
+			$respuesta3 = DatosSeccion::vistaNombreSeccionAbModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosabiertos");
+			echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A">COMPONENTE: '.$respuesta3["ra_descripcionesp"]. '</a></li>';
+			    
 			  break;
 			case 3 :
         	# coloca subtitulo de seccion
@@ -534,7 +542,8 @@ public function vistaNombresubseccionController(){
 		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    	#busca ultimo nivel en estandar
 		   		$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec, $servicioController, $numreac, $numcom, "cue_reactivosestandar");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+				//echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+		        echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=E">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
 		    
 			  	break;
 			case 3 :
@@ -556,7 +565,7 @@ public function vistaNombresubseccionController(){
 		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    	$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=E">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 		    
 		    	#nivel tres
 				$respuesta3 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosestandar");
@@ -564,8 +573,21 @@ public function vistaNombresubseccionController(){
 		    
 
 			  break;
+			  
 				} // fin de switch nivel
+				break;
 
+ default:
+			  # busca nombre del servicio
+		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+			# busca nombre de seccion
+		    
+		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
+
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    break;
+			 
 		}// fin de switch  tipo 
 	}
 }

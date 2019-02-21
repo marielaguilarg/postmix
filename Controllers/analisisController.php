@@ -123,6 +123,7 @@ ins_detalleestandar.ide_idmuestra =:ntoma group by ide_numrenglon";
 		$bnvo='<a class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=nuevoanalisis&ncomp='.$tipomue.'&ntoma='.$ntoma.'&tipo='.$tipoAna.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
 ';
 	//	$this->botnvo=$bnvo;
+		
 		foreach ($rsnr as $rownr) {
 			$resultado=array();
 				
@@ -172,7 +173,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 				"componente"=> $rowcue["re_numcomponente"]
 				);
 				$rsc=Conexion::ejecutarQuery($ssqldet,$parametros);
-				
+			
 				if(sizeof($rsc))
 					foreach ($rsc as $rowdet) {
 						$resultado=array();
@@ -559,7 +560,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 	//	echo $sqltr;
 		
 		$rsc=Conexion::ejecutarQuery($sqltr,array("idserv"=>$idserv,"ncomp"=>$ncomp));
-		
+		var_dump($rsc);
 		try{
 		foreach ($rsc as $rowc){
 			$pondreal=0;
@@ -572,7 +573,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 				$valcom=${$nomcam};
 				
 			}
-			echo $valcom;
+			//echo $valcom;
 			if($valcom!=""){
 				$band=1;
 				if (is_numeric($valcom)) {
@@ -584,12 +585,13 @@ aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 						$sigunon=${$siguno};
 					}
 					$idser=$rowc['ser_claveservicio'];
+					
 					$idsec=$rowc['sec_numseccion'];
 					$numreac=$rowc['r_numreactivo'];
 					$numcom=$rowc['re_numcomponente'];
 					$numcar=$rowc['re_numcaracteristica'];
 					$numcom2=$rowc['re_numcomponente2'];
-					$numcar2=$rowc['re_numcaracteristica2'];
+					$numcar2=$rowc['red_numcaracteristica2'];
 					$sigdos=$rowc['red_signodos'];
 					$valmin=$rowc['red_valormin'];
 					$valmax=$rowc['red_valormax'];
@@ -1054,7 +1056,7 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 					//		echo $pondreal;
 					//  2.- guarda o actualiza la seccion
 					// if ($operac=="nueva") {
-					$numcar2=$rowc['red_numcaracteristica2'];
+				//	$numcar2=$rowc['red_numcaracteristica2'];
 					
 					
 					if(strlen($valcom)>0){
@@ -1063,21 +1065,22 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 //                             ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon,ide_ponderacion,ide_aceptado,ide_numcolarc, ide_idmuestra)
 //                             values ('".$idser."', ".$numrep.", ".$idsec.", ".$numreac.", ". .", ".$numcar.",
 //  ".$numcom2.", ".$numcar2.", '".$valcom."', ".$numren.", ".$pondreal.", ".$aceptado.", 1, $ntoma);";
-						$datosController= array("nserv"=>$idser,
+						$datosController= array("idser"=>$idser,
 								"numrep"=>$numrep,
-								"nsec"=>$idsec,
-								"nreac"=>$numreac,
-								"numcom"=>$numcom,
-								"ncar1"=>$numcar,
-								"ncom2"=>$numcom2,
+								"numsec"=>$idsec,
+								"numreac"=>$numreac,
+								"numcom"=>". .",
+								"numcar"=>$numcar,
+								"numcom2"=>$numcom2,
 								"numcar2"=>$numcar2,
-								"valreal"=>$valcom,
+								"valcom"=>$valcom,
 								"numren"=>$numren,
-								"pond"=>$pondreal,
+								"pondreal"=>$pondreal,
 								"aceptado"=>$aceptado,
-								"colarc"=>1,
-								"nummues"=>$ntoma
+								"numcolarc"=>1,
+								"ntoma"=>$ntoma
 						);
+						var_dump($datosController);
 						DatosEst::insertaRepEstandarDetalleToma($datosController, "ins_detalleestandar");
 					}
 				} //fin del if que valida si es numerico
@@ -1157,7 +1160,7 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		
 		
 		$rsfq=DatosEst::ConsultaAgua($ntoma);
-	//	var_dump($rsfq);
+		var_dump($rsfq);
 		if(sizeof($rsfq)!=0) {   // existen resultados de analisis
 			foreach ( $rsfq as  $rownr){
 				$numren=$rownr['ide_numrenglon'];
@@ -1204,7 +1207,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 				$valcom=${$nomcam};
 				
 			}
-		//	echo "********".$valcom;
+			//echo "********".$valcom;
 			if($valcom!=""){
 				$band=1;
 				if (is_numeric($valcom)) {
@@ -1221,7 +1224,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 					$numcom=$rowc['re_numcomponente'];
 					$numcar=$rowc['re_numcaracteristica'];
 					$numcom2=$rowc['re_numcomponente2'];
-					$numcar2=$rowc['re_numcaracteristica2'];
+					$numcar2=$rowc['red_numcaracteristica2'];
 					$sigdos=$rowc['red_signodos'];
 					$valmin=$rowc['red_valormin'];
 					$valmax=$rowc['red_valormax'];

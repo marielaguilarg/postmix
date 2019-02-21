@@ -121,12 +121,14 @@ where ca_tipomercado.tm_clavetipo=:mercado";
 	/* * ******************************************************************* */
 	//guardo los filtros como var de sesion
 	
-	$periodo = Utilerias::fecha_res($fechainicio . '-' . $fechainicio2) . ' '.strtoupper(T_("a")).' ' . Utilerias::fecha_res($fechafin . '-' . $fechafin2);
+	if(!isset($_SESSION["fperiodo"])||$_SESSION["fperiodo"]=="")
+	{	$periodo = Utilerias::fecha_res($fechainicio . '-' . $fechainicio2) . ' '.strtoupper(T_("a")).' ' . Utilerias::fecha_res($fechafin . '-' . $fechafin2);
 	
 	$_SESSION["fperiodo"] = $periodo;
 	$_SESSION["fcuenta"] = $cuenta;
 	$_SESSION["fpuntov"] = $unidadnegocio;
 	$_SESSION["fnumrep"] = $num_reg;
+	}
 	//var_dump($_SESSION);
 	
 	//$_SESSION["fcompania"] =buscaNivel($select1;

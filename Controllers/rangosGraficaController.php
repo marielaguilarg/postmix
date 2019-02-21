@@ -78,6 +78,7 @@ inner join cue_reactivosestandardetalle on cue_secciones.ser_claveservicio=cue_r
       //  $slq_ran="DELETE FROM `cnfg_rangosgrafica` WHERE (`rg_id`='".$_GET["id"]."')  ";
         //	echo $slq_ran;
         try{
+        	
         DatosRangosgrafica::eliminarRango($id,"cnfg_rangosgrafica");
         $this->mensaje="<div class='alert alert-success'>El rango se eliminó correctamente</div>";
         
@@ -192,6 +193,29 @@ concat(red_numseccion,'.',red_numreactivo,'.',red_numcomponente,'.',red_numcarac
     public function vistaNuevoRango(){
         $this->numop=filter_input(INPUT_GET,"numop",FILTER_SANITIZE_STRING);
         $this->seccion=filter_input(INPUT_GET,"secc",FILTER_SANITIZE_STRING);
+        $sql="select cue_reactivosestandardetalle.sec_numseccion, cue_reactivosestandardetalle.r_numreactivo,
+        cue_reactivosestandardetalle.re_numcomponente, cue_reactivosestandardetalle.re_numcaracteristica, cue_reactivosestandardetalle.re_numcomponente2, cue_reactivosestandardetalle.red_numcaracteristica2, cue_reactivosestandardetalle.red_parametroesp, cue_reactivosestandardetalle.red_parametroing
+        from cue_reactivosestandardetalle
+        inner join cue_reactivosestandar on cue_reactivosestandar.ser_claveservicio=cue_reactivosestandardetalle.ser_claveservicio and cue_reactivosestandar.sec_numseccion=cue_reactivosestandardetalle.sec_numseccion
+        and cue_reactivosestandar.r_numreactivo=cue_reactivosestandardetalle.r_numreactivo and cue_reactivosestandar.re_numcomponente=cue_reactivosestandardetalle.re_numcomponente
+        and cue_reactivosestandar.re_numcaracteristica=cue_reactivosestandardetalle.re_numcaracteristica and cue_reactivosestandar.re_numcomponente2=cue_reactivosestandardetalle.re_numcomponente2
+        where red_grafica=-1 and re_tipoevaluacion <>0 
+ 
+  AND CONCAT(
+    cue_reactivosestandardetalle.sec_numseccion,
+    '.',
+    cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente,
+    '.',
+    cue_reactivosestandardetalle.re_numcaracteristica,
+    '.',
+    cue_reactivosestandardetalle.re_numcomponente2,
+    '.',
+    red_numcaracteristica2)=:componente";
+        $res=Conexion::ejecutarQuery($sql, array("componente"=> $this->numop));
+ 	foreach($res as $row){
+      $this->componentes=$row["red_parametroesp"];
+ 	}
+        $this->nombreSeccion=DatosSeccion::nombreSeccionIdioma($this->seccion,1,1);
     }
     /**
      * @return mixed

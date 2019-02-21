@@ -4,9 +4,9 @@ class CuentaController{
 
 	public function vistaCuentasController(){
 				
-				$respuesta =DatosCuenta::vistaCuentasModel("ca_cuentas");
-
-				foreach($respuesta as $row => $item){
+		$respuesta =DatosCuenta::vistaCuentasModel("ca_cuentas");
+		$i=$bac=1;
+		foreach($respuesta as $row => $item){
 
         if ($item["cue_tipomercado"]==1){
           $nommerc="ON PREMISE";
@@ -17,7 +17,12 @@ class CuentaController{
         }  else if ($item["cue_tipomercado"]==4){
           $nommerc="EXPERIMENTAL";
         }
-
+        
+        if(($i-1)%3==0){
+        	echo '<div class="row">';
+        	$bac=0;
+        }
+        
 		echo '
         <div class="col-md-4" >
           <div class="box box-info" >
@@ -36,14 +41,14 @@ class CuentaController{
               <div class="arrow">
               	  <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                      <li><a href="index.php?action=editacuenta&id='.$item["cue_id"].'"><strong>Nombre: '.$item["cue_descripcion"].'</strong></a></li>
+                      <li><a href="index.php?action=editacuenta&id='.$item["cue_id"].'"><strong>NOMBRE : '.$item["cue_descripcion"].'</strong></a></li>
                     </ul>
                 </div>
               </div>
                <div class="arrow">
               	  <div class="box-footer no-padding">
                     <ul class="nav nav-stacked">
-                      <li><a href="#"><strong>Tipo: '.$nommerc.'</strong></a></li>
+                      <li><a href="#"><strong>TIPO : '.$nommerc.'</strong></a></li>
                     </ul>
                  </div>
               </div>
@@ -75,7 +80,12 @@ class CuentaController{
               </div>
               
               </div>';
-
+				if(($i)%3==0){
+					
+					echo '</div>';
+					$bac=1;
+				}
+				$i++;
 
 				}
 
@@ -138,11 +148,11 @@ public function editarCuentaController(){
     echo '<div class="form-group col-md-6">
     <input type="hidden" name="idcueeditar" value="'.$respuesta["cue_id"].'">
            <label>NOMBRE</label>
-           <input type="text" class="form-control" name="cuedes" value="'.$respuesta["cue_descripcion"].'" >
+           <input type="text" class="form-control" name="cuedes" value="'.$respuesta["cue_descripcion"].'" required>
           </div>
           <div class="form-group col-md-6">
               <label>CLIENTE</label>
-              <select class="form-control" name="clicuen">   
+              <select class="form-control" name="clicuen" required>   
                  <option value="">-- Elija el cliente  --</option>';
 
               foreach($listaclien as $row => $itemc){                 
@@ -158,7 +168,7 @@ public function editarCuentaController(){
                 </div>
                 <div class="form-group col-md-6">
                   <label>TIPO DE MERCADO</label>
-                  <select class="form-control" name="tipomercuen">';
+                  <select class="form-control" name="tipomercuen" required>';
                     if($respuesta["cue_tipomercado"] == 1 ){
                        echo '<option value=1  selected="selected">ON PREMISE</option>';
                     }else{

@@ -8,8 +8,12 @@ class ProductoController{
 			$seccion = $_GET["sec"];
 			$servicioController = $_GET["sv"];
 
+		$tiposec="V";
+
+	$respuesta =DatosAbierta::actualizatiporeac($seccion, $servicioController,$tiposec, "cue_secciones");
+
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevoproducto&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevoproducto&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>';
 

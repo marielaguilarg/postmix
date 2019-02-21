@@ -1,6 +1,26 @@
 <?php
 class PonderacionController{
 
+	public function tituloPonderaController(){
+		 $ser = $_GET["sv"];
+        $sec = $_GET["sec"];
+		     $datini=SubnivelController::obtienedato($sec,1);
+			 $londat=SubnivelController::obtienelon($sec,1);
+			 $seccion=substr($sec,$datini,$londat);
+			 //echo $seccion;
+			 
+	# busca nombre del servicio
+		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
+		    echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+			# busca nombre de seccioneditarPonderaComentController
+		    
+		    $respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $ser,"cue_secciones");
+
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$ser.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			echo '<li><a href="index.php?action=sn&ts=P&sv='.$ser.'&sec='.$seccion.'">SECCION PONDERADA </a></li>';
+	}
+
+
 
 #vista ponderacion
 	public function vistaPonderaController(){
@@ -21,8 +41,8 @@ class PonderacionController{
   <div class="form-group col-md-4" >
      </div>
 
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevapondera&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
-    <button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=sn&sec='.$seccion.'&ts=PN&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Pondera  </a></button>
+    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevapondera&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+    <button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=sn&sec='.$seccion.'&ts=PN&sv='.$servicioController.'" >   PONDERA </a></button>
      </div>
      </div>
 
@@ -58,15 +78,15 @@ class PonderacionController{
                 
                 
 	                  <td>
-	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'&ts='.$item["r_tiporeactivo"].'&sv='.$item["ser_claveservicio"].'"><span ><i class="fa fa-level-down fa-lg pull-center" aria-hidden="true"></i></span></a>
+	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'&ts='.$item["r_tiporeactivo"].'&sv='.$item["ser_claveservicio"].'"><span ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span></a>
 	                  </td>
 	                  <td>
-	                    <a href="index.php?action=reactivocoment&sec='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'&sv='.$item["ser_claveservicio"].'">Coment</a>
+	                    <a href="index.php?action=reactivocoment&sec='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'&sv='.$item["ser_claveservicio"].'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a>
 	                  </td>
 	               <td>
 	                    
 
-	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts=P&sv='.$item["ser_claveservicio"].'&idb='.$item["ser_claveservicio"].'.'.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'">Borrar</a>
+	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts=P&sv='.$item["ser_claveservicio"].'&idb='.$item["ser_claveservicio"].'.'.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'"><i class="fa fa-trash-o fa-lg"></i></a>
 	                  </td>
 	                </tr>';
 	            $i++;  
@@ -119,16 +139,17 @@ public function registrarPonderaController(){
                               "indsyd"=>$indsyd,
                               ); 
           
-          $respuesta=DatosPond::registrarPonderaModel($datosController, "cue_reactivos");
-           echo $respuesta; 
+          $respuesta=DatosPond::registrarPonderaModel($datosController, "cue_reactivos"); 
         if($respuesta=="success"){
-           echo '<script> windows.location= "index.php?action=listacuenta" </script>';
-          
-       //   header("location:index.php?action=listacuenta");
-
+        echo "
+            <script type='text/javascript'>
+              window.location='index.php?action=sn&sv=".$datosServicio."&sec=".$datosSeccion."&ts=P'
+                </script>
+                  ";
         } else {
           echo "error";
         }
+		
       }  
     
     }
@@ -147,11 +168,11 @@ public function editarPonderaController(){
           <input type="hidden" name="idreac" value="'.$respuesta["r_numreactivo"].'">
          
            <label>DESCRIPCION EN ESPAÑOL</label>
-           <input type="text" class="form-control" name="desesp" value="'.$respuesta["r_descripcionesp"].'" >
+           <input type="text" class="form-control" name="desesp" value="'.$respuesta["r_descripcionesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="desing" value="'.$respuesta["r_descripcioning"].'" >
+           <input type="text" class="form-control" name="desing" value="'.$respuesta["r_descripcioning"].'" required>
           </div>
 
 		 <div class="form-group col-md-6">
@@ -176,8 +197,8 @@ public function editarPonderaController(){
            
           </div>
            <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$respuesta["sec_numseccion"].'&ts=P&sv='.$respuesta["ser_claveservicio"].'"> Cancelar </a></button>
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$respuesta["sec_numseccion"].'&ts=P&sv='.$respuesta["ser_claveservicio"].'"> CANCELAR </a></button>
+                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
                  </div>';
                
 
@@ -191,6 +212,9 @@ public function actualizarPonderaController(){
       }else{
           $indsyd=0;
       }
+	  $datosServicio=$_POST["idser"];
+	  $datosSeccion=$_POST["idsec"];
+	  
       $datosController= array("idsec"=>$_POST["idsec"],
                               "idser"=>$_POST["idser"],
                               "idreac"=>$_POST["idreac"],
@@ -202,12 +226,14 @@ public function actualizarPonderaController(){
 
       
           $respuesta=DatosPond::actualizarPonderaModel($datosController, "cue_reactivos");
-           echo $respuesta; 
-        if($respuesta=="success"){
-           echo '<script> windows.location= "index.php?action=listacuenta" </script>';
           
-       //   header("location:index.php?action=listacuenta");
-
+        if($respuesta=="success"){
+            echo "
+            <script type='text/javascript'>
+              window.location='index.php?action=sn&sv=".$datosServicio."&ts=P&sec=".$datosSeccion."'
+                </script>
+                  ";
+				    
         } else {
           echo "error";
         }
@@ -218,18 +244,20 @@ public function actualizarPonderaController(){
   public function borrarPonderaController(){
     if(isset($_GET["idb"])){
       $datosController = $_GET["idb"];
+	  $datosServicio = $_GET["sv"];
+	  $datosSeccion = $_GET["sec"];
       
       $respuesta = DatosPond::borrarPonderaModel($datosController, "cue_reactivos");
-      echo $respuesta;
-        if($respuesta=="success"){
-           echo '<script> windows.location= "index.php?action=listacliente" </script>';
-          //header('location:index.php?action=listacliente');
-            // echo "cambio efectuado";
-          
-        
-          } else {
-            echo "error";
-          } 
+      if($respuesta=="success"){
+            echo "
+            <script type='text/javascript'>
+              window.location='index.php?action=sn&ts=P&sv=".$datosServicio."&sec=".$datosSeccion."'
+                </script>
+                  ";
+				    
+        } else {
+          echo "error";
+        } 
     }
   } 
 
@@ -238,7 +266,7 @@ public function actualizarPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["id"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$id.'&ts=P&sv='.$ids.'"> Cancelar </a></button>
+     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$id.'&ts=P&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
 
@@ -253,10 +281,10 @@ public function actualizarPonderaController(){
         echo '  <tr>
                   <td>'.$item["rc_numcomentario"].'</td>
 
-                  <td><a href="index.php?action=editacoment&id='.$sec.'.'.$item["rc_numcomentario"].'&ids='.$ser.'&sec='.$sec.'">'.$item["rc_descomentarioesp"].'</a>
+                  <td><a href="index.php?action=editapondcoment&id='.$sec.'.'.$item["rc_numcomentario"].'&ids='.$ser.'&sec='.$sec.'">'.$item["rc_descomentarioesp"].'</a>
                   </td>
                   
-                   <td><a href="index.php?action=reactivocoment&idb='.$item["rc_numcomentario"].'&sv='.$ser.'&sec='.$sec.'">borrar</a>
+                   <td><a href="index.php?action=reactivocoment&idb='.$item["rc_numcomentario"].'&sv='.$ser.'&sec='.$sec.'"><i class="fa fa-trash-o fa-lg"></i></a>
                   </td>
                 </tr>';
                    
@@ -273,7 +301,7 @@ public function actualizarPonderaController(){
     
       echo '
       <div class="row">
-        <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevorcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+        <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevorcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
          </div>
          </div>';
 
@@ -290,14 +318,38 @@ public function actualizarPonderaController(){
             
   }
 
+   public function EncComentPondController(){
+      
+    $datosController = $_GET["id"];
+    $servicioController = $_GET["ids"];
+	$seccion = $_GET["sec"];
+
+      
+     echo '<input type="hidden" name="idsec" value="'.$datosController.'">';
+     echo '<input type="hidden" name="idser" value="'.$servicioController.'">';
+	 echo '<input type="hidden" name="sec" value="'.$seccion.'">';
+            
+  }
+
+
   public function botonRegresarComentController(){
       
   $ids = $_GET["ids"];
   $id = $_GET["id"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> Cancelar </a></button>
+     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
+  
+  public function botonRegresaComPondController(){
+      
+  $ids = $_GET["ids"];
+  $id = $_GET["sec"];
+
+     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
+  ';
+  }
+
 
 public function registraReacComentController(){
       // echo "entre a actualizar el comentario     
@@ -340,7 +392,7 @@ public function registraReacComentController(){
         if($respuesta=="success"){
             echo "
            <script type='text/javascript'>
-             window.location.href='index.php?action=reactivocoment&sv=".$servicio."&sec=".$seccion."
+             window.location='index.php?action=reactivocoment&sv=".$servicio."&sec=".$seccion."'
                 </script>
                   ";
         } else {
@@ -360,11 +412,11 @@ public function editarPonderaComentController(){
     $respuesta = DatosPond::editaPonderaComentModel($datosController,$idservicio,"cue_reactivoscomentarios");
        
     echo ' 
-                <input type="text" class="form-control" name="descesp" value="'.$respuesta["rc_descomentarioesp"].'" >
+                <input type="text" class="form-control" name="descesp" value="'.$respuesta["rc_descomentarioesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="descing" value="'.$respuesta["rc_descomentarioing"].'" >
+           <input type="text" class="form-control" name="descing" value="'.$respuesta["rc_descomentarioing"].'" required>
            </div>';
     }       
 
@@ -383,13 +435,14 @@ public function editarPonderaComentController(){
                               "nomesp"=>$descesp,
                               "noming"=>$descing,
                               ); 
-          
+							  
+		  
        $respuesta=DatosPond::actualizarPonderaComentModel($datosController, "cue_seccioncomentario");
       
         if($respuesta=="success"){
             echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=listacoment&sv=".$servicio."&sec=".$sec."
+              window.location='index.php?action=reactivocoment&sv=".$servicio."&sec=".$sec."'
                 </script>
                   ";
         } else {
@@ -587,7 +640,7 @@ public function editarPonderaComentController(){
     
     
  $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
-     
+     $i=$bac=1;
     foreach($respuesta as $row => $item){
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
           //  echo "encontre el registro";
@@ -614,7 +667,11 @@ public function editarPonderaComentController(){
             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==21)
             continue; 
-      echo '
+      if(($i-1)%3==0){
+        	echo '<div class="row">';
+        	$bac=0;
+        }
+	  echo '
       
         <div class="col-md-4" >
           <div class="box box-info" >
@@ -753,6 +810,13 @@ public function editarPonderaComentController(){
           <!-- /.box -->
     </div>
      ';
+	 if(($i)%3==0){
+					
+					echo '</div>';
+					$bac=1;
+				}
+				$i++;
+	 
       } //foreach
    
 

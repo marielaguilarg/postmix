@@ -31,13 +31,16 @@ class NcuaController{
 		//$datosController = $_GET["idnt"];
 		if (isset($_GET["idnt"])) {
 			$datosController = $_GET["idnt"];
-
+			$reg=Datosntres::vistaN3opcionModel($datosController, "ca_nivel3");
+			$id3=$reg["n3_idn2"];
+			$reg=Datosndos::vistaN2opcionModel($id3,"ca_nivel2");
+			$id2=$reg["n2_idn1"];
 		}else{
 			$datosController = 1;
 
 		}
-		echo '<li><a href="index.php?action=listan2&idnd=1"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
-			echo '<li><a href="index.php?action=listan3&idnt='.$datosController.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
+		echo '<li><a href="index.php?action=listan2&iduno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
+			echo '<li><a href="index.php?action=listan3&idnd='.$id3.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
 		
 	}
 }

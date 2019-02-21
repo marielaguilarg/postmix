@@ -95,7 +95,11 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 					$registro['delcat']=$eliminar;
 					$this->listaRecepciones[]=$registro;
 				}
-				
+				Navegacion::iniciar();
+				Navegacion:: borrarRutaActual("a");
+				$rutaact = $_SERVER['REQUEST_URI'];
+				// echo $rutaact;
+				Navegacion::agregarRuta("a", $rutaact, "RECEPCION DE MUESTRAS");
 		
 	}
 	
@@ -158,7 +162,7 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 		
 		// genera clave de servicio, la consulta debe estar agrupada y debera presentar el numero maximo para obtenerlo
 	
-		
+		date_default_timezone_set('America/Mexico_City');
 		$fecvis=date("Y-m-d H:i:s");
 		
 		

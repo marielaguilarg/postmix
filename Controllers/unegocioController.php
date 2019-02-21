@@ -76,10 +76,11 @@ if (isset($_POST["opcionuneg"])||$estado!=0)
 //echo $totuneg;
 foreach ($respuesta as $row => $item) {
 echo '  <tr>
-	                  <td>' . $item["une_id"] . '</td>
-	                  <td>' . $item["une_idpepsi"] . '</td>
-		                  <td>' . $item["une_idcuenta"] . '</td>
-	                  <td>
+	      
+	       <td>'.$item["une_dir_estado"].'</td>
+           <td>'.$item["une_dir_municipio"].'</td>
+           <td>' . $item["une_num_unico_distintivo"] . '</td>
+			<td>
 	                     <a href="index.php?action=editaunegocio&referencia='.$item["une_id"].'&idc='.$idc.'">' . $item["une_descripcion"] . '</a>
 	                  </td>
 	                </tr>';
@@ -154,9 +155,10 @@ $op = "%" . $_POST["opcionuneg"] . "%";
 
 foreach ($respuesta as $row => $item) {
 echo '  <tr>
-	                  <td>' . $item["une_id"] . '</td>
-	                  <td>' . $item["une_idpepsi"] . '</td>
-		                  <td>' . $item["une_idcuenta"] . '</td>
+	              
+	                  <td>'.$item["une_dir_estado"].'</td>
+           <td>'.$item["une_dir_municipio"].'</td>
+                      <td>' . $item["une_num_unico_distintivo"] . '</td>
 	                  <td>
 	                    <a href="index.php?action=runegociodetalle&idc='.$idcta.'&un='.$item["une_id"].'&sv='.$sv.'">'.$item["une_descripcion"].'</a>
 	                  </td>
@@ -239,7 +241,9 @@ echo '<h3 class="box-title">' . $respuesta["une_descripcion"] . '</h3>
                 <div class="col-sm-4">
                   <div class="description-block">
   
-                 <button type="button" class="btn btn-block btn-primary" style="width: 80%"><a href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a></button>
+                 <button type="button" class="btn btn-block btn-info" style="width: 80%"><a href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a></button>
+				  
+
 ';
 }
 

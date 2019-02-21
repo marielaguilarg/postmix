@@ -28,7 +28,8 @@ public function vistaNomServSeccController(){
     #buscar el nombre del servicio
     $respuesta =DatosServicio::vistaNomServicioModel($numser,"ca_servicios");
     echo '<li><a href="index.php?action=listaservicio">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
-    $respuesta =DatosSeccion::vistaNombreSeccionModel($numsec, $numser, "cue_secciones");
+    
+	$respuesta =DatosSeccion::vistaNombreSeccionModel($numsec, $numser, "cue_secciones");	
     echo '<li><a href="index.php?action=listaseccion&idser='.$numser.'">SECCION: '.$respuesta["sec_nomsecesp"]. '</a></li>';
 }
 
@@ -48,8 +49,12 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
 
 
 		$respuesta =DatosSeccion::vistaSeccionModel($numser,"cue_secciones");
-
+		$bac=$i=1;
 		foreach($respuesta as $row => $item){
+			if(($i-1)%3==0){
+        		echo '<div class="row">';
+        		$bac=0;
+        	}
 			echo '
         <div class="col-md-4" >
           <div class="box box-info" >
@@ -110,7 +115,7 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
                  
-                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'"> DETALLE </a></span></button>
+                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'"> <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i> </a></span></button>
 
 
                   </div>
@@ -119,14 +124,14 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
-                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">COMENTARIO </a></span></button>
+                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a></span></button>
                   </div>
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-4">
                   <div class="description-block">
-                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaseccion&idb='.$item["sec_numseccion"].'&idser='.$item["ser_claveservicio"].'"><i class="fa fa-trash-o"></i></a></button>
+                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaseccion&idb='.$item["sec_numseccion"].'&idser='.$item["ser_claveservicio"].'"><i class="fa fa-trash-o fa-lg"></i></a></button>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -134,12 +139,19 @@ echo '<button  class="btn btn-default pull-right" style="margin-right: 18px"><a 
               </div> 
                    </div>
             <!-- /.box-body -->
+			
           </div>
           <!-- /.box -->
        
         
     </div>';
-             
+           if(($i)%3==0){
+           	
+           	echo '</div>';
+           	$bac=1;
+           }
+           $i++;
+		  
 
 		}
 	}	
@@ -394,7 +406,7 @@ public function borrarSeccionPonderaController(){
                 <td><a href="index.php?action=editacoment&id='.$sec.'.'.$item["sec_numcoment"].'&ids='.$ser.'&sec='.$sec.'">'.$item["sec_comentesp"].'</a>
                 </td>
                 
-                 <td><a href="index.php?action=listacoment&idb='.$item["sec_numcoment"].'&sv='.$ser.'&sec='.$sec.'">borrar</a>
+                 <td><a href="index.php?action=listacoment&idb='.$item["sec_numcoment"].'&sv='.$ser.'&sec='.$sec.'"><i class="fa fa-trash-o fa-lg"></i></a>
                 </td>
               </tr>';
                  
@@ -411,7 +423,7 @@ public function borrarSeccionPonderaController(){
   
     echo '
     <div class="row">
-      <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevocoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+      <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevocoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
        </div>
        </div>';
 
@@ -422,7 +434,7 @@ public function borrarSeccionPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["id"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacoment&sec='.$id.'&sv='.$ids.'"> Cancelar </a></button>
+     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
 
@@ -431,7 +443,7 @@ public function borrarSeccionPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["sec"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> Cancelar </a></button>
+     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
 
@@ -498,16 +510,20 @@ public function borrarSeccionPonderaController(){
                               ); 
           
        $respuesta=DatosSeccion::registrarComentSeccionModel($datosController, "cue_seccioncomentario");
-      
+       
         if($respuesta=="success"){
             echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=listacoment&sv=".$servicio."&sec=".$seccion."
+              window.location='index.php?action=listacoment&sv=".$servicio."&sec=".$seccion."'
                 </script>
                   ";
+				  
         } else {
           echo "error";
         }
+		
+		
+		
       }  
     
     }
@@ -522,12 +538,13 @@ public function borrarSeccionPonderaController(){
     //echo $idservicio;
     $respuesta = DatosSeccion::editaComentModel($datosController,$idservicio,"cue_seccioncomentario");
        
+	   
     echo ' 
-                <input type="text" class="form-control" name="descesp" value="'.$respuesta["sec_comentesp"].'" >
+                <input type="text" class="form-control" name="descesp" value="'.$respuesta["sec_comentesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="descing" value="'.$respuesta["sec_comenting"].'" >
+           <input type="text" class="form-control" name="descing" value="'.$respuesta["sec_comenting"].'" required>
            </div>';
     }       
 
@@ -548,11 +565,11 @@ public function actualizarComentController(){
                               ); 
           
        $respuesta=DatosSeccion::actualizarComentSeccionModel($datosController, "cue_seccioncomentario");
-      
+     
         if($respuesta=="success"){
             echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=listacoment&sv=".$servicio."&sec=".$sec."
+              window.location='index.php?action=listacoment&sv=".$servicio."&sec=".$sec."'
                 </script>
                   ";
         } else {
@@ -692,9 +709,16 @@ public function vistanomRservController(){
 }
 
 public function ingresaimagen(){
-      //$ser = $_GET["sv"];
-      //$sec = $_GET["sec"];
-  
+      $servicio = $_GET["sv"];
+      $seccion = $_GET["sec"];
+	  $reporte = $_GET["nrep"];
+      $punvta = $_GET["pv"];
+	  $idc=$_GET["idc"];
+	  
+		$datosController= array("servicio"=>$servicio,
+                              "numrep"=>$reporte,
+                              "seccion"=>$seccion,
+                              ); 
     echo '
 <div class="row">
    <div class="col-md-12">
@@ -710,7 +734,7 @@ public function ingresaimagen(){
    <input type="hidden" name="reporte" size="20" maxlength="100" value="'.$nsol.'">
     <input type="hidden" name="MAX_FILE_SIZE" value="600000">                     
    
-   <input class="form-control-file"  type="file" name="pictures1" id="pictures1" accept="image/gif,image/jpeg,image/x-png" />
+   <input class="form-control-file"  type="file" name="pictures[]" id="pictures1" accept="image/gif,image/jpeg,image/x-png" />
    <br /> 
    Descripci&oacute;n 1 : 
    <input type="text" name="descripcion1" id="descripcion1" class="campoTxt" size="100" maxlength="500"   />
@@ -718,7 +742,7 @@ public function ingresaimagen(){
    <br />
    Incluir en Certificado:   <input name="incluir1" type="checkbox"/><br />
 <br />
-<input class="form-control-file"  type="file" name="pictures2" id="pictures2" accept="image/gif,image/jpeg,image/x-png" />
+<input class="form-control-file"  type="file" name="pictures[]" id="pictures2" accept="image/gif,image/jpeg,image/x-png" />
    <br /> 
    Descripci&oacute;n 2 : 
    <input type="text" name="descripcion2" id="descripcion2" class="campoTxt" size="100" maxlength="500"   />
@@ -726,44 +750,57 @@ public function ingresaimagen(){
    <br />
    Incluir en Certificado:   <input name="incluir2" type="checkbox"/><br />
     <br />
-   <input class="form-control-file"  type="file" name="pictures3" id="pictures3" accept="image/gif,image/jpeg,image/x-png" />
+   <input class="form-control-file"  type="file" name="pictures[]" id="pictures3" accept="image/gif,image/jpeg,image/x-png" />
    <br /> 
    Descripci&oacute;n 3 : 
    <input type="text" name="descripcion3" id="descripcion3" class="campoTxt" size="100" maxlength="500"   />
 
    <br />
    Incluir en Certificado:   <input name="incluir3" type="checkbox"/><br />
+';
 
-
-
-</div> <div class="form-group">
-   <button type="submit" name="submit"  class="btn btn-info pull-right"> Guardar   </button>
-        
-</div> 
-  </form> </div></div>       
-         <div class="row">     
-          <div class="col-md-12 table-responsive">         
-       <table class="table">    
-<tr>             
-<th>No.</th><th>NOMBRE</th></tr>';
-
-//           $rsar=DatosSolicitud::listaSolicitudDetalle($nsol,$idserv,"cer_solicituddetalle");
-        
-          //$band=1;
-  //        foreach($rsar as $rowa){
-   //           $detalle=array();
-    //          $detalle['id_arc_exist']='<tr><td >'.$rowa["sde_idarchivo"].'</td>';
-     //         $detalle['arc_exist']="<td >".
-       //           "<a href='imprimirReporte.php?admin=descarc&nserv=".$idserv."&nsol=".$nsol."&narc=".
-      //            $rowa["sde_idarchivo"] ."'>".$rowa["sde_ruta"]."</a></td></tr>";
-      //        $this->listaSolDet[]=$detalle;
-             // $html->expandir ( 'ARCHIVOS_EX', '+PanelbusquedaA' );
-      //    }
-       //   $this->listaSolDet[]=array('id_arc_exist'=>"</table></div></div>");
+// aqui llamamos el programa para guardar 
+      $archivo=$this->subeimagen();
 
 
 echo '
-                    </table></div></div>
+</div> <div class="form-group">
+   <button type="submit" name="submit"  class="btn btn-info pull-right"> Guardar   </button>
+        
+</div>
+
+  </form> </div></div>       
+         <div class="row">     
+          <div class="col-md-12 table-responsive">';         
+      
+// busca imagenes subidas
+							  
+		$respuesta = DatosSeccion::getListaImagenes($datosController,"ins_imagendetalle");
+		$cont=1;
+		$disp="";
+ 	    foreach($respuesta as $infoimg){
+			$rutaFoto=$infoimg["id_ruta"];
+			$descripcionFoto=$infoimg["id_descripcion"];
+			$idimg=$infoimg["id_idimagen"];
+			$display="fotografias/".$rutaFoto;
+		
+		$servicio = $_GET["sv"];
+        $seccion = $_GET["sec"];
+	    $reporte = $_GET["nrep"];
+        $punvta = $_GET["pv"];
+	    $idc=$_GET["idc"];
+	  
+		  echo "<div class='col-md-4'>   <div class='mr-2'>";
+          echo '  <a data-fancybox="gallery" href="'.$display.'" '.$disp.'><img src="'.$display.'" width="350" height="234"></a><br /><br /><div class="mr-2">'.$descripcionFoto.
+		  '</div><button type="button" class="btn btn-block btn-info"><a href="index.php?action=rsn&sec='.$seccion.'&ts=IM&sv='.$servicio.'&nrep='.$reporte.'&pv='.$punvta.'&idb='.$idimg.'&idc='.$idc.'"><i class="fa fa-trash-o"></i></a></button>';
+          if($cont==3)
+             $display="style='display:none;'";
+          $cont++;
+          echo "</div></div>";
+ 
+		}    
+		echo '
+                    </div></div>
     </div>
 </div>           
 </div>
@@ -777,72 +814,75 @@ echo '
         define('RAIZ',"../fotografias");
 
               //echo $ncuenta;
-              include ('Utilerias/leevar.php');
-              $carpeta=verificaCarpeta($servicio,$reporte);
-             if($carpeta!=-1)
-             {
-               $ban=0;
-               $contdes=1; /* para los campos de descripcion*/      // valida si hay archivo para ingresar
+             include ('Utilerias/leevar.php');
+              $refer=3;
+              $status=1;
+			  
+               // valida si hay archivo para ingresar
           
-               foreach ( $_FILES ["pictures"] ["error"] as $key => $error ) {
-            $name = $_FILES ["pictures"] ["name"] [$key];
-            if ($error == UPLOAD_ERR_OK) {
-
-                $tmp_name = $_FILES ["pictures"] ["tmp_name"] [$key];
-
-
-
-                $uploadfile =RAIZ."/".$carpeta . '/'.basename ( $name );
-                if(!is_file($uploadfile))
-                 {
-                    $tipo=$_FILES["pictures"]["type"] [$key];
-                    if($tipo=='image/gif'||$tipo=='image/jpeg'||$tipo=='image/x-png'||$tipo=='image/pjpeg'||$tipo=='application/octet-stream')
-                        {if (@move_uploaded_file ( $tmp_name, $uploadfile )) {
-                            $des="descripcion".$contdes;
-              $presen="incluir".$contdes;
-              if ($$presen) { 
-                                $pres=-1;
-              } else {
-                  $pres=-0;
+               if ($_FILES ["pictures"]&&$reporte){
+                  $carpeta=$this->verificaCarpeta($servicio,$reporte);
+                  echo $carpeta;
+				  echo "entre a carpeta"; 
+                  if($carpeta!=-1)
+                  {
+                      $ban=0;
+                      foreach ( $_FILES ["pictures"] ["error"] as $key => $error ) {
+                          $name = $_FILES ["pictures"] ["name"] [$key];
+                          //echo $name;
+                          if ($error == UPLOAD_ERR_OK) {
+                              $tmp_name = $_FILES ["pictures"] ["tmp_name"] [$key];
+                              //reviso tamaña
+                              if( $_FILES ["pictures"] ["size"] [$key]>1048576)
+                              {	$this->msg="<div class='alert alert-danger' role='alert'><br>El tamaño de los archivos no puede ser mayor a 1Mb</div>";
+                             	return false;
+                              }
+                              $uploadfile =RAIZ."/".$carpeta . '/'.basename ( $name );
+							  echo $uploadfile;
+                              if(!is_file($uploadfile))
+                              {
+                                  if (@move_uploaded_file ( $tmp_name, $uploadfile )) {
+									  
+                                      try{
+                                      $this->InsertaImagenDetalle($servicio, $reporte, $carpeta . '/'.basename ( $name ),$des,$pres);
+                                      
+                                      
+                                      $this->msg="<div  class='alert alert-success' role='alert'><br>El archivo '" . $name . "' fue cargado exitosamente.</div>";
+                                      }catch(Exception $ex){
+                                          $this->msg="<div  class='alert alert-danger' role='alert'><br>".$ex->getMessage()."</div>";
+                                          
+                                      }
+                                      //	$html->asignar('msg',$msg);
+                                  } else {
+                                      $this->msg="<div  class='alert alert-danger' role='alert'><br>Error al cargar el archivo, intenta de nuevo</div>";
+                                      //	   $html->asignar('msg',$msg);
+                                      $ban=1;
+                                  }
+                              }
+                              else
+                              {
+                                  $this->msg="<div class='alert alert-danger' role='alert'><br>El archivo '" . $name . "' ya existe</div>";
+                                  //  $html->asignar('msg',$msg);
+                                  $ban=1;
+                              }
+                          }
+                          else if ($error == UPLOAD_ERR_FORM_SIZE) {
+                              $this->msg='<div class="alert alert-danger" role="alert"><br>El archivo "' . $name . '" excede el tamaño máximo</div>';
+                              //$html->asignar('msg',$msg);
+                              $ban=1;
+                          }else
+                              if ($error == UPLOAD_ERR_CANT_WRITE) {
+                                  $this->msg='<div class="alert alert-danger" role="alert"><br>No se encontró el directorio especificado</div>';
+                                  //$html->asignar('msg',$msg);
+                                  
+                                  $ban=1;
+                              }
+                          $contdes++;
+                      } //termina foreach
+                  }
               }
-                            InsertaImagenDetalle($servicio, $reporte, $seccion, $reactivo, $carpeta . '/'.basename ( $name ),$$des,$pres);
-                            //me regreso
-                           
-                          //  echo "<br>El archivo '" . $name . "' fue cargado exitosamente.\n";
-                            //guardar en la bd
-
-                        } else {    echo '<div align="center">';
-                            echo "<br><h2>Error al cargar el archivo, intenta de nuevo</h2>";
-                            $ban=1;
-
-                        }}
-                    else
-                        {    echo '<div align="center">';
-                         echo "<br><h2>El archivo '" . $name . "' no es válido.\n</h2>";
-                         $ban=1;
-                        }
-                    }
-                else
-                   {     echo '<div align="center">';
-                    echo "<br><h2>La imagen '" . $name . "' ya existe</h2>";
-                    $ban=1;
-                   }
-
-            }
-            else if ($error == UPLOAD_ERR_FORM_SIZE) {
-                 echo '<div align="center">';
-                echo '<br><h2>El archivo "' . $name . '" excede el tamaño maximo</h2>';
-                $ban=1;
-            }else
-            if ($error == UPLOAD_ERR_CANT_WRITE) {
-                 echo '<div align="center">';
-                echo '<br><h2>No se encontró el directorio especificado</h2>';
-                $ban=1;
-            }
-            $contdes++;
-        } //termin
-      }
- }
+             
+          }
 
  function verificaCarpeta($servicio,$reporte)
             {
@@ -875,8 +915,31 @@ echo '
                 
                 return $ruta; //si existe
           }
-
-
+          
 }
 
+
+function InsertaImagenDetalle($servicio, $reporte,$seccion,$reactivo,$ruta,$descripcion,$presentar) {
+            //primero busco el siguiente id
+		$datosController= array("servicio"=>$servicio,
+                              "numrep"=>$reporte,
+                              "seccion"=>$seccion,
+                              "reactivo"=>$reactivo,
+                              ); 
+							  
+		$respuesta = DatosSeccion::getNumImagen($datosController,"ins_imagendetalle");
+		$sigId=$respuesta["id"]+1;		
+		
+		$datosController= array("servicio"=>$servicio,
+                              "numrep"=>$reporte,
+                              "seccion"=>$seccion,
+                              "reactivo"=>$reactivo,
+							  "sigId"=>$sigId,
+							  "ruta"=>$ruta,
+							  "descripcion"=>$descripcion,
+							  "presentar"=>$presentar,
+                              ); 
+							  
+		$respuesta = DatosSeccion::InsertaImagen($datosController,"ins_imagendetalle");
+}
 ?>

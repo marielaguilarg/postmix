@@ -28,16 +28,22 @@ class NcinController{
 	public function asignavar(){
 		if (isset($_GET["idncu"])){
 			$datosController = $_GET["idncu"];
+			$reg=Datosncua::vistaN4opcionModel($datosController, "ca_nivel4");
+			$id4=$reg["n4_idn3"];
+			$reg=Datosntres::vistaN3opcionModel($id4, "ca_nivel3");
+			$id3=$reg["n3_idn2"];
+			$reg=Datosndos::vistaN2opcionModel($id3,"ca_nivel2");
+			$id2=$reg["n2_idn1"];
 		} else {
 			$datosController =6;
 		}
 
 		//$datosController = $_GET["idncu"];
 
-		echo '<li><a href="index.php?action=listan2&idnd=1"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
-		echo '<li><a href="index.php?action=listan3&idnt=1"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
+		echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
+		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
 
-		echo '<li><a href="index.php?action=listan4&idnt='.$datosController.'"><em class="fa fa-dashboard"></em> Nivel 4</a></li>';
+		echo '<li><a href="index.php?action=listan4&idnt='.$id4.'"><em class="fa fa-dashboard"></em> Nivel 4</a></li>';
 		
 	}
 }

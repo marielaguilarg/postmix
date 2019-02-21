@@ -8,7 +8,7 @@ class abiertaController{
 			$servicioController = $_GET["sv"];
 
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaabierta&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaabierta&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>';
 		
@@ -208,10 +208,10 @@ class abiertaController{
 	              <td>'.$componente.'</td>
 	              <td><a href="index.php?action=editaabierta&sec='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=A">'.$item["ra_descripcionesp"].'</a>
 	              </td>
-	              <td><a href="index.php?action=sn&sec='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=AD">Detalle</a>
+	              <td><a href="index.php?action=sn&sec='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=AD"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
 	              </td>
 	                  
-	               <td><a href="index.php?action=sn&ids='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=A&sec='.$item["sec_numseccion"].'">Borrar</a>
+	               <td><a href="index.php?action=sn&ids='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=A&sec='.$item["sec_numseccion"].'"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	            $i++;  
@@ -405,7 +405,7 @@ public function registrarAbiertaController(){
 			$respuesta =DatosAbierta::insertaabierta6($datosController, "cue_reactivosabiertos");	
 		  
           } // fin del if
-          	echo $respuesta;
+          	
 			if($respuesta== "success"){
           		echo "
 	          <script type='text/javascript'>
@@ -478,16 +478,18 @@ public function registrarAbiertaController(){
 			} // switch
 			#lee datos con seccion
 			$respuesta =DatosAbierta::EditaAbiertaModel($idservicio,$numseccon, "cue_reactivosabiertos");
+			
+			
 			echo '<label >NOMBRE EN ESPAÑOL</label>
                
                    <div class="col-sm-10">
-                    <input name="nombreesp" id="nombreesp" class="form-control" value="'.$respuesta["ra_descripcionesp"].'">
+                    <input name="nombreesp" id="nombreesp" class="form-control" value="'.$respuesta["ra_descripcionesp"].'" required>
                 </div>
                 </div>
                 <div class="form-group col-md-6">
                  <label >NOMBRE EN INGLES</label>
                <div class="col-sm-10">
-                    <input name="nombreing" id="nombreing" class="form-control" value="'.$respuesta["ra_descripcioning"].'">
+                    <input name="nombreing" id="nombreing" class="form-control" value="'.$respuesta["ra_descripcioning"].'" required>
                 </div>
                 </div>';	
 	}
@@ -533,6 +535,7 @@ public function registrarAbiertaController(){
 				 $numcom2=0;
 					
 				 $numseccon=$numsec.$numreac.$numcom.$numcar.$numcom2;
+				 $seccion=$numsec;
 				 break;
 			case 3 :  /*primer nivel */
 			    $numreac=0;
@@ -554,12 +557,13 @@ public function registrarAbiertaController(){
                                "desing"=>$_POST["nombreing"],
                               ); 
 		$respuesta = DatosAbierta::actualizaabierta($datosController,"cue_reactivosabiertos");
-    	if($respuesta== "success"){
+    	echo $nivel;
+		if($respuesta== "success"){
 
           		echo "<script type='text/javascript'>
-				window.location.href='index.php?action=sn&sec=".$seccion."&ts=A&sv=".$idservicio."';
+				window.location='index.php?action=sn&sec=".$seccion."&ts=A&sv=".$idservicio."';
 				</script>
-				";
+				";  
 
 
           	//header("location:index.php?action=ok");
@@ -652,7 +656,7 @@ public function registrarAbiertaController(){
 				$servicioController = $_GET["sv"];
 		# boton de nuevo
 			echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nvaabdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nvaabdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>';	
      # calcula numero de nivel
@@ -753,9 +757,9 @@ public function registrarAbiertaController(){
 	                    }
 	                    echo $incluye.'</a>
 	                  </td>
-	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["rad_tiporeactivo"].'">subnivel</a>
+	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["rad_tiporeactivo"].'"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=AD&sec='.$seccion.'">borrar</a>
+	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=AD&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	            $i++;  
@@ -1060,7 +1064,7 @@ public function registrarAbiertaController(){
 		$sec = $_GET["id"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}
@@ -1070,7 +1074,7 @@ public function registrarAbiertaController(){
 		$sec = $_GET["sa"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}
@@ -1089,16 +1093,16 @@ public function registrarAbiertaController(){
 		//foreach($respuesta as $row => $item){
 		echo  '<div class="form-group col-md-6">
           <label>DESCRIPCION EN ESPAÑOL</label>
-          <input type="text" class="form-control" name="descesp" value="'.$respuesta["rad_descripcionesp"].'">
+          <input type="text" class="form-control" name="descesp" value="'.$respuesta["rad_descripcionesp"].'" required>
         </div>
         <div class="form-group col-md-6">
           <label>DESCRIPCION EN INGLES</label>
-          <input type="text" class="form-control" name="descing" value="'.$respuesta["rad_descripcioning"].'" >
+          <input type="text" class="form-control" name="descing" value="'.$respuesta["rad_descripcioning"].'" required>
         </div>
 
          <div class="form-group col-md-6">
           <label>FORMATO DE REACTIVO</label>
-          <select class="form-control" name="tiporeac">
+          <select class="form-control" name="tiporeac" required>
           <option value="">--- Elija el formato ---</option>';
           /*asignas catalogo */
 		  $TFORM=$respuesta["rad_formatoreactivo"];
@@ -1435,7 +1439,7 @@ public function registrarAbiertaController(){
 	 	 }	
 
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$nsec.'&ts=A&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$seccion.'&ts=A&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}

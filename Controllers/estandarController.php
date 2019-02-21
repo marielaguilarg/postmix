@@ -188,7 +188,7 @@ class EstandarController{
 
 
 	 echo '<div class="row">
-	    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaestandar&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>   Nuevo  </a></button>
+	    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaestandar&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>   NUEVO  </a></button>
 	     </div>
 	     </div>
 
@@ -439,11 +439,11 @@ class EstandarController{
 	              <td><a href="index.php?action=editaestandar&sec='.
                     $numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'">'.$item["re_descripcionesp"].'</a>
 	              </td>
-	              <td><a href="index.php?action=sn&sec='.$numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'&ts=ED">detalle</a>
+	              <td><a href="index.php?action=sn&sec='.$numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'&ts=ED"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	                  <td><a href="index.php?action=estandarcoment&sec='.$numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'">comentario</a>
+	                  <td><a href="index.php?action=estandarcoment&sec='.$numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	               <td><a href="index.php?action=sn&ids='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'.'.$item["re_numcomponente"].'&sv='.$item["ser_claveservicio"].'&ts=E&sec='.$item["sec_numseccion"].'">borrar</a>
+	               <td><a href="index.php?action=sn&ids='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'.'.$item["re_numcomponente"].'&sv='.$item["ser_claveservicio"].'&ts=E&sec='.$item["sec_numseccion"].'"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	               
@@ -570,7 +570,7 @@ public function borrarEstandarController(){
 			$servicioController = $_GET["sv"];
 
 			echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=nuevaestdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=nuevaestdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>';
 		
@@ -677,9 +677,9 @@ public function borrarEstandarController(){
 	                    }
 	                    echo $incluye.'</a>
 	                  </td>
-	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["red_tiporeactivo"].'">subnivel</a>
+	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["red_tiporeactivo"].'"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=ED&sec='.$seccion.'">borrar</a>
+	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=ED&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
 	                </tr>';
 	            $i++;  
 			}
@@ -883,7 +883,7 @@ public function registrarEstandarController(){
 			if($respuesta== "success"){
 
           		echo "<script type='text/javascript'>
-				window.location.href='index.php?action=sn&sec=".$seccion."&ts=E&sv=".$datosServicio."';
+				window.location='index.php?action=sn&sec=".$seccion."&ts=E&sv=".$datosServicio."';
 				</script>
 				";
 
@@ -900,7 +900,7 @@ public function registrarEstandarController(){
 		$sec = $_GET["id"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}
@@ -910,7 +910,7 @@ public function registrarEstandarController(){
 		$sec = $_GET["sa"];
 		$ser = $_GET["sv"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}
@@ -1199,7 +1199,7 @@ public function registrarEstandarController(){
 			if($respuesta== "success"){
 
           		echo "<script type='text/javascript'>
-				window.location.href='index.php?action=sn&sec=".$seccion."&ts=ED&sv=$idser';
+				window.location='index.php?action=sn&sec=".$seccion."&ts=ED&sv=$idser';
 				</script>
 				";
 
@@ -1300,17 +1300,17 @@ public function registrarEstandarController(){
         echo '<div class="row">
         		<div class="form-group col-md-6">
                   <label>DESCRIPCION EN ESPAÑOL</label>
-                  <input type="text" class="form-control" name="descesp" value="'.$desesp.'">
+                  <input type="text" class="form-control" name="descesp" value="'.$desesp.'" required>
 
                 </div>
                 <div class="form-group col-md-6">
                   <label>DESCRIPCION EN INGLES</label>
-                  <input type="text" class="form-control" name="descing" value="'.$desing.'">
+                  <input type="text" class="form-control" name="descing" value="'.$desing.'" required>
                 </div>
 
                 <div class="form-group col-md-6">
                   <label>FORMATO DE REACTIVO</label>
-                  <select class="form-control" name="formato" id="formareac">
+                  <select class="form-control" name="formato" id="formareac" required>
                       <option value="">--- Elija el formato ---</option>';
                       if ($formato=="C"){
                           echo '<option value="C" selected="selected">CATALOGO</option>';	
@@ -1682,7 +1682,7 @@ public function registrarEstandarController(){
     
       echo '
       <div class="row">
-        <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;""><a href="index.php?action=nuevoestcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+        <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;""><a href="index.php?action=nuevoestcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
          </div>
          </div>';
 
@@ -1752,7 +1752,7 @@ public function registrarEstandarController(){
                   <td><a href="index.php?action=editaestcoment&id='.$numseccon.$item["rec_numcomentario"].'&ids='.$ser.'&sec='.$seccion.'">'.$item["rec_descomentarioesp"].'</a>
                   </td>
                   
-                   <td><a href="index.php?action=estandarcoment&idb='.$numseccon.$item["rec_numcomentario"].'&sv='.$ser.'&sec='.$seccion.'">borrar</a>
+                   <td><a href="index.php?action=estandarcoment&idb='.$numseccon.$item["rec_numcomentario"].'&sv='.$ser.'&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
                   </td>
                 </tr>';
                    
@@ -1779,7 +1779,7 @@ public function registrarEstandarController(){
 	  $ids = $_GET["ids"];
 	  $id = $_GET["id"];
 
-	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$id.'&sv='.$ids.'"> Cancelar </a></button>
+	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
 	  ';
 	  }
 
@@ -1814,7 +1814,8 @@ public function registrarEstandarController(){
 		 }  
 
 		$numsec=$idsecc;
-		$nivel=$nnivel;		
+		$nivel=$nnivel;
+		//echo $nivel;		
 		 switch($nivel) {
 		 case 2:
 			/* Genera clave para ingreso de reaactivo */
@@ -1831,7 +1832,7 @@ public function registrarEstandarController(){
 			 $numcom=substr($seccion,$datini,$londat);
 			    $numcar=0;
 				$numcom2=0;
-				$numseccon=$numsec.$numreac.$numcom.$numcar.$numcom2;
+				$numseccom=$numsec.$numreac.$numcom.$numcar.$numcom2;
 				break;
 		   case 3:	
 		   		$numcar=0;
@@ -1875,6 +1876,7 @@ public function registrarEstandarController(){
 			  	break;		
 	       }
 	       #calcula numero de caracteristica
+		   //echo $numseccom;
 	       $respuesta=DatosEst::CalculaultimoEstComentModel($numseccom, $servicio, "cue_reactivosestandarcomentarios");
 	       if (isset($respuesta["clavecom"])) {
 	          $i=0;
@@ -1885,6 +1887,8 @@ public function registrarEstandarController(){
 	       $numcar2=$respuesta["clavecom"];
 	       $numcar2=$numcar2+1;
 	      
+		  
+		  
 	       $datosController= array("idser"=>$servicio,
 	                              "idsec"=>$numsec,
 	                              "idreac"=>$numreac,
@@ -1902,9 +1906,9 @@ public function registrarEstandarController(){
 	        if($respuesta=="success"){
 	            echo "
 	           <script type='text/javascript'>
-	             window.location.href='index.php?action=estandarcoment&sv=".$servicio."&sec=".$seccion."
+	             window.location='index.php?action=estandarcoment&sv=".$servicio."&sec=".$seccion."'
 	                </script>
-	                  ";
+	                  ";   
 	        } else {
 	          	echo "error";
 	        }
@@ -1931,11 +1935,11 @@ public function editarEstandarComentController(){
     //echo $idservicio;
     $respuesta = DatosEst::editaEstComentModel($datosController,$idservicio,"cue_reactivosestandarcomentarios");
        
-    echo ' <input type="text" class="form-control" name="descesp" value="'.$respuesta["rec_descomentarioesp"].'" >
+    echo ' <input type="text" class="form-control" name="descesp" value="'.$respuesta["rec_descomentarioesp"].'" required>
            </div>
            <div class="form-group col-md-6">
            <label>DESCRIPCION EN INGLES</label>
-           <input type="text" class="form-control" name="descing" value="'.$respuesta["rec_descomentarioing"].'" >
+           <input type="text" class="form-control" name="descing" value="'.$respuesta["rec_descomentarioing"].'" required>
            </div>';
     }       
 
@@ -1960,7 +1964,7 @@ public function editarEstandarComentController(){
        // if($respuesta=="success"){
             echo "
             <script type='text/javascript'>
-              window.location.href='index.php?action=estandarcoment&sv=".$servicio."&sec=".$sec."
+              window.location='index.php?action=estandarcoment&sv=".$servicio."&sec=".$sec."'
                 </script>
                   ";
         //} else {
@@ -1976,7 +1980,7 @@ public function botonRegEditEstComentController(){
 	  $id = $_GET["id"];
 	  $sec = $_GET["sec"];
 
-	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$sec.'&sv='.$ids.'"> Cancelar </a></button>
+	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$sec.'&sv='.$ids.'"> CANCELAR </a></button>
 	  ';
 	  }
 
@@ -2978,7 +2982,7 @@ echo '					</table>
 
 
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$numsec.'&ts=E&sv='.$ser.'"> Cancelar </a></button>
+	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$numsec.'&ts=E&sv='.$ser.'"> CANCELAR </a></button>
 	';
 
 	}
@@ -2995,6 +2999,98 @@ public function borraRepEstandarDetalle(){
 		}
 	}
 
+ public function titestcom(){
+	$servicioController=$_GET["sv"];
+	$seccion=$_GET["sec"];
+
+
+	 # busca nombre del servicio
+		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
+		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+			# busca nombre de seccion
+			#determina el nivel
+		    $i=1;
+			$nnivel=0;
+			$idsecc='';
+			 while ($i <= 10) {
+				 $datini=SubnivelController::obtienedato($seccion,$i);
+				 $londat=SubnivelController::obtienelon($seccion,$i);
+				 if (isset($datini)) {
+				 $nusec=substr($seccion,$datini,$londat);
+				 $idsecc=$idsecc.$nusec;
+				 
+				 if ($nusec) {
+					$nnivel++;
+				}
+				}	
+				 $i++;
+			 }  
+
+			$numsec=$idsecc;
+			
+			$nivel=$nnivel;
+			//echo 'nivel '. $nivel;
+			switch($nivel) {
+			case 1 :
+				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
+
+			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+				break;	
+			case 2 :
+        	# coloca subtitulo de seccion
+        	 	$datini=SubnivelController::obtienedato($seccion,1);
+			 	$londat=SubnivelController::obtienelon($seccion,1);
+			 	$numsec=substr($seccion,$datini,$londat);
+
+			 	$datini=SubnivelController::obtienedato($seccion,2);
+			 	$londat=SubnivelController::obtienelon($seccion,2);
+			 	$numreac=substr($seccion,$datini,$londat);	
+
+				$datini=SubnivelController::obtienedato($seccion,3);
+			 	$londat=SubnivelController::obtienelon($seccion,3);
+			 	$numcom=substr($seccion,$datini,$londat);	
+
+		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
+
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	#busca ultimo nivel en estandar
+		   		$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec, $servicioController, $numreac, $numcom, "cue_reactivosestandar");
+				//echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+		        echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=E">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+		    
+			  	break;
+			case 3 :
+        		# coloca subtitulo de seccion
+        	 	$datini=SubnivelController::obtienedato($seccion,1);
+			 	$londat=SubnivelController::obtienelon($seccion,1);
+			 	$numsec=substr($seccion,$datini,$londat);
+
+			 	$datini=SubnivelController::obtienedato($seccion,2);
+			 	$londat=SubnivelController::obtienelon($seccion,2);
+			 	$numreac=substr($seccion,$datini,$londat);	
+
+			 	$datini=SubnivelController::obtienedato($seccion,3);
+			 	$londat=SubnivelController::obtienelon($seccion,3);
+			 	$numcom=substr($seccion,$datini,$londat);	
+
+		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
+
+		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    #busca ultimo nivel en ponderada
+		    	$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+		    
+		    	#nivel tres
+				$respuesta3 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosestandar");
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A">COMPONENTE: '.$respuesta3["re_descripcionesp"]. '</a></li>';
+			}
+	 
+	 }
+ 
+
 }  // fin de la clase
+  
+ 
+ 
  
 ?>

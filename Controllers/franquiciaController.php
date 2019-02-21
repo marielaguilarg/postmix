@@ -18,9 +18,12 @@ public function listaCuentasController(){
   public function vistaFranquiciaController(){
         
         $respuesta =DatosFranquicia::vistaFranquiciasModel("ca_franquiciascuenta");
-
+	$bac=$i=1;
         foreach($respuesta as $row => $item){
-
+        	if(($i-1)%3==0){
+        		echo '<div class="row">';
+        		$bac=0;
+        	}
      
            echo ' 
             <div class="col-md-4" >
@@ -74,6 +77,12 @@ public function listaCuentasController(){
               <!-- /.box -->
            
             </div>';
+           if(($i)%3==0){
+           	
+           	echo '</div>';
+           	$bac=1;
+           }
+           $i++;
       }
    }   
 

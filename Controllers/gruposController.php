@@ -51,6 +51,7 @@ class GruposController
 				 FROM cnfg_grupos";
         $rs=DatosGrupo::vistaGrupos("cnfg_grupos");
         $cont=0;
+       
         foreach( $rs as $row)
         {
             if($cont%2==0)
@@ -75,13 +76,13 @@ class GruposController
         $navegacion->borrarRutaActual("grupos");
         $rutaact = $_SERVER['REQUEST_URI'];
         // echo $rutaact;
-        $navegacion::agregarRuta("grupos", $rutaact, "GRUPOS");
+        $navegacion::agregarRuta("grupos", "index.php?action=slistagrupos", "GRUPOS");
         
     }
     
     public function insertarGrupo(){
        include "Utilerias/leevar.php";
-      
+    
        
         // genera clave de servicio, la consulta debe estar agrupada y debera presentar el numero maximo para obtenerlo
         $ssql="SELECT max(cgr_clavegrupo) as clavegroup
@@ -123,7 +124,7 @@ class GruposController
             try{
             DatosGrupo::actualizarGrupo($idper,$nomesp,"cnfg_grupos");
             $this->mensaje='<div class="alert alert-success"">Se actualizó el grupo correctamente</div>';
-            $this->vistaListaGrupos();
+          
         }catch(Exception $ex){
             $this->mensaje='<div class="alert aler-danger">'.$ex->getMessage().". Intente nuevamente</div>";
         }

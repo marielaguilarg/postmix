@@ -37,8 +37,12 @@ class ReporteController{
 	    $idc=$_GET["idc"];
 
 	    $respuesta =DatosSeccion::vistaSeccionModel($numser,"cue_secciones");
-
+         $i=$bac=1;
 	    foreach($respuesta as $row => $item){
+			 if(($i-1)%3==0){
+        	echo '<div class="row">';
+        	$bac=0;
+        }
 	      echo '
 	        <div class="col-md-4" >
 	          <div class="box box-info" >
@@ -77,7 +81,7 @@ class ReporteController{
 	                <!-- /.col -->
 	                <div class="col-sm-4 border-right">
 	                  <div class="description-block">
-	                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 14px"><a href="index.php?action=repcoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'">! </a></span></button>
+	                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 14px"><a href="index.php?action=repcoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a></span></button>
 	                  </div>
 	                  <!-- /.description-block -->
 	                </div>
@@ -97,7 +101,12 @@ class ReporteController{
 	       
 	        
 	    </div>';
-	             
+	             if(($i)%3==0){
+					
+					echo '</div>';
+					$bac=1;
+				}
+				$i++;
 
 	    }
 	  } 
@@ -366,8 +375,8 @@ public function botonNuevoRep(){
 	$idc=$_GET["idc"];
 	$sv=$_GET["sv"];
 	$pv=$_GET["un"];
-   echo '<button type="button" class="btn btn-block btn-primary" style="width: 80%"><a href="index.php?action=nvorep&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'"> Nuevo </a></button>';
-
+   echo '<button type="button" class="btn btn-block btn-info" style="width: 80%"><a href="index.php?action=nvorep&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'"> Nuevo </a></button>';
+    
 }
 
 

@@ -4,6 +4,7 @@ class muestrasController{
 	private $TITULO;
 	private $listamuestras;
 	private $pages;
+	
   public function listaMuestrasPendientes(){
         $gpo = UsuarioController::Obten_grupo();
     
@@ -173,6 +174,7 @@ onclick="detalle(\'MB\','.$item["mue_idmuestra"].')"> Detalle </button>';
 
    
    public function listaMuestrasRealizadas(){
+   	include "Utilerias/leevar.php";
    	$gpo = UsuarioController::Obten_grupo();
    	
    	$idusuario=UsuarioController::Obten_Usuario();
@@ -190,7 +192,7 @@ onclick="detalle(\'MB\','.$item["mue_idmuestra"].')"> Detalle </button>';
    		$numcat=43;
    		$this->TITULO=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", $numcat, $tipocons);
    		
-   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, 
+   		$ssql="SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, 
 rm_embotelladora,mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp, cad_descripcionesp FROM (SELECT aa_muestras.mue_numreporte, 
 aa_muestras.mue_nomanalistaFQ,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
 aa_recepcionmuestra.rm_embotelladora,aa_muestras.mue_idmuestra,cad_descripcionesp FROM aa_muestras
@@ -206,12 +208,16 @@ ca_servicios.ser_descripcionesp FROM ins_detalleestandar INNER JOIN ins_generale
 AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
 INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
-GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
-AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra ");
-   		$parametros=array("tipocons"=>$tipocons);
+ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra";
+   		if($fil_ptoventa!="")
+   			$ssql.=" where une_descripcion like :fil_ptoventa ";
+   		
+$ssql.=" ORDER BY A.mue_idmuestra ";
+$parametros=array("tipocons"=>$tipocons,"fil_ptoventa"=>"%".$fil_ptoventa."%");
    		
    	} else {
-   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
+   		$ssql="SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
 mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp,cad_descripcionesp FROM 
 (SELECT aa_muestras.mue_numreporte, aa_muestras.mue_nomanalistaFQ,
 aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
@@ -228,11 +234,18 @@ ca_servicios.ser_descripcionesp FROM ins_detalleestandar
 INNER JOIN ins_generales ON  ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id 
 INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
-GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
-AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC ");
+ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra";
+   		if($fil_ptoventa!="")
+   		{	$ssql.=" where  une_descripcion like :fil_ptoventa ";
+   		$parametros=array("fil_ptoventa"=>"%".$fil_ptoventa."%");
+   		}
+$ssql.=" ORDER BY A.mue_idmuestra DESC ";
+
    	}
    	
    	$this->listamuestras=Conexion::ejecutarQuery($ssql,$parametros);
+   	if(sizeof($this->listamuestras)>10){
    	$this->pages = new Paginator(sizeof($this->listamuestras), 9, array(
    			10,
    			25,
@@ -242,7 +255,7 @@ AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC ");
    			'All'
    	));
    	if ($gpo=="lab") {
-   	  		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB,
+   	  		$ssql="SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB,
 rm_embotelladora,mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp, cad_descripcionesp FROM (SELECT aa_muestras.mue_numreporte,
 aa_muestras.mue_nomanalistaFQ,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
 aa_recepcionmuestra.rm_embotelladora,aa_muestras.mue_idmuestra,cad_descripcionesp FROM aa_muestras
@@ -258,12 +271,16 @@ ca_servicios.ser_descripcionesp FROM ins_detalleestandar INNER JOIN ins_generale
 AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
 INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
-GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
-AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra limit ".$this->pages->limit_start.",".$this->pages->limit_end);
-   		$parametros=array("tipocons"=>$tipocons);
+ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra";
+if($fil_ptoventa!="")
+   			$ssql.=" where une_descripcion like :fil_ptoventa ";
+$ssql.=" ORDER BY A.mue_idmuestra limit ".$this->pages->limit_start.",".$this->pages->limit_end;
+   	  		
+$parametros=array("tipocons"=>$tipocons,"fil_ptoventa"=>"%".$fil_ptoventa."%");
    		
    	} else {
-   		$ssql=("SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
+   		$ssql="SELECT mue_numreporte, mue_nomanalistaFQ, mue_fechoranalisisFQ,mue_nomanalistaMB,mue_fechoranalisisMB, rm_embotelladora,
 mue_idmuestra,une_descripcion,une_idpepsi,ser_descripcionesp,cad_descripcionesp FROM
 (SELECT aa_muestras.mue_numreporte, aa_muestras.mue_nomanalistaFQ,
 aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_nomanalistaMB, aa_muestras.mue_fechoranalisisMB,
@@ -280,10 +297,17 @@ ca_servicios.ser_descripcionesp FROM ins_detalleestandar
 INNER JOIN ins_generales ON  ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN ca_unegocios ON ins_generales.`i_unenumpunto` = ca_unegocios.une_id
 INNER JOIN ca_servicios ON `ins_generales`.`i_claveservicio` = ca_servicios.ser_id
-GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
-AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC limit ".$this->pages->limit_start.",".$this->pages->limit_end);
+ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra)
+AS B ON A.mue_idmuestra=B.ide_idmuestra";
+   		if($fil_ptoventa!="")
+   		{	$ssql.=" where une_descripcion like :fil_ptoventa ";
+   		$parametros=array("fil_ptoventa"=>"%".$fil_ptoventa."%");}
+$ssql.=" ORDER BY A.mue_idmuestra DESC limit ".$this->pages->limit_start.",".$this->pages->limit_end;
+
+
    	}
    	$this->listamuestras=Conexion::ejecutarQuery($ssql,$parametros);
+   	}
    	Navegacion::iniciar();
    	Navegacion:: borrarRutaActual("a");
    	$rutaact = $_SERVER['REQUEST_URI'];
@@ -434,7 +458,7 @@ AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC limit ".$t
                <td > '. $fuentedes .'</td></tr>';
                if ($estatus==1){
                  echo '
-               <tr> <td><button type="button" class="btn btn-block btn-info"><a href="index.php?action=rsn&idb='. $numren.'&sv='.$sv.'&nrep='. $nrep.'&ts=ED&idc='. $idc.'&sec='. $sec.'">Imprimir</a></button> </td>';
+               <tr> <td><button type="button" class="btn btn-block btn-info"><a href="imprimirReporte.php?admin=impetiq&ntoma='.$rownr["mue_idmuestra"]."&numrep=".$numrep.'">Imprimir</a></button> </td>';
              }else{
               echo '
               <tr> <td>&nbsp;</td>';
@@ -734,6 +758,143 @@ AS B ON A.mue_idmuestra=B.ide_idmuestra ORDER BY A.mue_idmuestra DESC limit ".$t
     }  // fin del if
   }  // fin de la funcion
 
+  public function imprimir(){
+  	$error="";
+  	include "Utilerias/leevar.php";
+  
+  	//despliega codigos
+  	$sqleti="SELECT 
+  aa_muestras.mue_idmuestra,
+  aa_muestras.mue_tipomuestra,
+  aa_muestras.mue_fechahora,
+  aa_muestras.mue_numreporte,
+  ins_generales.`i_unenumpunto`,
+  aa_muestras.mue_numunidadesFQ,
+  TIME(aa_muestras.mue_fechahora) AS hortom,
+  aa_muestras.mue_numunidadesMB,
+  ca_unegocios.une_descripcion,
+  ca_unegocios.une_idpepsi 
+FROM
+  aa_muestras 
+  INNER JOIN ins_detalleestandar 
+    ON ins_detalleestandar.ide_idmuestra = aa_muestras.mue_idmuestra 
+  INNER JOIN ins_generales 
+    ON ins_generales.i_claveservicio = ins_detalleestandar.ide_claveservicio 
+    AND ins_generales.i_numreporte = ins_detalleestandar.ide_numreporte 
+  INNER JOIN ca_unegocios 
+    ON ca_unegocios.une_id= ins_generales.`i_unenumpunto` 
+WHERE aa_muestras.mue_idmuestra =:ntoma
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte,
+ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
+  
+   
+  	$rseti=Conexion::ejecutarQuery($sqleti,array("ntoma"=>$ntoma));
+ 
+  	foreach($rseti as $valor ) {
+  		$nmuesX=$valor["mue_idmuestra"];
+  		$uninegX=$valor["une_descripcion"];
+  		$cveunegX=$valor["une_idpepsi"];
+  		$tipomueX=$valor["mue_tipomuestra"];
+  		$fechorX=Utilerias::formato_fecha($valor["mue_fechahora"]);
+  		$horX=$valor["hortom"];
+  		$numrepX=$valor["mue_numreporte"];
+  		$uniFQX=$valor["mue_numunidadesFQ"];
+  		$uniMBX=$valor["mue_numunidadesMB"];
+  		
+  		$codgenX="FQ".$nmuesX;
+  		
+  		//obtiene desc tipo muestra
+  		$sqltimu="SELECT ca_catalogosdetalle.cad_idcatalogo, ca_catalogosdetalle.cad_idopcion, ca_catalogosdetalle.cad_descripcionesp, ca_catalogosdetalle.cad_descripcioning FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '41' AND ca_catalogosdetalle.cad_idopcion =  '".$tipomueX."'";
+  
+  		$destmX=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle", 41, $tipomueX);
+  		
+  		$etiFQ==1;
+  		
+  		while ($etiFQ<$uniFQX) {
+  			$tipoan="FISICOQUIMICO";
+  			
+  			$texto="! 0 200 200 276 1
+LABEL
+CONTRAST 0
+TONE 0
+SPEED 2
+PAGE-WIDTH 392
+GAP-SENSE 15
+T 7 0 20 1 NO. DE MUESTRA :
+T 7 0 225 1 $nmuesX
+T 7 0 20 25 $uninegX
+T 7 0 20 50 PUNTO DE VENTA $cveunegX
+T 7 0 20 75 $destmX
+T 7 0 184 75 $tipoan
+B 128 2 0 40 16 100 $codgenX
+T 7 0 20 150 $fechorX
+T 7 0 170 150 $horX
+SETFF 25.5.2
+PRINT
+";
+  			$etiFQ++;
+  			
+  			$textofin=$textofin.$texto;
+  			
+  		}  // etiquetas para fisicoquimico
+  		
+  		// ETIQUETAS PARA MICROBIOLOGICO
+  		$etiMB==1;
+  		while ($etiMB<$uniMBX) {
+  			$tipoan="MICROBIOLOGICO";
+  			$codgenX="MB".$nmuesX;
+  			
+  			$texto="! 0 200 200 276 1
+LABEL
+CONTRAST 0
+TONE 0
+SPEED 2
+PAGE-WIDTH 392
+GAP-SENSE 15
+T 7 0 20 1 NO. DE MUESTRA
+T 7 0 225 1 $nmuesX
+T 7 0 20 25 $uninegX
+T 7 0 20 50 PUNTO DE VENTA $cveunegX
+T 7 0 20 75 $destmX
+T 7 0 184 75 $tipoan
+B 128 2 0 40 16 100 $codgenX
+T 7 0 20 150 $fechorX
+T 7 0 170 150 $horX
+SETFF 25.5.2
+PRINT
+";
+  			$etiMB++;
+  			
+  			$textofin=$textofin.$texto;
+  		}  // etiquetas para MICROBIOLOGICO
+  		
+  		
+  	}
+  
+  	$base=getcwd();
+  	
+  
+  	//$base=substr($base, 0, strrpos($base,"\\"));
+  	$nomarchivo=$base.DIRECTORY_SEPARATOR."Archivos".DIRECTORY_SEPARATOR."etiquetas".$nmuesX.".fmt";
+  
+  	//$textofin=$textofin.$texto;
+  	$archivo = fopen($nomarchivo,"w+");
+  
+  	fwrite($archivo, $textofin);
+   	fclose($archivo);
+   	header("Content-type: application/octet-stream");
+//   	header("Content-type: application/force-download");
+   	// $f="calendario.ZIP";
+   	header("Content-Disposition: attachment; filename=\"etiquetas".$nmuesX.".fmt\"");
+   	readfile($nomarchivo);
+  	// actualiza estatus
+   	$sqlu="UPDATE aa_muestras SET
+aa_muestras.mue_estatusmuestra=2
+WHERE aa_muestras.mue_idmuestra='".$ntoma."'";
+  	DatosMuestra::actualizarEstatus(2,$ntoma);
+  	
+  
+  }
 /**
 	 * @return mixed
 	 */

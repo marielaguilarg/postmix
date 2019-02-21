@@ -29,7 +29,8 @@ Inner Join cue_secciones ON cue_reactivosestandar.ser_claveservicio = cue_seccio
 WHERE
 cue_secciones.sec_indagua =  '1'");
 		$this->listaPruebas=Conexion::ejecutarQuerysp($ssql);
-		
+		Navegacion::iniciar();
+		Navegacion::agregarRuta("a",$_SERVER['REQUEST_URI'], "PRUEBA");
 		
 		
 	}
@@ -90,9 +91,13 @@ ON pa_numprueba=red_numcaracteristica2 order by pa_numprueba");
 		//ECHO $ssql;
 		
 		$this->ids=$idserv;
+		$this->listaPruebas=null;
 		$this->listaPruebas=Conexion::ejecutarQuery($ssql,array("idserv"=>$idserv,"numcat"=>$numcat));
-	
+		Navegacion::borrarRutaActual("b");
 		
+		$rutaact = $_SERVER['REQUEST_URI'];
+		// echo $rutaact;
+		Navegacion::agregarRuta("b", $rutaact, "PRUEBA NO.".$numcat);
 	}
 	
 	public function insertar(){

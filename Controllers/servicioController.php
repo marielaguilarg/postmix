@@ -55,7 +55,7 @@ public function vistaServiciosController(){
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
-                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listaseccion&idser='.$item["ser_id"].'"> Cuestionario </a></span></button>
+                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listaseccion&idser='.$item["ser_id"].'"> <i class="fa fa-file-text fa-lg" aria-hidden="true"  ></i> </a></span></button>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -63,7 +63,7 @@ public function vistaServiciosController(){
                 <div class="col-sm-4">
                   <div class="description-block">
                  
-                  <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaservicio&idb='.$item["ser_id"].'"><i class="fa fa-trash-o"></i></a></button>
+                  <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaservicio&idb='.$item["ser_id"].'"><i class="fa fa-trash-o fa-lg"></i></a></button>
                   </div>
                   <!-- /.description-block -->
                 </div>
