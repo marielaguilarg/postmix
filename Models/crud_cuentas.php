@@ -142,7 +142,7 @@ where ca_cuentas.cue_idcliente=:cliente ";
     foreach ($reg as $row) {
         $nombre = $row["cue_descripcion"];
     }
-
+  $res->closeCursor();$reg=null;
     return $nombre;
 }
 

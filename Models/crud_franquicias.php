@@ -5,100 +5,49 @@
 require_once "Models/conexion.php";
 
 
-
-
-
 class DatosFranquicia extends Conexion{
 
-
-
-
-
 public function listaCuentasModel($tabla){
-
-
-
 		$stmt = Conexion::conectar()-> prepare("SELECT cue_id, cue_descripcion FROM $tabla ");
-
-		
-
 		$stmt-> execute();
-
-
-
-
-
 		return $stmt->fetchAll();
-
 	}
-
-
-
-
-
 
 
 #lista de franquicias
-
-
-
 	public function vistaFranquiciasModel($tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT fc_idfranquiciacta, cf_descripcion FROM $tabla ");
-
-		
-
 		$stmt-> execute();
-
-
 		return $stmt->fetchAll();
-
 	}
 
+#busca ultima franquicia
+	public function calculaUltimaFranquiciasModel($tabla){
+		$stmt = Conexion::conectar()-> prepare("select max(fc_idfranquiciacta) as clave FROM $tabla");
+
+		$stmt-> execute();
+		return $stmt->fetch();
+		$stmt->close();	}
 
 
 	#registo franquicia
-
-
-
-public function registroFranquiciaModel($datosModel, $tabla){
-
-		$stmt = Conexion::conectar()-> prepare("INSERT INTO $tabla (cue_clavecuenta, cf_descripcion) VALUES (:idcuen,:descripcuen)");
-
-
-	  $stmt->bindParam(":idcuen", $datosModel["fracuen"], PDO::PARAM_INT);
-
-		$stmt->bindParam(":descripcuen", $datosModel["franom"], PDO::PARAM_STR);
+     public function registroFranquiciaModel($datosModel, $tabla){
+		 $stmt = Conexion::conectar()-> prepare("INSERT INTO $tabla (fc_idfranquiciacta, cue_clavecuenta, cf_descripcion) VALUES (:idfran, :idcuen, :descripcuen)");
+		 
+		 $stmt->bindParam(":idfran", $datosModel["idfran"], PDO::PARAM_INT);
+		 $stmt->bindParam(":idcuen", $datosModel["fracuen"], PDO::PARAM_INT);
+		 $stmt->bindParam(":descripcuen", $datosModel["franom"], PDO::PARAM_STR);
 
 		if($stmt-> execute()){
-
-
-
-			return "success";
-
+		return "success";
 		}
-
 		 else{
-
-
-
-		 	return "error";
-
+			return "error";
 		 }
+	 }
 
-
-
-
-
-	}
-
-
-
-  
 
 #edita franquicia
-
-
-
 	public function editarFranquiciaModel($datosModel, $tabla){
 
 		$stmt = Conexion::conectar()-> prepare("SELECT  fc_idfranquiciacta, cue_clavecuenta, cf_descripcion FROM $tabla WHERE fc_idfranquiciacta= :fra_id");
@@ -237,7 +186,8 @@ ca_franquiciascuenta.cue_clavecuenta=:cuenta";
         $nombre = $row["cf_descripcion"];
 
     }
-
+		  $res=null;
+    $reg=null;
      return $nombre;
 
 }

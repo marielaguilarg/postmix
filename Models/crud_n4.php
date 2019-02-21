@@ -36,7 +36,7 @@ class Datosncua extends Conexion{
 
 	public function vistaN4opcionModel($idn4, $tabla){
 
-		$stmt = Conexion::conectar()-> prepare("SELECT n4_id, n4_nombre FROM ca_nivel4 WHERE n4_id=:idn4");
+		$stmt = Conexion::conectar()-> prepare("SELECT n4_id, n4_nombre,n4_idn3 FROM ca_nivel4 WHERE n4_id=:idn4");
 
 
 
@@ -75,7 +75,9 @@ class Datosncua extends Conexion{
               $nombre = $row["n4_nombre"];
 
             }
-
+            $res=null;
+            $stmt->closeCursor();
+            $stmt=null;
              return $nombre;
 
         }

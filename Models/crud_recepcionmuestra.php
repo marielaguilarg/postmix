@@ -176,27 +176,30 @@ aa_recepcionmuestradetalle.rm_idrecepcionmuestra =:numrecibo
     	$stmt-> execute();
     	
     	$res=$stmt->fetch();
+    	//$stmt->debugDumpParams();
     	return $res["ulpartida"];
     	
     }
     
-    function insertarRecepcionDet($ulpar,$numrecibo,$nmues,$totmb,$tipo){
+    function insertarRecepcionDet($idserv,$ulpar,$numrecibo,$nmues,$totmb,$tipo){
     	$sql="insert into aa_recepcionmuestradetalle
-(aa_recepcionmuestradetalle.rmd_partida, aa_recepcionmuestradetalle.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_tipoanalisis,
+(mue_claveservicio,aa_recepcionmuestradetalle.rmd_partida, aa_recepcionmuestradetalle.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_tipoanalisis,
 aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus) 
-VALUES (:ulpar, :numrecibo,:nmues,:tipo, :totmb,1)";
+VALUES (:serv,:ulpar, :numrecibo,:nmues,:tipo, :totmb,1)";
     	try{
 
     	$stmt = Conexion::conectar()-> prepare($sql);
     	$stmt-> bindParam(":ulpar", $ulpar, PDO::PARAM_INT);
-    	
+    	$stmt-> bindParam(":serv", $idserv, PDO::PARAM_INT);
     	$stmt-> bindParam(":numrecibo", $numrecibo, PDO::PARAM_INT);
     	$stmt-> bindParam(":nmues", $nmues, PDO::PARAM_INT);
     	$stmt-> bindParam(":totmb", $totmb, PDO::PARAM_INT);
     	$stmt-> bindParam(":tipo", $tipo, PDO::PARAM_STR);
     	
-    		if(!$stmt-> execute())
-    			throw new Exception("Error al insertar");
+    	$stmt-> execute();
+//     	$stmt->debugDumpParams();
+//      	var_dump($stmt->errorInfo());
+    			//throw new Exception("Error al insertar");
     	}catch(Exception $ex){
     		throw new Exception("Error al insertar recepción detalle");
     	}
@@ -212,7 +215,11 @@ VALUES (:ulpar, :numrecibo,:nmues,:tipo, :totmb,1)";
     		
     		
     		if(!$stmt-> execute())
+    		{	
+    			//var_dump($stmt->errorInfo());
     			throw new Exception("Error al borrar");
+    		
+    		}
     	}catch(Exception $ex){
     		throw new Exception("Error al borrar recepción detalle");
     	}
@@ -257,6 +264,7 @@ VALUES (:ulpar, :numrecibo,:nmues,:tipo, :totmb,1)";
     	$sSQLu1="update aa_recepcionmuestra set aa_recepcionmuestra.rm_fechahora=:fecvis, 
 aa_recepcionmuestra.rm_estatus=2 
 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra=:numrecibo";
+    	$stmt = Conexion::conectar()-> prepare($sSQLu1);
     	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_INT);
     	$stmt-> bindParam(":numrecibo", $numrecibo, PDO::PARAM_INT);
     	

@@ -18,4 +18,3 @@ class DatosSubnivel extends Conexion{
 	}
 
 }
- ?>

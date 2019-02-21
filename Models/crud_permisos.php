@@ -1,6 +1,4 @@
 <?php
-
-
 class DatosPermisos
 {
     public static function vistaPermisosMenu($gpo) {
@@ -17,8 +15,6 @@ class DatosPermisos
         $stmt = Conexion::conectar()->prepare($sqq);
         $stmt->bindParam(":op2", $gpo,PDO::PARAM_STR);
         $stmt->execute();
-        
-        
         
         return $stmt->fetchAll();
     }
@@ -79,8 +75,8 @@ WHERE `cpe_grupo` = :grupo
             $stmt->bindParam(":grupo", $grupo);
             $stmt->bindParam(":claveopcion", $opcion);
           
-       if($stmt->execute())
-           throw new Exception("Error al eliminar permiso");
+       $stmt->execute();
+           //throw new Exception("Error al eliminar permiso");
         }catch(PDOException $es){
             throw new Exception("Error al eliminar permiso");
         }
@@ -159,6 +155,65 @@ where men_superopcion='".$menu."'";
         
         return $stmt->fetchAll();
     }
+    
+    public function getPermisosxgrupo($grupo){
+    	$sql="select * from cnfg_menu
+        inner join cnfg_permisos on cnfg_menu.men_claveopcion=cnfg_permisos.cpe_claveopcion
+where cnfg_permisos.cpe_grupo=:grupous and men_nivel=1
+order by cnfg_menu.men_claveopcion;";
+    	
+    	
+    	$con=Conexion::conectar();
+    	$stmt=$con->prepare($sql);
+    	$stmt->bindParam("grupous", $grupo, PDO::PARAM_STR);
+    	$stmt->execute();
+    //	$stmt->debugDumpParams();
+    	$res=$stmt->fetchAll();
+    	$con=null;
+    	return $res;
+    	
+    }
+    
+    public function getSubmenusxgrupo($grupo,$superopcion){
+    	$sql_com = "SELECT
+*
+FROM
+cnfg_permisos
+Inner Join cnfg_menu ON cnfg_permisos.cpe_claveopcion = cnfg_menu.men_claveopcion
+where
+cnfg_permisos.cpe_grupo=:grupous and cnfg_menu.men_superopcion=:superopcion";
+    	
+    	
+    	
+    	$con=Conexion::conectar();
+    	$stmt=$con->prepare($sql_com);
+    	$stmt->bindParam("grupous", $grupo, PDO::PARAM_STR);
+    	$stmt->bindParam("superopcion", $superopcion, PDO::PARAM_STR);
+    	$stmt->execute();
+    //	$stmt->debugDumpParams();
+    	$res=$stmt->fetchAll();
+    	$con=null;
+    	return $res;
+    	
+    }
+    
+     public function getSubmenusxop($superopcion){
+     	$sql2 = "SELECT * FROM cnfg_menu where men_superopcion=:op;";
+     	
+    	
+    	
+    	
+    	$con=Conexion::conectar();
+    	$stmt=$con->prepare($sql2);
+    	
+    	$stmt->bindParam("op", $superopcion, PDO::PARAM_STR);
+    	$stmt->execute();
+    	$res=$stmt->fetchAll();
+    	$con=null;
+    	return $res;
+    	
+    }
+    
 }
 
 

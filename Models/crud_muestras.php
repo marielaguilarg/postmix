@@ -104,8 +104,11 @@ ins_detalleestandar.ide_numseccion ) AS B ON  A.mue_idmuestra = B.ide_idmuestra"
 
     public function vistaDatosPunto($idser, $idmues, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi, ca_unegocios.une_idcuenta, ca_unegocios.cue_clavecuenta, ca_inspectores.ins_nombre, ins_generales.i_responsablevis, ins_generales.i_fechavisita,ins_generales.i_numreporte 
-			FROM $tabla Inner Join ins_generales ON  ca_unegocios.une_id = ins_generales.i_unenumpunto Inner Join ca_inspectores ON ins_generales.i_claveinspector = ca_inspectores.ins_clave Inner Join ins_detalleestandar ON ins_generales.i_claveservicio = ins_detalleestandar.ide_claveservicio AND ins_generales.i_numreporte = ins_detalleestandar.ide_numreporte 
-WHERE ins_detalleestandar.ide_claveservicio = :idser AND ins_detalleestandar.ide_idmuestra =:idmues GROUP BY ins_detalleestandar.ide_claveservicio, ca_unegocios.une_id ORDER BY ca_unegocios.une_id");
+			FROM $tabla Inner Join ins_generales ON  ca_unegocios.une_id = ins_generales.i_unenumpunto
+ Inner Join ca_inspectores ON ins_generales.i_claveinspector = ca_inspectores.ins_clave
+ Inner Join ins_detalleestandar ON ins_generales.i_claveservicio = ins_detalleestandar.ide_claveservicio AND ins_generales.i_numreporte = ins_detalleestandar.ide_numreporte 
+WHERE ins_detalleestandar.ide_claveservicio = :idser AND ins_detalleestandar.ide_idmuestra =:idmues 
+GROUP BY ins_detalleestandar.ide_claveservicio, ca_unegocios.une_id ORDER BY ca_unegocios.une_id");
 		
 		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
 		$stmt-> bindParam(":idmues", $idmues, PDO::PARAM_INT);
@@ -432,7 +435,16 @@ WHERE aa_muestras.mue_idmuestra=:ntoma");
     
     public function listaMuestrasxIdMuestra($ntoma,$tabla){
     	
-    	$sql_rep="SELECT aa_muestras.mue_fechahora, aa_muestras.mue_fecharecepcion, aa_muestras.mue_fechoranalisisFQ, aa_muestras.mue_fechoranalisisMB, aa_muestras.mue_numreporte, aa_muestras.mue_claveservicio, aa_muestras.mue_idmuestra, if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_fechoranalisisMB) as ulfeclab,  if((aa_muestras.mue_fechoranalisisFQ ='0000-00-00 00:00:00') or (aa_muestras.mue_fechoranalisisMB ='0000-00-00 00:00:00'),null,datediff(if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_fechoranalisisMB),mue_fecharecepcion) ) AS dias_trans_lab
+    	$sql_rep="SELECT aa_muestras.mue_fechahora, aa_muestras.mue_fecharecepcion, 
+aa_muestras.mue_fechoranalisisFQ, aa_muestras.mue_fechoranalisisMB, aa_muestras.mue_numreporte,
+ aa_muestras.mue_claveservicio, aa_muestras.mue_idmuestra,
+ if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,aa_muestras.mue_fechoranalisisFQ,
+aa_muestras.mue_fechoranalisisMB) as ulfeclab, 
+ if((aa_muestras.mue_fechoranalisisFQ ='0000-00-00 00:00:00') or (aa_muestras.mue_fechoranalisisMB ='0000-00-00 00:00:00'),
+null,datediff(if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,
+aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_fechoranalisisMB),mue_fecharecepcion) ) AS dias_trans_lab,
+aa_muestras.mue_idmuestra, aa_muestras.mue_numunidadesFQ, aa_muestras.mue_numunidadesMB,
+aa_muestras.mue_estatusmuestra
     	
 FROM
 
@@ -447,7 +459,7 @@ $stmt->bindParam("ntoma", $ntoma,PDO::PARAM_INT);
 
 
 $stmt-> execute();
-
+//$stmt->debugDumpParams();
 return $stmt->fetchall();
 
 
@@ -470,9 +482,10 @@ WHERE aa_muestras.mue_idmuestra=:ntoma");
     	}
     }
     
-    public function actualizarFechaRecepcion(){
+    public function actualizarFechaRecepcion($nmues){
     	$sSQLu1="update aa_muestras set mue_estatusmuestra=3, 
 mue_fecharecepcion=now() where mue_idmuestra=:nmues";
+    	$stmt=Conexion::conectar()->prepare($sSQLu1);
     	$stmt-> bindParam(":nmues", $nmues, PDO::PARAM_INT);
     	
     	if(!$stmt-> execute()){

@@ -20,7 +20,7 @@ FROM $tabla where ca_catalogosdetalle.cad_idcatalogo= :id");
         
         
         public function getCatalogoDetalle($tabla,$catalogo,$opcion){
-            
+          
          $sql_cat = "SELECT
 ca_catalogosdetalle.cad_descripcionesp,
 ca_catalogosdetalle.cad_descripcioning FROM ".
@@ -28,7 +28,7 @@ $tabla."
 WHERE
 ca_catalogosdetalle.cad_idcatalogo =  :clavecatalogo AND
 ca_catalogosdetalle.cad_idopcion =  :opcion";
-//  echo "<br> oo ".$sql_cat;
+ 
         $stmt = Conexion::conectar()-> prepare($sql_cat);
 
     $stmt-> bindParam(":clavecatalogo", $catalogo, PDO::PARAM_INT);
@@ -42,8 +42,8 @@ ca_catalogosdetalle.cad_idopcion =  :opcion";
         else
             $res = $row_cat["cad_descripcionesp"];
     }
-          
-        
+     $stmt->closeCursor();     
+     $result_cat=$stmt=null;
       return $res;
         }
 

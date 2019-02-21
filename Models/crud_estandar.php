@@ -1569,7 +1569,7 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		$stmt-> bindParam(":ntoma", $datosModel["ntoma"], PDO::PARAM_INT);
 		
 		IF($stmt-> execute()){
-			
+	//	$stmt->debugDumpParams();
 			return "success";
 		}
 		

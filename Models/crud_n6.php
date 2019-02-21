@@ -79,7 +79,8 @@ class Datosnsei extends Conexion{
               $nombre = $row["n6_nombre"];
 
             }
-
+            $stmt=null;
+            $res=null;
              return $nombre;
 
         }

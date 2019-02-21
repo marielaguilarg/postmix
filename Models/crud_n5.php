@@ -40,7 +40,7 @@ class Datosncin extends Conexion{
 
 	public function vistancinOpcionModel($datosModel,$tabla){
 
-		$stmt = Conexion::conectar()-> prepare("SELECT n5_id, n5_nombre FROM $tabla WHERE n5_id=:idn");
+		$stmt = Conexion::conectar()-> prepare("SELECT n5_id, n5_nombre,n5_idn4 FROM $tabla WHERE n5_id=:idn");
 
 		$stmt-> bindParam(":idn", $datosModel, PDO::PARAM_INT);
 

@@ -449,10 +449,10 @@ cus_cliente, cus_servicio, cus_solcer)
 	    
 	  if( !$stmt->execute())
 	  { 
-	      $stmt->debugDumpParams();
+	     // $stmt->debugDumpParams();
 	    throw new Exception("Error al crear el usuario");
 	  }
-	  $stmt->debugDumpParams();
+	//  $stmt->debugDumpParams();
 	    }catch(PDOException $ex){
 	        throw new Exception("Error al crear el usuario");
 	    }

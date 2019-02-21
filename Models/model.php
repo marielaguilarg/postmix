@@ -16,6 +16,7 @@ class EnlacesPaginas{
 			$enlacesModel == "listaunegocio" ||
 			$enlacesModel == "nuevaunegocio" ||
 			$enlacesModel == "nuevaponcuenta" ||
+			$enlacesModel == "editapondcoment" ||
 
 		    $enlacesModel == "editaunegocio" ||
 
@@ -170,10 +171,10 @@ class EnlacesPaginas{
 			$module ="views/modulos/cue_reporte.php";	
 		}
 
-		else if($enlacesModel == "index"){
+// 		else if($enlacesModel == "index"){
 
-			$module = "views/modulos/enlaces.php";
-		}
+// 			$module = "views/modulos/enlaces.php";
+// 		}
 
 		else if($enlacesModel == "ok"){
 
@@ -184,10 +185,10 @@ class EnlacesPaginas{
 
 			$module = "views/modulos/cue_listafranquicia.php";
 		}
-		else{
+// 		else{
 
-			$module = "views/modulos/enlaces.php";
-		}
+// 			$module = "views/modulos/enlaces.php";
+// 		}
 
 		return $module;
 	}

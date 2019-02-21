@@ -6,14 +6,16 @@ class DatosUnegocio extends Conexion {
 #vistaservicios
 
 	public function vistaUnegocioModel($init=false, $page_size=false, $cta, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi, une_idcuenta FROM $tabla where cue_clavecuenta=:cta limit :init, :size ");
-
+		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi,
+une_dir_estado, une_dir_municipio, une_idcuenta,une_num_unico_distintivo FROM $tabla 
+where cue_clavecuenta=:cta order by une_dir_estado limit :init, :size  ");
+		
         $stmt->bindParam(":init", $init, PDO::PARAM_INT);
 
         $stmt->bindParam(":size", $page_size, PDO::PARAM_INT);
 		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);
         $stmt->execute();
-
+	
 
 
         return $stmt->fetchAll();
@@ -22,7 +24,7 @@ class DatosUnegocio extends Conexion {
 	public function vistaFiltroUnegocioModel($cta, $datosbus,$estado,$ciudad, $tabla){
 
 		$sql="SELECT une_id, une_descripcion, une_idpepsi,
- une_idcuenta FROM $tabla
+ une_idcuenta,une_num_unico_distintivo,une_dir_estado, une_dir_municipio FROM $tabla
 where cue_clavecuenta=:cta and une_descripcion
 LIKE :opbusqueda ";
 	
@@ -39,7 +41,7 @@ LIKE :opbusqueda ";
 			
 			}
 		}
-		$stmt = Conexion::conectar()-> prepare($sql);
+		$stmt = Conexion::conectar()-> prepare($sql." order by une_dir_estado" );
 		if(isset($estado)&&$estado!="0") {
 			
 			$stmt-> bindParam(":estado", $estado, PDO::PARAM_INT);
@@ -55,7 +57,7 @@ LIKE :opbusqueda ";
         $stmt->bindParam(":opbusqueda", $datosbus, PDO::PARAM_STR);
 		$stmt-> bindParam(":cta", $cta, PDO::PARAM_INT);
         $stmt->execute();
-
+    
         return $stmt->fetchAll();
     }
 
@@ -420,7 +422,7 @@ ca_unegocios.une_descripcion, concat(une_dir_calle,' ',
 
    une_dir_municipio, une_idcuenta,une_id,cue_clavecuenta,fc_idfranquiciacta,
 
-    une_idpepsi
+    une_idpepsi,une_num_unico_distintivo
 
 FROM
 
@@ -656,10 +658,8 @@ ca_unegocios.une_cla_pais=$aux2[2]";
 
         return Conexion::ejecutarQuery($slq_franquicia, $parametros);
     }
-
-    public function insertarUnegociodesdeSolicitud($servicio, $reporte) {
-
-
+   public function insertarUnegociodesdeSolicitud($servicio, $reporte) {
+    	try{
 
         $ssql = "select max(une_id) as claveuneg from ca_unegocios";
 
@@ -703,7 +703,8 @@ ca_unegocios.une_cla_pais=$aux2[2]";
 
  une_dir_delegacion, une_dir_municipio, une_dir_idestado, une_dir_cp, une_dir_referencia, une_dir_telefono, 
 
- une_numpunto,ca_unegocios.une_estatus,une_fechaestatus)
+ une_numpunto,ca_unegocios.une_estatus,une_fechaestatus,une_idpepsi,
+  une_num_unico_distintivo)
 
  SELECT cer_solicitud.sol_cuenta,  :numunineg, cer_solicitud.sol_descripcion,
 
@@ -715,7 +716,7 @@ cer_solicitud.sol_idcuenta,
 
  cer_solicitud.sol_dir_delegacion, cer_solicitud.sol_dir_municipio, cer_solicitud.sol_dir_estado, cer_solicitud.sol_dir_cp, cer_solicitud.sol_dir_referencia, cer_solicitud.sol_dir_telefono, 
 
-:npunto, 1, curdate()
+:npunto, 1, curdate(),'',''
 
  FROM cer_solicitud WHERE cer_solicitud.sol_claveservicio =:servicio AND cer_solicitud.sol_idsolicitud =:reporte";
 
@@ -735,13 +736,20 @@ cer_solicitud.sol_idcuenta,
 
         $res = $stmt->execute();
 
-
+       // $stmt->debugDumpParams();
 
 
 
         if (!$res)
             throw new Exception("Error al insertar solicitud");
+    	}catch(PDOException $ex){
+    		throw new Exception("Error al insertar solicitud");
+    	}
     }
+   
+   
+   
+   
 	 public function registrarUnegocio($datosModel, $tabla) {
         try {
             $ssql = "select max(une_id) as claveuneg from $tabla";
