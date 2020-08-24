@@ -17,6 +17,7 @@ class SurveyDataController
    private $cuenta;
    private $aceptados,$im;
    private $letrero;
+   private $wherecuenta;
    
     public function descargarArchivo(){
         
@@ -40,7 +41,7 @@ class SurveyDataController
         //$fec2="2008-12-30";
         $fec1=$fechainicio.".".$fechainicio2;
         $fec2=$fechafin.".".$fechafin2;
-        
+    
         //$nomcuenta="algo33";
         $idcliente=1;
     //    $prueba=new tablahtml("");			//crea una nueva tabla
@@ -48,20 +49,43 @@ class SurveyDataController
         $cuenta_des="CUENTAS TODAS";
         if($consulta=="t")
         {   $this->cuenta=-1;
-        $nomcuenta="Surveydata".date("dmyHi");
+       		$nomcuenta="Surveydata".date("dmyHi");
         }else
         {
-            $this->cuenta=$cuenta;
-            //echo $cuenta;
-            $cuenta_des=DatosCuenta::nombreCuenta($cuenta,$idcliente);
-           // echo $cuenta_des; die();
-            //CREA EL ARCHIVO PARA EXPORTAR
-            $nomcuenta="Surveydata".$cuenta_des.date("dmyHi")	;		//nombre del archivo
-            
+        
+        	$this->cuenta=$cuenta=$_POST["cuenta"];
+        
+        	
+        	//reviso si es más de 1
+        	if(sizeof($cuenta)>1 )
+        	{
+        		$varin="";
+        		foreach($cuenta as $num){
+        			$varin.=$num.",";
+        		}
+        		
+        		$varin=substr($varin, 0,strlen($varin)-1); //quito ultima ,
+        		
+        		$this->wherecuenta="($varin)";
+        		$nomcuenta="Surveydata".date("dmyHi")	;		//nombre del archivo
+        		
+        	}
+        	else{
+        		
+        		$this->wherecuenta="(".$cuenta[0].")";
+         
+	            //echo $cuenta;
+	            $cuenta_des=DatosCuenta::nombreCuenta($cuenta[0],$idcliente);
+	           // echo $cuenta_des; die();
+	            //CREA EL ARCHIVO PARA EXPORTAR
+	            $nomcuenta="Surveydata".$cuenta_des.date("dmyHi")	;		//nombre del archivo
+        	}
         }
+        
         $this->workbook =new PHPExcel();
         
         $this->worksheet =$this->workbook->getActiveSheet();
+    
         $this->workbook->getActiveSheet()->setTitle($cuenta_des);
         
        // $prueba->nuevoren();
@@ -113,8 +137,8 @@ where res.ide_numcaracteristica3 =  '9' and
 		and res.ide_numreactivo='0'";
             $parametros=array();
             if($this->cuenta!=-1)
-            {    $queryren.="	and	i_clavecuenta=:cuenta";
-                $parametros["cuenta"]=$this->cuenta;
+            {    $queryren.="	and	i_clavecuenta in ".$this->wherecuenta;
+               // $parametros["cuenta"]=$this->cuenta;
             }
                 $queryren.=" and str_to_date(concat('01.',i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y')
 and str_to_date(concat('01.',i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
@@ -167,11 +191,11 @@ WHERE
 			 ins_generales.i_claveservicio=:servicio";
                     $parametros=array("servicio"=>$this->servicio);
                     if($this->cuenta!=-1)
-                    {  $cad.="		and cue_id=:cuenta";
-                    $parametros["cuenta"]=$this->cuenta;
+                    {  $cad.="		and cue_id in ".$this->wherecuenta;
+                   // $parametros["cuenta"]=$this->cuenta;
                     }
                         $cad.=" and
-			 str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
+			 str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y')
  and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y') and
 			ins_detalle.id_numseccion =:sec AND
 			ins_detalle.id_numreactivo=:reac order by ins_generales.i_fechavisita ASC, rep";
@@ -236,8 +260,9 @@ WHERE
 ins_generales.i_claveservicio =:servicio AND";
                     $parametros["servicio"]=$this->servicio;
                     if($this->cuenta!=-1)
-                    {    $cad.=" cue_id =:cuenta AND";
-                    $parametros["cuenta"]=$this->cuenta;}
+                    {    $cad.=" cue_id in ".$this->wherecuenta." AND";
+                   // $parametros["cuenta"]=$this->cuenta;
+                    }
                     
                      $cad.="
  str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y') 
@@ -272,8 +297,8 @@ ins_generales.i_claveservicio =:servicio AND";
                             $parametros["servicio"]=$this->servicio;
                          
                             if($this->cuenta!=-1)
-                                $cad.=" cue_id =:cuenta AND";
-                                {   $parametros["cuenta"]=$this->cuenta;}
+                                $cad.=" cue_id in ".$this->wherecuenta." AND";
+                            //   {   $parametros["cuenta"]=$this->cuenta;}
                                 
                                 $cad.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y') and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y') AND
 ins_detalleestandar.ide_numseccion =:sec AND
@@ -324,10 +349,10 @@ AND ins_detalleabierta.ida_numreactivo = cue_reactivosabiertosdetalle.r_numreact
  AND ins_detalleabierta.ida_numcaracteristica3 = cue_reactivosabiertosdetalle.rad_numcaracteristica2
 WHERE ins_detalleabierta.ida_claveservicio =:servicio and";
                     if($this->cuenta!=-1)
-                    {   $cad.=" cue_id =:cuenta AND ";
-                       $parametros["cuenta"]=$this->cuenta;
+                    {   $cad.=" cue_id in ".$this->wherecuenta." AND ";
+                      // $parametros["cuenta"]=$this->cuenta;
                     }
-                        $cad.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechafin),'%d.%m.%Y') 
+                        $cad.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y') 
 and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')  AND
 		ins_detalleabierta.ida_numseccion =:sec AND
 		ins_detalleabierta.ida_numreactivo=:reac and
@@ -380,7 +405,7 @@ WHERE ";
                             $parametros=array();
                                 if($this->cuenta!=-1)
                                 {   $cad.=" cue_id =:cuenta AND";
-                                $parametros["cuenta"]=$this->cuenta;
+                               // $parametros["cuenta"]=$this->cuenta;
                                 }
                                     $cad.="	 str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y') 
 and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')  AND
@@ -492,8 +517,9 @@ left Join ca_nivel6 ON  ca_unegocios.une_cla_franquicia = ca_nivel6.n6_id
             				"name"    => 'Arial Unicode MS'
             		));
             if($this->cuenta!=-1)
-            {    $sSQL.="  and ca_unegocios.cue_clavecuenta=:cuenta";
-            $parametros["cuenta"]=$this->cuenta;  }
+           {    $sSQL.="  and ca_unegocios.cue_clavecuenta in ".$this->wherecuenta;
+          //  $parametros["cuenta"]=$this->cuenta;  
+            }
                 $sSQL.=" and  str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y') 
 and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
 order by ins_generales.i_fechavisita ASC, i_numreporte";
@@ -511,6 +537,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 }
                 $renglon++;			//fin del renglon
                 $res=Conexion::ejecutarQuery($sSQL,$parametros);
+               
                $letra=65;
                 if($res) {
                    
@@ -554,10 +581,11 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
 	ins_generales.i_claveservicio =:servicio AND";
             $parametros=array("servicio"=>$this->servicio);
             if($this->cuenta!=-1)
-            {  $sql2.=" cue_id =:cuenta AND";
+            {  $sql2.=" cue_id in ".$this->wherecuenta." AND";
 
-            $parametros["cuenta"]=$this->cuenta;}
-                $sql2.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
+           // $parametros["cuenta"]=$this->cuenta;
+            }
+                $sql2.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y')
         and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y') order by ins_generales.i_fechavisita ASC,rep";
                 $parametros["fechaini"]=$fechaini;
                 $parametros["fechafin"]=$fechafin;
@@ -575,6 +603,7 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
                 //        else
                 
                 $res=$this->consulta($tiporeac,$fechaini,$fechafin,$reactivo,$ren);		//realiza la consulta
+              
                 // para cada columna que aparecerá en el reporte
               //  $otabla=new tablahtml("");					//crea un objeto tablahtml
                 $letra=$letraini;
@@ -700,12 +729,13 @@ order by ins_generales.i_fechavisita ASC, i_numreporte";
 	ins_generales.i_claveservicio =:servicio AND";
             $parametros=array();
             if($this->cuenta!=-1)
-            {   $sql2.=" cue_id =:cuenta AND";
+            {   $sql2.=" cue_id in ".$this->cuentawhere." AND";
             
             
-                $parametros["cuenta"]=$this->cuenta;}
+              //  $parametros["cuenta"]=$this->cuenta;
+            }
             
-                $sql2.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
+                $sql2.=" str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaini),'%d.%m.%Y')
         and str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechafin),'%d.%m.%Y')
      order by ins_generales.i_fechavisita ASC,rep";
                 $parametros["servicio"]=$this->servicio;
@@ -915,6 +945,7 @@ cnfg_surveydata.surv_nombrecol IS NOT NULL
                 }
             }
             $renglon++;
+        
             return $letra;
             
             

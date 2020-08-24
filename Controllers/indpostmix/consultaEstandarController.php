@@ -676,9 +676,10 @@ class ConsultaEstandarController
                        
                            $this->listaAtributos[$rowcue["ide_numcaracteristica3"]]=$resultado;
                             if($numren>$numrenant)
-                            {      $this->listaEstandar[$numren]= $this->listaAtributos;
+                            {      $this->listaEstandar[$numrenant]= $this->listaAtributos;
                             $numrenant=$numren;
-                            $sumapond = 0;
+                            if ($tipoeva == 1 && $rowcue["ide_numrenglon"] == 1) 
+                        	    $sumapond = 0;
                             }
                             
                        
@@ -697,11 +698,13 @@ class ConsultaEstandarController
                        
                             
                     } //termino despliegue de datos
+//                     echo "---".$numren;
+//                     print_r($this->listaAtributos);
                     $this->listaEstandar[$numren]= $this->listaAtributos;
                     
                 }
-              
-                
+//               echo"****************************";
+//                 print_r($this->getListaEstandar());
              
                 
                 $cont_rea++;
@@ -717,9 +720,9 @@ class ConsultaEstandarController
         
         
         //calcula nivel de cumplimiento
-        
+     
         if ($tipoeva == 2) {
-            
+          
             $sumapond = $sumapond / $numren;
             
         }

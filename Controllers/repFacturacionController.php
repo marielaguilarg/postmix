@@ -223,42 +223,48 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         
       
        
-        
-        
         $text_format_b =array(
             'font-style'    => 'bold',
             
             'fill'   =>  $arrcolores["verdeo"],
             'font-size'    => 10,
-            font    => 'Arial Unicode MS',
-      //      vAlign => 'vjustify',
-           'halign' => 'Center'
+           'font'    => 'Arial Unicode MS',
+         
+           'halign' => 'center',
+        		'widths'=>[20,20,20,20,20,
+        				20,20,40,60,20,
+        				20,130,20,20,20,
+        				20,20,60,20,40,
+        				20,20,20,20,20],
+    'wrap_text'=>true
+        		
         );
         
      	
         $letrae=65;
         
         //////////////////////////////////// nombres de cada columna o prueba//////////////////////////////
-        $enctablas=array("NO DE PUNTO DE VENTA", "UNIDAD DE NEGOCIO", "FRANQUICIA CLIENTE", "CUENTA", "FRANQUICIA CUENTA", "REGION", "ESTADO", "CIUDAD O MUNICIPIO", "PUNTO DE VENTA (NOMBRE)","ID PEPSI","ID CUENTA","DOMICILIO","MES ASIGNACION","ESTATUS","FECHA DE ESTATUS","FECHA DE VISITA", "NO. DE REPORTE","AUDITOR","NO MUESTRA AGUA","EMBOTELLADORA","REPORTE CIC","NO. REPORTE CIC","FINALIZADO","NO. FACTURA", "SIN COBRO");
+        $enctablas=array("NO DE PUNTO DE VENTA"=>"string", "UNIDAD DE NEGOCIO"=>'string', "FRANQUICIA CLIENTE"=>'string',
+        		"CUENTA"=>'string', "FRANQUICIA CUENTA"=>'string', "REGION"=>'string', "ESTADO"=>'string', "CIUDAD O MUNICIPIO"=>'string',
+        		"PUNTO DE VENTA (NOMBRE)"=>'string',"NUD"=>'string',"ID CUENTA"=>'string',"DOMICILIO"=>'string',"MES ASIGNACION"=>'string',
+        		"ESTATUS"=>'string',"FECHA DE ESTATUS"=>"date","FECHA DE VISITA"=>"date", "NO. DE REPORTE"=>"string","AUDITOR"=>'string',
+        		"NO MUESTRA AGUA"=>"integer","EMBOTELLADORA"=>"string","REPORTE CIC"=>"string","NO. REPORTE CIC"=>"string",
+        		"FINALIZADO"=>'string',"NO. FACTURA"=>'string', "SIN COBRO"=>'string');
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         /*** DESPLIEGO TITULOS DE COLUMNA**/
         $arr_colxsec=array(
             4,3,5,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4);
         
     
-     
         // inicio en letra a=65
         $letra=65;
     
         $i=0;
     //    for($i=0;$i<25;$i++) {
-            $this->worksheet->writeSheetRow($this->hoja, $enctablas,$text_format_b);
+        $this->worksheet->writeSheetHeader($this->hoja, $enctablas,$text_format_b);
    //     }
        
-        
-       
-        
-        
+             
         // detalle
         $fr=explode('-', $fecharep);
         $fecrec=$fr[2]."-".$fr[1].".".$fr[0];
@@ -282,8 +288,7 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         $this->datosUNegocio($mes_asig,$mes_asig2,$diafin, $cclien, $idserv);
         $fin = microtime(true);
         $tiempo = $fin - $ini;
-       
-        //
+    
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate');
@@ -302,16 +307,17 @@ cnfg_usuarios.cus_clavegrupo FROM cnfg_usuarios WHERE cnfg_usuarios.cus_usuario 
         function datosUNegocio($mes_asig,$mes_asigfin, $diafin, $claclien,$idserv) {
       
             
-            if ($idserv==1) {
+            if ($idserv>0) {
                 $sqluneg="SELECT une_numpunto, n2_nombre, n3_nombre, cue_descripcion, cf_descripcion, n4_nombre, 
-n4_nombre, une_dir_municipio,une_descripcion, une_idpepsi,une_idcuenta, dir,i_mesasignacion, une_estatus, fecha_estatus,
-i_fechavisita, i_numreporte, i_claveinspector,ide_idmuestra,i_reportecic,i_numreportecic, i_finalizado, i_numfactura, 
+n5_nombre, une_dir_municipio,une_descripcion, une_num_unico_distintivo,une_idcuenta, dir,i_mesasignacion, une_estatus, fecha_estatus,
+i_fechavisita, i_numreporte, i_claveinspector,ide_idmuestra,i_reportecic,i_numreportecic,
+   IF(i_finalizado<>0,IF(`mue_estatusFQ`=3 AND `mue_estatusMB`=3,1,0),i_finalizado) AS i_finalizado, i_numfactura, 
 i_sincobro
 FROM (SELECT ca_unegocios.une_numpunto, ca_unegocios.une_dir_municipio, ca_unegocios.une_descripcion,
-ca_unegocios.une_idpepsi, ca_unegocios.une_idcuenta, concat(ca_unegocios.une_dir_calle,' ',ca_unegocios.une_dir_numeroext,' ',ca_unegocios.une_dir_numeroint,' ',
+ca_unegocios.une_num_unico_distintivo, ca_unegocios.une_idcuenta, concat(ca_unegocios.une_dir_calle,' ',ca_unegocios.une_dir_numeroext,' ',ca_unegocios.une_dir_numeroint,' ',
 ca_unegocios.une_dir_manzana,' ',ca_unegocios.une_dir_lote,' ',ca_unegocios.une_dir_colonia,' ',ca_unegocios.une_dir_delegacion,' ',
 ca_unegocios.une_dir_municipio,' ',ca_unegocios.une_dir_estado,' ',ca_unegocios.une_dir_cp) AS dir,
-ca_unegocios.une_estatus, date_format(ca_unegocios.une_fechaestatus,'%d-%m-%Y') AS fecha_estatus,
+ca_unegocios.une_estatus, if(une_fechaestatus='0000-00-00','',ca_unegocios.une_fechaestatus) AS fecha_estatus,
  ca_unegocios.cue_clavecuenta, ca_unegocios.une_id,
 ca_nivel5.n5_nombre, ca_nivel4.n4_nombre, ca_nivel3.n3_nombre, ca_nivel2.n2_nombre, ca_cuentas.cue_descripcion,
 ca_franquiciascuenta.cf_descripcion 
@@ -324,32 +330,46 @@ Left Join ca_cuentas ON  ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
 Left Join ca_franquiciascuenta ON ca_unegocios.fc_idfranquiciacta = ca_franquiciascuenta.fc_idfranquiciacta 
 AND ca_cuentas.cue_idcliente = ca_franquiciascuenta.cli_idcliente 
  AND ca_cuentas.cue_id = ca_franquiciascuenta.cue_clavecuenta
- WHERE  ca_cuentas.cue_idcliente =:claclien ORDER BY ca_unegocios.une_numpunto ) AS A  INNER JOIN (SELECT  i_claveservicio,
-  i_unenumpunto, i_mesasignacion, i_fechavisita, i_numreporte, i_claveinspector, ide_idmuestra,i_reportecic,i_numreportecic, 
-i_finalizado, i_numfactura, i_sincobro FROM  (SELECT  ins_generales.i_claveservicio, 
- ins_generales.i_unenumpunto, ins_generales.i_mesasignacion, ins_generales.i_fechavisita, ins_generales.i_numreporte,
- ins_generales.i_claveinspector, ins_generales.i_reportecic, ins_generales.i_numreportecic, ins_generales.i_finalizado, ins_generales.i_numfactura, ins_generales.i_sincobro
-FROM ins_generales WHERE DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))>= str_to_date(concat('01.',:mes_asig),'%d.%m.%Y')  
-AND DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))<= str_to_date(concat(:diafin,'.',:mes_asigfin),'%d.%m.%Y')  AND ins_generales.i_claveservicio=:idserv) AS C 
-LEFT JOIN  (SELECT ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_numrenglon 
+ WHERE  ca_cuentas.cue_idcliente =:claclien ORDER BY ca_unegocios.une_numpunto ) AS A 
+ INNER JOIN (SELECT  i_claveservicio,
+  i_unenumpunto, i_mesasignacion, i_fechavisita, i_numreporte, i_claveinspector, ide_idmuestra,
+i_reportecic,i_numreportecic, 
+i_finalizado, i_numfactura, i_sincobro ,`mue_estatusFQ`,`mue_estatusMB`
+ FROM  (SELECT  ins_generales.i_claveservicio, 
+ ins_generales.i_unenumpunto, ins_generales.i_mesasignacion, ins_generales.i_fechavisita, 
+ins_generales.i_numreporte,
+ ins_generales.i_claveinspector, ins_generales.i_reportecic, ins_generales.i_numreportecic, 
+ i_finalizado, ins_generales.i_numfactura, ins_generales.i_sincobro
+FROM ins_generales 
+WHERE DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))>= str_to_date(concat('01.',:mes_asig),'%d.%m.%Y')  
+AND DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))<= str_to_date(concat(:diafin,'.',:mes_asigfin),'%d.%m.%Y')  
+AND ins_generales.i_claveservicio=:idserv) AS C 
+LEFT JOIN  (SELECT ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra,
+ ins_detalleestandar.ide_numrenglon  ,`mue_estatusFQ`,`mue_estatusMB`
 FROM ins_detalleestandar 
-where ins_detalleestandar.ide_numrenglon = '1' and ins_detalleestandar.ide_idmuestra <>0
-AND ins_detalleestandar.ide_claveservicio =:idserv GROUP BY ins_detalleestandar.ide_numreporte,
- ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B
+INNER JOIN aa_muestras ON aa_muestras.`mue_idmuestra`=ins_detalleestandar.`ide_idmuestra`
+and `ide_claveservicio`=`mue_claveservicio` 
+WHERE  ins_detalleestandar.ide_idmuestra <>0
+  
+ AND (aa_muestras.`mue_estatusmuestra`=5 or aa_muestras.`mue_estatusmuestra`=4)
+AND ins_detalleestandar.ide_claveservicio =:idserv 
+ GROUP BY ins_detalleestandar.ide_numreporte,
+ ins_detalleestandar.ide_idmuestra  ) AS D ON i_numreporte=ide_numreporte) AS B
 ON  B.i_unenumpunto = A.une_id";
                 $parametros=array("claclien"=>$claclien,"idserv"=>$idserv,"mes_asig"=>$mes_asig,"diafin"=>$diafin,"mes_asigfin"=>$mes_asigfin );
             } else {
                 $sqluneg=("SELECT une_numpunto, n2_nombre, n3_nombre, cue_descripcion, cf_descripcion, n4_nombre, 
-n5_nombre, une_dir_municipio,une_descripcion, une_idpepsi,une_idcuenta, dir,i_mesasignacion, une_estatus, fecha_estatus,
-i_fechavisita, i_numreporte, i_claveinspector, ide_idmuestra, i_reportecic, i_numreportecic, i_finalizado, i_numfactura,
+n5_nombre, une_dir_municipio,une_descripcion, une_num_unico_distintivo,une_idcuenta, dir,i_mesasignacion, une_estatus, fecha_estatus,
+i_fechavisita, i_numreporte, i_claveinspector, ide_idmuestra, i_reportecic, i_numreportecic,
+   IF(i_finalizado<>0,IF(`mue_estatusFQ`=3 AND `mue_estatusMB`=3,1,0),i_finalizado) AS i_finalizado, i_numfactura,
  i_sincobro FROM
-(SELECT ca_unegocios.une_numpunto, ca_unegocios.une_dir_municipio, ca_unegocios.une_descripcion, ca_unegocios.une_idpepsi,
+(SELECT ca_unegocios.une_numpunto, ca_unegocios.une_dir_municipio, ca_unegocios.une_descripcion, ca_unegocios.une_num_unico_distintivo,
  ca_unegocios.une_idcuenta,
 concat(ca_unegocios.une_dir_calle,' ',ca_unegocios.une_dir_numeroext,' ',ca_unegocios.une_dir_numeroint,' ',
 ca_unegocios.une_dir_manzana,' ',ca_unegocios.une_dir_lote,' ',ca_unegocios.une_dir_colonia,' ',
 ca_unegocios.une_dir_delegacion,' ',ca_unegocios.une_dir_municipio,' ',ca_unegocios.une_dir_estado,' ',
 ca_unegocios.une_dir_cp) AS dir,
- ca_unegocios.une_estatus, date_format(ca_unegocios.une_fechaestatus,'%d-%m-%Y') AS fecha_estatus, 
+ ca_unegocios.une_estatus,  if(une_fechaestatus='0000-00-00','',ca_unegocios.une_fechaestatus) AS fecha_estatus, 
  ca_unegocios.cue_clavecuenta, ca_unegocios.une_id,
  ca_nivel5.n5_nombre, ca_nivel4.n4_nombre, ca_nivel3.n3_nombre, ca_nivel2.n2_nombre, ca_cuentas.cue_descripcion,
  ca_franquiciascuenta.cf_descripcion FROM ca_unegocios
@@ -366,7 +386,9 @@ WHERE ca_cuentas.cue_idcliente=:claclien
 ORDER BY ca_unegocios.une_numpunto ) AS A
 INNER JOIN (
 SELECT  i_claveservicio, i_unenumpunto, i_mesasignacion, i_fechavisita, i_numreporte, 
-i_claveinspector, ide_idmuestra,i_reportecic, i_numreportecic, i_finalizado, i_numfactura, i_sincobro FROM
+i_claveinspector, ide_idmuestra,i_reportecic, i_numreportecic, i_finalizado, i_numfactura,
+ i_sincobro,  `mue_estatusFQ`,
+    `mue_estatusMB` FROM
  (SELECT  ins_generales.i_claveservicio, 
 ins_generales.i_unenumpunto, ins_generales.i_mesasignacion, ins_generales.i_fechavisita, ins_generales.i_numreporte,
  ins_generales.i_claveinspector,
@@ -378,28 +400,33 @@ Left Join cer_solicitud ON ins_generales.i_claveservicio = cer_solicitud.sol_cla
 WHERE DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))>= str_to_date(concat('01.',:mes_asig),'%d.%m.%Y')
 AND DATE (str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y'))<= str_to_date(concat('31.',:mes_asigfin),'%d.%m.%Y') 
  AND
-cer_solicitud.sol_estatussolicitud =  '3') AS C
+cer_solicitud.sol_estatussolicitud >  '2' and cer_solicitud.sol_estatussolicitud<>5) AS C
 LEFT JOIN
-(SELECT ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra, ins_detalleestandar.ide_numrenglon 
+(SELECT ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_idmuestra,
+ ins_detalleestandar.ide_numrenglon ,  `mue_estatusFQ`,
+    `mue_estatusMB`
 FROM ins_detalleestandar 
-where ins_detalleestandar.ide_numrenglon = '1' and ins_detalleestandar.ide_idmuestra <>0
- GROUP BY ins_detalleestandar.ide_numreporte, 
-ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B ON 
+INNER JOIN aa_muestras ON aa_muestras.`mue_idmuestra`=ins_detalleestandar.`ide_idmuestra`
+and `ide_claveservicio`=`mue_claveservicio` 
+WHERE  ins_detalleestandar.ide_idmuestra <>0
+  
+ AND  (aa_muestras.`mue_estatusmuestra`=5 or aa_muestras.`mue_estatusmuestra`=4)
+ GROUP BY ins_detalleestandar.ide_numreporte,
+ ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B ON 
  B.i_unenumpunto = A.une_id");
              $parametros=array("claclien"=>$claclien,"mes_asig"=>$mes_asig,"mes_asigfin"=>$mes_asigfin );
                 
             }
             $resultuneg=Conexion::ejecutarQuery($sqluneg,$parametros);
-        // die();
+        
             $letra=65;
             $ren_ex=2;
             
             $text_format_det =array(
-                
-                
                 'font-size'    => 10,
-                font    => 'Arial Unicode MS',
-                'halign' => 'Center'
+                'font'    => 'Arial Unicode MS',
+                'halign' => 'center'
+            		
             );
         //    var_dump($resultuneg);die();
             foreach ($resultuneg as $rowuneg) {
@@ -408,7 +435,9 @@ ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B ON
                     // echo $letra;
                   //  $this->worksheet->writeSheetRow($this->hoja, $rowuneg, $text_format_det);
                 	$this->renglon[]=$rowuneg[$i];
+                	
                }
+             
                 $mesasig = Utilerias::cambiaMesG($rowuneg[12]);
                 $this->renglon[]=$mesasig;
                // $this->worksheet->writeSheetRow($this->hoja, $mesasig, $text_format_det);
@@ -427,7 +456,8 @@ ins_detalleestandar.ide_idmuestra ) AS D ON i_numreporte=ide_numreporte) AS B ON
                 }
                 $numrepcic=$rowuneg[20];
                 // finaliza para servicio =3
-                if ($idserv=3){
+                
+                if ($idserv==3){
                     // busca finalizado para seccion 3
                     $sqles = "SELECT cer_solicitud.sol_estatussolicitud FROM cer_solicitud 
 WHERE cer_solicitud.sol_numrep =  '".$numrep."' AND cer_solicitud.sol_claveservicio =  '3'";
@@ -442,11 +472,12 @@ WHERE cer_solicitud.sol_numrep =  '".$numrep."' AND cer_solicitud.sol_claveservi
                     }
                 }else{
                     $finaliza=$rowuneg[21];
-                    if ($finaliza)
+                   
+                    if ($finaliza==0)
                     {
-                        $repfin = "Si";
-                    } else {
                         $repfin = "No";
+                    } else {
+                        $repfin = "Si";
                     }
                 }
                 $numfac=$rowuneg[22];
@@ -460,10 +491,15 @@ WHERE cer_solicitud.sol_numrep =  '".$numrep."' AND cer_solicitud.sol_claveservi
                 $this->busest($cveest, $fecest, $fecvis, $numrep, $ren_ex);
                 $this->busaud($cveins, $nummues, $ren_ex);
                 $this->busemb($nummues, $ren_ex, $repcicd, $numrepcic, $repfin,$numfac,$repsc);
+             
                 $this->worksheet->writeSheetRow($this->hoja, $this->renglon, $text_format_det);
-                
+             
                 $ren_ex++;
             }
+//              foreach(range('A','Y') as $columnID) {
+//              	$this->worksheet-> (aFixedWidths|'autosize-char'|'autosize-font');
+//              }
+
         }
         
         function busest($cveest1, $fecest1, $fecvis1, $numrep1, $ren_ex1){
@@ -493,8 +529,9 @@ ca_catalogosdetalle.cad_idopcion ='$cveest1'";
             
                 $this->renglon[]=$rstreg;
                 $this->renglon[]=$fecest1;
+              
                 $this->renglon[]=$fecvis1;
-                $this->renglon[]=$fecvis1;
+                $this->renglon[]=$numrep1;
                 
                 
                 
@@ -559,10 +596,13 @@ ca_catalogosdetalle.cad_idcatalogo =  '43') as B on  a.rm_embotelladora=B.cad_id
             $sqltrep;
             $rstreg=Conexion::ejecutarQuery($sqltrep,array("nummues1"=>$nummues1));
           //  die();
+           // echo "---".sizeof($rstreg);
+            if(sizeof($rstreg)>0)
             foreach ( $rstreg as $rowtr) {
                // $this->worksheet->writeSheetRow($this->hoja, $rowtr[0], $text_format_det);
                 $this->renglon[]=$rowtr[0];
             }
+            else  $this->renglon[]="";
 //             $this->worksheet->writeSheetRow($this->hoja, $repcic1, $text_format_det);
 //             $this->worksheet->writeSheetRow($this->hoja, $numrepcic1, $text_format_det);
 //             $this->worksheet->writeSheetRow($this->hoja, $repfin1, $text_format_det);
@@ -573,6 +613,7 @@ ca_catalogosdetalle.cad_idcatalogo =  '43') as B on  a.rm_embotelladora=B.cad_id
             $this->renglon[]=$repfin1;
             $this->renglon[]=$numfac1;
             $this->renglon[]=$repsc1;
+           // var_dump($this->renglon);
         }
         
         

@@ -84,6 +84,7 @@ class ConsultaPonderadoController
        
         $cont = 0;
         foreach ($rs as $row) {
+        	$resultado=array();
             if ($cont % 2 == 0) {
                 $color = "subtitulo31";
             } else {  //class="subtitulo31"
@@ -96,12 +97,13 @@ class ConsultaPonderadoController
                 "nreac"=>$row["r_numreactivo"],
             );
            
-            $rse = DatosPond::leeDatosPonderaModel($datosController,"ins_detalle");
-            
-        $numRows =sizeof($rse);
+            $rowe = DatosPond::leeDatosPonderaModel($datosController,"ins_detalle");
+         
+            $numRows =sizeof($rowe);
             if ($numRows != 0) { // existe en la base
-                foreach ($rse as $rowe) {
-                    if ($rowe["id_aceptado"]) {
+              
+                
+                	if ($rowe["id_aceptado"]==-1) {
                      //   $valant = "checked";
                        // $valant2=$paloma;
                         $valant2=T_("ACEPTADO");
@@ -110,7 +112,7 @@ class ConsultaPonderadoController
                        // $valant = "";
                         $valant2=T_("NO ACEPTADO");
                     }
-                    if ($rowe["id_noaplica"]) {
+                    if ($rowe["id_noaplica"]==-1) {
                         $valnoap = "checked";
                         $valant2=T_("NO APLICA");
                     } else {
@@ -118,13 +120,13 @@ class ConsultaPonderadoController
                     }
                   //  $valcom = $rowe["id_comentario"];
                     $pondcta = $rowe["id_ponderacionreal"];
-                }
+                
             } else {
                // $valant = "";
               //  $valcom = "";
                 $valant2="";
             }
-            $resultado=array();
+          
             //$sumapond=$sumapond+$pondcta;
             $resultado['numreac']= $row["r_numreactivo"] ;
             if($_SESSION["idiomaus"]==2)
@@ -155,7 +157,7 @@ class ConsultaPonderadoController
                     if ($num_reg != 0) {
 //                         $resultado['comentario']= "<a class=\"btn  btn-sm btn-info\"  tabindex='0'  data-toggle=\"popover\" data-trigger=\"focus\" ".
 //                         "title=\"Dismissible popover\" data-content=\"And here's some amazing content. It's very engaging. Right?\"  >" .T_("COMENTARIO"). "</a>";
-                        $resultado['comentario']= "<a class=\"btn btn-block btn-sm btn-info\" href='index.php?action=indlistasecciones&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'  >" .T_("COMENTARIO"). "</a>";
+                        $resultado['comentario']= "<a class=\"btn btn-block btn-sm btn-info\" href='index.php?action=indlistasecciones&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'  ><i class=\"fa fa-comment fa-lg\" aria-hidden=\"true\"></i></a>";
 // '<div class="collapse" id="collapseExample">
 //   <div class="card card-body">
 //     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
@@ -164,7 +166,7 @@ class ConsultaPonderadoController
                         
                         //href='index.php?action=indlistasecciones&tiposec=C&secc=" . $row["sec_numseccion"] . "." . $row["r_numreactivo"] . "&Op=" . $Id . "'
                     } else {
-                        $resultado['comentario']="<a class=\"btn btn-block  btn-sm btn-info\" disabled><span style=\"font-size: 12px\">" .T_("COMENTARIO"). "</span></a>";
+                        $resultado['comentario']="<a class=\"btn btn-block  btn-sm btn-info\" disabled><span style=\"font-size: 12px\"><i class=\"fa fa-comment fa-lg\" aria-hidden=\"true\"></i></span></a>";
                       //  $resultado['comentario']="";
                     }
                     /*     * ************************************************************************************************ */

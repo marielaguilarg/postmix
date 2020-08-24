@@ -51,13 +51,25 @@ class InicioExcelController
         'font-size'    => 10,
         'font'    => 'Arial Unicode MS',
         'halign' => 'center',
-        'valign' => 'center'
+        'valign' => 'center',
+    		'widths'=>array(20,20,30,
+    				30,60,30,
+    				40,40,60,
+    				20,20,130,
+    				20,40,20,
+    				35),
+    		'wrap_text'=>true
     );
     
    
     
     //////////////////////////////////// nombres de cada columna o prueba//////////////////////////////
-    $enctablas=array("NO DE PUNTO DE VENTA", "UNIDAD DE NEGOCIO", "FRANQUICIA CLIENTE", "CUENTA", "FRANQUICIA", "REGION", "ESTADO", "CIUDAD O MUNICIPIO", "PUNTO DE VENTA (NOMBRE)","ID PEPSICO","ID CUENTA","DOMICILIO","ESTATUS","FECHA DE ESTATUS","TOTAL DE REPORTES","NO DE REPORTES ASIGNADOS");
+    $enctablas=array("NO DE PUNTO DE VENTA"=>"integer", "UNIDAD DE NEGOCIO"=>'string', "FRANQUICIA CLIENTE"=>'string',
+    		"CUENTA"=>'string', "FRANQUICIA"=>'string', "REGION"=>'string',
+    		"ESTADO"=>'string', "CIUDAD O MUNICIPIO"=>'string', "PUNTO DE VENTA (NOMBRE)"=>'string',
+    		"NUD"=>"string","ID CUENTA"=>"string","DOMICILIO"=>'string',
+    		"ESTATUS"=>'string',"FECHA DE ESTATUS"=>'string',"TOTAL DE REPORTES"=>"integer",
+    		"NO DE REPORTES ASIGNADOS"=>'string');
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /*** DESPLIEGO TITULOS DE COLUMNA**/
    
@@ -70,7 +82,8 @@ class InicioExcelController
         'font-size'    => 10,
         'font'    => 'Arial Unicode MS',
         'halign' => 'center',
-        'valign' => 'center'
+        'valign' => 'center',
+    		
     );
     
     
@@ -86,32 +99,24 @@ class InicioExcelController
 
     $i=0;
     //for($i=0;$i<16;$i++) {
-        $this->worksheet->writeSheetRow($this->hoja, $enctablas,$text_format_b);
+    $this->worksheet->writeSheetHeader($this->hoja, $enctablas,$text_format_b);
     //}
     
-    
-   
-    
-   
     if($consulta=="t")
         $cuenta=-1;
-      
+
         $this->datosUNegocio($mes_asig,$mes_asig2,$cuenta, $fecrec, $tcons, $text_format_det, $text_format_det1, $gpous, $claclien);
         $fin = microtime(true);
         $tiempo = $fin - $ini;
-      
+    // die();
         //
-        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
-        header("Content-Disposition: attachment; filename=\"".$nomarch.".xlsx\"");
+        header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($nomarch).'.xlsx"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
         $this->worksheet->writeToStdOut();
-        //$fh=fopen($fname, "rb");
-        //fpassthru($fh);
-        //unlink($fname);
-        //header("Content-Type: application/x-msexcel; name=\"example-demo.xls\"");
-        //header("Content-Disposition: inline; filename=\"example-demo.xls\"");
-//         $fh=fopen($fname, "rb");
-//         fpassthru($fh);
-//         unlink($fname);
+       
     }
         function datosUNegocio($mes_asig,$mes_asigfin, $cuenta, $fechar, $tipo_cons, $text_format_det, $text_format_det1, $grupous, $claclien1) {
           
@@ -124,16 +129,16 @@ ca_nivel4.n4_nombre,
  n5_nombre,
  ca_unegocios.une_dir_municipio,
  ca_unegocios.une_descripcion, 
-ca_unegocios.une_idpepsi, 
+ca_unegocios.une_num_unico_distintivo,
 ca_unegocios.une_idcuenta,
  CONCAT(ca_unegocios.une_dir_calle,' ',
  ca_unegocios.une_dir_numeroext,' ',ca_unegocios.une_dir_numeroint,' ',ca_unegocios.une_dir_manzana,' ',
  ca_unegocios.une_dir_lote,' ',ca_unegocios.une_dir_colonia,' ',ca_unegocios.une_dir_delegacion,' ',
  ca_unegocios.une_dir_municipio,' ',ca_unegocios.une_dir_estado,' ',ca_unegocios.une_dir_cp) AS dir,
   ca_unegocios.une_estatus,
- DATE_FORMAT(ca_unegocios.une_fechaestatus,'%d-%m-%Y') AS fecha_estatus, 
+ if(une_fechaestatus='0000-00-00','',DATE_FORMAT(ca_unegocios.une_fechaestatus,'%d-%m-%Y')) AS fecha_estatus,
  cue_idcliente, 
- ca_unegocios.cue_clavecuenta, 
+ ca_unegocios.cue_clavecuenta,
 ca_unegocios.une_id 
   FROM ca_unegocios 
   LEFT JOIN ca_cuentas ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
@@ -143,14 +148,15 @@ ca_unegocios.une_id
   LEFT JOIN ca_nivel1 ON `une_cla_region`= ca_nivel1.n1_id 
   LEFT JOIN ca_franquiciascuenta ON ca_unegocios.fc_idfranquiciacta = ca_franquiciascuenta.fc_idfranquiciacta
   where ca_cuentas.cue_idcliente=:claclien1
-ORDER BY une_numpunto";
+ORDER BY une_numpunto,une_idcuenta";
             $parametros=array("claclien1"=>$claclien1);
           
             $resultuneg=Conexion::ejecutarQuery($sqluneg,$parametros);
           
             $letra=65;
             $ren_ex=2;
-            
+        
+         
             foreach($resultuneg as $rowuneg) {
             	$this->renglon=array();
                 for($i=0;$i<12;$i++) {//despliego cada columna
@@ -164,14 +170,20 @@ ORDER BY une_numpunto";
                // $cveser = $rowuneg[15];
                 $cvecta = $rowuneg[15];
                 $cveuneg = $rowuneg[16];
-                $this->busest($cveest, $fecest, $ren_ex, $text_format_det);
-                $this->totrep( $cvecli, $cveuneg, $ren_ex, $text_format_det);
-                $this->asnumrep( $cvecli,  $cveuneg, $ren_ex, $text_format_det);
+          
+                 $this->busest($cveest, $fecest, $ren_ex, $text_format_det);
+               
+//                 $this->totrep( $cvecli, $cveuneg, $ren_ex, $text_format_det);
+           
+                 $this->asnumrep( $cvecli,  $cveuneg, $ren_ex, $text_format_det);
+           
                 $ren_ex++;
-                
+              
                 $this->worksheet->writeSheetRow($this->hoja, $this->renglon, $text_format_det);
+             
             }
-          //  die();
+         
+           
         }
         
         function busest($cveest1, $fecest1, $ren_ex1,$text_format_det){
@@ -190,10 +202,9 @@ ORDER BY une_numpunto";
         
         
         
-        function totrep( $cvecli, $cveuneg, $ren_ex1, $text_format_det){
+        function totrep( $cliente, $cveuneg, $ren_ex1, $text_format_det){
             
-            $sqltrep="SELECT  TOTREP FROM
-	(SELECT
+            $sqltrep="SELECT
 COUNT(ins_generales.i_numreporte) AS TOTREP,
 ins_generales.i_claveservicio,
 
@@ -201,23 +212,17 @@ ins_generales.i_unenumpunto
 FROM
 ins_generales
 inner join ca_servicios  on  ins_generales.i_claveservicio=ser_id
-where ser_idcliente =:cvecli 
-GROUP BY
- ins_generales.i_claveservicio,
-
-ins_generales.i_unenumpunto
-ORDER BY
-ins_generales.i_claveservicio,
-
-ins_generales.i_unenumpunto) AS A
 WHERE
-
-i_unenumpunto =:cveuneg";
-            $parametros=array("cvecli"=>$cvecli,
+ser_idcliente=:cliente and
+i_unenumpunto =:cveuneg
+GROUP BY ser_idcliente,
+ins_generales.i_unenumpunto
+";
+            $parametros=array("cliente"=>$cliente,
                 "cveuneg"=>$cveuneg
             );
             $rstreg=Conexion::ejecutarQuery($sqltrep,$parametros);
-          
+          //  var_dump($rstreg);
             $numRows =sizeof($rstreg);
             if ($numRows==0)
             {
@@ -231,9 +236,10 @@ i_unenumpunto =:cveuneg";
         }
         
         
-        function asnumrep($cveser, $cveuneg, $ren_ex1, $text_format_det) {
+        function asnumrep($cliente, $cveuneg, $ren_ex1, $text_format_det) {
             $numreps= "";
-            $rstreg=DatosGenerales::consultaReportexServicioUneg($cveser,$cveuneg,"ins_generales");
+            $rstreg=DatosGenerales::consultaReportexCliUneg($cliente,$cveuneg,"ins_generales");
+            
             foreach($rstreg as $rowtr) {
                 $numreps=$numreps.$rowtr[0].", ";
             }
@@ -241,6 +247,8 @@ i_unenumpunto =:cveuneg";
             if ($totlen>0) {
                 $numreps= substr($numreps,0,strlen($numreps)-2);
             }
+         //   echo "<br>".$cveuneg."***".$numreps;
+            $this->renglon[]=sizeof($rstreg);
             $this->renglon[]=$numreps;
         }
         

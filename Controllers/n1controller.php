@@ -1,8 +1,14 @@
 <?php
+include "Controllers/estructuraController.php";
+
 class NunoController{
 
 public function vistanunoController(){
-			
+			include "Utilerias/leevar.php";
+			if($admin=="eli"){
+				$ec=new EstructuraController();
+				$ec->eli();
+			}
 			$respuesta =Datosnuno::vistan1Model("ca_nivel1");
 
 			foreach($respuesta as $row => $item){
@@ -25,7 +31,7 @@ public function vistanunoController(){
 		              <div class="arrow">
 		              	  <div class="box-footer no-padding">
 		                    <ul class="nav nav-stacked">
-		                      <li><a href="index.php?action=editan1&id='.$item["n1_id"].'"><strong>'.$item["n1_nombre"].'</strong></a></li>
+		                      <li><a href="index.php?action=nuevonivel&niv=1&id='.$item["n1_id"].'"><strong>'.$item["n1_nombre"].'</strong></a></li>
 		                    </ul>
 		                </div>
 		              </div>
@@ -38,14 +44,14 @@ public function vistanunoController(){
 		                <!-- /.col -->
 		                <div class="col-sm-4 border-right">
 		                  <div class="description-block">
-		                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listan2&idnuno='.$item["n1_id"].'"> Detalle </a></span></button>
+		                   <a class="btn btn-block btn-info" style="font-size: 12px" href="index.php?action=listan2&idnuno='.$item["n1_id"].'"> Detalle </a>
 		                  </div>
 		                  <!-- /.description-block -->
 		                </div>
 		                <!-- /.col -->
 		                <div class="col-sm-4">
 		                  <div class="description-block">
-		                 <button type="button" class="btn btn-block btn-info"><i class="fa fa-trash-o"></i></button>
+		                 <a  class="btn btn-block btn-info" href="index.php?action=listan1&admin=eli&niv=1&id='.$item["n1_id"].'" onclick="return dialogoEliminar();"><i class="fa fa-trash-o"></i></a>
 		                  </div>
 		                  <!-- /.description-block -->
 		                </div>

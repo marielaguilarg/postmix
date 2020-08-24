@@ -63,7 +63,7 @@ inner join cue_reactivosestandardetalle on cue_secciones.ser_claveservicio=cue_r
           
         }
         $this->mensaje="<div class='alert alert-success'>El rango se insertó correctamente</div>";
-        
+        echo Utilerias::enviarPagina("index.php?action=srangosgraffrec&secc=".$aux[0]);
         }catch(Exception $ex){
             $this->mensaje="<div class='alert alert-danger'>".$ex->getMessage()."</div>";
         }
@@ -81,7 +81,7 @@ inner join cue_reactivosestandardetalle on cue_secciones.ser_claveservicio=cue_r
         	
         DatosRangosgrafica::eliminarRango($id,"cnfg_rangosgrafica");
         $this->mensaje="<div class='alert alert-success'>El rango se eliminó correctamente</div>";
-        
+        echo Utilerias::enviarPagina("index.php?action=srangosgraffrec&secc=".$secc);
         
          }catch(Exception $ex){
             $this->mensaje="<div class='alert alert-danger'>".$ex->getMessage()."</div>";

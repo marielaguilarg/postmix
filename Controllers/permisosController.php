@@ -165,6 +165,7 @@ values ('$grupo','$combito',$insdata,$moddata,$bordata);";
         }
         
         $this->mensaje='<div class="alert alert-success">Permiso agregado</div>';
+        echo Utilerias::enviarPagina("index.php?action=slistapermisos&id=".$grupo);
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage()."</div>";
         }
@@ -221,7 +222,7 @@ men_superopcion=:superopcion;";
         $sSQL="Delete From cnfg_permisos where cpe_claveopcion = '". $id."' and cpe_grupo='".$id2."' ";
         DatosPermisos::eliminarPermisos($id,$id2,"cnfg_permisos");
         $this->mensaje='<div class="alert alert-success">Permiso eliminado</div>';
-        
+        echo Utilerias::enviarPagina("index.php?action=slistapermisos&id=".$id);
     }
     
     public function vistaNuevo(){

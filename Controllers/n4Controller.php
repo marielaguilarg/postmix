@@ -3,6 +3,10 @@ class NcuaController{
 
 
 	public function vistancuaController(){
+		if($_GET["admin"]=="eli"){
+			$ec=new EstructuraController();
+			$ec->eli();
+		}else{
 		if (isset($_GET["idnt"])) {
 			$datosController = $_GET["idnt"];
 		}else{
@@ -17,13 +21,16 @@ class NcuaController{
 	                  <td>'.$item["n4_id"].'</td>
 	                 
 	                  <td>
-	                    <a href="index.php?action=edita4&id='.$item["n4_id"].'">'.$item["n4_nombre"].'</a>
+	                    <a href="index.php?action=nuevonivel&niv=4&id='.$item["n4_id"].'">'.$item["n4_nombre"].'</a>
 	                  </td>
 	                  <td>
 	                    <a href="index.php?action=listan5&idncu='.$item["n4_id"].'">detalle</a>
 	                  </td>
+<td> <a type="button" href="index.php?action=listan4&admin=eli&niv=4&id='.$item["n4_id"].'" onclick="return dialogoEliminar();"><i class="fa fa-times"></i></a>
+		                </td>
 	                </tr>';
 	            
+		}
 		}
 	}
 
@@ -39,9 +46,10 @@ class NcuaController{
 			$datosController = 1;
 
 		}
-		echo '<li><a href="index.php?action=listan2&iduno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
-			echo '<li><a href="index.php?action=listan3&idnd='.$id3.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
+		echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'">NIVEL 2</a></li>';
+		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'">NIVEL 3</a></li>';
 		
+			
 	}
 }
 

@@ -2,6 +2,7 @@
 
 include 'Models/crud_recepcionmuestra.php';
 
+
 class RecepcionController {
 	
 	private $listaRecepciones;
@@ -74,13 +75,20 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 					$registro['celdaSumniv']="<a href='index.php?action=recepciondetalle&cat=".$row["rm_idrecepcionmuestra"]."'>".
 								"<i class='fa fa-plus'></i></a>";
 					
-					$imprimir= "<a href='imprimirReporte.php?admin=recibomue&ntoma=".$row["rm_idrecepcionmuestra"]."'>".
-								"<i class='fa fa-print fa-2x' aria-hidden='true'></i></a>";
-					if ($status==2) {
+					$imprimir= "<a class='btn btn-primary' href='imprimirReporte.php?admin=recibomue&tipoimp=zbr&ntoma=".$row["rm_idrecepcionmuestra"]."'>".
+								"Imprimir zeb</a>
+<a class='btn btn-primary' href='javascript:return 0'
+onclick=\"ajax_printz('imprimirReporte.php?admin=recibomue&tipoimp=zbr2&ntoma=".$row["rm_idrecepcionmuestra"]."',this)\">".
+							"Imp zeb2</a>";
+					$imprimir.= "<div><a class='btn btn-primary' href='javascript:return 0'
+onclick=\"ajax_print('imprimirReporte.php?admin=recibomue&tipoimp=gen&ntoma=".$row["rm_idrecepcionmuestra"]."',this)\">".
+							"Imprimir</a></div>";
+					
+					//if ($status==2) {
 						$registro['imprec']=$imprimir;
-					} else {
-						$registro['imprec']="";
-					}
+// 					} else {
+// 						$registro['imprec']="";
+// 					}
 					
 					
 					if ($gpous=="adm") {
@@ -174,6 +182,11 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 			try{
 			if ($desclab) {
 				DatosRecepcionMuestra::insertarRecepcion($recmues, $entmues, $desclab, $fecvis, "aa_recepcionmuestra");
+				echo "
+             <script type='text/javascript'>      
+          window.location='index.php?action=listarecepcion'
+                  </script>
+                    ";
 			} else {
 				$this->mensaje=Utilerias::mensajeError('No es posible recibir. No existe laboratorio seleccionado');
 			}	
@@ -187,6 +200,11 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 
 		try{
 		DatosRecepcionMuestra::actualizarRecepcion($recmues, $numrecep, $desclab, "aa_recepcionmuestra");
+		echo "
+             <script type='text/javascript'>
+                window.location='index.php?action=listarecepcion'
+                 </script>
+                   ";
 		}catch(Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}
@@ -196,6 +214,11 @@ GROUP BY aa_recepcionmuestradetalle.rm_idrecepcionmuestra) as b on a.rm_idrecepc
 		include "Utilerias/leevar.php";
 		try{
 		DatosRecepcionMuestra::borrarRecepcion($id, "aa_recepcionmuestra");
+		echo "
+             <script type='text/javascript'>
+                window.location='index.php?action=listarecepcion'
+                 </script>
+                   ";
 		}catch(Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}
@@ -212,18 +235,16 @@ aa_recepcionmuestra.rm_embotelladora, aa_recepcionmuestra.rm_fechahora,
 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra =  '".$ntoma."'";
 		
 		$valor=DatosRecepcionMuestra::editaRecepcion($ntoma);
-		
-			$numemboX=$valor["rm_embotelladora"];
-			$horrecX=$valor["horec"];
-			$fecharecX=Utilerias::formato_fecha($valor["rm_fechahora"])."  ".$horrecX;
-			$recibeX=$valor["rm_personarecibe"];
-			$entregaX=$valor["rm_personaentrega"];
-		
-		
+		$numemboX=$valor["rm_embotelladora"];
+		$horrecX=$valor["horec"];
+		$fecharecX=Utilerias::formato_fecha($valor["rm_fechahora"])."  ".$horrecX;
+		$recibeX=$valor["rm_personarecibe"];
+		$entregaX=$valor["rm_personaentrega"];
+				
 		// obtengo embotellador
 		$numcat=43;
 		$sqlca="select * from ca_catalogosdetalle where cad_idcatalogo=".$numcat." and cad_idopcion=".$numemboX.";";
-		$opcionc=DatosCatalogoDetalle::getCatalogoDetalle($ca_catalogosdetalle,43,$numemboX);
+		$opcionc=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",43,$numemboX);
 		
 		// LEE DETALLE
 		$sqleti="SELECT aa_recepcionmuestradetalle.mue_idmuestra,
@@ -237,8 +258,10 @@ aa_recepcionmuestradetalle.rmd_tipoanalisis";
 		$rseti=Conexion::ejecutarQuery($sqleti, array("ntoma"=>$ntoma));
 		$treg=sizeof($rseti);
 		$alto = ($treg*35) + 500;
+		$laboratorio= DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",43,$nlab);
 		
-		$textoENC="! 0 200 200 $alto 2
+		if($tipoimp=="zbr"||$tipoimp=="zbr2"){
+			$textoENC="! 0 200 200 $alto 2
 IN-MILIMETERS
 LABEL
 CONTRAST 0
@@ -253,51 +276,49 @@ T 7 0 8 80 MUESTRA
 T 7 0 120 80 ANALISIS
 T 7 0 260 80 UNIDADES
 ";
-		
-		
-		
-		
-		$y=120;
-		$numunids=0;
-		foreach ($rseti as $valor) {
-			$idrec=$valor["rm_idrecepcionmuestra"];
-			$nmuesX=$valor["mue_idmuestra"];
-			$tipoanaX=$valor["rmd_tipoanalisis"];
-			$totmues=$valor["totmuestras"];
-			
-			IF ($tipoanaX=="FQ") {
-				$tipoan="FISICOQUIMICO";
-			} else {
-				$tipoan="MICROBIOLOGICO";
+			$txtcuer="";
+			$y=120;
+			$numunids=0;
+			foreach($rseti as $valor) {
+				$idrec=$valor["rm_idrecepcionmuestra"];
+				$nmuesX=$valor["mue_idmuestra"];
+				$tipoanaX=$valor["rmd_tipoanalisis"];
+				$totmues=$valor["totmuestras"];
+				
+				IF ($tipoanaX=="FQ") {
+					$tipoan="FISICOQUIMICO";
+				} else {
+					$tipoan="MICROBIOLOGICO";
+				}
+				
+				$textoDET="T 7 0 15 $y $nmuesX
+T 7 0 85 $y $tipoan
+T 7 0 306 $y $totmues";
+				$txtcuer=$txtcuer.$textoDET."\r\n";
+				$y+=35;
+				$numunids+=$totmues;
 			}
 			
-			$textoDET="
-T 7 0 15 $y $nmuesX
-T 7 0 85 $y $tipoan
-T 7 0 306 $y $totmues
-";
-			$txtcuer=$txtcuer.$textoDET;
+			$txtpie="LINE 245 $y 359 $y 1";
 			$y+=35;
-			$numunids+=$totmues;
-		}
-		
-		$txtpie="LINE 245 $y 359 $y 1";
-		$y+=35;
-		$txtpie=$txtpie."
+			$txtpie=$txtpie."
 T 7 0 63 $y Total
 T 7 0 306 $y $numunids";
-		$y+=100;
-		$txtpie=$txtpie."
+			$y+=100;
+			$txtpie=$txtpie."
 T 7 0 15 $y ENTREGA:";
-		//$y+=40;
-		$txtpie=$txtpie."
+			//$y+=40;
+			$txtpie=$txtpie."
 T 7 0 120 $y $entregaX";
-		$y+=100;
-		$txtpie=$txtpie."
+			$y+=100;
+			$txtpie=$txtpie."
 T 7 0 15 $y RECIBE:";
-		//$y+=40;
-		$txtpie=$txtpie."
-T 7 0 120 $y $recibeX
+			$y+=38;
+			$txtpie=$txtpie."
+LINE 120 $y 359 $y 1"; 
+	$y+=2;
+	$txtpie.="
+T 7 0 120 ".$y." ".$recibeX."
 PRINT
 ";
 		
@@ -307,13 +328,67 @@ PRINT
 		
 		$nomarchivo="Archivos/recibo".$nmuesX.".fmt";
 		
-		//echo $nomarchivo;
+		
 		//$textofin=$textofin.$texto;
 		$archivo = fopen($nomarchivo,"w+");
 		fwrite($archivo, $textofin);
 		
 		fclose($archivo);
+		}else{
+		//para impresora gen
 		
+		$textoENC= $fecharecX."\n";
+	//	
+		$texto=$opcionc."\n\n";
+		//$texto.="\x1b\x44".chr(10)."\x00";
+	
+		$texto.="MUESTRA\x09ANALISIS      UNIDADES";
+		$textoENC.=$texto."\x0A";
+		
+		$y=120;
+		$numunids=0;
+		$txtcuer="";
+		foreach ($rseti as $valor) {
+			$idrec=$valor["rm_idrecepcionmuestra"];
+			$nmuesX=$valor["mue_idmuestra"];
+			$tipoanaX=$valor["rmd_tipoanalisis"];
+			$totmues=$valor["totmuestras"];
+			
+			if($tipoanaX=="FQ") {
+				$tipoan="FISICOQUIMICO    ";
+			} else {
+				$tipoan="MICROBIOLOGICO   ";
+			}
+			
+			$textoDET= $nmuesX."\x09".$tipoan."".
+				$totmues;
+			$txtcuer=$txtcuer.$textoDET." \x0A";
+			$y+=35;
+			$numunids+=$totmues;
+		}
+	
+		$txtpie="\x09        __________________ \x0A";
+		$y+=35;
+		$txtpie.="\x09         Total     ".$numunids."\x0A\x0A";
+		$y+=100;
+		$txtpie=$txtpie."ENTREGA:";
+		
+		$txtpie=$txtpie.$entregaX." \x0A";
+		$y+=100;
+	//	$esc="\x1b";
+ 		$txtpie=$txtpie."RECIBE:";
+	
+// 		//$y+=40;
+ 		$txtpie=$txtpie.$recibeX."\x0A\x0A\x0A\x0A
+         \x09__________________ \x0A\x09             Firma
+\x0A\x0A\x0A\x0A\x0A\x0A\x0A\x0A";
+		
+		$textofin=$textoENC.$txtcuer.$txtpie;
+ 		//$textofin=$textoENC.$txtcuer;
+		$textofin.=" ".$textofin;
+	
+		}
+	
 		/* cambia estatus a 4 */
 		/* buscar todas las muestras por recibo */
 		$sqlr="SELECT aa_recepcionmuestradetalle.mue_idmuestra 
@@ -323,11 +398,12 @@ GROUP BY aa_recepcionmuestradetalle.mue_idmuestra";
 		$rsr=Conexion::ejecutarQuery($sqlr,array("ntoma"=>$ntoma));
 		foreach ($rsr as $valor) {
 			$nmuesX=$valor["mue_idmuestra"];
-			$sqlu="UPDATE aa_muestras SET aa_muestras.mue_estatusmuestra=4
- WHERE aa_muestras.mue_idmuestra='".$nmuesX."'";
-			$rsu=DatosMuestra::actualizarEstatus(4, $nmuesX);
-		}
 		
+		
+			$rsu=DatosMuestra::actualizarEstatusss(4, $nmuesX);
+			
+		}
+	
 		// actualiza recibo
 		
 		$sqlup="UPDATE aa_recepcionmuestra 
@@ -335,11 +411,22 @@ SET aa_recepcionmuestra.rm_estatus=3
 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra='".$idrec."'";
 		$rsu=DatosRecepcionMuestra::actualizarEstatus(3, $idrec, "aa_recepcionmuestra");
 		
-		header("Content-type: application/octet-stream");
-		//header("Content-type: application/force-download");
-		// $f="calendario.ZIP";
-		header("Content-Disposition: attachment; filename=\"recibo".$nmuesX.".fmt\"");
-		readfile($nomarchivo);
+		if($tipoimp=="zbr"){
+			header("Content-type: application/octet-stream");
+			header("Content-Disposition: attachment; filename=\"recibo".$nmuesX.".fmt\"");
+			readfile($nomarchivo);
+		}else{
+
+
+			//miajax_print("base64,'.base64_encode($textofin).'",this);
+		//	echo Utilerias::enviarPagina("rawbt:base64,".base64_encode($textofin));
+		//	echo Utilerias::enviarPagina("rawbt:holahola");
+		//	echo '<a class="btn btn-primary btn-cta"
+// 			href="rawbt:base64,'.base64_encode($textofin).'">para el var</a>';
+			Utilerias::guardarError("impresion generica de recibo: ".$textofin);
+			error_log(date("Y-m-d h:m:s")."impresion generica de recibo: ".$textofin);
+			echo base64_encode($textofin);
+		}
 	}
 	/**
 	 * @return mixed

@@ -1,6 +1,7 @@
 <?php
 class ReporteController{
 
+	public $ligaRegresar;
 	public function vistaRnomservController(){
 	    $datosController = $_GET["sv"];
 	    $nrep=$_GET["nrep"];
@@ -8,25 +9,38 @@ class ReporteController{
 	    $idc=$_GET["idc"];
 	    $ts=$_GET["ts"];
 	    $sec=$_GET["sec"];
+	   
+
+	    #busca nombre de punto de venta
+if(!isset($datosController)||$datosController==""){
+	    	$datosController=$_SESSION["rservicio"];
+	    }
+	   
+	    if(!isset($un)||$un==""){
+	    	$un=$_SESSION["runeg"];
+	    }
+	    if(!isset($idc)||$idc==""){
+	    	$idc=$_SESSION["rcuenta"];
+	    }
 	    $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
 	   	#busca el cliente
 
-	    echo '<li>CLIENTE: '.$respuesta["cli_nombre"]. '</a></li>
-	    <li><a href="index.php?action=rlistaunegocio&sv='.$datosController.'&idc='.$idc.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>
-	    	<li><a href="index.php?action=editarep&idc='.$idc.'&sv='.$datosController.'&pv='.$un.'&nrep='.$nrep.'">REPORTE: '.$nrep. '</a></li>';
-	    #busca nombre de punto de venta
+	    echo '
+	    <li><a href="index.php?action=rlistaunegocio&sv='.$datosController.'&idc='.$idc.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 	    $unegocio = DatosUnegocio::vistaUnegocioDetalle($un,"ca_unegocios");
 	    echo '<li><a href="index.php?action=runegociodetalle&sv='.$datosController.'&un='.$un.'&idc='.$idc.'">PUNTO DE VENTA: '.$unegocio["une_descripcion"]. '</a></li>';
-	    $repgen = DatosReporte::ReporteGenerales($datosController, $nrep, "ins_generales");
+	    echo '
+	    	<li><a href="index.php?action=editarep&idc='.$idc.'&sv='.$datosController.'&pv='.$un.'&nrep='.$nrep.'">REPORTE: '.$nrep. '</a></li>';
+	     $repgen = DatosReporte::ReporteGenerales($datosController, $nrep, "ins_generales");
 	    //echo $repgen;
 		$fecvis=SubnivelController::cambiaf_a_normal($repgen["i_fechavisita"]);
 		//$fecvis=$repgen["i_fechavisita"];
-	    echo '<li><a href="index.php?action=runegociodetalle&idc='.$idc.'&sv='.$datosController.'&un='.$un.'&idc='.$idc.'">FECHA VISITA: '.$fecvis. '</a></li>';
+	 //   echo '<li><a href="index.php?action=runegociodetalle&idc='.$idc.'&sv='.$datosController.'&un='.$un.'&idc='.$idc.'">FECHA VISITA: '.$fecvis. '</a></li>';
 
-	    if ($ts=="TM"){
-			echo '<li><a href="index.php?action=rsn&idc='.$idc.'&sv='.$datosController.'&pv='.$un.'&ts=E&nrep='.$nrep.'&sec='.$sec.'">ATRAS: '.$fecvis. '</a></li>';
+// 	    if ($ts=="TM"){
+// 			echo '<li><a href="index.php?action=rsn&idc='.$idc.'&sv='.$datosController.'&pv='.$un.'&ts=E&nrep='.$nrep.'&sec='.$sec.'">ATRAS: '.$fecvis. '</a></li>';
 
-	    }
+// 	    }
 	    
 	}
 
@@ -39,10 +53,17 @@ class ReporteController{
 	    $respuesta =DatosSeccion::vistaSeccionModel($numser,"cue_secciones");
          $i=$bac=1;
 	    foreach($respuesta as $row => $item){
-			 if(($i-1)%3==0){
-        	echo '<div class="row">';
-        	$bac=0;
-        }
+	    	/*ocultamos seccion 2 y 6 de certificacion sep2019*/
+	    	if($numser==3&&($item["sec_numseccion"]==2||$item["sec_numseccion"]==6||$item["sec_numseccion"]==4))
+	    		continue;
+                /*ocultamos seccion 4 de certificacion gepp ago2020*/
+                if($numser==5&&($item["sec_numseccion"]==4))
+	    		continue;
+	    	/*****************/
+                if(($i-1)%3==0){
+	        	echo '<div class="row">';
+	        	$bac=0;
+       		 }
 	      echo '
 	        <div class="col-md-4" >
 	          <div class="box box-info" >
@@ -72,7 +93,7 @@ class ReporteController{
 	                <div class="col-sm-4 border-right">
 	                  <div class="description-block">
 	                 
-	                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"> Detalle </a></span></button>
+	                    <a type="button" class="btn btn-block btn-info" style="font-size: 12px" href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts='.$item["sec_tiposeccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"> Detalle </a>
 
 
 	                  </div>
@@ -81,14 +102,14 @@ class ReporteController{
 	                <!-- /.col -->
 	                <div class="col-sm-4 border-right">
 	                  <div class="description-block">
-	                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 14px"><a href="index.php?action=repcoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a></span></button>
+	                   <a type="button" class="btn btn-block btn-info" style="font-size: 14px" href="index.php?action=rsn&ts=coment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a>
 	                  </div>
 	                  <!-- /.description-block -->
 	                </div>
 	                <!-- /.col -->
 	                <div class="col-sm-4">
 	                  <div class="description-block">
-	                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts=IM&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"><i class="fa fa-image"></i></a></button>
+	                 <a type="button" class="btn btn-block btn-info" href="index.php?action=rsn&sec='.$item["sec_numseccion"].'&ts=IM&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'&idc='.$idc.'"><i class="fa fa-image"></i></a>
 	                  </div>
 	                  <!-- /.description-block -->
 	                </div>
@@ -172,7 +193,9 @@ class ReporteController{
 		  
 		    case "A" :  
 		       $ingreso = new abiertaController();		    
-			   $ingreso -> reporteAbiertaController();   
+			   $ingreso -> reporteAbiertaController(); 
+			   echo $ingreso->ligaRegresar;
+			   $this->ligaRegresar=$ingreso->ligaRegresar;
 		       break;
 		    case "AD" :       
 		       $ingreso = new abiertaController();
@@ -182,6 +205,7 @@ class ReporteController{
 			case "AN" : 	       
 		      $ingreso = new abiertaController();
 		      // registra estandar
+		   
 			  $ingreso -> nuevoReporteabierta();
 			  //$ingreso -> insertaReporteEstandar();
 			  break;
@@ -202,7 +226,27 @@ class ReporteController{
 		       $ingreso = new ProductoController();
 			   //$ingreso -> nuevoRepDetProductoController();
 		       break;
-		       
+		    case "coment": 
+		    	include "Controllers/comentarioController.php";
+		    	$comentarioController=new ComentarioController();
+		    	$comentarioController->vistaComentarioRep();
+		    	include "views/modulos/cue_rseccioncomentario.php";
+		    
+		    break;
+		    case "Pcoment":
+		    	include "Controllers/comentarioController.php";
+		    	$comentarioController=new ComentarioController();
+		    	$comentarioController->ponderadaComentario();
+		    	include "views/modulos/cue_rseccioncomentario.php";
+		    	
+		    	break;
+		    case "ET":
+		    	
+		    	$comentarioController=new muestrasController();
+		    	$comentarioController->eliminarTomaMue();
+		   
+		    	
+		    	break;
 		    default:
 		    	
 		        $i=1;
@@ -245,6 +289,134 @@ class ReporteController{
 		
 	}
 
+	public function vistaEncabezado(){
+		include "Utilerias/leevar.php";
+		$respuesta = DatosSeccion::vistaNombreServModel($sv,"ca_servicios");
+		#busca el cliente
+		echo " <h1 style='font-size: 20px;' >
+	  
+	 	
+	 	CLIENTE: ".$respuesta["cli_nombre"]."
+
+   </h1> ";
+		
+		$repgen = DatosReporte::ReporteGenerales($sv, $nrep, "ins_generales");
+		
+		$fecvis=SubnivelController::cambiaf_a_normal($repgen["i_fechavisita"]);
+		//$fecvis=$repgen["i_fechavisita"];
+		echo '<h1 style="font-size: 20px;">FECHA VISITA: '.$fecvis. '</h1>
+';
+		
+		
+	}
+	
+	public function SeleccionaseccionLigabc(){
+		include "Utilerias/leevar.php";
+		$seccion = $_GET["sec"];
+		$tiposec = $_GET["ts"];
+		$servicio = $_GET["sv"];
+		
+		
+		
+		if (isset($_GET["ts"])) {
+			switch($_GET["ts"]) {
+				
+				case "E" :
+					$this->ligaRegresar=$this->ligaRegresarA();
+					break;
+			
+			
+				
+			
+			
+				case "IM" : case "Pcoment": case "A" :
+					$this->ligaRegresar=$this->ligaRegresarA();
+					break;
+				case "AD" :
+				
+					$this->ligaRegresarAD("A");
+					//$ingreso -> vistaAbDetController();
+					break;
+				case "TM" : case "ED":
+					
+					$this->ligaRegresarAD("E");
+					//$ingreso -> vistaAbDetController();
+					break;
+			
+				
+			
+			
+				
+			
+			}
+			#crea titulo y subtitulo
+		}  // if
+		
+	}
+	public function ligaRegresarA(){
+		include "Utilerias/leevar.php";
+		$idser=$sv;
+		$seccion=$sec;
+		$datini=SubnivelController::obtienedato($seccion,1);
+		$londat=SubnivelController::obtienelon($seccion,1);
+		$numsec=substr($seccion,$datini,$londat);
+		$datini=SubnivelController::obtienedato($seccion,2);
+		$londat=SubnivelController::obtienelon($seccion,2);
+		$numreac=substr($seccion,$datini,$londat);
+		if ($numreac!=0) {
+			return "<li><a href='index.php?action=rsn&sec=".$numsec."&ts=P&sv=".$idser."&nrep=".$nrep."&pv=".$pv."&idc=".$idc."'>SECCION:".$numsec."</a></li>";
+		}
+		Navegacion::borrarRutaActual("a");
+		Navegacion::agregarRuta("a","index.php?action=rsn&sec=".$numsec."&ts=P&sv=".$idser."&nrep=".$nrep."&pv=".$pv."&idc=".$idc ," SECCION:".$numsec);
+		// 				else{
+		// $this->ligaRegresar="index.php?action=editarep&idc=".$idc."&sv=".$idser."&pv=".$pv."&nrep=".$nrep;
+		// 				}
+	}
+	public function ligaRegresarAD($td){
+		include "Utilerias/leevar.php";
+		$seccion = $sec;
+		$ser = $sv;
+		# calcula nivel
+		$idsecc='';
+		$i=1;
+		$nnivel=0;
+		$idsecc='';
+		while ($i <= 10) {
+			$datini=SubnivelController::obtienedato($seccion,$i);
+			$londat=SubnivelController::obtienelon($seccion,$i);
+			if (isset($datini)) {
+				$nusec=substr($seccion,$datini,$londat);
+				$idsecc=$idsecc.$nusec;
+				
+				if ($nusec) {
+					$nnivel++;
+				}
+			}
+			$i++;
+		}
+		$nivel=$nnivel;
+	    switch($nivel) {
+			case 2 :
+				$datini=SubnivelController::obtienedato($seccion,1);
+				$londat=SubnivelController::obtienelon($seccion,1);
+				$numsec=substr($seccion,$datini,$londat);
+				$nsec=$numsec;
+				break;
+			case 3 :
+				$datini=SubnivelController::obtienedato($seccion,1);
+				$londat=SubnivelController::obtienelon($seccion,1);
+				$numsec=substr($seccion,$datini,$londat);
+				
+				$datini=SubnivelController::obtienedato($seccion,2);
+				$londat=SubnivelController::obtienelon($seccion,2);
+				$numreac=substr($seccion,$datini,$londat);
+				$nsec=$numsec.".".$numreac;
+				break;
+		}	
+		Navegacion::borrarRutaActual("b");
+		Navegacion::agregarRuta("b", 'index.php?action=rsn&sec='.$nsec.'&ts='.$td.'&sv='.$ser.'&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep, 'SECCION:'.$nsec);
+		$this->ligaRegresar= '<li><a href="index.php?action=rsn&sec='.$nsec.'&ts='.$td.'&sv='.$ser.'&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> SECCION:'.$nsec."</a></li>";
+	}
 	public function vistaNombreSeccion(){
 
 		$seccion = $_GET["sec"];
@@ -293,7 +465,9 @@ class ReporteController{
 	 		$numcom2=0;
 	 	}
 	 	if ($numreac!=0) {
+	 		
 	 		if ($numcom==0) { // segundo nivel
+	 		
 	 			$respuesta =DatosPond::vistanombrepondera($servicio, $seccion,  "cue_reactivos");
 				echo ' SECCION '.$seccion.' : '.$respuesta["r_descripcionesp"];
 	 		} else {
@@ -365,6 +539,7 @@ class ReporteController{
 
 
 	 	}
+	 
 
 	}  // fin de funcion
 
@@ -375,7 +550,7 @@ public function botonNuevoRep(){
 	$idc=$_GET["idc"];
 	$sv=$_GET["sv"];
 	$pv=$_GET["un"];
-   echo '<button type="button" class="btn btn-block btn-info" style="width: 80%"><a href="index.php?action=nvorep&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'"> Nuevo </a></button>';
+   echo '<a  class="btn btn-block btn-info"  href="index.php?action=nvorep&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'"> Nuevo </a>';
     
 }
 
@@ -393,13 +568,8 @@ public function botonNuevoRep(){
 
 	    if ($estatus == 1) {
 	    	#crea numero de reporte
-	    	$ulrep =DatosReporte::CalculaNumReporte($numser, "ins_generales");
-	    	if ($ulrep) {
-	    		$numrep=$ulrep["numrep"];
-	    	} else {
-	    		$numrep=0;
-	    	}
-	    	$numrep+=1;
+	    	$numrep =DatosReporte::apartarNumReporte($numser, $_SESSION["NombreUsuario"]);
+// 	    	
 	    	echo "<script type='text/javascript'>
 				window.location.href='index.php?action=editarep&idc=".$idc."&pv=".$pv."&sv=".$numser."&nrep=".$numrep."';
 				</script>

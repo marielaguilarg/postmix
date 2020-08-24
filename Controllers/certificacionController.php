@@ -1,11 +1,11 @@
 <?php
-//require "Models/crud_muestras.php";
+
 
 class CertificacionController{
     
     
     private $listaSolicitudes;
-    private $titulo;
+    public $titulo;
     private $subtitulo;
     private $listaEstados;
     private $listaCuentas;
@@ -18,7 +18,7 @@ class CertificacionController{
     private $listaUnegocios;
     private $autor_ex;
     private $enc_comen;
-    
+    public $estado;
    
     
     public function vistaListaCertificados(){
@@ -32,11 +32,11 @@ class CertificacionController{
                 $imp=new ImprimirCertificadoController();
                 $imp->reporteAnalisis();
         }else{
-        $user = $_SESSION["UsuarioInd"];
+        $user = $_SESSION["NombreUsuario"];
    
     
     // busco el grupo de usuarios
-   
+ 
     $rs_sql_gpo =  UsuarioModel::getUsuario($user,"cnfg_usuarios");
     foreach($rs_sql_gpo as $row_rs_sql_gpo  ) {
         $gpo=$row_rs_sql_gpo["cus_clavegrupo"];
@@ -61,15 +61,26 @@ class CertificacionController{
 //         if()
 //     }
     
-    
+if($sv==3)
     $this->titulo=T_("CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA");
-    
-  $parametros=array();
+if($sv==5)
+	$this->titulo=T_("CERTIFICACION DE CALIDAD DE AGUA GEPP");
+  $parametros=array("servicio"=>$sv);
     IF ($gpo=='cue') {
-        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans, sol_fechaapertura, sol_fechaterminacion, dias_antic,IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta
+        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans,
+ sol_fechaapertura, sol_fechaterminacion, 
+dias_antic,IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta,
+if(sol_estatussolicitud=3 and sol_fechainicio>'2019-10-15','NUEVO','')  as estatus
 FROM (SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion,
-cer_solicitud.sol_numrep, cer_solicitud.sol_fechainicio, cer_solicitud.sol_estatussolicitud, datediff(sol_fechaterminacion,sol_fechainicio) AS dias_trans, cer_solicitud.sol_fechaapertura, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) AS dias_antic, cer_solicitud.sol_idcuenta, cer_solicitud.sol_numpunto, ca_unegocios.cue_clavecuenta FROM cer_solicitud
-Inner Join ca_unegocios ON  cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto WHERE (cer_solicitud.sol_estatussolicitud =  3 OR cer_solicitud.sol_estatussolicitud =  5)";
+cer_solicitud.sol_numrep, cer_solicitud.sol_fechainicio, cer_solicitud.sol_estatussolicitud, datediff(sol_fechaterminacion,sol_fechainicio) AS dias_trans, 
+cer_solicitud.sol_fechaapertura, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) AS dias_antic, 
+cer_solicitud.sol_idcuenta, cer_solicitud.sol_numpunto, ca_unegocios.cue_clavecuenta ,i_finalizado
+FROM cer_solicitud
+ INNER JOIN ins_generales ON `i_claveservicio`=`sol_claveservicio`
+      AND `i_numreporte` =`sol_numrep`
+      INNER JOIN ca_unegocios 
+      ON `i_unenumpunto`=`une_id` AND cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto 
+ WHERE (cer_solicitud.sol_estatussolicitud >2) AND sol_claveservicio=:servicio and (i_finalizado=1 OR i_finalizado=-1)";
         if ($GradoNivel==1) {
             $sql_sol=$sql_sol." AND ca_unegocios.cue_clavecuenta =:Nivel01 ";
             $parametros["Nivel01"]=$Nivel01;
@@ -84,14 +95,25 @@ cer_solicitud.sol_numpunto = :Nivel03";
             $parametros["Nivel02"]=$Nivel02;
             $parametros["Nivel03"]=$Nivel03;
         }
-        $sql_sol=$sql_sol.") AS A LEFT JOIN (SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO,  ins_detalle.id_numreporte, ins_detalle.id_claveservicio FROM ins_detalle
-WHERE ins_detalle.id_claveservicio =  '3' AND ins_detalle.id_numseccion =  '5' AND ins_detalle.id_numreactivo =  '4') AS B ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDER BY sol_idsolicitud DESC;";
+        $sql_sol=$sql_sol.") AS A LEFT JOIN (SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO,  
+ins_detalle.id_numreporte, ins_detalle.id_claveservicio 
+FROM ins_detalle
+WHERE ins_detalle.id_claveservicio =:servicio AND ins_detalle.id_numseccion =  '5' AND ins_detalle.id_numreactivo =  '4') AS B 
+ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDER BY sol_idsolicitud DESC;";
     } else if ($gpo=='muf') {
-        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans, sol_fechaapertura, sol_fechaterminacion, dias_antic,IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta
-FROM (SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion, cer_solicitud.sol_numrep, cer_solicitud.sol_fechainicio, cer_solicitud.sol_estatussolicitud, datediff(sol_fechaterminacion,sol_fechainicio) AS dias_trans, cer_solicitud.sol_fechaapertura, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) AS dias_antic, cer_solicitud.sol_idcuenta, cer_solicitud.sol_numpunto, ca_unegocios.cue_clavecuenta FROM cer_solicitud
-Inner Join ca_unegocios ON 
-cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto WHERE (cer_solicitud.sol_estatussolicitud =  3 OR
-cer_solicitud.sol_estatussolicitud =  5)";
+        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans, sol_fechaapertura, sol_fechaterminacion, dias_antic,
+IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta, 
+if(sol_estatussolicitud=3 and sol_fechainicio>'2019-10-15','NUEVO','') as estatus
+FROM (SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion, cer_solicitud.sol_numrep, 
+cer_solicitud.sol_fechainicio, cer_solicitud.sol_estatussolicitud, datediff(sol_fechaterminacion,sol_fechainicio) AS dias_trans, 
+cer_solicitud.sol_fechaapertura, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) AS dias_antic, cer_solicitud.sol_idcuenta,
+ cer_solicitud.sol_numpunto, ca_unegocios.cue_clavecuenta, i_finalizado
+ FROM cer_solicitud
+ INNER JOIN ins_generales ON `i_claveservicio`=`sol_claveservicio`
+      AND `i_numreporte` =`sol_numrep`
+      INNER JOIN ca_unegocios 
+      ON `i_unenumpunto`=`une_id` AND cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto 
+ WHERE (cer_solicitud.sol_estatussolicitud >2) and (i_finalizado=1 OR i_finalizado=-1) AND sol_claveservicio=:servicio";
         if ($GradoNivel==1) {
             $sql_sol=$sql_sol." AND ca_unegocios.une_cla_region =:Nivel01";
             $parametros["Nivel01"]=$Nivel01;
@@ -128,17 +150,41 @@ cer_solicitud.sol_estatussolicitud =  5)";
             $parametros["Nivel06"]=$Nivel06;
         }
         $sql_sol=$sql_sol.") AS A LEFT JOIN (SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO,  ins_detalle.id_numreporte, ins_detalle.id_claveservicio FROM ins_detalle
-WHERE ins_detalle.id_claveservicio =  '3' AND ins_detalle.id_numseccion =  '5' AND ins_detalle.id_numreactivo =  '4') AS B ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDER BY sol_idsolicitud DESC";
+WHERE ins_detalle.id_claveservicio =:servicio AND ins_detalle.id_numseccion =  '5' 
+AND ins_detalle.id_numreactivo =  '4') AS B ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDER BY sol_idsolicitud DESC";
         
+	   } else if ($gpo=='muh') {  
+        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans,
+if(sol_estatussolicitud=3 and sol_fechainicio>'2019-10-15','NUEVO','') as estatus, sol_fechaapertura, sol_fechaterminacion, dias_antic,
+IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta FROM 
+(SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion, cer_solicitud.sol_numrep, 
+cer_solicitud.sol_fechainicio, sol_estatussolicitud, datediff(sol_fechaterminacion,sol_fechainicio) as dias_trans, cer_solicitud.sol_fechaapertura, 
+cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) as dias_antic, cer_solicitud.sol_idcuenta FROM 
+cer_solicitud WHERE (cer_solicitud.sol_estatussolicitud>2) and cer_solicitud.sol_claveservicio=5) AS A LEFT JOIN 
+(SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO, ins_detalle.id_numreporte, ins_detalle.id_claveservicio FROM 
+ins_detalle
+ WHERE ins_detalle.id_claveservicio = '5' AND ins_detalle.id_numseccion = '5' 
+AND ins_detalle.id_numreactivo = '4') AS B 
+ON A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte 
+ORDER BY sol_idsolicitud DESC;";
+    //echo $sql_sol;
     } else {
         
-        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans, sol_fechaapertura, sol_fechaterminacion, dias_antic,IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES, sol_idcuenta
+        $sql_sol="SELECT sol_idsolicitud,sol_descripcion,sol_numrep,sol_fechainicio,dias_trans, 
+sol_fechaapertura, sol_fechaterminacion, dias_antic,IF(sol_estatussolicitud=5,'CANCELADO',RESULTADO) AS RES,
+ sol_idcuenta, if(sol_estatussolicitud=3 and sol_fechainicio>'2019-10-15','NUEVO','')  as estatus
 FROM
 (SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion,  cer_solicitud.sol_numrep,  cer_solicitud.sol_fechainicio, sol_estatussolicitud,
 datediff(sol_fechaterminacion,sol_fechainicio) as dias_trans, cer_solicitud.sol_fechaapertura, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaapertura,sol_fechaterminacion) as dias_antic,
 cer_solicitud.sol_idcuenta
-FROM cer_solicitud WHERE (cer_solicitud.sol_estatussolicitud=3 OR cer_solicitud.sol_estatussolicitud=5)) AS A LEFT JOIN (SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO, 
- ins_detalle.id_numreporte, ins_detalle.id_claveservicio FROM ins_detalle WHERE ins_detalle.id_claveservicio =  '3' AND ins_detalle.id_numseccion =  '5' AND ins_detalle.id_numreactivo =  '4') AS B 
+FROM cer_solicitud
+ WHERE (cer_solicitud.sol_estatussolicitud>2) AND sol_claveservicio=:servicio) AS A LEFT JOIN (SELECT if(ins_detalle.id_aceptado=-1,'APROBADO','NO APROBADO') AS RESULTADO, 
+ ins_detalle.id_numreporte, ins_detalle.id_claveservicio ,i_finalizado
+FROM ins_detalle 
+inner join ins_generales  ON (`ins_detalle`.`id_claveservicio` = `ins_generales`.`i_claveservicio`) 
+AND (`ins_detalle`.`id_numreporte` = `ins_generales`.`i_numreporte`)
+WHERE ins_detalle.id_claveservicio =:servicio AND ins_detalle.id_numseccion =  '5'  
+AND ins_detalle.id_numreactivo =  '4' and (i_finalizado=1 OR i_finalizado=-1)) AS B 
 ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDER BY sol_idsolicitud DESC;";
     }
     
@@ -160,22 +206,79 @@ ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDE
         // $html->asignar ( 'fechaaper']=  formato_fecha($row_rs_sql_sol ["sol_fechaapertura"]) . "</a></td>" );
         $solicitudes['fechater']=  Utilerias::formato_fecha($row_rs_sql_sol ["sol_fechaterminacion"]) ;
         $solicitudes['diastrans']=  $row_rs_sql_sol ["dias_trans"]  ;
-        //$solicitudes[ 'diasant']= "<td  class='$color'>". $row_rs_sql_sol ["dias_antic"] . "</a></td>" );
+        $solicitudes['estatus']= "<span  class='label label-success'>" .$row_rs_sql_sol ["estatus"]."</span>" ;
         $solicitudes[ 'Nrep']=  $row_rs_sql_sol ["sol_numrep"]  ;
-        $solicitudes[ 'resul']=  $row_rs_sql_sol ["RES"]  ;
-        $impreso="javascript:imprimirCER(".$row_rs_sql_sol["sol_numrep"].");";
+      //  echo "<br>".$row_rs_sql_sol ["sol_numrep"] ;
+        //busco el resultado
+        $resas=$row_rs_sql_sol ["RES"] ;
+        if($resas!="CANCELADO"){
+        $ssql="SELECT ins_detalle.id_claveservicio, ins_detalle.id_numreporte,
+ ins_detalle.id_numseccion, ins_detalle.id_numreactivo, ins_detalle.id_aceptado,
+ins_detalle.id_noaplica, cue_reactivos.r_descripcionesp FROM
+ins_detalle Inner Join cue_reactivos
+ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio
+ AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion
+AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
+WHERE ins_detalle.id_claveservicio =:servicio AND ins_detalle.id_numseccion =  '5' AND
+ins_detalle.id_numreporte =:numrep
+";
+        $rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$sv,"numrep"=> $solicitudes[ 'Nrep']));
+   
+    $resas="";
+    $condi=$noap=0;
+        foreach($rs as $row) {
+        	//		$pdf->Rect(15,$i,175,10,F);
+        	//		$pdf->Rect(195,$i+2,12,6,F);
+        
+//         	echo $row["id_aceptado"]."---".$row["id_noaplica"];
+        	
+        		if ($row["id_noaplica"]==-1){
+        		$condi=1;
+        		
+        	}else 
+        	if ($row["id_aceptado"]==-1)
+        	{ $resas="APROBADO";
+        	
+        	}else{
+        		$noap=1;
+        		
+        		
+        		
+        	} 
+        	
+        }
+        
+     //echo "---".$noap."---".$condi;
+        if ($noap) {
+        	$resas="NO APROBADO";
+        	
+        	
+        }else
+        	if ($condi){
+        		$resas="CONDICIONADO";
+        		
+        }else
+        {$resas="APROBADO";
+        
+        }
+        }
+        $solicitudes[ 'resul']=  $resas;
+        //$solicitudes[ 'resul']=  $row_rs_sql_sol ["RES"]  ;
+        
+        $impreso="javascript:imprimirCER(".$row_rs_sql_sol["sol_numrep"].",".$sv.");";
         $solicitudes[ 'impres']=$impreso;
-        $impreaa="javascript:imprimirANA(".$row_rs_sql_sol["sol_numrep"].");";
+        $impreaa="javascript:imprimirANA(".$row_rs_sql_sol["sol_numrep"].",".$sv.");";
         $solicitudes[ 'impanag']= $impreaa;
         // $html->asignar('impres',"<td width='246' class='$color' ><div align='center'><a href='javascript:imprimirCER(".$row_rs_sql_sol["sol_numrep"].");'><img src='../img/print_gold.png' alt='Imprimir' width='28' height='33' border='0' /></a></div>");
         $this->listaSolicitudes[]=$solicitudes;
         $contl++;
     }
         }
+       // die();
     }
     public function vistaEstatusSolicitud(){
         
-        $user = $_SESSION["UsuarioInd"];
+        $user = $_SESSION["NombreUsuario"];
         // busco el grupo de usuarios
         $rs_sql_gpo =UsuarioModel::getUsuario($user,"cnfg_usuarios");
         foreach ($rs_sql_gpo as $row_rs_sql_gpo ) {
@@ -191,21 +294,28 @@ ON  A.sol_claveservicio=B.id_claveservicio AND A.sol_numrep=B.id_numreporte ORDE
            
         }
      
-        
-        
-        $this->titulo=T_("CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA");
-        $this->subtitulo=T_("ESTATUS SOLICITUD");
-   
+       
         
         // validar de acuerdi a grupo de usuarios
         
-        $sql_sol="SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, cer_solicitud.sol_fechainicio, datediff(i_fechavisita, sol_fechainicio) AS dias_trans, ins_generales.i_fechavisita, cer_solicitud.sol_numrep, cer_solicitud.sol_descripcion, cer_solicitud.sol_fechaterminacion, datediff(sol_fechaterminacion,".
+        $sql_sol="SELECT cer_solicitud.sol_claveservicio, cer_solicitud.sol_idsolicitud, 
+cer_solicitud.sol_fechainicio, datediff(i_fechavisita, sol_fechainicio) AS dias_trans, 
+ins_generales.i_fechavisita, cer_solicitud.sol_numrep, cer_solicitud.sol_descripcion, 
+cer_solicitud.sol_fechaterminacion, datediff(sol_fechaterminacion,".
         " sol_fechainicio) AS dias_tot, cer_solicitud.sol_idcuenta 
 FROM cer_solicitud 
 Left Join ins_generales ON cer_solicitud.sol_claveservicio = ins_generales.i_claveservicio AND cer_solicitud.sol_numrep = ins_generales.i_numreporte 
 Left Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
  WHERE ";
-$parametros=array();
+        $sv=filter_input(INPUT_GET, "sv",FILTER_SANITIZE_NUMBER_INT);
+$parametros=array("servicio"=>$sv);
+if($sv==3)
+	
+	$this->titulo="CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA";
+	if($sv==5)
+		$this->titulo="CERTIFICACION DE CALIDAD DE AGUA GEPP";
+		$this->subtitulo=("ESTATUS SOLICITUD");
+		
 IF ($gpo=='cue') {
 	 if ($GradoNivel==1) {
 	     
@@ -229,6 +339,10 @@ IF ($gpo=='cue') {
 } else if ($gpo=='aud') { //auditor, muestra solo sus asignaciones
   $sql_sol=$sql_sol." cer_solicitud.sol_estatussolicitud=2 AND cer_solicitud.sol_claveinspector =:user";
   $parametros["user"]=$user;
+	  } else if ($gpo=='muh') { //auditor, muestra solo sus asignaciones
+  $sql_sol=$sql_sol." cer_solicitud.sol_estatussolicitud=2 AND cer_solicitud.sol_claveinspector =:user";
+  $parametros["user"]=$user;
+  //var_dump($parametros);
 } else if ($gpo=='muf') {  
 	if ($GradoNivel==1) {
     $sql_sol=$sql_sol."cer_solicitud.sol_estatussolicitud =  '2' AND ca_unegocios.une_cla_region =:Nivel01"; 
@@ -275,11 +389,11 @@ AND ca_unegocios.une_cla_estado =:Nivel04 AND ca_unegocios.une_cla_ciudad =:Nive
 } else {
    $sql_sol=$sql_sol."cer_solicitud.sol_estatussolicitud =  '2'";
 } // fin de if de grupo
-$sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
+$sql_sol=$sql_sol." and sol_claveservicio=:servicio ORDER BY cer_solicitud.sol_idsolicitud DESC";
 
 
   $rs_sql_sol = Conexion::ejecutarQuery($sql_sol,$parametros);
-        
+ 
         $contl=1;
         
         foreach($rs_sql_sol as $row_rs_sql_sol) {
@@ -299,6 +413,7 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
           
            
             $rs_sql_rep = DatosMuestra::listaMuestrasxRep($nserv,$nrep,"aa_muestras");
+           
             $num_reg = sizeof($rs_sql_rep);
             if ($num_reg>0) {
                 foreach ($rs_sql_rep as $row_rs_sql_rep) {
@@ -311,8 +426,10 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
 //                     " WHERE aa_recepcionmuestradetalle.mue_idmuestra =  '".$nmues."' GROUP BY
 // aa_recepcionmuestradetalle.mue_idmuestra";
                     
-                    $nlab="";
+                    $nlab=""; 
                     $rs_sql_mue = DatosRecepcionMuestra::listaRecepcionMuestraDet($nmues);
+                   
+                  
                     foreach($rs_sql_mue as $row_rs_sql_mue) {
                         $nlab=$row_rs_sql_mue["rm_embotelladora"];
                     }
@@ -321,7 +438,8 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
                     // busca nombre de laboratorio
                   
                     $nlab=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",43,$nlab);
-                     $solicitud['entmu']=  Utilerias::formato_fecha($row_rs_sql_rep ["mue_fecharecepcion"])  ;
+                  
+                    $solicitud['entmu']=  Utilerias::formato_fecha($row_rs_sql_rep ["mue_fecharecepcion"])  ;
                     $solicitud['lab']= $nlab;
                     $solicitud['capfis']= Utilerias::formato_fecha($row_rs_sql_rep ["mue_fechoranalisisFQ"]) ;
                     $solicitud['capmic']= Utilerias::formato_fecha($row_rs_sql_rep ["mue_fechoranalisisMB"]) ;
@@ -343,12 +461,21 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
     }
         public function vistaListasolicitudes(){
             
+         
+            
+            $user = $_SESSION["NombreUsuario"];
+         //   var_dump($_SESSION);
+                /*         * ************************************** */
+            if(!isset($_SESSION["UsuarioInd"])){
+               $_SESSION["UsuarioInd"]=$user;
+               $_SESSION["clienteind"]=1;
+            }
+               
+            $user=$_SESSION["UsuarioInd"];
+            $gpo = $_SESSION["GrupoUs"];
+            //echo $user;
           
-            
-            $user = $_SESSION["UsuarioInd"];
-            
-          
-            
+         
             
             // busco el grupo de usuarios
              $rs_sql_gpo =UsuarioModel::getUsuario($user,"cnfg_usuarios");
@@ -365,14 +492,23 @@ $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
                
                 /*	echo '<script>alert("'.$gpo.'")</script>';   */
             }
-           
-            $this->titulo=T_("CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA");
-            $this->subtitulo=T_("SOLICITUDES");
-          $parametros=array();   
-            $sql_sol="SELECT cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion, IF(sol_estatussolicitud=1,'     SOLICITADA     ',IF(sol_estatussolicitud=4,'  NO ACEPTADA  ','    EN PROCESO    ')) AS ESTATUS, 
-cer_solicitud.sol_estatussolicitud, cer_solicitud.sol_fechainicio, datediff(now(),sol_fechainicio) AS dias_trans, 
-cer_solicitud.sol_fechaapertura, cer_solicitud.sol_idcuenta, cer_solicitud.sol_claveinspector, datediff(sol_fechaapertura,now()) AS dias_restantes 
-FROM cer_solicitud Left Join ca_unegocios ON  cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto WHERE ";
+           $sv=filter_input(INPUT_GET, "sv",FILTER_SANITIZE_NUMBER_INT);
+            $this->titulo=T_("SOLICITUDES PENDIENTES");
+            if($sv==5)
+            	$this->titulo=T_("SOLICITUDES PENDIENTES CERTIFICACION DE CALIDAD DE AGUA GEPP");
+   $this->subtitulo=T_("SOLICITUDES");
+          $parametros=array("servicio"=>$sv);   
+            $sql_sol="SELECT cer_solicitud.sol_idsolicitud, cer_solicitud.sol_descripcion,
+ IF(sol_estatussolicitud=1,'     SOLICITADA     ',IF(sol_estatussolicitud=4,'  NO ACEPTADA  ',' 
+   EN PROCESO    ')) AS ESTATUS, 
+cer_solicitud.sol_estatussolicitud, cer_solicitud.sol_fechainicio,
+ datediff(now(),sol_fechainicio) AS dias_trans, 
+cer_solicitud.sol_fechaapertura, cer_solicitud.sol_idcuenta, cer_solicitud.sol_claveinspector,
+ datediff(sol_fechaapertura,now()) AS dias_restantes 
+FROM cer_solicitud 
+Left Join ca_unegocios ON  cer_solicitud.sol_numpunto = ca_unegocios.une_numpunto 
+and ca_unegocios.cue_clavecuenta=cer_solicitud.sol_cuenta
+WHERE ";
             IF ($gpo=='cue') {
                 if ($GradoNivel==1) {
                     $sql_sol=$sql_sol."(cer_solicitud.sol_estatussolicitud<3 || cer_solicitud.sol_estatussolicitud=4)
@@ -400,7 +536,11 @@ cer_solicitud.sol_numpunto =:Nivel03";
                 }  // fin de nivel
             } else if ($gpo=='aud') { //auditor, muestra solo sus asignaciones
                 $sql_sol=$sql_sol." cer_solicitud.sol_estatussolicitud=2 AND cer_solicitud.sol_claveinspector =:user";
+   $parametros["user"]=$user;
+             } else if ($gpo=='muh') { //auditor, muestra solo sus asignaciones
+                $sql_sol=$sql_sol." cer_solicitud.sol_estatussolicitud=2 AND cer_solicitud.sol_claveinspector =:user";
                 $parametros["user"]=$user;
+                   // var_dump($parametros);
             } else if ($gpo=='muf') {
                 if ($GradoNivel==1) {
                     $sql_sol=$sql_sol."(cer_solicitud.sol_estatussolicitud<3 || cer_solicitud.sol_estatussolicitud=4) AND ca_unegocios.une_cla_region =:Nivel01";
@@ -448,39 +588,45 @@ cer_solicitud.sol_numpunto =:Nivel03";
             } else {
                 $sql_sol=$sql_sol."(cer_solicitud.sol_estatussolicitud<3 || cer_solicitud.sol_estatussolicitud=4)";
             } // fin de if de grupo
-            $sql_sol=$sql_sol." ORDER BY cer_solicitud.sol_idsolicitud DESC";
+            $sql_sol=$sql_sol." and sol_claveservicio=:servicio ORDER BY cer_solicitud.sol_idsolicitud DESC";
             $rs_sql_sol = Conexion::ejecutarQuery($sql_sol,$parametros);
             $contl=1;
             foreach ($rs_sql_sol as $row_rs_sql_sol ) {
                 
                 // busca inspector
-                $nins=$row_rs_sql_sol ["sol_claveinspector"];
-                if ($nins) {
+            	$nominsp=$row_rs_sql_sol ["sol_claveinspector"];
+//                 if ($nins) {
                    
-                //echo $sqlins;
-                    $rowi = DatosInspector::getInspector($nins,"ca_inspectores");
+//                 //echo $sqlins;
+//                     $rowi = DatosInspector::getInspector($nins,"ca_inspectores");
                     
-                    $num_reg = sizeof($rowi);
-                    if ($rowi){
+//                     $num_reg = sizeof($rowi);
+//                     if ($rowi){
                     
-                    $nominsp=$rowi['ins_nombre'];
+//                     $nominsp=$rowi['ins_nombre'];
                     
-                }else{
-                    $nominsp="";
-                }
-                }
+//                 }else{
+//                     $nominsp="";
+//                 }
+//                 }
                 $solicitud=array();
                 $solicitud['Numcert1']=  $row_rs_sql_sol ["sol_idsolicitud"]  ;
                 $solicitud['idcuen']=  $row_rs_sql_sol ["sol_idcuenta"]  ;
                 // SI SOLICITUD EN PROCESO, NO HAY LINK
                 //  IF ($row_rs_sql_sol ["sol_estatussolicitud"]==2){
                 $solicitud['Punto1']=  $row_rs_sql_sol ["sol_descripcion"]  ;
-                //OTRO SI HY LINK
-                //  } else {
+                if($sv==5){
+                	$pagina="nuevasolicitudgepp";
+                }
+                else $pagina="editasolicitud";
+                if($gpo!="muh"){
                 $solicitud['Punto1']=
-                    "<a href='index.php?action=editasolicitud&admin=edisol&nsol=".
+                    "<a href='index.php?action=".$pagina."&admin=edisol&idserv=".$sv."&nsol=".
                     $row_rs_sql_sol ["sol_idsolicitud"] ."'>".$row_rs_sql_sol ["sol_descripcion"]."</a>";
-                // }
+                 }
+                 else {
+                 	$row_rs_sql_sol ["sol_descripcion"];
+                 }
                 $solicitud['estatus']=  $row_rs_sql_sol ["ESTATUS"]  ;
                 $solicitud['fechaini']=  Utilerias::formato_fecha($row_rs_sql_sol ["sol_fechainicio"])  ;
                 $solicitud['dtrans']=  $row_rs_sql_sol ["dias_trans"]  ;
@@ -548,6 +694,7 @@ cer_solicitud.sol_numpunto =:Nivel03";
             if ($admin=="nvasol") {
                     $nvonum=DatosSolicitud::getUltimaSolicitud($idserv,"cer_solicitud");
                     $nvonum++;
+                    $nsol=$nvonum;
                     $this->unegocio['CLAVEUNINEG']=$nvonum;
                     $this->unegocio['reporte']= $nvonum;
                     $this->unegocio['servicio']= $idserv;
@@ -569,14 +716,14 @@ cer_solicitud.sol_numpunto =:Nivel03";
                         $this->listaCuentas=$this->listaCuentas."<option value='".$rowc["cue_id"]."'>".$rowc["cue_descripcion"]."</option>";
                     }
                   
-                    
+                 //   echo $npun;
                     if ($npun) {
                         // busc info de punto de venta
                      
                         //$html->asignar('msg',$msg);
-                        $rsp=DatosUnegocio::classUnegocioCompleta($npun,"ca_unegocios");
-                        foreach($rsp as $rowp){
-                        $this->unegocio['NPUN'] =$npun;
+                    	$rowp=DatosUnegocio::UnegocioCompleta($npun,"ca_unegocios");
+                     // var_dump($rowp);
+                        $this->unegocio['NPUN'] =$rowp["une_numpunto"];
                         $this->unegocio['NOMUNEG']= $rowp["une_descripcion"];
                          $this->unegocio['IDC'] =$rowp["une_idcuenta"];
                         $idc=$rowp["une_idcuenta"];
@@ -608,7 +755,7 @@ cer_solicitud.sol_numpunto =:Nivel03";
                         }
                         
                         // Llena lista de estados
-                        $rs=DatosEstado::listaEstadoModel("ca_uneestados");
+                        $rs=DatosEstado::listaEstadosModel("ca_uneestados");
                         $this->listaEstados="";
                         foreach($rs as $row_es) {
                             if($idedo==$row_es["est_id"])
@@ -622,14 +769,14 @@ cer_solicitud.sol_numpunto =:Nivel03";
                         $rsc=DatosCuenta::vistaCuentasxcliente($cliente,"ca_cuentas");
                         $this->listaCuentas="";
                         foreach($rsc as $rowc){
-                            if($cta==$rowc["cue_clavecuenta"])
+                            if($cta==$rowc["cue_id"])
                                 $this->listaCuentas.="<option value='".$rowc["cue_id"]."' selected>".$rowc["cue_descripcion"]."</option>";
                                 else
                                     $this->listaCuentas.="<option value='".$rowc["cue_id"]."' >".$rowc["cue_descripcion"]."</option>";
                                     
                         }  // while cuenta
                         
-                    }  // while de punto de venta
+                      // while de punto de venta
                 }	// if npun
                 
                 if ($idcta) {
@@ -703,6 +850,7 @@ cer_solicitud.sol_numpunto =:Nivel03";
                     $rsc=DatosCuenta::vistaCuentasxcliente($cliente,"ca_cuentas");
                   
                     $this->listaCuentas="";
+                  
                     foreach($rsc as $rowc){
                        
                         if($cta==$rowc["cue_id"])
@@ -718,103 +866,104 @@ cer_solicitud.sol_numpunto =:Nivel03";
                 if($_SESSION["GrupoUs"]=="adm"||$_SESSION["GrupoUs"]=="cli"||$_SESSION["GrupoUs"]=="muf"){
                   //  $this->msg=$msg;
                     // actualiza archivos existentes
-                    $this->subtitulo='
-<div class="row">
-<div class="col-md-12">
-<form  name="bform" action="index.php?action=editasolicitud&admin=ingarc" method="post" enctype="multipart/form-data"> 
+//                     $this->subtitulo='
+// <div class="row">
+// <div class="col-md-12">
+// <form  name="bform" action="index.php?action=editasolicitud&admin=ingarc" method="post" enctype="multipart/form-data"> 
 
-	 <div class="form-group">
-    <input type="hidden" name="servicio" size="20" maxlength="100" value="'.$idserv.'">
- 	 <input type="hidden" name="reporte" size="20" maxlength="100" value="'.$nsol.'">
-    <input type="hidden" name="MAX_FILE_SIZE" value="600000">
+// 	 <div class="form-group">
+//     <input type="hidden" name="servicio" size="20" maxlength="100" value="'.$idserv.'">
+//  	 <input type="hidden" name="reporte" size="20" maxlength="100" value="'.$nsol.'">
+//     <input type="hidden" name="MAX_FILE_SIZE" value="600000">
   
                         
    
-   <input class="form-control-file"  type="file" name="pictures1[]" id="pictures1" />
-</div> <div class="form-group">
-   <button type="submit" name="submit"  class="btn btn-info pull-right"> Guardar   </button>
+//    <input class="form-control-file"  type="file" name="pictures1[]" id="pictures1" />
+// </div> <div class="form-group">
+//    <button type="submit" name="submit"  class="btn btn-info pull-right"> Guardar   </button>
         
-</div> 
-  </form> </div></div>       
-      <div class="row">     
-          <div class="col-md-12 table-responsive">         
-       <table class="table">    
-<tr>             
-<th>No.</th><th>NOMBRE</th></tr>';
-                     $rsar=DatosSolicitud::listaSolicitudDetalle($nsol,$idserv,"cer_solicituddetalle");
+// </div> 
+//   </form> </div></div>       
+//       <div class="row">     
+//           <div class="col-md-12 table-responsive">         
+//        <table class="table">    
+// <tr>             
+// <th>No.</th><th>NOMBRE</th></tr>';
+//                      $rsar=DatosSolicitud::listaSolicitudDetalle($nsol,$idserv,"cer_solicituddetalle");
                   
-                    //$band=1;
-                    foreach($rsar as $rowa){
-                        $detalle=array();
-                        $detalle['id_arc_exist']='<tr><td >'.$rowa["sde_idarchivo"].'</td>';
-                        $detalle['arc_exist']="<td >".
-                            "<a href='imprimirReporte.php?admin=descarc&nserv=".$idserv."&nsol=".$nsol."&narc=".
-                            $rowa["sde_idarchivo"] ."'>".$rowa["sde_ruta"]."</a></td></tr>";
-                        $this->listaSolDet[]=$detalle;
-                       // $html->expandir ( 'ARCHIVOS_EX', '+PanelbusquedaA' );
-                    }
-                    $this->listaSolDet[]=array('id_arc_exist'=>"</table></div></div>");
+//                     //$band=1;
+//                     foreach($rsar as $rowa){
+//                         $detalle=array();
+//                         $detalle['id_arc_exist']='<tr><td >'.$rowa["sde_idarchivo"].'</td>';
+//                         $detalle['arc_exist']="<td >".
+//                             "<a href='imprimirReporte.php?admin=descarc&nserv=".$idserv."&nsol=".$nsol."&narc=".
+//                             $rowa["sde_idarchivo"] ."'>".$rowa["sde_ruta"]."</a></td></tr>";
+//                         $this->listaSolDet[]=$detalle;
+//                        // $html->expandir ( 'ARCHIVOS_EX', '+PanelbusquedaA' );
+//                     }
+//                     $this->listaSolDet[]=array('id_arc_exist'=>"</table></div></div>");
                
                     // comentarios
                     
                     // encabezado de titulo
-                    $this->enc_comen='
-<div class="row">
-<div class="col-md-12">
-       <div class="form-goup" >
-          <textarea class="form-control" name="coment" cols="120"></textarea>
-          <input type="hidden" name="nrepc" id="nrepc" value= "'.$nsol.'" />
-		  <input type="hidden" name="nserc" id="nserc" value= "'.$idserv.'"/>
+//                     $this->enc_comen='
+// <div class="row">
+// <div class="col-md-12">
+//        <div class="form-goup" >
+//           <textarea class="form-control" name="coment" cols="120"></textarea>
+//           <input type="hidden" name="nrepc" id="nrepc" value= "'.$nsol.'" />
+// 		  <input type="hidden" name="nserc" id="nserc" value= "'.$idserv.'"/>
       
 		 
-		<p class="margin">
-         <button name="" type="submit" class="btn btn-info pull-right">Guardar   </button>
+// 		<p class="margin">
+//          <button name="" type="submit" class="btn btn-info pull-right">Guardar   </button>
 
-      </p>
-  </div></div></div>
-<div class="row">
-   <div class="col-md-12 table-responsive">           <table class="table table-sm">
+//       </p>
+//   </div></div></div>
+// <div class="row">
+//    <div class="col-md-12 table-responsive">           <table class="table table-sm">
                         
-  <tr>
-       <th >FECHA</th>
-         <th>HORA</th>
-        <th >USUARIO</th>
-        <th>COMENTARIOS</th>
-      </tr>';
+//   <tr>
+//        <th >FECHA</th>
+//          <th>HORA</th>
+//         <th >USUARIO</th>
+//         <th>COMENTARIOS</th>
+//       </tr>';
                     
                     
-                   $rsco=DatosSolicitud::listaSolicitudComentario($nsol,$idserv,"cer_solicitudcomentario");
+//                    $rsco=DatosSolicitud::listaSolicitudComentario($nsol,$idserv,"cer_solicitudcomentario");
                  
-                    //$msg=$sqlcom;
-                    //$html->asignar('msg',$msg);
-                    //$rsar=mysql_query($sqlar);
-                    foreach($rsco as $rowb){
-                        $comentario=array();
-                        $comentario['fec']='<tr>
-      <td >'.$rowb["sol_fechacom"].'</td>';
-                        $comentario['hor']='<td>'.$rowb["sol_horcom"].'</td>';
-                        $comentario['user']='<td >'.$rowb["sol_user"].'</td>';
-                        $comentario['comen']='<td>'.$rowb["sol_comentario"].'</tr>';
-                       $this->listaComentarios[]=$comentario;
-                    }
-                    $this->listaComentarios[]=array("fec"=>"</table></div></div>");
-//                     $html->asignar ( 'fec', '');
-//                     $html->asignar ( 'hor', '');
-//                     $html->asignar ( 'comen', '');
-//                     $html->asignar ( 'user', '');
+//                     //$msg=$sqlcom;
+//                     //$html->asignar('msg',$msg);
+//                     //$rsar=mysql_query($sqlar);
+//                     foreach($rsco as $rowb){
+//                         $comentario=array();
+//                         $comentario['fec']='<tr>
+//       <td >'.$rowb["sol_fechacom"].'</td>';
+//                         $comentario['hor']='<td>'.$rowb["sol_horcom"].'</td>';
+//                         $comentario['user']='<td >'.$rowb["sol_user"].'</td>';
+//                         $comentario['comen']='<td>'.$rowb["sol_comentario"].'</tr>';
+//                        $this->listaComentarios[]=$comentario;
+//                     }
+//                     $this->listaComentarios[]=array("fec"=>"</table></div></div>");
+// //                     $html->asignar ( 'fec', '');
+// //                     $html->asignar ( 'hor', '');
+// //                     $html->asignar ( 'comen', '');
+// //                     $html->asignar ( 'user', '');
                     
-                } //if grupo
+                 } //if grupo
                 
                 // autorizacion
                 if($_SESSION["GrupoUs"]=="adm"){
 //                     $this->enc_autor='
 //    <table class="table">';
                     // AUTORIZACIONES
-                    $rsau=DatosInspector::listainspectores("ca_inspectores");
-                    $this->listaInspectores="";
-                    foreach($rsau as $rowa){
-                        $this->listaInspectores.= $this->listaInspectores."<option value=".$rowa['cus_usuario'].">".$rowa['ins_nombre']."</option>";
-                    }
+//                     $rsau=DatosInspector::listainspectores("ca_inspectores");
+//                     $this->listaInspectores="";
+//                     foreach($rsau as $rowa){
+//                         $this->listaInspectores.= $this->listaInspectores."<option value=".$rowa['cus_usuario'].">".$rowa['ins_nombre']."</option>";
+//                     }
+                     		
                     // puntos de venta
                     $sqlpv="SELECT ca_unegocios.une_id, ca_unegocios.une_descripcion FROM ca_unegocios WHERE
 ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
@@ -844,14 +993,19 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                  
                     if ($estsol==1 || $estsol==4) {
                         // LISTA DE INSPECTORES
-                        $rsca=DatosInspector::listainspectores("ca_inspectores");
-                        $this->listaInspectores="";
-                        if ($rsca) {
-                            foreach($rsca as $rowca){
-                                $this->listaInspectores= $this->listaInspectores."<option value='".$rowca['ins_usuario']."'>".$rowca['ins_nombre']."</option>";
-                            }
-                        }
-                        $autoriza=$autoriza.'<div class="form-group"><label>AUDITOR :</label>
+//                         $rsca=DatosInspector::listainspectores("ca_inspectores");
+//                         $this->listaInspectores="";
+//                         if ($rsca) {
+//                             foreach($rsca as $rowca){
+//                                 $this->listaInspectores= $this->listaInspectores."<option value='".$rowca['ins_usuario']."'>".$rowca['ins_nombre']."</option>";
+//                             }
+//                         }
+                    	$this->listaInspectores="";
+                    	//	foreach($rsau as $rowa){
+                    	if($idserv==3)
+                    		$this->listaInspectores.= "<option value=\"AUDITOR MUESMERC\">AUDITOR MUESMERC</option>";
+                    		
+                    	$autoriza=$autoriza.'<div class="form-group"><label>AUDITOR :</label>
         <select class="form-control" name="INSPECTOR" id="INSPECTOR">'.$this->listaInspectores.'
          </select>
             
@@ -884,7 +1038,10 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                 // echo $rutaact;
                 Navegacion::agregarRuta("b", $rutaact, "NO. SOLICITUD ".$nsol);
             } // if edit
-            
+            Navegacion::borrarRutaActual("b");
+            $rutaact = $_SERVER['REQUEST_URI'];
+            // echo $rutaact;
+            Navegacion::agregarRuta("b", $rutaact, "NO. SOLICITUD ".$nsol);
          
 //             $html->asignar('arc_exist','');
 //             $html->asignar('id_arc_exist','');
@@ -896,7 +1053,7 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
         
         public function insertarsolicitud(){
             define('RAIZ',"solicitudes");
-            $user = $_SESSION["UsuarioInd"];
+            $user = $_SESSION["NombreUsuario"];
            include 'Utilerias/leevar.php';
           
             $refer=3;
@@ -906,21 +1063,32 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
            // $fecape= Utilerias::mysql_fecha($fecaper);
             $idserv=3;
             // IDENTIFICA SI ES INSERT O UPDATE
-           
+          
             $rs=DatosSolicitud::getSolicitud($clauneg,$idserv,"cer_solicitud");
           
            
             try{
+            	
                 if ($rs&&sizeof($rs)>0){
                 // edita
-                $sSQL=("update cer_solicitud set sol_claveservicio='$refer', sol_descripcion='$desuneg', sol_estatussolicitud='$status', sol_idcuenta='$idcta', sol_cuenta=$cta, sol_fechaapertura='".$fecape."', sol_contacto='".$conuneg."', sol_correoelec= '".$email."', sol_dir_calle='".$calle."', sol_dir_numeroext='".$numext."', sol_dir_numeroint='".$numint."', sol_dir_manzana='".$mz."', sol_dir_lote='".$lt."', sol_dir_colonia='".$col."', sol_dir_delegacion='".$del."', sol_dir_municipio='".$mun."', sol_dir_estado='".$edo."', sol_dir_cp='".$cp."', sol_dir_referencia='".$ref."', sol_dir_telefono='".$tel."', sol_dir_telmovil='".$cel."',sol_solicitante='".$user."', sol_numpunto =".$numpun." where sol_idsolicitud=".$clauneg.";");
-                
+                $sSQL=("update cer_solicitud set sol_claveservicio='$refer',
+ sol_descripcion='$desuneg', sol_estatussolicitud='$status', sol_idcuenta='$idcta',
+ sol_cuenta=$cta, sol_fechaapertura='".$fecape."', sol_contacto='".$conuneg."',
+ sol_correoelec= '".$email."', sol_dir_calle='".$calle."', sol_dir_numeroext='".$numext."',
+ sol_dir_numeroint='".$numint."', sol_dir_manzana='".$mz."', sol_dir_lote='".$lt."',
+ sol_dir_colonia='".$col."', sol_dir_delegacion='".$del."', sol_dir_municipio='".$mun."', 
+sol_dir_estado='".$edo."', sol_dir_cp='".$cp."', sol_dir_referencia='".$ref."', 
+sol_dir_telefono='".$tel."', sol_dir_telmovil='".$cel."',sol_solicitante='".$user."',
+ sol_numpunto =".$numpun." where sol_idsolicitud=".$clauneg.";");
+              
                 DatosSolicitud::actualizarSolicitud($refer,  $desuneg, 	 $status, 	$idcta, 	 $cta, 	 $fecape,	 $conuneg, 	 $email,  $calle, 	 $numext, 	 $numint,
-                    $mz,  $lt,  $col, 	 $del, 	$mun,  $edo, $cp, 	 $ref,	 $tel,  $cel, 	 $user, 	$numpun, 	 $clauneg);
+                    $mz,  $lt,  $col, 	 $del, 	$mun,  $edo, $cp, 	 $ref,	 $tel,  $cel, 	
+                		$user, 	$numpun, 	 $clauneg);
                 
               
             } else{  // nuevo
                 //procedimiento de insercion de  la cuenta
+               
                 if ($numpun) {
                 } else {
                     $numpun=0;
@@ -941,6 +1109,10 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
             $this->msg='<div class="alert alert-success" role="alert">
             La solicitud se guardó correctamente
             </div>';
+            print("<script>
+window.location.replace('index.php?action=editasolicitud&nsol=$clauneg');</script>");
+            
+            
          //   header("Location: MENindprincipal.php?admin=edisol&nsol=$clauneg&msg=$msg");
         }
         
@@ -1107,11 +1279,11 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
               
               $rs1=DatosUnegocio::unegocioxIdCuentaCuenta($idcta,$cta,"ca_unegocios");
               $num_reg = sizeof($rs1);
-              
+             
               if ($num_reg !=0){  // ya existe
                   //   $rst=mysql_4rowtquery($sqlt);
                   foreach($rs1 as $rowt) {
-                      $npunto=$rowt["une_numpunto"];
+                      $npunto=$rowt["une_id"];
                       // valida si existe una soicitud con el mismo idcta
                        $rs2=DatosSolicitud::getsolicitudxEstatus1($npunto,"cer_solicitud");
                       $num_reg2 = sizeof($rs2);
@@ -1160,22 +1332,22 @@ ca_unegocios.cue_clavecuenta =  '$idc' GROUP BY ca_unegocios.une_id";
                   $npunto=null;
               }
               if($opcion=="si"){
-            if($npunto){
-                  $msg=$npunto;
-              }else{
-                  // genera punto de venta
-                  // asigna nuevo numero de punto de venta
-                 
-                  // inserta punto de venta
-                   try{
-                       
-                      DatosUnegocio::insertarUnegociodesdeSolicitud($servicio,$reporte);
-                  }catch(Exception $ex){
-                      $this->msg=Utilerias::mensajeError("Error al insertar, intente de nuevo");
-                  }
-                  // actualiza punto de venta;
-                  
-              }
+	            if($npunto){
+	                  $msg=$npunto;
+	              }else{
+	                  // genera punto de venta
+	                  // asigna nuevo numero de punto de venta
+	                 
+	                  // inserta punto de venta
+	                   try{
+	                       
+	                   	$npunto=DatosUnegocio::insertarUnegociodesdeSolicitud($servicio,$reporte);
+	                  }catch(Exception $ex){
+	                      $this->msg=Utilerias::mensajeError("Error al insertar, intente de nuevo");
+	                  }
+	                  // actualiza punto de venta;
+	                  
+	              }
               }
              
               // guarda inspector, lee punto de venta y  cambia el estatus, manda mensaje de "aceptado"
@@ -1186,6 +1358,8 @@ cer_solicitud.sol_estatussolicitud = :estatus, cer_solicitud.sol_fechainicio=".$
               try{
              Conexion::ejecutarInsert($sSQLabis,array("estatus"=>$estatus,"INSPECTOR"=>$INSPECTOR,"servicio"=>$servicio,"npunto"=>$npunto,"reporte"=>$reporte));
              $this->msg=Utilerias::mensajeExito("Se modificó el estatus correctamente");
+             print("<script>
+window.location.replace('index.php?action=listasolicitudes&sv=".$servicio."');</script>");
              
               }catch(Exception $ex){
                   $this->msg=$ex->getMessage();
@@ -1230,6 +1404,528 @@ cer_solicitud.sol_estatussolicitud = :estatus, cer_solicitud.sol_fechainicio=".$
               //header("Location: MENindprincipal.php?admin=edisol&nsol=$nsol&msg=$msg");
               
           }
+          
+	public function vistaListaAlertas(){
+          	include "Utilerias/leevar.php";
+          	$user = $_SESSION["NombreUsuario"];
+          	$rs_sql_gpo =  UsuarioModel::getUsuario($user,"cnfg_usuarios");
+          	foreach($rs_sql_gpo as $row_rs_sql_gpo  ) {
+          		$gpo=$row_rs_sql_gpo["cus_clavegrupo"];
+          		$nvasol=$row_rs_sql_gpo["cus_solcer"];
+          		$GradoNivel = $row_rs_sql_gpo ["cus_tipoconsulta"];
+          		$Nivel01 = $row_rs_sql_gpo ["cus_nivel1"];
+          		$Nivel02 = $row_rs_sql_gpo ["cus_nivel2"];
+          		$Nivel03 = $row_rs_sql_gpo ["cus_nivel3"];
+          		$Nivel04 = $row_rs_sql_gpo ["cus_nivel4"];
+          		$Nivel05 = $row_rs_sql_gpo ["cus_nivel5"];
+          		$Nivel06 = $row_rs_sql_gpo ["cus_nivel6"];
+          			
+          			/*	echo '<script>alert("'.$gpo.'")</script>';   */
+          	}
+          	$sv=1;
+          	$parametros=array("servicio"=>$sv);
+          	$sql_sol="SELECT   `ins_generales`.`i_numreporte`
+   
+    , `ins_generales`.`i_claveservicio`
+    , `ins_generales`.`i_finalizado`
+    , `ins_generales`.`i_fechafinalizado`
+    , `ca_unegocios`.`cue_clavecuenta`
+    , `ca_unegocios`.`une_descripcion`,une_idcuenta, une_num_unico_distintivo,
+    IF(IFNULL( i_estatusreporte,0)<2 and i_fechafinalizado>'2019-11-01','NUEVO','') estatus,
+COUNT(i_numreporte) AS total, IF(`mue_fechoranalisisFQ`
+    < `mue_fechoranalisisMB`,mue_fechoranalisisMB,mue_fechoranalisisFQ) AS fechaemi
+FROM  ins_generales 
+    INNER JOIN `ins_detalleestandar` ON `ide_claveservicio`=i_claveservicio AND `ide_numreporte`=i_numreporte
+    AND `ide_numseccion`=5 AND `ide_numreactivo`=0 AND `ide_numcomponente`=2 AND  (`ide_numcaracteristica3`=1 OR `ide_numcaracteristica3`=17)
+    
+      INNER JOIN ca_unegocios
+      ON `i_unenumpunto`=`une_id`"; 
+          	IF ($gpo=='cue') { /* necesita tener resultados de agua*/
+//           		$sql_sol="SELECT   `ins_generales`.`i_numreporte`
+//     , `ins_generales`.`i_numreporte`
+//     , `ins_generales`.`i_claveservicio`
+//     , `ins_generales`.`i_finalizado`
+//     , `ins_generales`.`i_fechafinalizado`
+//     , `ca_unegocios`.`cue_clavecuenta`
+//     , `ca_unegocios`.`une_descripcion`, une_idcuenta, une_num_unico_distintivo,
+//    IF(IFNULL( i_estatusreporte,0)<2 and i_fechafinalizado>'2019-11-01' ,'NUEVO','') estatus,
+// COUNT(i_numreporte) AS total
+// FROM  ins_generales 
+//     INNER JOIN `ins_detalleestandar` ON `ide_claveservicio`=i_claveservicio AND `ide_numreporte`=i_numreporte
+//     AND `ide_numseccion`=5 AND `ide_numreactivo`=0 AND `ide_numcomponente`=2 AND  (`ide_numcaracteristica3`=1 OR `ide_numcaracteristica3`=17)
+    
+//       INNER JOIN ca_unegocios
+//       ON `i_unenumpunto`=`une_id` 
+//  ";
+          			if ($GradoNivel==1) {
+          				$sql_sol=$sql_sol." AND ca_unegocios.cue_clavecuenta =:Nivel01 ";
+          				$parametros["Nivel01"]=$Nivel01;
+          			} else if ($GradoNivel==2) {
+          				$sql_sol=$sql_sol." AND ca_unegocios.cue_clavecuenta =:Nivel01 AND ca_unegocios.fc_idfranquiciacta =:Nivel02 ";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          			} else if ($GradoNivel==3) {
+          				$sql_sol=$sql_sol." AND ca_unegocios.cue_clavecuenta =:Nivel01 AND ca_unegocios.fc_idfranquiciacta =:Nivel02 AND
+cer_solicitud.sol_numpunto = :Nivel03";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          				$parametros["Nivel03"]=$Nivel03;
+          			}
+          			$sql_sol=$sql_sol." 
+  INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio 
+GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;";
+          		} else if ($gpo=='muf') {
+//           			$sql_sol="SELECT   `ins_generales`.`i_numreporte`
+//     , `ins_generales`.`i_numreporte`
+//     , `ins_generales`.`i_claveservicio`
+//     , `ins_generales`.`i_finalizado`
+//     , `ins_generales`.`i_fechafinalizado`
+//     , `ca_unegocios`.`cue_clavecuenta`
+//     , `ca_unegocios`.`une_descripcion`,une_idcuenta, une_num_unico_distintivo,
+//    IF(IFNULL( i_estatusreporte,0)<2 and i_fechafinalizado>'2019-11-01','NUEVO','') estatus
+// FROM  ins_generales 
+//     INNER JOIN `ins_detalleestandar` ON `ide_claveservicio`=i_claveservicio AND `ide_numreporte`=i_numreporte
+//     AND `ide_numseccion`=5 AND `ide_numreactivo`=0 AND `ide_numcomponente`=2
+//       INNER JOIN ca_unegocios
+//       ON `i_unenumpunto`=`une_id` ";
+          			if ($GradoNivel==1) {
+          				$sql_sol=$sql_sol." AND ca_unegocios.une_cla_region =:Nivel01";
+          				$parametros["Nivel01"]=$Nivel01;
+          			} else if ($GradoNivel==2) {
+          				$sql_sol=$sql_sol."	AND ca_unegocios.une_cla_region =:Nivel01 AND ca_unegocios.une_cla_pais =:Nivel02";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          			} else if ($GradoNivel==3) {
+          				$sql_sol=$sql_sol."	AND ca_unegocios.une_cla_region =:Nivel01 AND ca_unegocios.une_cla_pais =:Nivel02 AND ca_unegocios.une_cla_zona =:Nivel03";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          				$parametros["Nivel03"]=$Nivel03;
+          			} else if ($GradoNivel==4) {
+          				$sql_sol=$sql_sol."	AND ca_unegocios.une_cla_region =:Nivel01 AND ca_unegocios.une_cla_pais =:Nivel02 AND ca_unegocios.une_cla_zona =:Nivel03 AND ca_unegocios.une_cla_estado =:Nivel04";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          				$parametros["Nivel03"]=$Nivel03;
+          				$parametros["Nivel04"]=$Nivel04;
+          				
+          			} else if ($GradoNivel==5) {
+          				$sql_sol=$sql_sol."	AND ca_unegocios.une_cla_region =:Nivel01 AND ca_unegocios.une_cla_pais =:Nivel02 AND ca_unegocios.une_cla_zona =:Nivel03 AND ca_unegocios.une_cla_estado =:Nivel04 AND ca_unegocios.une_cla_ciudad =:Nivel05";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          				$parametros["Nivel03"]=$Nivel03;
+          				$parametros["Nivel04"]=$Nivel04;
+          				$parametros["Nivel05"]=$Nivel05;
+          			} else if ($GradoNivel==6) {
+          				$sql_sol=$sql_sol."	AND ca_unegocios.une_cla_region =:Nivel01 AND ca_unegocios.une_cla_pais =:Nivel02 AND ca_unegocios.une_cla_zona =:Nivel03 AND ca_unegocios.une_cla_estado =:Nivel04 AND ca_unegocios.une_cla_ciudad =:Nivel05 AND ca_unegocios.une_cla_franquicia =:Nivel06";
+          				$parametros["Nivel01"]=$Nivel01;
+          				$parametros["Nivel02"]=$Nivel02;
+          				$parametros["Nivel03"]=$Nivel03;
+          				$parametros["Nivel04"]=$Nivel04;
+          				$parametros["Nivel05"]=$Nivel05;
+          				$parametros["Nivel06"]=$Nivel06;
+          			}
+          			$sql_sol=$sql_sol."
+  INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio
+GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;";
+          		} else {
+          			
+          			$sql_sol.="
+  INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio 
+GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;
+";
+          		}
+          		
+          $rs_sql_sol = Conexion::ejecutarQuery($sql_sol,$parametros);
+          		
+          $contl=1;
+          if(!isset($estado)||$estado==""){
+          	$estado=1;
+          }
+          foreach($rs_sql_sol as $row_rs_sql_sol ) {
+          			
+          	$reportes=array();
+          	
+          	$reportes['idcuen']=  $row_rs_sql_sol ["une_num_unico_distintivo"]  ;
+          	$reportes['Punto']=  $row_rs_sql_sol ["une_descripcion"]  ;
+          	$reportes['fechater']=  Utilerias::formato_fecha($row_rs_sql_sol ["fechaemi"]) ;
+          	$reportes['estatus']= "<span  class='label label-success'>" .$row_rs_sql_sol ["estatus"]."</span>" ;
+          	$reportes[ 'Nrep']=  $row_rs_sql_sol ["i_numreporte"]  ;
+          	//  echo "<br>".$row_rs_sql_sol ["sol_numrep"] ;
+          
+          	//busco el dictamen en la seccion 5
+          	$ssql="SELECT  r_numreactivo ,ins_detalle.id_claveservicio, ins_detalle.id_numreporte,
+ ins_detalle.id_numseccion, ins_detalle.id_numreactivo, ins_detalle.id_aceptado,
+ins_detalle.id_noaplica, r.r_descripcionesp from
+(  SELECT
+   *
+FROM
+    `cue_reactivos`
+    WHERE ser_claveservicio =:servicio AND sec_numseccion =  '4' AND
+ r_numreactivo IN(3,7,22,23)) AS r
+    LEFT  JOIN `ins_detalle`
+        ON (r.`ser_claveservicio` = `ins_detalle`.`id_claveservicio`)
+        AND (r.`sec_numseccion` = `ins_detalle`.`id_numseccion`)
+        AND (r.`r_numreactivo` = `ins_detalle`.`id_numreactivo`) AND ins_detalle.id_numreporte =:numrep
+
+ GROUP BY     r.`ser_claveservicio`
+    ,r.`sec_numseccion`,r_numreactivo
+ORDER BY r_numreactivo
+";
+          	$rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$sv,"numrep"=> $reportes[ 'Nrep']));
+          			
+          	$resas="";
+          	$condi=$noap=0; //variables para saber si el dictamen es condicionado o no aceptado
+          	
+          	foreach($rs as $row) {
+              //  	echo "<br>--".$row["id_aceptado"]."---".$row["id_noaplica"];
+          					
+	          	if ($row["id_noaplica"]==-1){
+	          		$condi=1; //sera condicionado
+	          						
+	          	}else
+	          	if ($row["id_aceptado"]==-1)
+	          	{ $resas="APROBADO"; //sera aprobado
+	          						
+	          	}else{
+	          		$noap=1;  //con un no aceptado el dictamen es no
+	          			break;			
+	          						
+	          						
+	          	}
+          					
+          	}
+          	$res=DatosEst::cumplimientoSeccion($sv,"5.0.2",$reportes[ 'Nrep']);
+          	if($res!="")
+          	{//	throw new Exception("No hay información suficiente para generar el certificado, verifique el reporte");
+          		$tache5=$res;
+          	}
+          				
+          //	echo "<br>".$reportes[ 'Nrep']."---".$noap."---".$condi."--".$tache5;
+          	if ($noap||$tache5=="tache") {
+          		$resas="NO APROBADO";
+          		$reportes["tipoalerta"]=$this->tipoAlerta($sv, $reportes[ 'Nrep']);
+          	}else{
+          		
+          		if ($condi&&$tache5=="palomita"){
+          			$resas="CONDICIONADO";
+          			$reportes["tipoalerta"]="MODERADO";
+          			
+          						
+          	}else
+          		{$resas="APROBADO";
+          			continue;	
+          		}
+          	}
+         
+          	//busco el tipo de alerta
+          	if($estado==1&&$reportes["tipoalerta"]=="MODERADO")//solo quiero ver criticos
+          	{	continue;
+          	
+          	
+          	}
+          	if($estado==2&&$reportes["tipoalerta"]=="CRITICO")//solo quiero ver moderados
+          	{	continue;
+          	
+          	
+          	}
+          	
+          	$reportes[ 'resul']=  $resas;
+          	
+          
+            $impreaa="javascript:imprimirANA(".$row_rs_sql_sol["i_numreporte"].");";
+          	$reportes[ 'impanag']= $impreaa;
+          			// $html->asignar('impres',"<td width='246' class='$color' ><div align='center'><a href='javascript:imprimirCER(".$row_rs_sql_sol["sol_numrep"].");'><img src='../img/print_gold.png' alt='Imprimir' width='28' height='33' border='0' /></a></div>");
+          	$this->listaSolicitudes[]=$reportes;
+          	$contl++;
+          }
+          $this->estado=$estado;
+          
+          	// die();
+       }
+       /*******************************
+        * para saber el tipo de alerta del certificado postmix
+        * @param int $idser
+        * @param int $reporte
+        * @return string devuelve el tipo de estatus
+        */
+       public function tipoAlerta($idser ,$reporte){
+       	
+       	//reviso el origen de la muestra si es de valvula postmix será moderado
+       	// sino continuo con la revisión
+       	$idsec=2;
+       	$muestra=DatosMuestra::vistaMuestrasRep($idsec, $reporte, $idser, $tabla);
+       	foreach ($muestra as $key => $rownr) {
+       		$origen =$rownr["mue_origenmuestra"]; 
+       	}
+       	if($origen==4){
+       		return "MODERADO"; //SINO
+       	}
+       		//reviso resultados microbiologia
+       	$resultados=DatosMuestra::vistaResultadosAgua($idser, 1, $reporte,"MB");
+       	$aceptado=-1;
+     
+       	foreach($resultados as $resultado){
+       		$siguno=$resultado['red_signounomoderado'];
+       		$sigdos=$resultado['red_signodosmoderado'];
+       		$sigdos=$resultado['red_signodosmoderado'];
+       		$valmin=$resultado['red_valorminmoderado'];
+       		$valmax=$resultado['red_valormaxmoderado'];
+       		$valcom=$resultado["ide_valorreal"];
+       		//echo "<br>".$reporte."--".$resultado["ide_aceptado"];
+       		if($resultado["ide_aceptado"]==0){ //si no fue aceptado reviso lo demas
+       		if ($valmax!="") {  // valido en un rango de dos valores  signo uno debe ser <= y signo dos debe ser >=
+       			$lvalmin=strlen ($siguno);
+       			$lvalmax=strlen ($sigdos);
+       			if (($lvalmin==1) and ($lvalmax==1)) {    // es menorque y mayorque
+       				if (($valcom > $valmin)  and ($valcom < $valmax)) {
+       					
+       					$aceptado=-1;
+       				} else {
+       					
+       					$aceptado=0;
+       					break;
+       				}
+       			} else {
+       				if (($lvalmin==1) and ($lvalmax==2)) {    // es menorque y mayoro igual que
+       					if (($valcom > $valmin)  and ($valcom <= $valmax)) {
+       					
+       						$aceptado=-1;
+       					} else {
+       					
+       						$aceptado=0;
+       						break;
+       					}
+       				} else {
+       					if (($lvalmin==2) and ($lvalmax==1)) {    // es menorque y mayoro igual que
+       						if (($valcom >= $valmin)  and ($valcom < $valmax)) {
+       						
+       							$aceptado=-1;
+       						} else {
+       							
+       							$aceptado=0;
+       							break; //es critico
+       						}
+       					} else {
+       						if (($lvalmin==2) and ($lvalmax==2)) {    // es menorque y mayoro igual que
+       							if (($valcom >= $valmin)  and ($valcom <= $valmax)) {
+       								
+       								$aceptado=-1;
+       							} else {
+       								
+       								$aceptado=0;
+       								break;
+       							}
+       						}   // fin de if 2 y 2
+       					}  // fin de if 2 y 1
+       				}   // fin de if 1 y 2
+       			}
+       		}else // no existe valor maximo
+       			//vemos si existe valor minimo
+       			if ($valmin!=""){
+       				$lvalmin=strlen ($siguno);
+       				if ($lvalmin==1) {    // es solo menorque o mayorque
+       					switch ($siguno) {
+       						case "=" :
+       							if ($valcom==$valmin) {
+       								
+       								$aceptado=-1;
+       							} else {
+       								
+       								$aceptado=0;
+       								break 2;
+       							}
+       							break;
+       						case "<" :
+       							if ($valcom < $valmin) {
+       								
+       								$aceptado=-1;
+       							} else {
+       							
+       								$aceptado=0;
+       								break 2;
+       							}
+       							break;
+       						case ">" :
+       							if ($valcom > $valmin) {
+       								
+       								$aceptado=-1;
+       							} else {
+       							
+       								$aceptado=0;
+       								break 2;
+       							}
+       							break;
+       					}
+       				}else{
+       					switch ($siguno) {
+       						case "<=" :
+       							if ($valcom <= $valmin) {
+       							
+       								$aceptado=-1;
+       							} else {
+       							
+       								$aceptado=0;
+       								break 2;
+       							}
+       							break;
+       						case ">=" :
+       							if ($valcom>=$valmin ) {
+       							
+       								$aceptado=-1;
+       							} else {
+       								
+       								$aceptado=0;
+       								break 2;
+       							}
+       							break;
+       					}  // fin del switch
+       				}	// fin de longitud =1
+       		}
+       		
+       		 //como es micro por default es critico
+       		 $aceptado=0;
+       		 break;
+       		}
+       	}// fin for
+    //  echo "*********".$aceptado;
+       	if($aceptado==0) //termino y es critico
+       		return "CRITICO";
+       		//REVISO Fq
+       	$resultados=DatosMuestra::vistaResultadosAgua($idser, 1, $reporte,"FQ");
+       	$aceptado=-1;
+       		
+       	foreach($resultados as $resultado){
+       		$tipodato=$resultado['red_tipodato'];
+       			
+       		$siguno=$resultado['red_signounomoderado'];
+       		$sigdos=$resultado['red_signodosmoderado'];
+       		$sigdos=$resultado['red_signodosmoderado'];
+       		$valmin=$resultado['red_valorminmoderado'];
+       		$valmax=$resultado['red_valormaxmoderado'];
+       		$valcom=$resultado["ide_valorreal"];
+       	
+       		if($tipodato=="N"&&$resultado["ide_aceptado"]==0)//es cuantitativo
+       		
+       				if ($valmax!="") {  // valido en un rango de dos valores  signo uno debe ser <= y signo dos debe ser >=
+       					$lvalmin=strlen ($siguno);
+       					$lvalmax=strlen ($sigdos);
+       					if (($lvalmin==1) and ($lvalmax==1)) {    // es menorque y mayorque
+       						if (($valcom > $valmin)  and ($valcom < $valmax)) {
+       							
+       							$aceptado=-1;
+       						} else {
+       							
+       							$aceptado=0;
+       							break;
+       						}
+       					} else {
+       						if (($lvalmin==1) and ($lvalmax==2)) {    // es menorque y mayoro igual que
+       							if (($valcom > $valmin)  and ($valcom <= $valmax)) {
+       								
+       								$aceptado=-1;
+       							} else {
+       								
+       								$aceptado=0;
+       								break;
+       							}
+       						} else {
+       							if (($lvalmin==2) and ($lvalmax==1)) {    // es menorque y mayoro igual que
+       								if (($valcom >= $valmin)  and ($valcom < $valmax)) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break; //es critico
+       								}
+       							} else {
+       								if (($lvalmin==2) and ($lvalmax==2)) {    // es menorque y mayoro igual que
+       									if (($valcom >= $valmin)  and ($valcom <= $valmax)) {
+       										
+       										$aceptado=-1;
+       									} else {
+       										
+       										$aceptado=0;
+       										break;
+       									}
+       								}   // fin de if 2 y 2
+       							}  // fin de if 2 y 1
+       						}   // fin de if 1 y 2
+       					}
+       			}else // no existe valor maximo
+       				//vemos si existe valor minimo
+       				if ($valmin!=""){
+       				//	echo "<br>".$reporte."--".$valcom." <=". $valmin;
+       					$lvalmin=strlen ($siguno);
+       					if ($lvalmin==1) {    // es solo menorque o mayorque
+       						switch ($siguno) {
+       							case "=" :
+       								if ($valcom==$valmin) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break 2;
+       								}
+       								break;
+       							case "<" :
+       								if ($valcom < $valmin) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break 2;
+       								}
+       								break;
+       							case ">" :
+       								if ($valcom > $valmin) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break 2;
+       								}
+       								break;
+       						}
+       					}else{
+       						switch ($siguno) {
+       							case "<=" :
+       								if ($valcom <= $valmin) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break 2;
+       								}
+       								break;
+       							case ">=" :
+       								if ($valcom>=$valmin ) {
+       									
+       									$aceptado=-1;
+       								} else {
+       									
+       									$aceptado=0;
+       									break 2;
+       								}
+       								break;
+       						}  // fin del switch
+       					}	// fin de longitud =1
+       			}
+       			
+       	}//fin for
+       	if($aceptado==0)// es critico
+       		return "CRITICO";
+       	
+       	return "MODERADO"; //SINO
+       }
+       
+       
         /**
          * @return mixed
          */

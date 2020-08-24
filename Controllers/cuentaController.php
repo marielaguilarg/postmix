@@ -69,7 +69,7 @@ class CuentaController{
                 <!-- /.col -->
                 <div class="col-sm-4">
                   <div class="description-block">
-                 <button type="button" class="btn btn-block btn-info" ><a  href="index.php?action=listacuenta&idb='.$item["cue_id"].'"><i class="fa fa-trash-o"></i></a></button>
+                 <a class="btn btn-block btn-info"  onclick="return dialogoEliminar()"  href="index.php?action=listacuenta&idb='.$item["cue_id"].'"><i class="fa fa-trash-o"></i></a>
 
                   </div>
                   <!-- /.description-block -->

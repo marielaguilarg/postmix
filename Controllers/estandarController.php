@@ -188,7 +188,7 @@ class EstandarController{
 
 
 	 echo '<div class="row">
-	    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaestandar&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>   NUEVO  </a></button>
+	    <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;" href="index.php?action=nuevaestandar&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>   NUEVO  </a>
 	     </div>
 	     </div>
 
@@ -406,7 +406,7 @@ class EstandarController{
               }  //switch	
   
 			//busca la info
-			$respuesta =DatosEst::vistaEstModel($servicioController, $datosController,"cue_reactivosestandar");
+		//	$respuesta =DatosEst::vistaEstModel($servicioController, $datosController,"cue_reactivosestandar");
 
 			// presenta info
 			echo 	'<section class="content container-fluid">
@@ -443,7 +443,7 @@ class EstandarController{
 	              </td>
 	                  <td><a href="index.php?action=estandarcoment&sec='.$numeros.".".$componente.'&sv='.$item["ser_claveservicio"].'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	               <td><a href="index.php?action=sn&ids='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'.'.$item["re_numcomponente"].'&sv='.$item["ser_claveservicio"].'&ts=E&sec='.$item["sec_numseccion"].'"><i class="fa fa-trash-o fa-lg"></i></a>
+	               <td><a href="index.php?action=sn&ids='.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'.'.$item["re_numcomponente"].'&sv='.$item["ser_claveservicio"].'&ts=E&sec='.$item["sec_numseccion"].'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	               
@@ -570,7 +570,7 @@ public function borrarEstandarController(){
 			$servicioController = $_GET["sv"];
 
 			echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=nuevaestdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+    <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; " href="index.php?action=nuevaestdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a>
      </div>
      </div>';
 		
@@ -679,7 +679,7 @@ public function borrarEstandarController(){
 	                  </td>
 	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["red_tiporeactivo"].'"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=ED&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
+	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["red_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=ED&sec='.$seccion.'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
 	                </tr>';
 	            $i++;  
 			}
@@ -900,7 +900,7 @@ public function registrarEstandarController(){
 		$sec = $_GET["id"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a></button>
+	   echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -910,7 +910,7 @@ public function registrarEstandarController(){
 		$sec = $_GET["sa"];
 		$ser = $_GET["sv"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a></button>
+	   echo ' <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=sn&sec='.$sec.'&ts=ED&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -1167,7 +1167,6 @@ public function registrarEstandarController(){
       						   "numcar"=>$numcar,
                                "numcom2"=>$numcom2,
                                "numcar2"=>$numcar2,
-      						 
       						   "desesp"=>$descesp,
                                "desing"=>$descing,
                                "estandar"=>$estandar,
@@ -1192,17 +1191,22 @@ public function registrarEstandarController(){
                                "rangov"=>$rangov,
                                "anapepsi"=>$anapepsi,
                                "refinter"=>$refinter,  
+                               "valminmod"=>$valminmod,
+                               "valmaxmod"=>$valmaxmod,
+                               "sigunomod"=>$sigunomod,
+                               "sigdosmod"=>$sigdosmod
       						  );
 
             $respuesta = DatosEst::insertaestandardetalle($datosController,"cue_reactivosestandardetalle");
          //   echo $respuesta;
+        
 			if($respuesta== "success"){
 
           		echo "<script type='text/javascript'>
 				window.location='index.php?action=sn&sec=".$seccion."&ts=ED&sv=$idser';
 				</script>
 				";
-
+				
 
           	//header("location:index.php?action=ok");
         	} else {
@@ -1249,6 +1253,11 @@ public function registrarEstandarController(){
         $valsigdos = $rowr["red_signodos"];
         $valuno = $rowr["red_valormin"];
         $valdos = $rowr["red_valormax"];
+        $valsigdosmod = $rowr["red_signodosmoderado"];
+        $valsigunomod = $rowr["red_signounomoderado"];
+        
+        $valunomod = $rowr["red_valorminmoderado"];
+        $valdosmod = $rowr["red_valormaxmoderado"];
         $std = $rowr["red_estandar"];
         $pon = $rowr["red_ponderacion"];
         $lugar = $rowr["red_lugarsyd"];
@@ -1348,6 +1357,7 @@ public function registrarEstandarController(){
                  
               $respuestac = DatosEst::catalogosModel("ca_catalogos");
 				foreach($respuestac as $row => $itemc){
+				
 					if ($itemc["ca_idcatalogo"]==$numcatalogo){
 						if ($formato=="C"){
 							echo '<option value='.$itemc["ca_idcatalogo"].' selected="selected">'.$itemc["ca_nombrecatalogo"].'</option>';
@@ -1356,10 +1366,12 @@ public function registrarEstandarController(){
 						echo '<option value='.$itemc["ca_idcatalogo"].'>'.$itemc["ca_nombrecatalogo"].'</option>';
 					}
 				}   
-				
+			
           echo '
                   </select>
-                </div>
+                </div>';
+         
+          echo'
                 <div class="form-group col-md-6">
                   <label>OPCION CORRECTA</label>
                    <select class="form-control cascada" name="valopcatalogo"  data-group="niv-1"
@@ -1367,7 +1379,7 @@ public function registrarEstandarController(){
                                    data-replacement="container1"  data-default-label="--- Elija la opción ---">
                       <option value="">--- Elija la opcion ---</option>';
 
-                 $respuestac = DatosEst::catalogoDetalleModel($itemc["ca_idcatalogo"],"ca_catalogos");
+          $respuestac = DatosEst::catalogoDetalleModel($numcatalogo,"ca_catalogos");
                  if ($formato=="C"){
 	                 foreach($respuestac as $row => $rowcd){
 					 	if ($valuno == $rowcd["cad_idopcion"]) {
@@ -1454,6 +1466,28 @@ public function registrarEstandarController(){
                 <div class="form-group col-md-6 tiponum">
                   <label>VALOR MAXIMO</label>
                   <input name="valmax" id="valmax" class="form-control" value="'.$valdos.'">
+                </div>';
+                echo '
+				<div class="form-group col-md-12 tiponum">
+ 					<label >ALERTA MODERADA</label>
+				</div>
+ 				<div class="form-group col-md-6 tiponum">
+ 					<label >ALERTA MODERADA</label>
+                   <label >SIGNO UNO</label>
+           
+                <input name="sigunomod" id="sigunomod" class="form-control" value="'.$valsigunomod.'">
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                  <label>VALOR MINIMO</label>
+                  <input name="valminmod" id="valminmod" class="form-control" value="'.$valunomod.'">
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                   <label >SIGNO DOS</label>
+                    <input name="sigdosmod" id="sigdosmod" class="form-control" value="'.$valsigdosmod.'">
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                  <label>VALOR MAXIMO</label>
+                  <input name="valmaxmod" id="valmaxmod" class="form-control" value="'.$valdosmod.'">
                 </div>';
              } else {
 				echo '<input name="siguno" id="siguno" class="form-control">
@@ -1569,7 +1603,7 @@ public function registrarEstandarController(){
 			foreach($_POST as $nombre_campo => $valor){
 				$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
 			  	eval($asignacion);
-			 //       echo $asignacion."<br>";
+			      
 			 }
 			if (isset($indsyd)) {
 			   $sydata=-1;
@@ -1594,9 +1628,10 @@ public function registrarEstandarController(){
 			 }else{
 			   $grafica=0;
 			 }    	
-
-			if (isset($valopcatalogo)){
+			
+			 if (isset($valopcatalogo)&&$valopcatalogo!=""){
 			    $siguno="=";
+			
 			    $valmin=$valopcatalogo;
 			}	
 
@@ -1657,9 +1692,13 @@ public function registrarEstandarController(){
                                "rangoa"=>$rangoa,
                                "rangov"=>$rangov,
                                "anapepsi"=>$anapepsi,
-                               "refinter"=>$refinter,  
+                               "refinter"=>$refinter,
+								"valminmod"=>$valminmod,
+								"valmaxmod"=>$valmaxmod,
+								"sigunomod"=>$sigunomod,
+								"sigdosmod"=>$sigdosmod
       						  );
-
+		
 
 	 		$respuesta = DatosEst::actualizaEstandarDetalleModel($datosController, "cue_reactivosestandardetalle");
 	 		
@@ -1682,7 +1721,7 @@ public function registrarEstandarController(){
     
       echo '
       <div class="row">
-        <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;""><a href="index.php?action=nuevoestcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+        <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;" href="index.php?action=nuevoestcoment&id='.$sec.'&ids='.$ser.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a>
          </div>
          </div>';
 
@@ -1752,7 +1791,7 @@ public function registrarEstandarController(){
                   <td><a href="index.php?action=editaestcoment&id='.$numseccon.$item["rec_numcomentario"].'&ids='.$ser.'&sec='.$seccion.'">'.$item["rec_descomentarioesp"].'</a>
                   </td>
                   
-                   <td><a href="index.php?action=estandarcoment&idb='.$numseccon.$item["rec_numcomentario"].'&sv='.$ser.'&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
+                   <td><a href="index.php?action=estandarcoment&idb='.$numseccon.$item["rec_numcomentario"].'&sv='.$ser.'&sec='.$seccion.'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
                   </td>
                 </tr>';
                    
@@ -1779,7 +1818,7 @@ public function registrarEstandarController(){
 	  $ids = $_GET["ids"];
 	  $id = $_GET["id"];
 
-	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
+	     echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=estandarcoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a>
 	  ';
 	  }
 
@@ -1980,7 +2019,7 @@ public function botonRegEditEstComentController(){
 	  $id = $_GET["id"];
 	  $sec = $_GET["sec"];
 
-	     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$sec.'&sv='.$ids.'"> CANCELAR </a></button>
+	     echo ' <button  class="btn btn-default" style="margin-left: 10px"><a href="index.php?action=estandarcoment&sec='.$sec.'&sv='.$ids.'"> CANCELAR </a></button>
 	  ';
 	  }
 
@@ -2109,7 +2148,7 @@ public function botonRegEditEstComentController(){
 			                if ($respcoment>0) {
 			                	#presenta caracter de comentario
 			                	 echo '
-                    			<td><button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&CED=&sec='.$seccom.'&sv='.$idser.'">Comentario</a></span></button></td>';
+                    			<td><a class="btn btn-block btn-info" href="index.php?action=rsn&CED=&sec='.$seccom.'&sv='.$idser.'">Comentario</a></td>';
 			                } else {
 			                	echo '<td> </td>';
 			                } 
@@ -2117,7 +2156,7 @@ public function botonRegEditEstComentController(){
 			                // presenta indicador de agua
 			                if ($indagua==1){
 			                	 echo '
-                    			<td width 30px><button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$seccom.'&ts=TM&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'&sv='.$idser.'">Muestra</a></span></button></td>';
+                    			<td width 30px><a  class="btn btn-block btn-info" href="index.php?action=rsn&sec='.$seccom.'&ts=TM&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'&sv='.$idser.'">Muestra</a></td>';
 			                }
 			               
 		                }
@@ -2156,7 +2195,7 @@ echo '					</table>
 
 	 	if ($numsec!=5){
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$sec.'&sv='.$sv.'&ts=EN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; " href="index.php?action=rsn&sec='.$sec.'&sv='.$sv.'&ts=EN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
      </div>
      </div>';
 		}  // fin del if boton		
@@ -2165,8 +2204,15 @@ echo '					</table>
 	echo '<section class="content container-fluid">';
 
 	 $totren=DatosEst::buscatotren($sv, $sec, $nrep, "ins_detalleestandar");
+	 $i=1;
+	 $bac=1;
 	  foreach ($totren as $key => $tren) {
+	  	
 		   $numren=$tren["claveren"];
+		   if(($i-1)%2==0){
+		   	echo '<div class="row">';
+		   	$bac=0;
+		   }
 		   #presenta encabezado
 			echo '
 
@@ -2196,6 +2242,8 @@ echo '					</table>
 				$respestandar=DatosEst::vistaRepEstandarDet($sv, $sec, "cue_reactivosestandardetalle");
 		   
 	            foreach ($respestandar as $key => $item) {
+// 	            	if($sv==1&&$sec=="8.0.1.0.0"&& $item["red_numcaracteristica2"]==9)
+// 	            		continue;
 	            	$estandar=$item["red_estandar"];
         			echo '<tr> <td> '.$item["red_parametroesp"].'</td>
         			    	<td> '.$estandar.'</td>';
@@ -2267,7 +2315,7 @@ echo '					</table>
 						
 
 					echo '<tr>	<td > &nbsp;</td> <td > &nbsp;</td>
-<td><button type="button" class="btn btn-block btn-info"><a href="index.php?action=rsn&idb='. $numren.'&sv='.$sv.'&nrep='. $nrep.'&ts=ED&idc='. $idc.'&sec='. $sec.'"><i class="fa fa-trash-o"></i></a></button> </td></tr>';
+<td><a class="btn btn-block btn-info" onclick="return dialogoEliminar();" href="index.php?action=rsn&idb='. $numren.'&sv='.$sv.'&nrep='. $nrep.'&ts=ED&idc='. $idc.'&sec='. $sec.'"><i class="fa fa-trash-o"></i></a></td></tr>';
 				 
 echo '					</table>	
 
@@ -2278,9 +2326,17 @@ echo '					</table>
 		        			  <!----- Finaliza contenido ----->
 		    
 		    <!-- /.content -->';
+if(($i)%2==0){
+	
+	echo '</div>';
+	$bac=1;
+}
 
+	
+$i++;
 		} // for each de numren
-
+		if($bac==0)
+			echo '</div>';
 	} // fin de la funcion
 
 	public function nivelCumplimientoEstandar(){
@@ -2335,7 +2391,7 @@ echo '					</table>
         break;	
         } //fin del switch   
 
-          echo '<small>    NIVEL DE CUMPLIMIENTO '.$sumapond.'%</small></h1>'; 
+          echo '<h1><small>    NIVEL DE CUMPLIMIENTO '.$sumapond.'%</small></h1>'; 
 	} // fin de fucntion
 
 
@@ -2406,11 +2462,12 @@ echo '					</table>
 		<div class="row">
 		
         <div class="col-md-12">
-        
-				 <button class="btn btn-default pull-right" style="margin-right: 10px"><a href="index.php?action=rsn&nrep='.$nrep.'&ts=ED&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'&sec='.$sec.'"> Cancelar </a></button>
-                 <button type="submit" class="btn btn-info pull-right">Guardar</button>  
-              </div>
+        <div class="pull-right">
+                 <button type="submit" class="btn btn-info">Guardar</button>  
+				 <a class="btn btn-default" style="margin-right: 10px" href="index.php?action=rsn&nrep='.$nrep.'&ts=ED&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'&sec='.$sec.'"> Cancelar </a>
 
+              </div>
+</div>
 		</form>
               </div>
               </div>
@@ -2468,6 +2525,8 @@ echo '					</table>
 			$respuesta=DatosEst::vistaRepEstandarDet($sv, $sec, "cue_reactivosestandardetalle");
 		  //	var_dump($respuesta);
 			foreach ($respuesta as $key => $item) {
+// 				if($sv==1&&$sec=="8.0.1.0.0"&& $item["red_numcaracteristica2"]==9)
+// 					continue;
 				$pondreal=0;
 				$aceptado=0;
 				$nomcam="desc".$item['red_numcaracteristica2'];
@@ -2643,7 +2702,7 @@ echo '					</table>
 											break;
 								case "C" :
 		    // busco valor de opcion en catalogo
-											$rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($datosModel, $op, "ca_catalogosdetalle");
+											$rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($numcat, $valcom, "ca_catalogosdetalle");
 		         if ($rowca){
 		        	   $valop=$rowca["cad_idopcion"];
 		         }
@@ -2774,7 +2833,7 @@ echo '					</table>
 			        break;
 		      case "C" :
 		    // busco valor de opcion en catalogo
-		         $rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($datosModel, $op, "ca_catalogosdetalle");
+		         $rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($numcat, $valcom, "ca_catalogosdetalle");
 		         if ($rowca){
 		        	   $valop=$rowca["cad_idopcion"];
 		         }
@@ -2902,12 +2961,13 @@ echo '					</table>
           }
 										break;
 		     case "C" : 
-		        $rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($datosModel, $op, "ca_catalogosdetalle");
-		        if ($rowca){
-		        	   $valop=$rowca["cad_idopcion"];
-		        }
+// 		     	$rowca=DatosCatalogoDetalle::listaCatalogoDetalleOpc($numcat, $op, "ca_catalogosdetalle");
+// 		        if ($rowca){
+// 		        	   $valop=$rowca["cad_idopcion"];
+// 		        }
 		        if ($valmin!=""){
-													if ($valop == $valmin) {
+		        	
+													if ($valcom == $valmin) {
 													   $pondreal=$valpond;
 													   $aceptado=-1;
 													} else {
@@ -2920,6 +2980,7 @@ echo '					</table>
 										break;
 						 } // fin switch tipodato	
 				}  // fin switch tipoeva
+				
 				if(strlen($valcom)>0){
 								if ($ntoma) {
 									//echo "entre a ntoma";
@@ -2965,6 +3026,9 @@ echo '					</table>
 
 				}	// cierre de if valcom
 			} // cierre del foreach general
+		
+			if($respuesta=="success")
+			echo Utilerias::enviarPagina("index.php?action=rsn&nrep=".$nrep."&ts=ED&idc=".$idc."&pv=".$pv."&sv=".$sv."&sec=".$sec);
 		} else {
 		  //echo "no la encontre";	
 		}  // fin de if
@@ -2982,7 +3046,7 @@ echo '					</table>
 
 
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$numsec.'&ts=E&sv='.$ser.'"> CANCELAR </a></button>
+	   echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$numsec.'&ts=E&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -2995,18 +3059,22 @@ public function borraRepEstandarDetalle(){
 		  $idsec=$_GET["sec"];
 
 		  $respuesta = DatosEst::borraestandarDetalle($sv, $numrep, $idb,  $idsec, "ins_detalleestandar");
-		  //echo $respuesta;
+		 
+		  //die();//echo $respuesta;
 		}
 	}
 
  public function titestcom(){
 	$servicioController=$_GET["sv"];
 	$seccion=$_GET["sec"];
-
+	
+	echo '<li><a href="index.php?action=listaservicio">SERVICIOS</a></li>';
+	# busca nombre de seccion
+	
 
 	 # busca nombre del servicio
 		    $respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
-		    echo '<li><a href="index.php?action=listaservicio"><em class="fa fa-dashboard"></em>SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+		    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
 			# busca nombre de seccion
 			#determina el nivel
 		    $i=1;
@@ -3034,7 +3102,7 @@ public function borraRepEstandarDetalle(){
 			case 1 :
 				$respuesta1 = DatosSeccion::vistaNombreSeccionModel($seccion, $servicioController,"cue_secciones");
 
-			    echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+			    echo '<li>SECCION: '.$respuesta1["sec_nomsecesp"]. '</li>';
 				break;	
 			case 2 :
         	# coloca subtitulo de seccion
@@ -3052,11 +3120,11 @@ public function borraRepEstandarDetalle(){
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=E">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    	#busca ultimo nivel en estandar
 		   		$respuesta2 = DatosSeccion::vistaNombreSeccionEstModel($numsec, $servicioController, $numreac, $numcom, "cue_reactivosestandar");
 				//echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
-		        echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=E">REACTIVO: '.$respuesta2["re_descripcionesp"]. '</a></li>';
+		        echo '<li>REACTIVO: '.$respuesta2["re_descripcionesp"]. '</li>';
 		    
 			  	break;
 			case 3 :
@@ -3075,14 +3143,14 @@ public function borraRepEstandarDetalle(){
 
 		    	$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
 
-		    	echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		    	echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 		    #busca ultimo nivel en ponderada
 		    	$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
+				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=E">REACTIVO: '.$respuesta2["r_descripcionesp"]. '</a></li>';
 		    
 		    	#nivel tres
 				$respuesta3 = DatosSeccion::vistaNombreSeccionEstModel($numsec,$servicioController, $numreac, $numcom, "cue_reactivosestandar");
-				echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'.'.$numreac.'&ts=A">COMPONENTE: '.$respuesta3["re_descripcionesp"]. '</a></li>';
+				echo '<li>COMPONENTE: '.$respuesta3["re_descripcionesp"]. '</li>';
 			}
 	 
 	 }

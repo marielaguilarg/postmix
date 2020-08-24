@@ -3,6 +3,11 @@ class NcinController{
 
 
 	public function vistancinController(){
+		
+		if($_GET["admin"]=="eli"){
+			$ec=new EstructuraController();
+			$ec->eli();
+		}else{
 		if (isset($_GET["idncu"])){
 			$datosController = $_GET["idncu"];
 		} else {
@@ -15,13 +20,16 @@ class NcinController{
 	                  <td>'.$item["n5_id"].'</td>
 	                 
 	                  <td>
-	                    <a href="index.php?action=editan5&idnci='.$item["n5_id"].'">'.$item["n5_nombre"].'</a>
+	                    <a href="index.php?action=nuevonivel&niv=5&id='.$item["n5_id"].'">'.$item["n5_nombre"].'</a>
 	                  </td>
 	                  <td>
 	                    <a href="index.php?action=listan6&idnci='.$item["n5_id"].'">detalle</a>
 	                  </td>
+<td> <a type="button" href="index.php?action=listan5&admin=eli&niv=5&id='.$item["n5_id"].'" onclick="return dialogoEliminar();"><i class="fa fa-times"></i></a>
+		                </td>
 	                </tr>';
 	            
+		}
 		}
 	}
 
@@ -38,12 +46,11 @@ class NcinController{
 			$datosController =6;
 		}
 
-		//$datosController = $_GET["idncu"];
-
-		echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
-		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
-
-		echo '<li><a href="index.php?action=listan4&idnt='.$id4.'"><em class="fa fa-dashboard"></em> Nivel 4</a></li>';
+			
+		echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'">NIVEL 2</a></li>';
+		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'">NIVEL 3</a></li>';
+		
+		echo '<li><a href="index.php?action=listan4&idnt='.$id4.'">NIVEL 4</a></li>';
 		
 	}
 }

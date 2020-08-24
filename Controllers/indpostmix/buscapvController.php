@@ -64,7 +64,7 @@ class BuscapvController
         
         /* * ************************************** */
         $_SESSION["clienteind"]=1;
-        $_SESSION["servicionind"]=1;
+        $_SESSION["servicioind"]=1;
         $MiVar = $_SESSION["UsuarioInd"] ;
         $uscliente = $_SESSION["clienteind"];
         $usservicio = $_SESSION["servicioind"];
@@ -495,11 +495,20 @@ ca_franquiciascuenta.cli_idcliente= '$uscliente'";
             // //inserta reportes en la tabla temporal tmp_estadistica
             
             $rs_sql_us = DatosUnegocio::unegociosxNivel($fil_ptoventa, $fil_idpepsi, $filx, $fily, "", "");
-            
+       
+         
             $num_rows = sizeof($rs_sql_us);
             
-            if (sizeof($rs_sql_us) == 1) { // si es uno envia al punto de venta
-                header("Location: index.php?action=indhistorialreportes&prin=1&numrep=" . $row["numreporte"] . "&cser=" . $vserviciou . "&ccli=" . $vclienteu);
+            if ($num_rows == 1) { // si es uno envia al punto de venta
+            	//echo "********".$num_rows;
+               // header("Location: index.php?action=indhistorialreportes&prin=1&numrep=" . $row["numreporte"] . "&cser=" . $vserviciou . "&ccli=" . $vclienteu);
+            	$pag="index.php?action=indhistorialreportes&prin=1&ptv=" . $rs_sql_us[0]["une_id"] ;
+                
+                echo "
+             <script type='text/javascript'>
+               window.location='$pag'
+                 </script>
+                   ";
             } else if (sizeof($rs_sql_us) > 0) {
                 
                 $this->pages = new Paginator($num_rows, 9, array(
@@ -524,6 +533,8 @@ ca_franquiciascuenta.cli_idcliente= '$uscliente'";
                     $direccion = "index.php?action=indhistorialreportes&ptv=" . $row_rs_sql_c["une_id"] . "&fily=" . $fily;
                     $une['NomPuntoVenta'] = "<td  class='$color'><a href='" . $direccion . "'>" . $row_rs_sql_c["une_descripcion"] . "</a></td>";
                     $une['Pepsi'] = "<td  class='$color'><a href='" . $direccion . "'>" . $row_rs_sql_c["une_idpepsi"] . "</a></td>";
+                    $une['Nud'] = "<td  class='$color'><a href='" . $direccion . "'>" . $row_rs_sql_c["une_num_unico_distintivo"] . "</a></td>";
+                    
                     $une['CiudadN'] = "<td  class='$color' ><a href='" . $direccion . "'>" . $row_rs_sql_c["une_dir_municipio"] . "</a></td>";
                     $une['Direccion'] = "<td  class='$color' ><a href='" . $direccion . "'>" . $row_rs_sql_c["direccion"] . "</a></td>";
                     $this->listaunegocios[] = $une;

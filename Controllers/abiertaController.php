@@ -8,7 +8,7 @@ class abiertaController{
 			$servicioController = $_GET["sv"];
 
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nuevaabierta&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+    <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;" href="index.php?action=nuevaabierta&id='.$seccion.'&ids='.$servicioController.'&sec='.$seccion.'&sv='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a>
      </div>
      </div>';
 		
@@ -36,7 +36,7 @@ class abiertaController{
     	# crea titulo de la opcion (nombre del servicio)
 		# crea opciones
 		$tiposec="A";
-		//echo $nivel;
+	//	echo $nivel;
   		 switch($nivel) {
 		 case 1 :
 		 #crea subtitulo
@@ -65,6 +65,7 @@ class abiertaController{
 			 $seccion=$nvaseccion;
 
 			$respuesta =DatosAbierta::vistaAbiertaModeln1($servicioController, $numseccon,"cue_reactivosabiertos");
+		
 			//echo $respuesta1;
 			//echo $respuesta["ra_descripcionesp"];
 			$numeros=$seccion;
@@ -151,6 +152,7 @@ class abiertaController{
 			 $londat=SubnivelController::obtienelon($seccion,3);
 			 $numcom=substr($seccion,$datini,$londat);
 			 $numseccon=$numsec;
+		
 			  if ($tiposec=="A") {
 			  	# crea subtitulo
 			 	# actualiza tipo de reactivo nivel 6
@@ -211,7 +213,7 @@ class abiertaController{
 	              <td><a href="index.php?action=sn&sec='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=AD"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
 	              </td>
 	                  
-	               <td><a href="index.php?action=sn&ids='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=A&sec='.$item["sec_numseccion"].'"><i class="fa fa-trash-o fa-lg"></i></a>
+	               <td><a href="index.php?action=sn&ids='.$numeros.".".$componente.'&sv='. $item["ser_claveservicio"].'&ts=A&sec='.$item["sec_numseccion"].'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	            $i++;  
@@ -557,7 +559,7 @@ public function registrarAbiertaController(){
                                "desing"=>$_POST["nombreing"],
                               ); 
 		$respuesta = DatosAbierta::actualizaabierta($datosController,"cue_reactivosabiertos");
-    	echo $nivel;
+    //	echo $nivel;
 		if($respuesta== "success"){
 
           		echo "<script type='text/javascript'>
@@ -656,7 +658,7 @@ public function registrarAbiertaController(){
 				$servicioController = $_GET["sv"];
 		# boton de nuevo
 			echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;"><a href="index.php?action=nvaabdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+    <div class="col-md-12" ><a  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px;" href="index.php?action=nvaabdetalle&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a>
      </div>
      </div>';	
      # calcula numero de nivel
@@ -717,7 +719,7 @@ public function registrarAbiertaController(){
 			 	
 			 	$numseccon=$numsec.$numreac.$numcom.$numcar.$numcom2;
 			 	//$numseccon=$numsec.$numcar.$numcom2;
-				//$numsec_orig=".".$numcar.".".$numcom2;
+			 	$numsec_orig=$numsec.".".$numreac.".".$numcom.".".$numcar.".".$numcom2;
 				#crea subititulo
 			 	#crea regresar
 			 	break;
@@ -749,17 +751,17 @@ public function registrarAbiertaController(){
 	              </td>
 	                  
 	                  <td>
-	                    <a href="#">';
+	                    ';
 	                    if ($item["rad_syd"]==0){
 	                    	$incluye="NO";
 	                    } else {
 	                    	$incluye="SI";
 	                    }
-	                    echo $incluye.'</a>
+	                    echo $incluye.'
 	                  </td>
-	                  <td><a href="index.php?action=sn&sec='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["rad_tiporeactivo"].'"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
+	                  <td><a href="index.php?action=sn&sec2='.$numsec_orig.".".$item["rad_numcaracteristica2"].'&sec='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts='.$item["rad_tiporeactivo"].'"><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
 	              </td>
-	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=AD&sec='.$seccion.'"><i class="fa fa-trash-o fa-lg"></i></a>
+	                <td><a href="index.php?action=sn&ids='.$numseccon.$item["rad_numcaracteristica2"].'&sv='.$item["ser_claveservicio"].'&ts=AD&sec='.$seccion.'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
 	              </td>
 	                </tr>';
 	            $i++;  
@@ -1064,7 +1066,7 @@ public function registrarAbiertaController(){
 		$sec = $_GET["id"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a></button>
+	   echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -1074,7 +1076,7 @@ public function registrarAbiertaController(){
 		$sec = $_GET["sa"];
 		$ser = $_GET["ids"];
 
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a></button>
+	   echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$sec.'&ts=AD&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -1271,7 +1273,8 @@ public function registrarAbiertaController(){
 		$pv=$_GET["pv"];
 		$idc=$_GET["idc"];
 		
-			
+		
+		
 		$datini=SubnivelController::obtienedato($seccion,1);
 	 	$londat=SubnivelController::obtienelon($seccion,1);
 	 	$numsec=substr($seccion,$datini,$londat);
@@ -1309,16 +1312,25 @@ public function registrarAbiertaController(){
 	 	} else {
 	 		$numcom2=0;
 	 	}
-
+	 	if($_GET["admin"]=="eliminar"){
+	 		$this->borrarRepAbiertaDet($idser,$nrep,$seccion.'.'.$_GET["idb"]);
+	 	}
 	 	#despliega contenido
 	echo '<div class="row">
-	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$seccion.'&sv='.$idser.'&ts=AN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+	<div class="col-md-12" ><a class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; " href="index.php?action=rsn&sec='.$seccion.'&sv='.$idser.'&ts=AN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
 	 </div>
 	 </div>';
 	 
 	 	$respuesta =DatosAbierta::calculaNumRen($idser, $seccion, $nrep, "ins_detalleabierta");
 	 	
+	 	$i=1;
+	 	$bac=1;
 	 	foreach ($respuesta as $key => $item) {
+	 		if(($i-1)%2==0){
+	 			echo '<div class="row">';
+	 			$bac=0;
+	 		}
+	 		
 	 		$nren=$item["claveren"];
 	
 	 		# busca detalle
@@ -1327,7 +1339,7 @@ public function registrarAbiertaController(){
 		<div class="col-md-6" >
           <div class="box box-info" >
             <div class="box-header with-border">
-            <h3 class="box-title">No.'. $nren.'</h3>
+            <h3 class="box-title">NO.'. $nren.'</h3>
 
               <div class="box-tools pull-right">
                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -1343,17 +1355,17 @@ public function registrarAbiertaController(){
 	 		#presenta info
 
 	 		foreach ($respDet as $key => $itemDet) {
-	 			   if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
+// 	 			   if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
+//             		continue;
+// 					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
+//             		continue;
+// 					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
+//             		continue;
+if($idser==1&&($seccion=="4.7.1.0.0" ||$seccion=="4.13.1.0.0")&& $itemDet["ida_numcaracteristica3"]==2)
             		continue;
-					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
+            		if($idser==1&&($seccion=="4.7.1.0.0" ||$seccion=="4.13.1.0.0")&& $itemDet["ida_numcaracteristica3"]==3)
             		continue;
-					if($idser==1&&$seccion=="4.1.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
-            		continue;
-					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==2)
-            		continue;
-					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==3)
-            		continue;
-					if($idser==1&&$seccion=="4.7.1.0.0"&& $itemDet["ida_numcaracteristica3"]==4)
+            		if($idser==1&&($seccion=="4.7.1.0.0" ||$seccion=="4.13.1.0.0")&& $itemDet["ida_numcaracteristica3"]==4)
             		continue;
           
 				$tipocat=$itemDet["rad_formatoreactivo"];
@@ -1362,9 +1374,9 @@ public function registrarAbiertaController(){
 		        //echo $tipocat;
 		        
                 echo ' <div class="form-group col-md-12">
-            <div class="row">
+           
             <ul class="nav nav-stacked">
-           <li><a href="#"><strong>'.$itemDet["rad_descripcionesp"].'</strong>';
+           <li><strong>'.$itemDet["rad_descripcionesp"].'</strong>';
 
 				
 		        switch ($tipocat) {
@@ -1382,18 +1394,49 @@ public function registrarAbiertaController(){
 
 
 
-           echo ' :  '.$valreal. '</a></li>
+           echo ' :  '.$valreal. '</li>
            </ul>
-                  </div>
+                  
                 </div>';
             }
             
              echo ' </div>
-              </div>
-            </div>
-  </section>';
-	 	}
+<div class="box-footer">
+ <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4 border-right">
+                  <div class="description-block">
+                   
+                  </div>
+                  <!-- /.description-block -->
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-4">
+<a class="btn btn-block btn-info pull-right" onclick="return dialogoEliminar();"
+ href="index.php?action=rsn&idb='. $nren.'&sv='.$idser.'&nrep='. $nrep.'&ts=AD&admin=eliminar&idc='. $idc.'&sec='. $seccion.'" onclick="return confirmarEli()"><i class="fa fa-trash-o"></i></a></div>
+</div>';
 
+          echo '    </div>
+            </div>
+  ';
+          if(($i)%2==0){
+          	
+          	echo '</div>';
+          	$bac=1;
+          }
+          $i++;
+          
+	 	}
+	 	if($bac==0){
+	 		
+	 		echo '</div>';
+	 	
+	 	}
+	 	echo "</section>";
 	}
 
 
@@ -1438,8 +1481,8 @@ public function registrarAbiertaController(){
 	 		$nsec=$numsec.".".$numreac;	
 	 	 }	
 
-
-	   echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$seccion.'&ts=A&sv='.$ser.'"> CANCELAR </a></button>
+	
+	   echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$nsec.'&ts=A&sv='.$ser.'"> CANCELAR </a>
 	';
 
 	}
@@ -1590,17 +1633,17 @@ public function nuevoReporteabierta(){
 		$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "cue_reactivosabiertosdetalle");
 		foreach ($respuesta as $key => $item) {
 			echo $item["ida_numcaracteristica3"];
-			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+// 			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+//                 continue;
+//             if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+//                 continue;
+//             if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+//                 continue;
+                if($sv==1&&($sec=="4.7.1.0.0" ||$sec=="4.13.1.0.0")&&$item["rad_numcaracteristica2"]==2)
                 continue;
-            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+                if($sv==1&&($sec=="4.7.1.0.0" ||$sec=="4.13.1.0.0")&&$item["rad_numcaracteristica2"]==3)
                 continue;
-            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
-                continue;
-			if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==2)
-                continue;
-            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==3)
-                continue;
-            if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+                if($sv==1&&($sec=="4.7.1.0.0" ||$sec=="4.13.1.0.0")&&$item["rad_numcaracteristica2"]==4)
                 continue;	
 
 			switch ($item['rad_formatoreactivo']){
@@ -1653,15 +1696,15 @@ public function nuevoReporteabierta(){
 			}  //switch      
 		} // foreach
 
-		$ingreso = new AbiertaController();
-		$ingreso ->insertaReporteAbierta();
-
+	
 		echo ' 
 		</br>
 		<div class="row">
 		<div class="col-md-12">
-				 <button class="btn btn-default pull-right" style="margin-right: 10px"><a href="index.php?action=rsn&nrep='.$nrep.'&ts=AD&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'&sec='.$sec.'"> Cancelar </a></button>
-				 <button type="submit" class="btn btn-info pull-right">Guardar</button>  
+   <div class="pull-right">
+ <button type="submit" class="btn btn-info">Guardar</button> 
+				 <a class="btn btn-default" style="margin-right: 10px" href="index.php?action=rsn&nrep='.$nrep.'&ts=AD&idc='.$idc.'&pv='.$pv.'&sv='.$sv.'&sec='.$sec.'"> Cancelar </a>
+				 </div>
 			  </div>
 
 		</form>
@@ -1670,23 +1713,27 @@ public function nuevoReporteabierta(){
 			</div>
 		</div>
 	 </section>';
+		$ingreso = new AbiertaController();
+	
+		$ingreso ->insertaReporteAbierta();
+		
 	}	
 
 	
 	public function insertaReporteAbierta(){
 		#lee varia{ble
-		if (isset($_POST["sv"]) && $_POST["sv"]=!"") {
+		if (isset($_POST["nrep"]) && $_POST["nrep"]!="") {
 			foreach($_POST as $nombre_campo => $valor){
 				$asignacion = "\$" . $nombre_campo . "='" . $valor . "';";
 				eval($asignacion);
-		 		//echo ($asignacion);
+		 		
 			}
-
+			
 			#calculo numero de nuevo renglon
 			$respuesta=DatosAbierta::calculaUltimoRenglonAb($sv, $nrep, $sec, "ins_detalleabierta");
 			$numren= $respuesta["claveren"];
 			$numren++;   
-			//echo $sec;
+		
 			#VALIDO SI SE EVALUA O NO LAS SECCION
 			$datini=SubnivelController::obtienedato($sec,1);
 			$londat=SubnivelController::obtienelon($sec,1);
@@ -1709,20 +1756,21 @@ public function nuevoReporteabierta(){
 			$numcom2=substr($sec,$datini,$londat);
 			
 			$respuesta=DatosAbierta::vistanuevoAbiertoDetalle($sv, $sec, "ins_detalleabierta");
-			
+	
 			foreach ($respuesta as $key => $item) {
+			
 			 if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==2)
                 continue;
             if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==3)
                 continue;
             if($sv==1&&$sec=="4.7.1.0.0"&&$item["rad_numcaracteristica2"]==4)
                 continue;
-			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
-                continue;
-            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
-                continue;
-            if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
-                continue;	
+// 			if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==2)
+//                 continue;
+//             if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==3)
+//                 continue;
+//             if($sv==1&&$sec=="4.1.1.0.0"&&$item["rad_numcaracteristica2"]==4)
+//                 continue;	
 
 				$nomcam="desc".$item['rad_numcaracteristica2'];
   			    if (ctype_space(${$nomcam})) {
@@ -1739,13 +1787,13 @@ public function nuevoReporteabierta(){
 		   		} else {	 
 		   			if ($item['rad_tiporeactivo']=='F') {
 		   				$valcom=SubnivelController::fecha_mysql($valcom);
-		   				echo $valcom;
+		   				//echo $valcom;
 		   			} else {	
 			  		$valacepta=0;
 			  		}
 		   		}  // if
 		   		 $numcar2=$item['rad_numcaracteristica2'];
-
+		   		
 		   		 # inserta abierta
 		   		 $datosController= array("idser"=>$sv,
 				   "numrep"=>$nrep,
@@ -1760,20 +1808,34 @@ public function nuevoReporteabierta(){
 				   "numren"=>$numren,
 				  );
 
-		   		 $respuesta=DatosAbierta::insertaAbiertaDetalle1 ($datosController, "ins_detalleabierta");
-		   		 
-		   		 if($respuesta== "success"){
-		   			echo "<script type='text/javascript'>
+		   		 $resp=DatosAbierta::insertaAbiertaDetalle1 ($datosController, "ins_detalleabierta");
+		   		
+			}
+			
+			if($resp== "success"){
+				echo "<script type='text/javascript'>
 					window.location.href='index.php?action=rsn&nrep=".$nrep."&sec=".$sec."&idc=".$idc."&pv=".$pv."&ts=AD&sv=".$sv."';
 					</script>
 					";
-				} else {
-					echo "error";
-				}
+			} else {
+				echo Utilerias::mensajeError("Hubo un error al insertar intente de nuevo");
 			}
 		}	      
 	}
-
+	public function borrarRepAbiertaDet($idser,$numrep,$idsec){
+		
+	
+		$ssqle=("DELETE FROM ins_detalleabierta 
+WHERE ida_claveservicio = ".$idser." AND ida_numreporte = ".$numrep." 
+ AND concat(ida_numseccion,'.',ida_numreactivo,'.',ida_numcomponente,'.',
+ida_numcaracteristica1,'.',ida_numcaracteristica2,'.',ida_numrenglon) = '".$idsec."'");
+		try{
+		DatosAbierta::borrarRepAbiertaDet($idser,$numrep,$idsec, "ins_detalleabierta");
+		}catch(Exception $ex){
+			echo Utilerias::mensajeError($ex->getMessage());
+		}
+		
+	}
 
 }
 

@@ -28,7 +28,6 @@ class PostmixExcelController
    
    
     @session_start();
-
     $user = $_SESSION["UsuarioInd"];
     $this->cliente=1;
     $this->servicio=1;
@@ -203,7 +202,7 @@ class PostmixExcelController
            
         }
     } else {
-        for($i=0;$i<8;$i++) {
+        for($i=0;$i<4;$i++) {
         	$this->workbook->getActiveSheet()->getStyle($this->michr($letrae)."1")->applyFromArray($text_format);
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letrae++)."1", " ");
           
@@ -257,10 +256,10 @@ class PostmixExcelController
     ////////////////////////////////// nombres de cada columna o prueba//////////////////////////////
     $enctablas=array("PUNTO DE VENTA","ID CUENTA","NUD","NO. DE ACTIVO","FECHA VISITA","NO. REPORTE","MES ASIGNACION","MANTTO CORRECTIVO","FUERA DE RANGO","SANITIZACION","FUERA DE RANGO","DIAGNOSTICO MANEJO DE AGUA","FUERA DE RANGO",
         "TEMPERATURA (°C)", "PRESION","TEMPERATURA (F)","VOLUMENES C02",
-        "RATIO PEPSI",  "RATIO PEPSI LIGHT",
+        "RATIO PEPSI",  "RATIO PEPSI BLACK",
         "RATIO MIRINDA","RATIO SEVEN UP", "RATIO MANZANITA",
-        "RATIO KAS", "RATIO LIMONADA MINERAL 7UP", "RATIO SANGRIA CASERA", "RATIO VITAFRESA", "RATIO BE LIGHT JAMAICA",
-        "RATIO BE LIGHT LIMON", "RATIO BE LIGHT MANGO",  "RATIO LIPTON", "RATIO JUMEX FRESH CITRUS",
+         "RATIO LIMONADA MINERAL 7UP", "RATIO SANGRIA CASERA",  "RATIO BE LIGHT JAMAICA",
+       "RATIO LIPTON", "RATIO JUMEX FRESH CITRUS",
         "LUGAR DE TOMA DE MUESTRA",
         "SABOR","OLOR","COLOR","TURBIEDAD","pH",
         "ALCALINIDAD","DUREZA","CLORO LIBRE","CLORO TOTAL","SOLIDOS TOTALES DISUELTOS",
@@ -317,7 +316,7 @@ class PostmixExcelController
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
-        for($i=13;$i<31;$i++) {
+        for($i=13;$i<27;$i++) {
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
@@ -326,7 +325,7 @@ class PostmixExcelController
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
-        for($i=13;$i<31;$i++) {
+        for($i=13;$i<27;$i++) {
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
@@ -337,17 +336,17 @@ class PostmixExcelController
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
     } else {
-        for($i=31;$i<47;$i++) {
+        for($i=27;$i<43;$i++) {
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
         
-        for($i=47;$i<50;$i++) {
+        for($i=43;$i<46;$i++) {
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_b);
         }
         
-        for($i=50;$i<57;$i++) {
+        for($i=46;$i<53;$i++) {
             $this->workbook->getActiveSheet()->setCellValue($this->michr($letra)."2", $enctablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->michr($letra++)."2")->applyFromArray($text_format_c);
         }
@@ -391,7 +390,7 @@ ORDER BY cue_reactivosestandardetalle.red_numcaracteristica2  ASC";
         }
     }
     
-    for($i=0;$i<14;$i++) {
+    for($i=0;$i<10;$i++) {
         $esttablas[] = "4.5 - 5.5";
     }
     
@@ -410,17 +409,18 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
     If ($totalE>0) {
         foreach ($res0 as $row) {
             $esttablas[] = $row[0];
+           
         }
     }
     
     for($i=0;$i<7;$i++) {
         $esttablas[] = " ";
     }
-    
+ 
     $letra=65;
     for($i=0;$i<7;$i++) {
         $this->letras= $this->michr($letra++);
-        $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
+        $this->workbook->getActiveSheet()->setCellValue($this->letras."3",$esttablas[$i]);
         $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
     }
     if ($gpous=="cic") {
@@ -429,7 +429,7 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
             $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
-        for($i=13;$i<31;$i++) {
+        for($i=13;$i<27;$i++) {
             $this->letras= $this->michr($letra++);
             $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]); 
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
@@ -445,25 +445,25 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
             $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
-        for($i=13;$i<31;$i++) {
+        for($i=13;$i<27;$i++) {
          
             $this->letras= $this->michr($letra++);
-            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", utf8_decode($esttablas[$i]));
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
         }
-        for($i=31;$i<47;$i++) {
+        for($i=27;$i<43;$i++) {
           
             $this->letras= $this->michr($letra++);
-            $this->workbook->getActiveSheet()->setCellValue($this->letras."3",utf8_decode($esttablas[$i]));
+            $this->workbook->getActiveSheet()->setCellValue($this->letras."3",$esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
         }
-        for($i=47;$i<50;$i++) {
+        for($i=43;$i<46;$i++) {
            
             $this->letras= $this->michr($letra++);
             $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std);
         }
-        for($i=50;$i<57;$i++) {
+        for($i=46;$i<53;$i++) {
             $this->letras= $this->michr($letra++);
             $this->workbook->getActiveSheet()->setCellValue($this->letras."3", $esttablas[$i]);
             $this->workbook->getActiveSheet()->getStyle($this->letras."3")->applyFromArray($text_format_std1);
@@ -480,9 +480,31 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
     }
     
     // detalle
- 
+
     if($consulta=="t")
         $cuenta=-1;
+    else{
+    	$cuenta=$_POST["cuenta"];
+    	
+    	if($consulta=="u")
+   
+    	if(sizeof($cuenta)>1 )
+    	{
+    		$varin="";
+    		foreach($cuenta as $num){
+    			$varin.=$num.",";
+    		}
+    		
+    		$varin=substr($varin, 0,strlen($varin)-1); //quito ultima ,
+    		
+    		$cuenta="($varin)";
+    		
+    	}
+    	else
+    		
+    		$cuenta="(".$cuenta[0].")";
+    }
+   
         
     if (isset($tipo_consulta)) {
             $tcons=$tipo_consulta;
@@ -522,7 +544,7 @@ ORDER BY  if (cue_reactivosestandardetalle.red_numcaracteristica2=19,4, if ((cue
         //fpassthru($fh);
         //unlink($fname);
     
-        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=iso-8859-1");
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");
        header("Content-Disposition: inline; filename=\"".$nomarch.".xlsx\"");
     
         $fh=fopen($fname, "rb");
@@ -649,10 +671,10 @@ ins_generales.i_claveservicio=1 ";
                 }
                 
             }
-            
+       
             if($cuenta) {
                 if($cuenta!=-1)
-                    $sqluneg.=" and ca_unegocios.cue_clavecuenta=".$cuenta;
+                    $sqluneg.=" and ca_unegocios.cue_clavecuenta in ".$cuenta;
             }
            
             //echo $mes_asig."--".$mes_asigfin;
@@ -671,12 +693,12 @@ ins_generales.i_claveservicio=1 ";
             //echo $sqluneg;
             try{
             $resultuneg=Conexion::ejecutarQuery($sqluneg,$parametros);
-        
+       
             //comenzamos en a
             $ren_ex=4;
-           
-            Conexion::ejecutarQuerysp("truncate table tmp_generales");
-          
+        
+            Conexion::ejecutarQuerysp("delete from tmp_generales");
+         
             foreach($resultuneg as $rowuneg) {
                 $letra=65;
                 // inserto enla tabla temporal
@@ -686,24 +708,24 @@ ins_generales.i_claveservicio=1 ";
                 $resulti=Conexion::ejecutarInsert($queryi,$parametros2);
                 
                 for($i=0;$i<3;$i++) {//despliego cada columna
-                    if ($i>=1) {
+             //      if ($i>=1) {
                         $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]);
                         $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
-                    } else {
-                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]);
-                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
-                    }
+//                     } else {
+//                         $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]);
+//                         $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
+//                     }
                     $letra++;
                 }
                 $letra++;
                 for($i=3;$i<6;$i++) {//despliego cada columna
-                    if ($i>=1) {
+//                     if ($i>=1) {
+//                         $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]); 
+//                         $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
+//                     } else {
                         $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]); 
                         $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
-                    } else {
-                        $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[$i]); 
-                        $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format_det);
-                    }
+                //    }
                     $letra++;
                 }
                 if ($grupous=="cic") {
@@ -722,27 +744,29 @@ ins_generales.i_claveservicio=1 ";
                     $this->workbook->getActiveSheet()->setCellValue($this->michr(94).$ren_ex, $rowuneg[11]);
                     $this->workbook->getActiveSheet()->getStyle($this->michr(94).$ren_ex)->applyFromArray($text_format_det);
                 } else {
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(115).$ren_ex, $rowuneg[6]);
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(115).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(116).$ren_ex, $rowuneg[7]); 
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(116).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(117).$ren_ex, $rowuneg[8]); 
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(117).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(118).$ren_ex, $rowuneg[9]); 
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(118).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(119).$ren_ex, $rowuneg[10]);
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(119).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(120).$ren_ex, $rowuneg[11]);
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(120).$ren_ex)->applyFromArray($text_format_det);
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr(121).$ren_ex, utf8_decode($rowuneg[12])); 
-                    $this->workbook->getActiveSheet()->getStyle($this->michr(121).$ren_ex)->applyFromArray($text_format_det);
+                	$letra=111;
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[6]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[7]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[8]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[9]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[10]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[11]);
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$ren_ex, $rowuneg[12]); 
+                    $this->workbook->getActiveSheet()->getStyle($this->michr($letra++).$ren_ex)->applyFromArray($text_format_det);
                 }
                 $ren_ex++;
             }  // termina el while
            
             }
             catch(Exception $ex){
-        
+        		error_log("\n en postmixExcellController al generar archivo ".$ex->getMessage(), 3,"errorespostmix.log" );
+        	
                 throw new Exception ("Hubo un error al hacer su consulta, intente otra con un periodo más reducido");
             }
             
@@ -758,12 +782,12 @@ ins_generales.i_claveservicio=1 ";
                 $letra++;
             }
          
-            
+           
             ///********** obtengo los ratios
             
             if ($grupous=="cic") {
             } else {
-                $letra=96;
+                $letra=92;
                 for($i=4;$i<sizeof($reactivos);$i++){
                     $this->consultaEstandarRes($reactivos[$i], $letra, $text_format_det,$text_format_det);
                     $letra++;
@@ -773,7 +797,7 @@ ins_generales.i_claveservicio=1 ";
             
             // asigna mantenimiento correctivo
             $ren_ex=4;
-        
+          
             $this->asmantcor1( $this->letras,$ren_ex, $text_format_det,$grupous);
             
             // asigna sanitizacion y agua
@@ -790,7 +814,7 @@ ins_generales.i_claveservicio=1 ";
             $this->letras=68;
           
            $this->asNumActivo($ren_ex,$this->letras, $text_format_det, $text_format_det);
-       // die(); 
+      
      
         }
         
@@ -816,12 +840,15 @@ group by i_numreporte order by i_numreporte;";
                     //echo $query_na;$reporte,$numser,$seccion,$reactivo,$componente,$caract1,$caract2,$caract3,$renglon, $tabla
                    
                     $result_numact = DatosAbierta::consultaInsDetalleAbierta($numreporte,$this->servicio,2,1,2,0,0,9,$numren,"ins_detalleabierta");
+//                    var_dump($result_numact);
+//                    die();
                     foreach ($result_numact as $row_na) {
                         $numactivo=$row_na["ida_descripcionreal"];
                     }
                 }else{
                     $numactivo="";
                 }
+                
                 $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon, $numactivo);
                 $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format_det);
                 $renglon++;
@@ -832,11 +859,11 @@ group by i_numreporte order by i_numreporte;";
         
         
         function asmantcor1($letrai, $nren, $text_format_det, $grupous){
-           
+         
             $mantcor=" ";
             $razonmant=" ";
             
-            $query="select   ide_valorreal,  ide_aceptado, red_clavecatalogo, ide_numcaracteristica3, ide_numseccion, sum(causa) as totcausa, ide_numreporte
+            $query="select   ide_valorreal,  ide_aceptado, red_clavecatalogo, ide_numcaracteristica3, ide_numseccion, sum(causa) as totcausa, i_numreporte
 FROM tmp_generales left Join
 (select ide_claveservicio, ide_numreporte, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_numreactivo, ins_detalleestandar.ide_numcomponente, ins_detalleestandar.ide_numcaracteristica1, ins_detalleestandar.ide_numcaracteristica2,
 ins_detalleestandar.ide_numcaracteristica3, ins_detalleestandar.ide_valorreal, cue_reactivosestandardetalle.red_tipodato, cue_reactivosestandardetalle.red_clavecatalogo, ins_detalleestandar.ide_aceptado,
@@ -874,7 +901,8 @@ and ins_detalleestandar.ide_numcaracteristica3=9)and ins_detalleestandar.ide_cla
                         $razonmant= "";
                         break;
                 }
-                $nrep=$row["ide_numreporte"];
+                $nrep=$row["i_numreporte"];
+            
                 $saboresX=$this->consultaRatio($nrep, $nren, $text_format_det,$grupous);
                 if ($saboresX) {
                     if ($razonmant) {
@@ -884,7 +912,8 @@ and ins_detalleestandar.ide_numcaracteristica3=9)and ins_detalleestandar.ide_cla
                         $razonmant = $saboresX;
                     }
                 }
-                $this->letras= $this->michr(72);
+                $this->letras= $this->michr(72); //voy en la h
+             
                 $this->workbook->getActiveSheet()->setCellValue($this->letras.$nren, $mantcor, $text_format_det);
                 
                 $this->letras= $this->michr(73);
@@ -1104,7 +1133,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
         }
         
         function consultaRatio($reporte, $ren, $text_format_det,$grupous) {
-         
+        
             if ($grupous=="cic") {
                 $letra=78;
             } else {
@@ -1113,13 +1142,14 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
             $calival="";
             $motcali="";
             $sabores="";
-            $opcion_sabor=array(1,2,4,3,6,5,23,17,16,11,12,15,13,22);
+            $opcion_sabor=array(1,14,4,3,6,23,17,11,13,22);
             
             
             // OBTENGO ESTANDAR
             $loop=sizeof($opcion_sabor);
             $sabores="";
             for($i=0;$i<$loop;$i++) {
+            	
 //                 $queryren="SELECT
 //                 ins_detalleestandar.ide_numrenglon
 //                 FROM ins_detalleestandar
@@ -1168,7 +1198,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                 $letra++;
                 }
             }
-       
+    
             return $sabores;
         }
         
@@ -1211,7 +1241,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
             $result=Conexion::ejecutarQuery($query,$parametros);
          
             foreach($result as $row) {
-                //echo $letra;
+             
                 if($row["red_tipodato"]=="C")   // busco el valor en catalogo
                 {
                     
@@ -1219,7 +1249,7 @@ as res on tmp_generales.i_claveservicio = ide_claveservicio AND i_numreporte = i
                     $estandar = DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$row["red_clavecatalogo"],$row["ide_valorreal"]);
                    
                    
-                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon,utf8_decode($estandar));
+                    $this->workbook->getActiveSheet()->setCellValue($this->michr($letra).$renglon,$estandar);
                     $this->workbook->getActiveSheet()->getStyle($this->michr($letra).$renglon)->applyFromArray($text_format_det);
                    
                 }

@@ -10,7 +10,9 @@ class GeneralController{
 	$respuesta =DatosAbierta::actualizatiporeac($seccion, $servicioController,$tiposec, "cue_secciones");
 
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevageneral&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
+    <div class="col-md-12" style="
+    margin-top: 7px;
+" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevageneral&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
      </div>
      </div>';
 
@@ -188,7 +190,7 @@ class GeneralController{
 	public function botonRegresageneralController(){
 		$datosController = $_GET["id"];
 		$servicioController = $_GET["ids"];
-   		echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=G"> Cancelar </a></button>';
+   		echo ' <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=G"> Cancelar </a>';
 	}
 	
 public function reporteGeneralController(){
@@ -200,8 +202,24 @@ public function reporteGeneralController(){
 
          #guarda en pantalla
      
+/*funcion de validacion*/
+		echo '
+<script >
 
-		echo '<section class="content container-fluid">
+function validar(){
+
+ if($("#inspector").val()=="") //no ha seleccionado inspector
+ {	alert("Seleccione un inspector");
+	return false;
+	}
+  if($("#mesas").val()==""){
+	alert("Por favor seleccione el mes de asignación");
+	return false;
+	}
+	return true;
+}
+</script>
+<section class="content container-fluid">
 
       <!----- Inicia contenido ----->
         <div class="row">
@@ -209,7 +227,7 @@ public function reporteGeneralController(){
         <div class="col-md-12">
              <div class="box box-info">
              <div class="box-body">
-             <form role="form" method="post">';
+             <form role="form" method="post" id="form1" >';
              echo '<input type="hidden" name="sv" value="'.$sv.'">';
              echo '<input type="hidden" name="nrep" value="'.$nrep.'">';         
              echo '<input type="hidden" name="sec" value="'.$sec.'">';
@@ -218,7 +236,7 @@ public function reporteGeneralController(){
                       # valida si existen datos
              $existe = DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
              if ($existe){
-                
+                //es actualizacion
                 $registro = DatosGenerales::vistaReporteGenerales($sv, $nrep, "ins_generales");
                 #LEE VARIABLES
                   $cinsp=$registro["i_claveinspector"];
@@ -245,15 +263,19 @@ public function reporteGeneralController(){
                   $fecfin=$registro["i_fechafinalizado"];
                   $reasigna=$registro["i_reasigna"];
                   $gpo=$_SESSION["GrupoUs"];
-                  
+                  $telefono1=$registro["une_dir_telefono"];
+                  $telefono2=$registro["une_dir_telefono2"];
+                  $correo=$registro["une_dir_correoe"];
                 
                   echo '
                   <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
                   
-                  echo '<select class="form-control" name="inspector" id=inspector>';
+                  echo '<select class="form-control" name="inspector" id="inspector" required>';
                   #busca inspector
-                  $catalogo = DatosInspector::listainspectores("ca_inspectores");
+                  /*de acuerdo al servicio 17-09-2019*/
+                  
+                  $catalogo = DatosInspector::listaInspectoresxServicio($sv,"ca_inspectores");
                    foreach ($catalogo as $key => $item) {
                       if ($item["ins_clave"]==$cinsp) {
                         echo '<option value='.$item["ins_clave"].' selected>'.$item["ins_nombre"].'</option>';
@@ -266,9 +288,10 @@ public function reporteGeneralController(){
                   </div>
                   <div class="form-group col-md-12">
                   <label>MES ASIGNACION</label>';
-                   echo '<select class="form-control" name="mesas" id="mesas">';
+                   echo '<select class="form-control" name="mesas" id="mesas" required>';
                    $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
                    //$sele="";
+                   
                    foreach ($catalogo as $key => $rowc) {
                       switch ($rowc["num_mes_asig"]) {
                      case 1:
@@ -325,6 +348,18 @@ public function reporteGeneralController(){
                 <div class="form-group col-md-12">
                   <label>CARGO</label>
                   <input type="text" class="form-control" placeholder="" id="cargo" name="cargo" value="'.$puesresp.'">
+                </div>
+ <div class="form-group col-md-4">
+                  <label>TELEFONO FIJO</label>
+                  <input type="text" class="form-control"  id="telefono1" name="telefono1" value="'.$telefono1.'" maxlength="10">
+                </div>
+  <div class="form-group col-md-4">
+                  <label>TELEFONO MOVIL</label>
+                  <input type="text" class="form-control" id="telefono2" name="telefono2" value="'.$telefono2.'"  maxlength="10">
+                </div>
+  <div class="form-group col-md-4">
+                  <label>CORREO ELECTRONICO</label>
+                  <input type="text" class="form-control"  id="correo" name="correo" value="'.$correo.'"  maxlength="60">
                 </div>
                 <div class="form-group col-md-6">
                   <label>HORA DE ENTRADA</label>
@@ -403,10 +438,11 @@ public function reporteGeneralController(){
                     
                   }
 
-                  $fvis=SubnivelController::mysql_fecha($fecvis);
+                  $fvis=SubnivelController::mysql_fechabs($fecvis);
 
                   echo '</select>
                 </div>
+ <div class="form-group col-md-12">
               <div class="form-group">
                 <label>FECHA DE VISITA:</label>
 
@@ -414,12 +450,12 @@ public function reporteGeneralController(){
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis"  value="'.$fvis.'">
+                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis"  value="'.$fvis.'" required>
                 </div>
                 <!-- /.input group -->
-              </div>';
-
-                  if ($gpo=='adm'){
+              </div></div>';
+				if($sv!=5)
+				{  if ($gpo=='adm'){
                     echo '<div class="form-group col-md-4">';
                     if ($reasigna) {
                         $valreas="checked";
@@ -452,38 +488,41 @@ public function reporteGeneralController(){
                   else {
                      $valant="";
                 }
-                 $femi=SubnivelController::mysql_fecha($fecfin);
+              
+              
                 echo ' <label >REPORTE CIC</label>
                     <input type="checkbox" name="REPCIC"  '.$valant.' />
                 </div>
                 <div class="form-group col-md-4">
                   <label>NO DE REPORTE CIC</label>
                   <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic" value='.$numrepcic.'>
-                </div>
-               
-              <div class="form-group">
+                </div>';
+               }
+               $femi=SubnivelController::mysql_fechabs($fecfin);
+              echo '<div class="form-group">
                 <label>FECHA DE EMISION:</label>
 
                 <div class="input-group date">
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
+<input type="hidden" value="'.$finaliza.'" name="finalizado">
                   <input type="text" class="form-control pull-right" id="datepicker2" name="fecemi"  value="'.$femi.'">
                 </div>
                 <!-- /.input group -->
-              </div>
-
-                ';                
-
-                if ($finaliza==1) {
+              </div> ';                
+             
+                if ($finaliza==-1) {
                   echo '
                          <div class="form-group col-md-12">
                           <label>FINALIZAR REPORTE  :  FINALIZADO</label>
+
                          <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=RG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Reactivar </a></button>
                          </div>';
 
 
                 }else{
+                	if($sv!=5)
                   echo '  <div class="form-group col-md-12">
                           <label>FINALIZAR REPORTE  :  </label>
                     <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=FG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Finalizar </a></button>';
@@ -491,15 +530,22 @@ public function reporteGeneralController(){
 
           
              } else {
+             	//busco datos de contacto
+             	$rownp =DatosUnegocio::UnegocioCompleta($pv, "ca_unegocios");
+             	if($rownp)
+             	{$telefono1=$rownp["une_dir_telefono"];
+             	$telefono2=$rownp["une_dir_telefono2"];
+             	$correo=$rownp["une_dir_correoe"];
+             	}
               // nuevo
               echo '
                 <div class="form-group col-md-12">
                   <label>INSPECTOR</label>';
                   
-                  echo '<select class="form-control" name="inspector">';
+                  echo '<select class="form-control" name="inspector" id="inspector" required>';
                   #busca inspector
-                  $catalogo = DatosInspector::listainspectores("ca_inspectores");
-                  echo '<option "">--- Seleccione opcion ---</option>';
+                  $catalogo = DatosInspector::listaInspectoresxServicio($sv,"ca_inspectores");
+                  echo '<option value="">--- Seleccione opcion ---</option>';
                   foreach ($catalogo as $key => $item) {
                     echo '<option value='.$item["ins_clave"].'>'.$item["ins_nombre"].'</option>';                        
                   }  
@@ -508,12 +554,34 @@ public function reporteGeneralController(){
                 </div>     
                   <div class="form-group col-md-12">
                   <label>MES ASIGNACION</label>';
-                   echo '<select class="form-control" name=mesas id="mesas">';
-                   echo '<option "">--- Seleccione opcion ---</option>';
-                   $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
+                   echo '<select class="form-control" name=mesas id="mesas" required>';
+                   echo '<option value="" >--- Seleccione opcion ---</option>';
+                   
+                   $mes_asig = date("m.Y");
+                   $aux = explode(".", $mes_asig);
+                   
+                   $solomes = $aux[0];
+                   $soloanio = $aux[1];
+               
+                   //    $catalogo = DatosMesasignacion::listaMesAsignacion("ca_mesasignacion");
                    //$sele="";
-                   foreach ($catalogo as $key => $rowc) {
-                      switch ($rowc["num_mes_asig"]) {
+                  // if($solomes>1)
+                   $solomes--;
+                   for ($i=0;$i<2;$i++) {
+                   	 if($solomes==0)
+                   	 {	
+                   	 	$solomes=12;
+                   	 	$soloanio--;
+                   	 	
+                   	 	
+                   	 
+                   	 }
+                   	 if($solomes==13){
+                   	 	$solomes=1;
+                   	 	$soloanio++;
+                   	 }
+                   		$mes_asig = $solomes . "." . $soloanio;
+                      switch ($solomes) {
                      case 1:
                         $mesnom="ENERO";
                       break;
@@ -551,13 +619,14 @@ public function reporteGeneralController(){
                         $mesnom="DICIEMBRE";
                       break;
                      }
-                      if ($mesas==$rowc["num_mes_asig"].".".$rowc["num_per_asig"]){
+                     if ($mesas==$mes_asig){
                           $sele= "selected='selected'";
                       }else{
                         $sele="";
                       }
-                      echo "<option value=".$rowc["num_mes_asig"].".".$rowc["num_per_asig"]." ".$sele.">".$mesnom."-".$rowc["num_per_asig"]."</option>";                  
-                  } 
+                      echo "<option value=".$mes_asig." ".$sele.">".$mesnom."-".$soloanio."</option>";                  
+                $solomes++;
+                   } 
                    echo ' </select>
                 </div>
                 <div class="form-group col-md-12">
@@ -567,6 +636,18 @@ public function reporteGeneralController(){
                 <div class="form-group col-md-12">
                   <label>CARGO</label>
                   <input type="text" class="form-control" placeholder="" id="cargo" name="cargo" value="'.$puesresp.'">
+                </div>
+   <div class="form-group col-md-4">
+                  <label>TELEFONO FIJO</label>
+                  <input type="text" class="form-control"  id="telefono1" name="telefono1" value="'.$telefono1.'" maxlength="10">
+                </div>
+  <div class="form-group col-md-4">
+                  <label>TELEFONO MOVIL</label>
+                  <input type="text" class="form-control" id="telefono2" name="telefono2" value="'.$telefono2.'"  maxlength="10">
+                </div>
+  <div class="form-group col-md-4">
+                  <label>CORREO ELECTRONICO</label>
+                  <input type="text" class="form-control"  id="correo" name="correo" value="'.$correo.'"  maxlength="60">
                 </div>
                 <div class="form-group col-md-6">
                   <label>HORA DE ENTRADA</label>
@@ -627,6 +708,7 @@ public function reporteGeneralController(){
                   }
                   echo '</select>
                 </div>
+  <div class="form-group col-md-12">
                  <div class="form-group">
                 <label>FECHA DE VISITA :</label>
 
@@ -634,13 +716,15 @@ public function reporteGeneralController(){
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis">
+                  <input type="text" class="form-control pull-right" id="datepicker" name="fecvis" required>
                 </div>
                 <!-- /.input group -->
               </div>
 
-
-                <div class="form-group col-md-4">
+</div>';
+                  if($sv!=5){
+                  	
+                  echo '<div class="form-group col-md-4">
                    <label >REASIGNACION</label>
                     <input type="checkbox" name="REAS" />
                 </div>
@@ -654,9 +738,9 @@ public function reporteGeneralController(){
                 <div class="form-group col-md-12">
                   <label>NO DE REPORTE CIC</label>
                   <input type="text" class="form-control" placeholder="" id="numrepcic" name="numrepcic">
-                </div>
-                
-              <div class="form-group">
+                </div>';
+                  }
+                  echo '   <div class="form-group">
                 <label>FECHA DE EMISION:</label>
 
                 <div class="input-group date">
@@ -669,11 +753,15 @@ public function reporteGeneralController(){
               </div>
 
                 </br>';
-                               
+                  if($sv!=5){
                   echo '  <div class="form-group col-md-12">
+
                           <label>FINALIZAR REPORTE  :  </label>
                     <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=FG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Finalizar </a></button>';
-
+                  }
+             }
+             if($sv!=5){
+             echo '<button type="button"  style="margin-left: 10px" onclick="window.open(\'imprimirReporte.php?admin=impcerpm&sv='.$sv.'&nrep='.$nrep.'\')" > Generar certificado </button>';
              }
 
               #registra reporte
@@ -687,7 +775,7 @@ public function reporteGeneralController(){
                 <br>
                 
                 <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=editarep&sv='.$sv.'&idc='.$idc.'&nrep='.$nrep.'&pv='.$pv.'"> Cancelar </a></button>
+                  <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=editarep&sv='.$sv.'&idc='.$idc.'&nrep='.$nrep.'&pv='.$pv.'"> Cancelar </a>
                   <button type="submit" class="btn btn-info pull-right">Guardar</button>  
                  </div>
                
@@ -725,6 +813,7 @@ public function reporteGeneralController(){
           //}else{
           //   $horanasen=$HoraEn3.":".$HoraEn4;
           //}
+      
           if ($horsal){
           }else{
              $horsal=$HoraEn5.":".$HoraEn6;
@@ -752,23 +841,23 @@ public function reporteGeneralController(){
           } else {
             $reasig=0;
           } 
-
+       //   echo $fecemi."--".$fecvis;
           if($fecemi) {
-              $fecemis=SubnivelController::fecha_mysql($fecemi);
+          	$fecemis=SubnivelController::fecha_mysqlbs2($fecemi);
                
             }else{
                 $fecemis="0000/00/00";
             }
-            var_dump($fecemis);
+           
 
           if($fecvis) {
-              $fvis=SubnivelController::fecha_mysql($fecvis);
+          	$fvis=SubnivelController::fecha_mysqlbs2($fecvis);
                
             }else{
               $fvis="0000/00/00";
             }
-            var_dump($fvis);
-
+          //  var_dump($fvis);
+      //      echo $fecemis."--".$fvis; die();
          $datosController= array("idser"=>$sv,
                                  "numrep"=>$nrep,
                                  "numunineg"=>$pv,
@@ -780,7 +869,7 @@ public function reporteGeneralController(){
                                  "horsal"=>$horsal,
                                  "resp"=>$responsable,
                                  "cargo"=>$cargo,
-                               //  "horanasen"=>$horanasen,
+                                 "horanasen"=>"0",
      
                                  "repcic1"=>$repcic1,
                                  "sincob1"=>$sincob1,
@@ -791,20 +880,46 @@ public function reporteGeneralController(){
                                  );
           //var_dump($datosController);
 
-
+         try{
 
         $respuesta =DatosGenerales::validaExisteReporte($sv, $nrep, "ins_generales");
         //var_dump($respuesta);
         if ($respuesta==0){
+        	//valido que haya solicitud si es certificacion
+        	if($sv==3||$sv==5){
+        		$consulta="SELECT `sol_claveservicio`,`sol_idsolicitud`,`sol_estatussolicitud`,`sol_numpunto`
+FROM
+    `ca_unegocios`
+    INNER JOIN `cer_solicitud` 
+        ON (`ca_unegocios`.`une_numpunto` = `cer_solicitud`.`sol_numpunto`)
+        WHERE ca_unegocios.`une_id` =:uneid AND `sol_claveservicio`=:servicio
+     AND ISNULL(cer_solicitud.sol_numrep) AND sol_estatussolicitud <> 5";
+        		$res=Conexion::ejecutarQuery($consulta, array("servicio"=>$sv, "uneid"=>$pv));
+        		if(sizeof($res)<=0)
+        		{	echo "
+        <script type='text/javascript'>
+       alert('No se encontró ninguna solicitiud para este establecimiento, verifique');
+        </script>
+        ";
+        		return;}
+     
+        	}
           #nuevo registro
           //echo "es nuevo registro";
           #insertar nuevo registro
           $respuesta =DatosGenerales::insertaRepGeneral($datosController, "ins_generales");
+       
+          if($respuesta=="error")
+          {
+          	throw new Exception("Error al insertar reporte"); 
+          }
+          //elimina de la tabla temporal
+        //  DatosReporte::eliminarReporteTemporal($sv, $nrep, $_SESSION["NombreUsuario"]);
            //var_dump($respuesta);
            
         } else { #ya existe
           //  echo "el registro ya existe";
-              if ($FIN) {
+              if ($finalizado) {
                 $finaliza=1;
                } else {
                 $finaliza=0;   
@@ -814,15 +929,40 @@ public function reporteGeneralController(){
           //    } else {
           //      $reasig=-0;
           //    } 
+          $datosController["finaliza"]=$finaliza;
           #actualiza registro 
           $respuesta =DatosGenerales::actualizaRepGeneral($datosController, "ins_generales");
-          var_dump($respuesta); 
+        
         }
+        if($sv==3||$sv==5){
+        // busca el numpunto
+        $sqlnp="SELECT ca_unegocios.une_numpunto FROM ca_unegocios WHERE ca_unegocios.cli_idcliente =  '".$idclien."' AND
+ca_unegocios.ser_claveservicio =  '".$idser."' AND ca_unegocios.cue_clavecuenta =  '".$NumCuenta."' AND
+ca_unegocios.une_claveunegocio =  '".$numunineg."'";
+        $rownp =DatosUnegocio::UnegocioCompleta($pv, "ca_unegocios");
+      
+        $npunto=$rownp['une_numpunto'];
+    
+        //actualiza solicitud
+      //  $sqls="UPDATE cer_solicitud SET cer_solicitud.sol_numrep='".$numrep."' 
+//WHERE cer_solicitud.sol_numpunto =  '".$npunto."'  AND isnull(cer_solicitud.sol_numrep AND sol_estatussolicitud <> 5)";
+        //Utilerias::guardarError("Vamos a registrar el pv");
+        $rss = DatosSolicitud::registrarNumReporte($npunto, $nrep);
+        //echo $sqls;
+   		//actualizar datos de contacto
+        }
+        if($telefono1!=""||$telefono2!=""||$correo!="")
+   			DatosUnegocio::actualizarUnegocioContacto($pv,$telefono1,$telefono2,$correo);
+   		
         echo "
         <script type='text/javascript'>
         window.location.href='index.php?action=editarep&sv=".$sv."&idc=".$idc."&nrep=".$nrep."&pv=".$pv."&sec=".$sec."';
         </script>
-        ";   
+        ";
+         }catch (Exception $ex){
+         	Utilerias::guardarError("error en generalController:registrarRepDatosGenerales".$ex);
+         	echo "Hubo un error al insertar, verifique";
+         }
     } // el inspector tiene datos
   }
   public function finalizareporteController(){

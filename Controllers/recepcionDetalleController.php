@@ -93,7 +93,7 @@ group by  mue_idmuestra;");
 		Navegacion:: borrarRutaActual("b");
 		$rutaact = $_SERVER['REQUEST_URI'];
 		// echo $rutaact;
-		Navegacion::agregarRuta("b", $rutaact, "MUESTRA NO.".$numcat);
+		Navegacion::agregarRuta("b", $rutaact, "RECEPCION NO.".$numcat);
 		
 	}
 	public function vistaNuevo(){
@@ -182,7 +182,7 @@ group by nummuestra";
 			$rsnr=Conexion::ejecutarQuerysp($SQLL);
 		
 			$num_reg = sizeof($rsnr);
-			
+				
 			foreach ($rsnr as $rownr) {
 				$nmues= $rownr["nummuestra"];
 				$totmb=$rownr["totmb"];
@@ -195,24 +195,31 @@ group by nummuestra";
 aa_muestras.mue_estatusmuestra FROM
 aa_muestras WHERE aa_muestras.mue_idmuestra =  :nmues'";
 				
-				$rsntt=DatosMuestra::listaMuestrasxIdMuestra($nmues,"aa_muestras");
+				$rsntt=DatosMuestra::olistaMuestrasxIdMuestra($nmues,"aa_muestras");
 				$num_regt = sizeof($rsntt);
 			
 				foreach ($rsntt as $rowtt) {
-				
+					if($rowtt["mue_claveservicio"]==3||$rowtt["mue_claveservicio"]==5){
+						//primero valido que se pueda recibir
+						$respuesta =DatosGenerales::validaDiagnostico($rowtt["mue_claveservicio"], $rowtt["mue_numreporte"], "5", "4", "ins_detalle");
+						if($respuesta<=0)
+						{
+							throw new Exception("Falta capturar información de la sección 5 del reporte, verifique");
+						}
+					}
 					if  ($rowtt["mue_estatusmuestra"]==2) {  // listo para recibirse
-// 						echo $rowtt["mue_numunidadesMB"];
-// 						echo "--".$totmb;
-// 						echo "....".$rowtt["mue_numunidadesFQ"];
-// 						echo "---".$totfq;
+//  						echo $rowtt["mue_numunidadesMB"];
+//  						echo "--".$totmb;
+//  						echo "....".$rowtt["mue_numunidadesFQ"];
+//  						echo "---".$totfq; die();
 						if ($totmb==$rowtt["mue_numunidadesMB"] and $totfq==$rowtt["mue_numunidadesFQ"]) {  // listo para recibirse
 							//procedimiento de insercion del recibo
 							// insert FQ
 							$sSQL= "insert into aa_recepcionmuestradetalle
 (aa_recepcionmuestradetalle.rmd_partida, aa_recepcionmuestradetalle.rm_idrecepcionmuestra, aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_tipoanalisis,
-aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus) VALUES ($ulpar, '$numrecibo','$nmues','FQ', '$totfq',1)";
+aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus) VALUES ($ulpar, '$numrecibo','$nmues','FQ', $totfq,1)";
 							
-							DatosRecepcionMuestra::insertarRecepcionDet(0,$ulpar, $numrecibo, $nmues, $totmb,"FQ");
+							DatosRecepcionMuestra::insertarRecepcionDet(0,$ulpar, $numrecibo, $nmues, $totfq,"FQ");
 							
 							$i++;
 							$ulpar++;
@@ -232,40 +239,43 @@ aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus)
 							//echo "todo ok";
 						} else {   // LAS MUESTRAS NO COINCIDEN
 							// SI NO, PRESENTA MENSAJE
-							$this->mensaje=Utilerias::mensajeError('No es posible recibir. El numero de unidades que intenta entregar, no coincide con las recolectadas');
+							throw new Exception('No es posible recibir. El numero de unidades que intenta entregar, no coincide con las recolectadas');
 						//	print("<script>window.location.replace('MEZprincipal.php?op=Trec&admin=detalle&cat=$numrecibo');</script>");
 						}
 					} else if ($rowtt["mue_estatusmuestra"]==6) {
-						$this->mensaje=Utilerias::mensajeError('No es posible recibir. La muestra '. $nmues.' esta cancelada');
+						throw new Exception('No es posible recibir. La muestra '. $nmues.' esta cancelada');
 						//print("<script>window.location.replace('MEZprincipal.php?op=Trec&admin=detalle&cat=$numrecibo';
 					} else if  ($rowtt["mue_estatusmuestra"]==1) {
-						$this->mensaje=Utilerias::mensajeError('No es posible recibir. No se ha impreso la etiqueta para la muestra No. '.$nmues);
+						throw new Exception('No es posible recibir. No se ha impreso la etiqueta para la muestra No. '.$nmues);
 						//print("<script>window.location.replace('MEZprincipal.php?op=Trec&admin=detalle&cat=$numrecibo');</script>");
 					} else if  ($rowtt["mue_estatusmuestra"]>=3 && $rowtt["mue_estatusmuestra"]<=5) {
-						$this->mensaje=Utilerias::mensajeError('No es posible recibir. la muestra No. '.$nmues.' ya fue recibida');
+						throw new Exception('No es posible recibir. la muestra No. '.$nmues.' ya fue recibida');
 						//print("<script>window.location.replace('MEZprincipal.php?op=Trec&admin=detalle&cat=$numrecibo');</script>");
 					}
 				}
 				//		 }
 				//	}
 			}// cambia estatus
+			
 			if ($cambio>0) {
-				
+				date_default_timezone_set('America/Mexico_City');
 				//$fecvis=date("Y-m-d H:i:s")
 				$fecvis=date("Y-m-d H:i:s");
+			
+				
 				$sSQLu="update aa_recepcionmuestra set aa_recepcionmuestra.rm_fechahora='$fecvis', aa_recepcionmuestra.rm_estatus=2 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra=".$numrecibo;
 				$rs=DatosRecepcionMuestra::actualizarFechaRecepcion($fecvis,$numrecibo);
-				
+			
 			} else {
 				// elimina registro de recibo
 				if ($num_regt==0) {
-					$this->mensaje=Utilerias::mensajeError('No es posible recibir. La muestra No. '.$nmues.' no existe');
+					throw new Exception('No es posible recibir. La muestra No. '.$nmues.' no existe');
 					//print("<script>window.location.replace('MEZprincipal.php?op=Trec&admin=detalle&cat=$numrecibo');</script>");
 				}
 				//$SQLD="DELETE FROM aa_recepcionmuestra WHERE aa_recepcionmuestra.rm_idrecepcionmuestra='$nmues'";
 				$rsd=DatosRecepcionMuestra::eliminarRecepcion($nmues);
 			}
-			
+			echo Utilerias::enviarPagina("index.php?action=recepciondetalle&cat=".$numrecibo);
 		}catch(Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}
@@ -279,6 +289,7 @@ aa_recepcionmuestradetalle.rmd_unidades, aa_recepcionmuestradetalle.rmd_estatus)
 		//$sSQL="Delete From ca_catalogosdetalle Where concat(cad_idcatalogo,'.',cad_idopcion)='". $id."';";
 		$arr=explode(".", $id);
 		DatosCatalogoDetalle::borrarCatalogoDetalle($arr[0], $arr[1], "ca_catalogosdetalle");
+		echo Utilerias::enviarPagina("index.php?action=listarecepcion");
 		}catch(Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}

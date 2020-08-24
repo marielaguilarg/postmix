@@ -1476,6 +1476,7 @@ WHERE `ins_clave` = '".$ntec."'";
                UsuarioModel::insertarUsuario($login, $contras, $nomusu, $empresa, $cargo, $tel, $email, $op2, $SelectNivel, $select1, $select2, $select3, $select4, $select5, $select6, $idioma, $uscliente, $usservicio, $solcer, "cnfg_usuarios");
             }
                $this->mensaje='<div class="alert alert-success">Se insertó el usuario</div>';
+               echo Utilerias::enviarPagina("index.php?action=slistausuarios&id=".$op2);
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage().'. Intente de nuevo</div>';
         }
@@ -1489,6 +1490,7 @@ WHERE `ins_clave` = '".$ntec."'";
         try{
        UsuarioModel::eliminarUsuario($usu,"cnfg_usuarios");
        $this->mensaje='<div class="alert alert-success">Se eliminó el usuario</div>';
+       echo Utilerias::enviarPagina("index.php?action=slistausuarios&id=".$id);
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage().'. Intente de nuevo</div>';
         }
@@ -1553,6 +1555,7 @@ WHERE `ins_clave` = '".$ntec."'";
             }
         }
             $this->mensaje='<div class="alert alert-success">Se actualizó el usuario</div>';
+            echo Utilerias::enviarPagina("index.php?action=slistausuarios&id=".$grupo);
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage().'. Intente de nuevo</div>';
         }

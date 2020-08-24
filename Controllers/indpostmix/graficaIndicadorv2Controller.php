@@ -1,24 +1,21 @@
 <?php
-require_once ('libs/php-gettext-1.0.12/gettext.inc');
-include ('Utilerias/inimultilenguaje.php');
-include ('Utilerias/utilerias.php');
 
-class GraficaIndicadorController {
+
+class GraficaIndicadorv2Controller {
 
     private $navegacion;
-    private $navegacion2;
-    private $numsecc;
+   
     private $mes_indice;
   
-    private $opcionuni;
+  
     private $lb_buscar;
     private $lb_indicadores;
-    private $filtros;
-    private $nombre_indicador;
-    private $nombre_nivel;
-    private $codigoGrafica;
+   
+    
+    private $lugar;
+  
     private $periodo;
-    private $alertanav;
+  
     private $servicio;
     private $cliente;
     private $opciones_anio;
@@ -29,11 +26,18 @@ class GraficaIndicadorController {
     private $listanivel4;
     private $listanivel5;
     private $listanivel6;
-    private $varnivel;
-    private $gfilx;
-    private $gfily;
+   
+    private $filnivelreg; //de la forma 1.1.2.3
+    private $filnivelcedis; //de la forma 1.1.2.3
+    private $filcuenta; //de la forma 1.1.2.3
+    private $UrlCobertura;
+    private $UrlCoberturaxReg;
+    private $UrlCoberturaxCta;
+    private $UrlIndicadores;
+    private $titulos; //arreglo para los encabezados de las graficas
+    
 
-    public function vistaGraficaIndicadores() {
+    public function mostrarFiltros() {
         foreach ($_POST as $nombre_campo => $valor) {
             $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
             eval($asignacion);
@@ -71,87 +75,11 @@ class GraficaIndicadorController {
 // genera info grafica
 
         $this->filtroPeriodo($mes_solo, $anio);
-      
-        /* si es la primera vez que entro no existe esta variable y la creo
-         * 1-mostrar alerta
-         * 0- no mostrar
-         */
-//echo "ll".$_SESSION["alertanav"];
-        if (isset($_SESSION["alertanav"]) && $_SESSION["alertanav"] != 0) {
-            //ya habia entrado
-            $this->alertanav = 0; //no muestro alerta
-        } else {
-            //no he mostrado alerta
-            $this->alertanav = 1;
-            $_SESSION["alertanav"] = 1;
-        }
-//var_dump($_SESSION);
-//        $secdefault = $secciones[0][0];
-//
-//        if (isset($sec) && $sec != "") {
-//
-//            $this->numsecc = $sec;
-//        } else {
-//            $this->numsecc = $secdefault;
-//            $sec = $secdefault;
-//        }
-//
-//        $seccion = $sec;
-
-      
-        $navegacion=new Navegacion();
-        $navegacion->iniciar();
-        $navegacion->borrarRutaActual("graficaind");
-        $rutaact = $_SERVER['REQUEST_URI'];
-        // echo $rutaact;
-        $navegacion::agregarRuta("graficaind", $rutaact, T_("GRAFICA"));
-       
-
-
-    
-        if (isset($mes_solo) && $mes_solo != "") {
-
-            $this->mes_indice = $mes_asig = $mes_solo . "." . $anio;
-        } else { // si no hay mes x defecto es el anterior
-            $mes_asig = date("m.Y");
-            $aux = explode(".", $mes_asig);
-
-            $solomes = $aux[0] - 1;
-            $soloanio = $aux[1];
-
-            if ($solomes == 0) {
-                $solomes = 12;
-                $soloanio = $aux[1] - 1;
-            }
-
-            $mes_asig = $solomes . "." . $soloanio;
-            $this->mes_indice = $mes_asig;
-        }
-        $mes_consulta = $mes_asig;
- 
-        $aux = explode(".", $mes_asig);
-        $solomes = $aux[0];
-
-        $soloanio = $aux[1];
-        $aux = explode('.', $mes_consulta);
-        $mes = $aux[0];
-         if ($mes - 12 >= 0) { // calculo para los 12m
-             $z = $mes - 12 + 1;
-
-             $mes_pivote = $aux[1] . "-" . $z . "-01";
-             $mes_pivote = $z . "." . $aux[1];
-         } else {
-             $z = $mes + 1;
-
-             $mes_pivote = ($aux[1] - 1) . "-" . $z . "-01";
-             $mes_pivote = $z . "." . ($aux[1] - 1);
-         }
-        $fmes_consulta = $aux[1] . "-" . $aux[0] . "-01";
-          $mes_consulta_ant = $mes_pivote;       
+     
 // verifico el tipo de usuario
         //filtro de niveles
         $rs_usuarios = UsuarioModel::getUsuario($Usuario,"cnfg_usuarios");
-           
+      //  var_dump($rs_usuarios);
         foreach ($rs_usuarios as $row_usuarios ) {
         //            $html->asignar('USUARIO', "<span class='TitPost'>" . $row_usuarios ["cus_nombreusuario"] . "</span>");
             $VarNivel2 = $row_usuarios ["cus_tipoconsulta"];
@@ -163,8 +91,9 @@ class GraficaIndicadorController {
             $Nivel04 = $row_usuarios ["cus_nivel4"];
             $Nivel05 = $row_usuarios ["cus_nivel5"];
             $Nivel06 = $row_usuarios ["cus_nivel6"];
-
+  
         }
+          $_SESSION["fniv"] = $VarNivel2; 
         if ($grupo == "cli" || $grupo == "cue") {
            
             if ($grupo == "cli") {
@@ -178,7 +107,7 @@ class GraficaIndicadorController {
                 if ($Nivel01 > 0) { //es usuario de franquicia
                     $permiso = "P"; //devuelvo cuenta y franquicia
                     if ($Nivel03 > 0) //es usuario por p.v.
-                        $result = "PP";
+                        $permiso = "PP";
                 } else    //puede ver toda la cuenta
                     $permiso = "F";
             }
@@ -192,12 +121,7 @@ class GraficaIndicadorController {
             $html->asignar('lb_Notiene', T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION"));
         } else {
          
-//            if (isset($niv) && $niv != "") {
-//                $gnivel = $niv;
-//            } else if ($permiso == 0) {
-//                $gnivel = 4;
-//            } else
-//                $gnivel = $permiso + 1;
+// 
 
             if ($grupo == "cue") {
 //                if ($gnivel == "")
@@ -215,27 +139,23 @@ class GraficaIndicadorController {
                // $gfily = UsuarioModel::buscarReferenciaNivel($Usuario,$grupo,$this->servicio,$this->cliente);
             }
             else {
-                if(isset($filuni)&&$filuni!="") //vengo del menu lat es como iniciar y limpiear fil
-                {
-                    $gfiluni=$filuni;
-                   
-                    
-                    if (isset($filx) && $filx != "") { //escogio filtro
-                        
-                        $gfilx = $filx;
-                       
-                       // echo "eligio nivel";
-                        //  $html->asignar("refer",$gfilx);
-                    } 
-                }
-                               
-                  
-                 else  { 
-                     //vengo del formulario
+               
+                if(isset($select2)&&$select2!="")
+                {     //vengo del formulario
                      $gfiluni="1.".$select2.".".$select3;
                      $gfilx=$select4.".".$select5.".".$select6;
                  
-                 }
+                }
+                else
+                {
+                    if($Nivel01=="")
+                        $gfiluni="1.1.5";
+                    else{
+                      $gfiluni=$Nivel01.".".$Nivel02.".".$Nivel03;
+                     $gfilx=$Nivel04.".".$Nivel05.".".$Nivel06;
+                    }
+                }
+                ////o vengo del menu
 //                     if (($grupo == "cli" || $grupo == "muf") && $permiso > 3) {// si no tengo filtro
 //                         $gfilx =    $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
 //                     //    $refer = $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
@@ -244,81 +164,89 @@ class GraficaIndicadorController {
             }
                     
           
-            $this->gfilx=$gfilx;
-            $this->gfily=$gfily;
-             
-      //        echo $gfiluni."--".$gfilx;
-          
+            $this->filnivelcedis=$gfilx;
+            $this->filcuenta=$gfily;
+            
+            
             $aux = explode(".", $gfilx);
-
-            $this->opcionuni = $gfiluni;
-
+            
+            $this->filnivelreg = $gfiluni;
+            
             $filx = array();
-
+            
             $filx["reg"] = $aux[0];
-
+            
             $filx["ciu"] = $aux[1];
             $filx["niv6"] = $aux[2];
-
-
+            
+            
             $this->Nivel03 = $aux[0];
             $this->Nivel04 = $aux[1];
             $this->Nivel05 = $aux[2];
             $this->Nivel06 = $aux[3];
-
+            
             $auxy = explode(".", $gfily);
-
+            
             $fily = array();
-
+            
             $fily["cta"] = $auxy[0];
-
+            
             $fily["fra"] = $auxy[1];
             $fily["pv"] = $auxy[2];
-
+            
             $auxuni = explode(".", $gfiluni);
-
+            
             $filx["pais"] = $auxuni[0];
             $filx["uni"] = $auxuni[1];
             $filx["zon"] = $auxuni[2];
-            if ($filx["pais"] != "" && $filx["pais"] != 0) {
+//             if ($filx["pais"] != "" && $filx["pais"] != 0) {
 
-                $nompais = Datosnuno::nombreNivel1($filx["pais"], "ca_nivel1");
-            }
+//                 $nompais = Datosnuno::nombreNivel1($filx["pais"], "ca_nivel1");
+//             }
 
-//var_dump($filx);
+
+
             if ($filx["uni"] != "" && $filx["uni"] != 0) {
-
+                $nivel=2;
                 $nomuni = Datosndos::nombreNivel2($filx["uni"], "ca_nivel2");
             }
             if ($filx["zon"] != "" && $filx["zon"] != 0) {
-
+                $nivel=3;
                 $nomzon = "-" . Datosntres::nombreNivel3($filx["zon"], "ca_nivel3");
             }
             if ($filx["reg"] != "" && $filx["reg"] != 0) {
-
+                $nivel=4;
                 $nomreg = "-" . Datosncua::nombreNivel4($filx["reg"], "ca_nivel4");
             }
             if ($filx["ciu"] != "" && $filx["ciu"] != 0) {
-
+                $nivel=5;
                 $nomciu = "-" . Datosncin::nombreNivel5($filx["ciu"], "ca_nivel5");
             }
 
 //echo $filx["niv6"]; 
             if ($filx["niv6"] != "" && $filx["niv6"] != 0) {
+                $nivel=6;
                 $nomniv6 = "-" . Datosnsei::nombreNivel6($filx["niv6"], "ca_nivel6");
             }
 
 
-            if ($fily["cta"] != "")
+            if ($fily["cta"] != ""){
+                
+                $nivel=1;
                 $nomcta = DatosCuenta::nombreCuenta($fily["cta"],$this->cliente);
-            if ($fily["fra"] != "")
+            }
+            if ($fily["fra"] != ""){
+                 $nivel=2;
                 $nomfra = "-" . DatosFranquicia::nombreFranquicia($fily["cta"], $fily["fra"]);
-            if ($fily["pv"] != "")
+            }
+            if ($fily["pv"] != ""){
+                 $nivel=3;
                 $nompv = "-" . DatosUnegocio::nombrePV( $fily["pv"]);
+            }
 
 
 
-            $lugar = $nomuni . " " . $nomzon . " " . $nomreg . " " . $nomciu . " " . $nomniv6 . " " . $nomcta . " " . $nomfra . " " . $nompv;
+            $this->lugar = $nomuni . " " . $nomzon . " " . $nomreg . " " . $nomciu . " " . $nomniv6 . " " . $nomcta . " " . $nomfra . " " . $nompv;
 
 
 
@@ -443,6 +371,14 @@ class GraficaIndicadorController {
 
 
          }
+         
+         
+         //guardo var de sesion
+         if(isset($nivel)&&$nivel!="")
+         $_SESSION["fniv"]=$nivel;
+         else
+             $_SESSION["fniv"]=$VarNivel2;
+        //   die("yo".$_SESSION["fniv"]);
             //-----------------------------------
             //  inicializo etiquetas por idioma
             //  -----------------------------------
@@ -458,40 +394,7 @@ class GraficaIndicadorController {
          $this->lb_indicadores = $cad_buscapv;
 
       
-       $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
-     
-         
-        /** variables de sesi�n para los filtros */
-        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-         $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
-         $_SESSION["fmes"] = $mes; /* indice de aignacion */
    
-         $_SESSION["fniv"] = $VarNivel2;  /* nivel de consulta */
-         $_SESSION["ffilx"] = $gfilx;
-         $_SESSION["ffily"] = $gfily;
-         $_SESSION["fref"] = null;
-
-
-         $this->mes_asig = $mesletra;
-            
-      //  $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
-         $secciones = DatosEst::buscaSeccionesIndi2($this->servicio, $vidiomau);
-    // $secciones=array("5","2","3");
-         foreach ($secciones as $key) {
-            $seccion=new SeccionIndi;
-            $seccion->setTitulo($key[1]);
-          //    echo $key[0];
-            $seccion->setUrlDatos("Controllers/indpostmix/indgeneragrafindicjson.php?sec=" . $key[0] . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily .  "&filuni=" . $gfiluni);
-          
-           // $seccion->generaTabla($key[0]);
-            $this->listaSecciones[] = $seccion;
-         }
-
-
-       
-
-         $this->nombre_nivel = $lugar;
-         $this->periodo = $mesletra;
 //echo "views/modulos/indgeneragrafindic.php?sec=" . $seccion . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily . "&niv=" . $gnivel . "&filuni=" . $gfiluni;
             //  "Controllers/indpostmix/indgeneragrafindicjson.php?sec=5&mes=5.2018&filx=&fily=&niv=4&filuni=1.1"
                  // }//fin oermiso
@@ -500,84 +403,185 @@ class GraficaIndicadorController {
          }//fin oermiso 1
     }//fin funcion
 
-/***********hay que quitar**************/
-    function nombreSeccion($seccion, $vidiomau) {
-
-//echo $sql;
-        if ($vidiomau ==2) {
-            $nomcampo = "sec_nomsecing";
-        } else {
-           
+    
+    public function vistaGraficasIndicador(){
+        
+        foreach ($_POST as $nombre_campo => $valor) {
+            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
+            eval($asignacion);
+        }
+        foreach ($_GET as $nombre_campo => $valor) {
+            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
             
-            $nomcampo = "sec_nomsecind";
-            $nomcampo = "sec_nomsecesp";
+            eval($asignacion);
         }
-        $rs = DatosSeccion::editaSeccionModel($seccion, 1, "cue_secciones");
-        //  $rs = DatosSeccion::vistaSeccionModel(1, "cue_secciones");
-
-        foreach ($rs as $row) {
-
-            $arr = $rs[$nomcampo];
-        }
-
-        return $arr;
-    }
-
-    function buscaReferenciaNivelUni($usuario, $grupo) {
-        $result = 0;
-
-        // verifico el tipo de usuario
-
-        $query = "SELECT
-cnfg_usuarios.cus_usuario,
-cnfg_usuarios.cus_clavegrupo,
-cnfg_usuarios.cus_tipoconsulta,
-cnfg_usuarios.cus_nivel1,
-cnfg_usuarios.cus_nivel2,
-cnfg_usuarios.cus_nivel3,
-cnfg_usuarios.cus_nivel4,
-cnfg_usuarios.cus_nivel5,
-cnfg_usuarios.cus_nivel6,
-cnfg_usuarios.cus_cliente,
-cnfg_usuarios.cus_servicio,
-cnfg_usuarios.cus_nombreusuario
-FROM
-cnfg_usuarios
-where cus_usuario=:usuario and cnfg_usuarios.cus_cliente=:cliente and
-cnfg_usuarios.cus_servicio=:servicio";
-        $parametros = array("cliente" => $this->cliente, "servicio" => $this->servicio, "usuario" => $usuario);
-
-        $res = Conexion::ejecutarQuery($query, $parametros);
-        foreach ($res as $row) {
-            $nivCons = $row["cus_tipoconsulta"];
-            if ($grupo == "cli") {
-                if ($row["cus_nivel3"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"] . "." . $row["cus_nivel3"];
-                else if ($row["cus_nivel2"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"];
-                else
-                    $refer = $row["cus_nivel1"];
-            } else if ($grupo == "cue") {
-                if ($row["cus_nivel3"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"] . "." . $row["cus_nivel3"];
-                else if ($row["cus_nivel2"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"];
-                else
-                    $refer = $row["cus_nivel1"];
-            } else if ($grupo == "muf") {
-                if ($row["cus_nivel4"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"] . "." . $row["cus_nivel3"] . "." . $row["cus_nivel4"];
-                else if ($row["cus_nivel3"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"] . "." . $row["cus_nivel3"];
-                else if ($row["cus_nivel2"] != 0)
-                    $refer = $row["cus_nivel1"] . "." . $row["cus_nivel2"];
-                else
-                    $refer = $row["cus_nivel1"];
+         //inicio titulos
+        $this->titulos=array("COBERTURA","TAMAÑO DE LA MUESTRA","BEBIDAS","AGUA",
+            "SERVICIO | RESPONSABILIDAD GEPP","OPERACION | RESPONSABILIDAD CLIENTE","INOCUIDAD | RESPONSABILIDAD GEPP","INOCUIDAD | RESPONSABILIDAD CLIENTE");
+       
+        $navegacion=new Navegacion();
+        $navegacion->iniciar();
+        $navegacion->borrarRutaActual("graficaind");
+        $rutaact = $_SERVER['REQUEST_URI'];
+        if (isset($mes_solo) && $mes_solo != "") {
+            
+            $this->mes_indice = $mes_asig = $mes_solo . "." . $anio;
+        } else { // si no hay mes x defecto es el anterior
+            $mes_asig = date("m.Y");
+            $aux = explode(".", $mes_asig);
+            
+            $solomes = $aux[0] - 1;
+            $soloanio = $aux[1];
+            
+            if ($solomes == 0) {
+                $solomes = 12;
+                $soloanio = $aux[1] - 1;
             }
+            
+            $mes_asig = $solomes . "." . $soloanio;
+            $this->mes_indice = $mes_asig;
         }
-
-        return $refer;
+      //  $mes_asig="7.2019";
+        $mes_consulta = $mes_asig;
+      
+        $aux = explode(".", $mes_asig);
+      
+    
+        $mes = $aux[0];
+        if ($mes - 12 >= 0) { // calculo para los 12m
+            $z = $mes - 12 + 1;
+            
+            $mes_pivote = $aux[1] . "-" . $z . "-01";
+            $mes_pivote = $z . "." . $aux[1];
+        } else {
+            $z = $mes + 1;
+            
+            $mes_pivote = ($aux[1] - 1) . "-" . $z . "-01";
+            $mes_pivote = $z . "." . ($aux[1] - 1);
+        }
+         
+      
+     
+        // echo $rutaact;
+        $navegacion::agregarRuta("graficaind", $rutaact, T_("GRAFICA"));
+        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
+        
+        $this->mostrarFiltros();
+        /** variables de sesi�n para los filtros */
+        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
+        $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
+        $_SESSION["fmes"] = $mes; /* indice de aignacion */
+        
+        $_SESSION["fniv"] = $VarNivel2;  /* nivel de consulta */
+        $_SESSION["ffilx"] = $gfilx;
+        $_SESSION["ffily"] = $gfily;
+        $_SESSION["fref"] = null;
+        
+        
+        $this->mes_asig = $mesletra;
+        
+        //  $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
+       // $secciones = DatosEst::buscaSeccionesIndi2($this->servicio, $vidiomau);
+         $secciones=array("BEBIDAS"=>"E","AGUA"=>"E");
+        foreach ($secciones as $key) {
+           
+            $setUrlDatos="indgeneragrafjsonv2.php?tipo=" . $key[0] . "&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
+            
+            // $seccion->generaTabla($key[0]);
+            $this->listaSecciones[] = $setUrlDatos;
+            
+        }
+        
+        
+        
+        
+       
+        $this->periodo = $mesletra;
+        //meto datos en la tabla temporal
+       
+        $this->insertarReportesTemp($mes_consulta,$mes_pivote);
+         $this->UrlCobertura="indgeneragrafcoberturajson.php?tipo=Cob&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
+       $this->UrlIndicadores="indgeneragrafjsonv2.php?mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta.  "&filuni=" . $this->filnivelreg."&tipo=";
+      
     }
+
+    
+     public function vistaGraficasCobertura(){
+        
+        foreach ($_POST as $nombre_campo => $valor) {
+            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
+            eval($asignacion);
+        }
+        foreach ($_GET as $nombre_campo => $valor) {
+            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
+            
+            eval($asignacion);
+        }
+        
+        //inicio titulos
+        $this->titulos=array("COBERTURA DE AUDITORIAS POR REGION","TAMAÑO DE LA MUESTRA POR REGION","COBERTURA DE CUENTAS CLAVE","TAMAÑO DE LA MUESTRA POR CUENTA","COBERTURA","TAMAÑO DE LA MUESTRA");
+        $navegacion=new Navegacion();
+        $navegacion->iniciar();
+        $navegacion->borrarRutaActual("graficacob");
+        $rutaact = $_SERVER['REQUEST_URI'];
+        $navegacion::agregarRuta("graficacob", $rutaact, T_("GRAFICA COBERTURA"));
+        
+        if (isset($mes_solo) && $mes_solo != "") {
+            
+            $this->mes_indice = $mes_asig = $mes_solo . "." . $anio;
+            $soloanio=$anio;
+        } else { // si no hay mes x defecto es el anterior
+            $mes_asig = date("m.Y");
+            $aux = explode(".", $mes_asig);
+            
+            $solomes = $aux[0] - 1;
+            $soloanio = $aux[1];
+            
+            if ($solomes == 0) {
+                $solomes = 12;
+                $soloanio = $aux[1] - 1;
+            }
+            
+            $mes_asig = $solomes . "." . $soloanio;
+            $this->mes_indice = $mes_asig;
+        }
+       // $mes_consulta = $mes_asig;
+        
+       
+            
+        $mes_pivote ="01.".$soloanio;
+        
+      
+     
+        // echo $rutaact;
+      
+        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
+       // die($mes_pivote."++".$mes_asig."+++".$mesletra);
+        $this->mostrarFiltros();
+        /** variables de sesi�n para los filtros */
+        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
+        $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
+        $_SESSION["fmes"] = $mes_asig; /* indice de aignacion */
+        
+       /* nivel de consulta */
+        $_SESSION["ffilx"] = $this->filnivelcedis;
+        $_SESSION["ffily"] = $this->filcuenta;
+        $_SESSION["fref"] = null;
+        
+        
+        $this->mes_asig = $mesletra;
+     
+       //  die("yo".$_SESSION["fniv"]);
+        $this->periodo = $mesletra;
+        $this->UrlCobertura="indgeneragrafcoberturajson.php?tipo=Cob&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
+       $this->UrlCoberturaxReg="indgeneragrafcoberturajson.php?tipo=CobxReg&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta.  "&filuni=" . $this->filnivelreg;
+        $this->UrlCoberturaxCta="indgeneragrafcoberturajson.php?tipo=CobxCta&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
+        
+        
+        
+    }
+
+
     function crearReferenciaNivelUni($row,  $grupo) {
         $result = 0;
      
@@ -640,111 +644,148 @@ cnfg_usuarios.cus_servicio=:servicio";
             }
         }
     }
-/***************hay que uitar*********/
-    public function filtroSecciones() {
-// genera secciones
-
-        $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $_SESSION["idiomaus"]);
-
-
-        foreach ($secciones as $key) {
-
-            $this->listaSecciones .= '  <option value="' . $key[0] . '">' . $key[1] . '</option>';
+     public function insertarReportesTemp($fmes_consulta,$mes_consulta_ant)
+    {
+      
+        $usuario=$_SESSION["UsuarioInd"];
+        
+        
+        if ($this->filnivel == "") {
+            $this->filnivel = "1.1.5";
         }
+        
+        $this->servicio = 1; // siempre es 1
+        $aux = explode(".", $this->filnivelreg);
+        
+        $filuni = array();
+        $filuni["reg"] = $aux[0];
+        $filuni["uni"] = $aux[1];
+        $filuni["zon"] = $aux[2];
+        $filx = array();
+         $aux = explode(".", $this->filnivelcedis);
+       
+        $filx["edo"] = $aux[0];
+        
+        $filx["ciu"] = $aux[1];
+        $filx["niv6"] = $aux[2];
+        $auxy = explode(".", $this->filcuenta);
+        
+        $fily = array();
+        
+        $fily["cta"] = $auxy[0];
+        $fily["fra"] = $auxy[1];
+        $fily["pv"] = $auxy[2];
+      
+      /*   * **************************************CONSULTA********************************
+         */
+        $i = 0;
+        
+        DatosTemporales::eliminarEstadistica($usuario);
+        
+        /* creo consulta  generica */
+        $sql_porcuenta = "insert into tmp_estadistica (usuario, numreporte,mes_asignacion) select :Usuario, ins_generales.i_numreporte, str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y')
+FROM
+  (
+    ins_generales
+    INNER JOIN ca_unegocios
+      ON  ins_generales.`i_unenumpunto` = ca_unegocios.une_id
+  )
+  INNER JOIN ca_cuentas
+    ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
+where cue_idcliente=:vclienteu and ins_generales.i_claveservicio=:vserviciou";
+        
+        $parametros=array("vserviciou" => $this->servicio, "Usuario" => $usuario,"vclienteu"=>1);
+       
+        if ($fily["cta"] != 0) {
+            $sql_porcuenta .= " AND ca_unegocios.cue_clavecuenta=:cuenta  ";
+            $parametros["cuenta"] = $fily["cta"];
+            $nivel=1;
+        }
+        
+        if ($fily["fra"] != 0) {
+            $sql_porcuenta .= " AND fc_idfranquiciacta=:franquiciacta";
+            $parametros["franquiciacta"] = $fily["fra"];
+            //busco nombre de la franquicia para guardarlo
+                $nivel=2;
+            $_SESSION["ffrancuenta"] = DatosFranquicia::nombreFranquicia($fily["cta"], $fily["fra"], $this->vclienteu, $this->vserviciou);
+        }
+        
+        if ($fily["pv"] != 0) {
+            $sql_porcuenta .= " and ins_generales.i_unenumpunto=:unidadnegocio";
+            $parametros["unidadnegocio"] = $fily["pv"];
+                $nivel=3;
+        }
+        // validamos los niveles de la estructura
+        
+        
+        if ($filuni["reg"] != 0) {
+            $sql_porcuenta.= " AND une_cla_region=:select1  ";
+            $parametros["select1"] = $filuni["reg"];
+                $nivel=1;
+            
+        }
+        if ($filuni["uni"] != 0) {
+            $sql_porcuenta.= " AND une_cla_pais=:select2  ";
+            $_SESSION["funidadneg"] =Datosndos::nombreNivel2( $filuni["uni"],"ca_nivel2");
+            $parametros["select2"] = $filuni["uni"];
+                $nivel=2;
+        }
+        if ($filuni["zon"] != 0) {
+            $sql_porcuenta.= " AND une_cla_zona=:select3  ";
+            $_SESSION["ffranquicia"] =Datosntres::nombreNivel3( $filuni["zon"],"ca_nivel3");
+            $parametros["select3"] = $filuni["zon"];
+                $nivel=3;
+        }
+        if ($filx["edo"] != 0) {
+            $sql_porcuenta.= " AND une_cla_estado=:select4  ";
+            $_SESSION["fregion"] =Datosncua::nombreNivel4( $filx["edo"] ,"ca_nivel4");
+            $parametros["select4"] = $filx["edo"] ;
+                $nivel=4;
+        }
+        if ($filx["ciu"]  != 0) {
+            $sql_porcuenta.= " AND une_cla_ciudad=:select5  ";
+            $_SESSION["fzona"] =Datosncin::nombreNivel5( $filx["ciu"] ,"ca_nivel5");
+            $parametros["select5"] = $filx["ciu"] ;
+                $nivel=5;
+        }
+        if ($filx["niv6"]  != 0) {
+            $sql_porcuenta.= " AND une_cla_franquicia=:select6  ";
+            $_SESSION["fcedis"] =Datosnsei::nombreNivel6( $filx["niv6"] ,"ca_nivel6");
+            $parametros["select6"] = $filx["niv6"] ;
+                $nivel=6;
+        }
+        
+      
+      //modificacion del filtro de fecha se usa mes de asignacion
+	
+		//$fechainicioc = mod_fecha($fechainicio);
+		$sql_porcuenta.= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaasig_i ),'%d.%m.%Y')";
+		$parametros["fechaasig_i"] = $mes_consulta_ant;
+	
+		//$fechfinc = mod_fecha($fechafin);
+		$sql_porcuenta.= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechaasig_fin ),'%d.%m.%Y')";
+		$parametros["fechaasig_fin"] = $fmes_consulta;
+	
+        //	echo $select6;
+      //  die($mes_consulta_ant."--".$fmes_consulta;)
+        ////inserta reportes en la tabla temporal tmp_estadistica
+        $rs_sql_us = Conexion::ejecutarInsert($sql_porcuenta,$parametros);
+        
+        //valido si hay mas de un reporte
+        $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
+        //echo $sqlt;
+        $rs = Conexion::ejecutarQuery($sqlt,array("Usuario"=>$usuario));
+        $this->nivel=$nivel+1;
+        $num_reg = sizeof($rs);
     }
     
-    
-
-    /**
-     * @return the $varnivel
-     */
-    public function getVarnivel()
-    {
-        return $this->varnivel;
-    }
-
-    /**
-     * @return the $gfilx
-     */
-    public function getGfilx()
-    {
-        return $this->gfilx;
-    }
-
-    /**
-     * @return the $gfily
-     */
-    public function getGfily()
-    {
-        return $this->gfily;
-    }
-
-    /**
-     * @param Ambigous <unknown, number> $varnivel
-     */
-    public function setVarnivel($varnivel)
-    {
-        $this->varnivel = $varnivel;
-    }
-
-    /**
-     * @param field_type $gfilx
-     */
-    public function setGfilx($gfilx)
-    {
-        $this->gfilx = $gfilx;
-    }
-
-    /**
-     * @param field_type $gfily
-     */
-    public function setGfily($gfily)
-    {
-        $this->gfily = $gfily;
-    }
-
-    function getListaPeriodo() {
-        return $this->listaPeriodo;
-    }
-
-    function getListaNivel() {
-        return $this->listaNivel;
-    }
 
     function getNavegacion() {
         return $this->navegacion;
     }
 
-    function getNavegacion2() {
-        return $this->navegacion2;
-    }
-
-    function getNumsecc() {
-        return $this->numsecc;
-    }
-
     function getMes_indice() {
         return $this->mes_indice;
-    }
-
-    function getNivel03() {
-        return $this->Nivel03;
-    }
-
-    function getNivel04() {
-        return $this->Nivel04;
-    }
-
-    function getNivel05() {
-        return $this->Nivel05;
-    }
-
-    function getNivel06() {
-        return $this->Nivel06;
-    }
-
-    function getOpcionuni() {
-        return $this->opcionuni;
     }
 
     function getLb_buscar() {
@@ -755,111 +796,7 @@ cnfg_usuarios.cus_servicio=:servicio";
         return $this->lb_indicadores;
     }
 
-    function getFiltros() {
-        return $this->filtros;
-    }
-
-    function getNombre_indicador() {
-        return $this->nombre_indicador;
-    }
-
-    function getNombre_nivel() {
-        return $this->nombre_nivel;
-    }
-
-    function getCodigoGrafica() {
-        return $this->codigoGrafica;
-    }
-
-    function setListaSeccion($listaSeccion) {
-        $this->listaSeccion = $listaSeccion;
-    }
-
-    function setListaPeriodo($listaPeriodo) {
-        $this->listaPeriodo = $listaPeriodo;
-    }
-
-    function setListaNivel($listaNivel) {
-        $this->listaNivel = $listaNivel;
-    }
-    
-
-    /**
-     * @return the $listanivel2
-     */
-    public function getListanivel2()
-    {
-        return $this->listanivel2;
-    }
-
-    function setNavegacion($navegacion) {
-        $this->navegacion = $navegacion;
-    }
-
-    function setNavegacion2($navegacion2) {
-        $this->navegacion2 = $navegacion2;
-    }
-
-    function setNumsecc($numsecc) {
-        $this->numsecc = $numsecc;
-    }
-
-    function setMes_indice($mes_indice) {
-        $this->mes_indice = $mes_indice;
-    }
-
-    function setNivel03($Nivel03) {
-        $this->Nivel03 = $Nivel03;
-    }
-
-    function setNivel04($Nivel04) {
-        $this->Nivel04 = $Nivel04;
-    }
-
-    function setNivel05($Nivel05) {
-        $this->Nivel05 = $Nivel05;
-    }
-
-    function setNivel06($Nivel06) {
-        $this->Nivel06 = $Nivel06;
-    }
-
-    function setOpcionuni($opcionuni) {
-        $this->opcionuni = $opcionuni;
-    }
-
-    function setLb_buscar($lb_buscar) {
-        $this->lb_buscar = $lb_buscar;
-    }
-
-    function setLb_indicadores($lb_indicadores) {
-        $this->lb_indicadores = $lb_indicadores;
-    }
-
-    function setFiltros($filtros) {
-        $this->filtros = $filtros;
-    }
-
-    function setNombre_indicador($nombre_indicador) {
-        $this->nombre_indicador = $nombre_indicador;
-    }
-
-    function setNombre_nivel($nombre_nivel) {
-        $this->nombre_nivel = $nombre_nivel;
-    }
-
-    function setCodigoGrafica($codigoGrafica) {
-        $this->codigoGrafica = $codigoGrafica;
-    }
-    
-
-    function getPeriodo() {
-        return $this->periodo;
-    }
-
-    function getAlertanav() {
-        return $this->alertanav;
-    }
+ 
 
     function getOpciones_anio() {
         return $this->opciones_anio;
@@ -872,7 +809,15 @@ cnfg_usuarios.cus_servicio=:servicio";
     function getListaSecciones() {
         return $this->listaSecciones;
     }
-    
+
+    function getListanivel2() {
+        return $this->listanivel2;
+    }
+
+    function getListanivel3() {
+        return $this->listanivel3;
+    }
+
     function getListanivel4() {
         return $this->listanivel4;
     }
@@ -884,125 +829,44 @@ cnfg_usuarios.cus_servicio=:servicio";
     function getListanivel6() {
         return $this->listanivel6;
     }
-    function getListanivel3() {
-        return $this->listanivel3;
+
+    function getPeriodo() {
+        return $this->periodo;
+    }
+
+
+    function getLugar() {
+        return $this->lugar;
+    }
+
+    function getFilnivelreg() {
+        return $this->filnivelreg;
+    }
+
+    function getUrlCobertura() {
+        return $this->UrlCobertura;
+    }
+
+    function getUrlCoberturaxReg() {
+        return $this->UrlCoberturaxReg;
+    }
+
+  
+
+
+    function getTitulos() {
+        return $this->titulos;
+    }
+
+
+    function getUrlCoberturaxCta() {
+        return $this->UrlCoberturaxCta;
+    }
+
+    function getUrlIndicadores() {
+        return $this->UrlIndicadores;
     }
 
 
 
-
-}
-
-class SeccionIndi
-{
-
-    private $titulo;
-
-    private $urlDatos;
-
-    private $tabla;
-
-    function generaTabla($seccion)
-    {
-        $usuario_act = $_SESSION["UsuarioInd"];
-        $resres = new ResumenResultadosController();
-        $resres->setVcliente($_SESSION["clienteind"]);
-        $resres->setVservicio($_SESSION["servicioind"]);
-        
-        /* * *********** calidad del agua ********************** */
-        // $seccion2 = ConsultaAtributos('5.0.2');
-        switch ($seccion) {
-            case 8:
-                 /* * ****** calidad de la bebida***************** */
-                 $sec_calbebida = array(
-                    '8.0.2.6',
-                    '8.0.2.9',
-                    '8.0.1.9'
-                );
-                
-                $this->tabla = $resres->ConsultaSeccion($usuario_act, $sec_calbebida, '');
-                break;
-            case 5:
-                $seccion2 = array(
-                    "5.0.2.18",
-                    "5.0.2.17",
-                    "5.0.2.5",
-                    "5.0.2.9",
-                    "5.0.2.1",
-                    "5.0.2.2",
-                    "5.0.2.3",
-                    "5.0.2.4",
-                    "5.0.2.6",
-                    "5.0.2.7",
-                    "5.0.2.8",
-                    "5.0.2.10",
-                    "5.0.2.11",
-                    "5.0.2.12",
-                    "5.0.2.13",
-                    "5.0.2.16",
-                    "5.0.2.19",
-                    "5.0.2.20"
-                );
-                $this->tabla = $resres->ConsultaSeccion($usuario_act, $seccion2, '');
-                break;
-            case 2:
-        /*         * ************** frescura de jarabes ******************* */
-        /*
-          $tabla = ConsultaSeccion ( $usuario_act, array(6,7), 'V' );
-          $html->asignar ( 'tablaseccion', $tabla );
-          $html->expandir ( 'SECCIONES', '+listasec' ); */
-        /*         * ************************* presiones ********************** */
-        $seccion2 = $resres->ConsultaAtributos('2.8.1');
-                
-                $this->tabla = $resres->ConsultaSeccion($usuario_act, $seccion2, '');
-                break;
-            default:
-        /*         * ************************buenos habitos *********************************** */
-          $sec_condiciones = array(
-                    '6',
-                    '7',
-                    '3.3',
-                    '8.0.2.5',
-                    '3.6',
-                    '3.7',
-                    '3.9',
-                    '3.10',
-                    '3.2',
-                    '3.4'
-                );
-                $this->tabla = $resres->ConsultaSeccion($usuario_act, $sec_condiciones, 'P');
-                
-                break;
-        }
-    }
-
-    function getTitulo()
-    {
-        return $this->titulo;
-    }
-
-    function getUrlDatos()
-    {
-        return $this->urlDatos;
-    }
-
-    function getTabla()
-    {
-        return $this->tabla;
-    }
-
-    function setTitulo($titulo)
-    {
-        $this->titulo = $titulo;
-    }
-
-    function setUrlDatos($urlDatos)
-    {
-        $this->urlDatos = $urlDatos;
-    }
-
-    function setTabla($tabla)
-    {
-        $this->tabla = $tabla;
-    }
 }

@@ -19,6 +19,32 @@ class PonderacionController{
 		    echo '<li><a href="index.php?action=listaseccion&idser='.$ser.'">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
 			echo '<li><a href="index.php?action=sn&ts=P&sv='.$ser.'&sec='.$seccion.'">SECCION PONDERADA </a></li>';
 	}
+	
+	public function breadcrumbComent(){
+		$seccion = $_GET["sec"];
+		$servicioController = $_GET["sv"];
+	
+		echo '<li><a href="index.php?action=listaservicio">SERVICIOS</a></li>';
+		$respuesta = DatosSeccion::vistaNombreServModel($servicioController,"ca_servicios");
+		//
+		echo '<li><a href="index.php?action=listaseccion&idser='.$servicioController.'">SERVICIO: ' . $respuesta ["ser_descripcionesp"] . '</a></li>';
+		//coloca subtitulo de seccion
+		$datini=SubnivelController::obtienedato($seccion,1);
+		$londat=SubnivelController::obtienelon($seccion,1);
+		$numsec=substr($seccion,$datini,$londat);
+		
+		$datini=SubnivelController::obtienedato($seccion,2);
+		$londat=SubnivelController::obtienelon($seccion,2);
+		$numreac=substr($seccion,$datini,$londat);
+		
+		
+		$respuesta1 = DatosSeccion::vistaNombreSeccionModel($numsec, $servicioController,"cue_secciones");
+		echo '<li><a href="index.php?action=sn&sv='.$servicioController.'&sec='.$numsec.'&ts=P">SECCION: '.$respuesta1["sec_nomsecesp"]. '</a></li>';
+		#busca ultimo nivel en ponderada
+		$respuesta2 = DatosSeccion::vistaNombreSeccionPondModel($numsec,$servicioController, $numreac, "cue_reactivos");
+		echo '<li>REACTIVO: '.$respuesta2["r_descripcionesp"]. '</li>';
+		
+	}
 
 
 
@@ -86,7 +112,7 @@ class PonderacionController{
 	               <td>
 	                    
 
-	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts=P&sv='.$item["ser_claveservicio"].'&idb='.$item["ser_claveservicio"].'.'.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'"><i class="fa fa-trash-o fa-lg"></i></a>
+	                    <a href="index.php?action=sn&sec='.$item["sec_numseccion"].'&ts=P&sv='.$item["ser_claveservicio"].'&idb='.$item["ser_claveservicio"].'.'.$item["sec_numseccion"].'.'.$item["r_numreactivo"].'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
 	                  </td>
 	                </tr>';
 	            $i++;  
@@ -197,9 +223,12 @@ public function editarPonderaController(){
            
           </div>
            <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$respuesta["sec_numseccion"].'&ts=P&sv='.$respuesta["ser_claveservicio"].'"> CANCELAR </a></button>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
-                 </div>';
+  <div class="pull-right">
+  <button type="submit" class="btn btn-info">GUARDAR</button>  
+               
+                  <button  class="btn btn-default" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$respuesta["sec_numseccion"].'&ts=P&sv='.$respuesta["ser_claveservicio"].'"> CANCELAR </a></button>
+</div>                
+  </div>';
                
 
 }   
@@ -266,7 +295,7 @@ public function actualizarPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["id"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$id.'&ts=P&sv='.$ids.'"> CANCELAR </a></button>
+     echo ' <button  class="btn btn-default" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$id.'&ts=P&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
 
@@ -284,14 +313,13 @@ public function actualizarPonderaController(){
                   <td><a href="index.php?action=editapondcoment&id='.$sec.'.'.$item["rc_numcomentario"].'&ids='.$ser.'&sec='.$sec.'">'.$item["rc_descomentarioesp"].'</a>
                   </td>
                   
-                   <td><a href="index.php?action=reactivocoment&idb='.$item["rc_numcomentario"].'&sv='.$ser.'&sec='.$sec.'"><i class="fa fa-trash-o fa-lg"></i></a>
+                   <td><a href="index.php?action=reactivocoment&idb='.$item["rc_numcomentario"].'&sv='.$ser.'&sec='.$sec.'" onclick="return confirmarEli()"><i class="fa fa-trash-o fa-lg"></i></a>
                   </td>
                 </tr>';
                    
          } // foreach
-              echo  ' </table>
-              </div>
-             </div>';
+            
+              
 
     }
 
@@ -337,7 +365,7 @@ public function actualizarPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["id"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
+     echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a>
   ';
   }
   
@@ -346,7 +374,7 @@ public function actualizarPonderaController(){
   $ids = $_GET["ids"];
   $id = $_GET["sec"];
 
-     echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
+     echo ' <button  class="btn btn-default" style="margin-left: 10px"><a href="index.php?action=reactivocoment&sec='.$id.'&sv='.$ids.'"> CANCELAR </a></button>
   ';
   }
 
@@ -615,7 +643,9 @@ public function editarPonderaComentController(){
            </div>';
                   
   }
-
+/**********
+ * vista reporte seccion ponderada
+ */
   public function reportePonderaController(){
 
     # busca datos de la seccion ponderada
@@ -642,9 +672,9 @@ public function editarPonderaComentController(){
  $respuesta = DatosPond::vistareportePonderaModel($sec,$ser, "cue_reactivos");
      $i=$bac=1;
     foreach($respuesta as $row => $item){
-         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
-          //  echo "encontre el registro";
-            continue;
+//          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
+//           //  echo "encontre el registro";
+//             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==5)
             continue;   
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==8)
@@ -674,8 +704,12 @@ public function editarPonderaComentController(){
 	  echo '
       
         <div class="col-md-4" >
-          <div class="box box-info" >
-          
+          <div class="box box-info ';
+	  //para minimizar la seccion 5.1 de gepp
+	  if($ser==5&&$sec=="5"&& $item["r_numreactivo"]==1)
+	  	echo "collapsed-box";
+		echo '" >';
+        echo'  
             <div class="box-header with-border">
             <h3 class="box-title">No.'. $item["r_numreactivo"].'</h3>
 
@@ -764,17 +798,23 @@ public function editarPonderaComentController(){
                <div class="row" >
                 <div class="col-sm-4 border-right">
                   <div class="description-block">';
+                      $idreac=$item["r_numreactivo"];
                      if ($item["r_tiporeactivo"]!="") {
-                        $idreac=$item["r_numreactivo"];
+                     
                         # validar si hay registros en subnivel
                         switch($item["r_tiporeactivo"]) {
                         case 'A':
                         $numcom= DatosAbierta::validasubseccionAbierta($ser, $sec, $idreac, "cue_reactivosabiertosdetalle");
+                       break;
                         case 'E':
-                        $numcom= DatosEst::validasubseccionEstandar($ser, $sec, $idreac, "cue_reactivosestandardetalle");
+                       
+                        	$numcom= DatosEst::validasubseccionEstandar($ser, $sec, $idreac, "cue_reactivosestandardetalle");
+                        	break;
                         }
+                       
+                        if ($numcom>=1)
                         echo '
-                    <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=rsn&sec='.$sec.'.'.$idreac.'&ts='.$item["r_tiporeactivo"].'&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'&sv='.$ser.'"> Detalle </a></span></button>';
+                    <a type="button" class="btn btn-block btn-info" href="index.php?action=rsn&sec='.$sec.'.'.$idreac.'&ts='.$item["r_tiporeactivo"].'&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'&sv='.$ser.'"> Detalle </a>';
                       }
                       echo '
                   </div>
@@ -783,11 +823,13 @@ public function editarPonderaComentController(){
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block">';
-
-                  if ($numcom>=1){
+//reviso comentarios
+                      $numcom2=DatosPond::vistaReactivoComentModel($sec.".".$idreac, $ser, "cue_reactivoscomentarios");
+                    
+                  if (sizeof($numcom2)>=1){
                    
                     echo '
-                   <button type="button" class="btn btn-block btn-info" name="comen'.$item["r_tiporeactivo"].'"><span style="font-size: 12px"><a href="index.php?action=listacoment&sec='.$item["sec_numseccion"].'&sv='.$item["ser_claveservicio"].'">Comentario </a></span></button>';
+                   <a type="button" class="btn btn-block btn-info" name="comen'.$item["r_tiporeactivo"].'" href="index.php?action=rsn&ts=Pcoment&sec='.$sec.'.'.$idreac.'&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'"><i class="fa fa-comment fa-lg" aria-hidden="true"></i> </a>';
                   }
                   echo '
                   </div>
@@ -796,7 +838,7 @@ public function editarPonderaComentController(){
                 <!-- /.col -->
                 <div class="col-sm-4">
                   <div class="description-block">
-                 <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaseccion&idb='.$item["sec_numseccion"].'&idser='.$item["ser_claveservicio"].'"><i class="fa fa-image"></i></a></button>
+                 <a type="button" class="btn btn-block btn-info" href="index.php?action=rsn&sec='.$sec.'.'.$idreac.'&ts=IM&sv='.$item["ser_claveservicio"].'&nrep='.$nrep.'&pv='.$pv.'"><i class="fa fa-image"></i></a>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -808,18 +850,18 @@ public function editarPonderaComentController(){
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
-    </div>
-     ';
+    </div> ';
 	 if(($i)%3==0){
 					
 					echo '</div>';
 					$bac=1;
-				}
-				$i++;
+			}
+		
+			$i++;
 	 
       } //foreach
-   
-
+   if($bac==0)
+      echo '</div>';
   #registra reporte
               $ingreso = new PonderacionController();
               $ingreso -> registraPonderada();
@@ -881,7 +923,7 @@ public function editarPonderaComentController(){
       
       #verificar los registros para las secciones con letra
 
-      echo '
+      echo '<h1>
        
     <small>    NIVEL DE CUMPLIMIENTO '.$nivelacep.'%</small></h1>';
      
@@ -970,9 +1012,9 @@ public function registraPonderada(){
           }  
       # vamos a ingresar EL REACTIVO
           $descom=0;
-if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
+//if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
           //  echo "encontre el registro";
-            continue;
+//            continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==5)
             continue;   
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==8)

@@ -4,11 +4,12 @@ class UsuarioController{
 	public function validarUsuarioController(){
 		//var_dump(($_POST["g-recaptcha-response"]));
 			//echo "validausuario";
-		if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
+	//	if(isset($_POST["g-recaptcha-response"]) && ($_POST["g-recaptcha-response"])){
 			//echo "entre a validacion de captcha";
 						// validar el captcha
 			//$secret = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
 			$secretKey = 	"6Le3cF4UAAAAADqpg_8ZMleTeY35KqegkiR-Gqlb";
+		//	$secretKey = 	"6LdZapsUAAAAAG91rtgxTyEqD_hJtJ8N6N7Ro6tO";
 		//	echo "secret".$secret;
 			$ip= $_SERVER["REMOTE_ADDR"];
 		//	echo "ip".$ip;
@@ -34,18 +35,23 @@ class UsuarioController{
 			curl_close($ch);
 
 			$json = json_decode($output, TRUE);
-	       
-	       if ($json ["success"]==TRUE)
-	       //IF ($json)
-	       {
-		       	//echo "si eres humano";
+	 
+// 	       if ($json ["success"]==TRUE)
+// 	       //IF ($json)
+// 	       {
+				//echo "TRUE";
+			       //	echo "si eres humano";
 		       		# vamos a validar el mail y el password
 	       		$logemail=$_POST["logemail"];
+				
 		       	$datoslogController= array("logemail"=>$logemail,
 	            			"logpass"=>$_POST["logpass"]); 
-		       //	echo $datoslogController["logemail"];
+		      
 		       //	echo $datoslogController["logpass"];
-				$respuesta =UsuarioModel::validaUsuarioModel($datoslogController, "cnfg_usuarios");	var_dump($respuesta);		
+				$respuesta =UsuarioModel::validaUsuarioModel($datoslogController, "cnfg_usuarios");	
+				//var_dump($respuesta);		
+				//echo $respuesta;
+			
 				if ($respuesta>0) {
 				 	 	#actualiza Estatus del usuario
 					date_default_timezone_set('America/Mexico_City');
@@ -60,35 +66,46 @@ class UsuarioController{
 
 					//echo $respuesta;
 					$respuesta =UsuarioModel::consultaUsuarioModel($datoslogController, "cnfg_usuarios");
-
+					 
 					$gpo = $respuesta["cus_clavegrupo"];
                 	$idioma = $respuesta["cus_idioma"];
                 	$cargo=$respuesta["cus_cargo"];
                 	$NombreUsuario=$respuesta["cus_usuario"];
-
-				 	 #creamos variables de session
+					
+					 
                 	 session_start();
-   				     $_SESSION['Usuario'] = $logemail;
-   				     $_SESSION['GrupoUs'] = $gpo;
-   				     $_SESSION['Cargo'] = $cargo;
-   						
+					$_SESSION['Usuario'] = $logemail;
+   				    $_SESSION['GrupoUs'] = $gpo;
+   				    $_SESSION['Cargo'] = $cargo;
+					//echo $logemail;
+   					//echo $_SESSION['Usuario'];
+					//echo $_SESSION['GrupoUs'];
+					//echo $_SESSION['Cargo'];	
                 	//$ini=UsuarioController::Inicia_Sesion($logemail);
 					//$ini=UsuarioController::Guarda_Grupo($gpo);
             		$_SESSION['autentificado'] = 'SI';
             		$_SESSION['NombreUsuario'] = $NombreUsuario;
             		$_SESSION["idiomaus"] = $idioma;
-					
-					header("location:index.php");
+				
+					//header("location:index.php");		
+					echo '<script>
+					window.location="index.php";
+					</script>';
 					
 				} else {
 						echo "El usuario o la contrasena son incorrectos";
 				} 	    
 	       	 	
-	       }  else {
-	       		       }
-	     } else {
-	     	//echo "no paso el captcha";	
-		}  // captcha
+// 	       }  else {
+// 			   //echo "FALSE";
+// 			   echo "hubo un error intente de nuevo";
+// 	       		       }
+// 	     } 
+// 	     else {
+// 	     	echo "Hubo un errror intente de nuevo";
+// 	     	//echo "no paso el captcha";
+// 			//echo "FALSE";	
+// 		}  // captcha
 	}	
 
 	
@@ -132,4 +149,3 @@ class UsuarioController{
 
 
 }
-?>

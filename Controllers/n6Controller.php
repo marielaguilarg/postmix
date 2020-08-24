@@ -3,6 +3,11 @@ class NseisController{
 
 
 	public function vistanseisController(){
+		
+		if($_GET["admin"]=="eli"){
+			$ec=new EstructuraController();
+			$ec->eli();
+		}else{
 		$datosController = $_GET["idnci"];
 		$respuesta =Datosnsei::vistanseiModel($datosController,"ca_nivel6");
 	    
@@ -11,11 +16,13 @@ class NseisController{
 	                  <td>'.$item["n6_id"].'</td>
 	                 
 	                  <td>
-	                    <a href="index.php?action=editan6&idnci='.$item["n6_id"].'">'.$item["n6_nombre"].'</a>
+	                    <a href="index.php?action=nuevonivel&niv=6&id='.$item["n6_id"].'">'.$item["n6_nombre"].'</a>
 	                  </td>
-	                  
+	                  <td> <a type="button" href="index.php?action=listan6&admin=eli&niv=6&id='.$item["n6_id"].'" onclick="return dialogoEliminar();"><i class="fa fa-times"></i></a>
+		                </td>
 	                </tr>';
 	            
+		}
 		}
 	}
 
@@ -36,13 +43,12 @@ class NseisController{
 		}
 
 		//$datosController = $_GET["idncu"];
+			echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'">NIVEL 2</a></li>';
+		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'">NIVEL 3</a></li>';
 
-		echo '<li><a href="index.php?action=listan2&idnuno='.$id2.'"><em class="fa fa-dashboard"></em> Nivel 2</a></li>';
-		echo '<li><a href="index.php?action=listan3&idnd='.$id3.'"><em class="fa fa-dashboard"></em> Nivel 3</a></li>';
+		echo '<li><a href="index.php?action=listan4&idnt='.$id4.'">NIVEL 4</a></li>';
 
-		echo '<li><a href="index.php?action=listan4&idnt='.$id4.'"><em class="fa fa-dashboard"></em> Nivel 4</a></li>';
-
-		echo '<li><a href="index.php?action=listan5&idncu='.$id5.'"><em class="fa fa-dashboard"></em> Nivel 5</a></li>';
+		echo '<li><a href="index.php?action=listan5&idncu='.$id5.'">NIVEL 5</a></li>';
 		
 	}
 

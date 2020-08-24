@@ -23,19 +23,28 @@ class GenerarBusquedaController {
         $maxte=ini_get('max_execution_time');
 ini_set('max_execution_time',400);
         try {
+        
             if ($_GET) {
                 $keys_post = array_keys($_GET);
                 foreach ($keys_post as $key_post) {
                     $$key_post = filter_input(INPUT_GET, $key_post, FILTER_SANITIZE_SPECIAL_CHARS);
                     //error_log("variable $key_post viene desde $ _POST");
+                  
                 }
             }
             $historico = $_SESSION["historico"];
-              
+            if(!isset($mes)){
+            	
+            	$mes=$_GET["mes"];
+            	$filx=$_GET["filx"];
+            	$filuni=$_GET["filuni"];
+            	$fily=$_GET["fily"];
+            }
             $this->filtrosSel = new ConsultaIndicadores;
             $this->vserviciou = $_SESSION["servicioind"];
             $this->vclienteu =$_SESSION["clienteind"];
 // crear periodo de acuerdo a mes asig y periodo
+	
             $mesasig = $mes;
             $aux = explode('.', $mes);
             $mes = $aux[0];
@@ -110,7 +119,7 @@ ini_set('max_execution_time',400);
             $gfily = $fily;
             $aux = explode(".", $gfilx);
 
-          
+    
 
             $this->select4 = $aux[0];
 
@@ -127,7 +136,7 @@ ini_set('max_execution_time',400);
             $this->select1 = $auxuni[0];
             $this->select2 = $auxuni[1];
             $this->select3 = $auxuni[2];
-
+          
 //arma la fecha de inicio
 //reinicio variables de sesion para filtros
             $_SESSION["ffrancuenta"] = "";
@@ -228,7 +237,7 @@ where    ins_generales.i_claveservicio=:vserviciou";
 
 ////inserta reportes en la tabla temporal tmp_estadistica
             try {
-//                echo $sql_porcuenta;
+//               
 //                var_dump($parametros);
                Conexion::ejecutarInsert($sql_porcuenta, $parametros);
             } catch (Exception $ex) {
@@ -243,7 +252,7 @@ where    ins_generales.i_claveservicio=:vserviciou";
 //            $num_reg = sizeof($rs);
             /*             * ******************************************************************* */
 
-         
+          
 if($fechaasig_fin!="")
 { $periodo = Utilerias::fecha_res($fechaasig_i) . ' ' . T_("a") . ' ' . Utilerias::fecha_res($fechaasig_fin);}
  if (isset( $this->select2) &&  $this->select2 != "0" &&  $this->select2 != "") {
@@ -274,7 +283,7 @@ if($fechaasig_fin!="")
         }
      
 
-        
+    
         $this->filtrosSel->setNombre_nivel($vuni . " " . $vzona . " " . $vregion . " " . $vciudad . " " . $v_nivel6);
         $this->filtrosSel->setNombre_franquicia($vcuenta . " " . $vfranquicia);
         //guardo los filtros como var de sesion
@@ -298,7 +307,17 @@ if($fechaasig_fin!="")
 
             if ($action == "indestadisticares"||$action == "indindicadores"){
 //            // include('MENindencabezacons.php');
-                
+            	$sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
+            	//echo $sqlt;
+            	
+            	$parametros2 = array("Usuario" => $_SESSION["UsuarioInd"]);
+            	$rs = Conexion::ejecutarQuery($sqlt, $parametros2);
+            	
+            	$num_reg = sizeof($rs);
+            	$_SESSION["fnumrep"] = $num_reg;
+            	if ($num_reg >= 2) {  // pasa al resumen
+            		return true;
+            	}else return false;
              }
            else { //esta seccion es para hostorial de pv
    $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
@@ -306,6 +325,7 @@ if($fechaasig_fin!="")
    
             $parametros2 = array("Usuario" => $_SESSION["UsuarioInd"]);
             $rs = Conexion::ejecutarQuery($sqlt, $parametros2);
+           
             $num_reg = sizeof($rs);
             $_SESSION["fnumrep"] = $num_reg;
               if ($num_reg >= 2) {  // pasa al resumen

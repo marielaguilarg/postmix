@@ -64,7 +64,7 @@ public function listaCuentasController(){
                     <div class="col-sm-4">
                       <div class="description-block">
                      
-                      <button type="button" class="btn btn-block btn-info" ><a  href="index.php?action=listafranquicia&idb='.$item["fc_idfranquiciacta"].'"><i class="fa fa-trash-o"></i></a></button>
+                      <a class="btn btn-block btn-info" onclick="return dialogoEliminar()"  href="index.php?action=listafranquicia&idb='.$item["fc_idfranquiciacta"].'"><i class="fa fa-trash-o"></i></a>
                       </div>
                       <!-- /.description-block -->
                     </div>
@@ -93,12 +93,17 @@ public function listaCuentasController(){
     public function registroFranquiciaController(){
 
       if (isset($_POST["franombre"])){  
-      
-        $datosController=array("franom"=>$_POST["franombre"],
-                               "fracuen"=>$_POST["fraidcuenta"]
-                                    );        
         
+      //busco el cliente
+        $resultado=DatosCuenta::editarCuentaModel($_POST["fraidcuenta"],"ca_cuentas");
+        $cliente=$resultado["cue_idcliente"];
+        
+        $datosController=array("franom"=>$_POST["franombre"],
+        		"fracuen"=>$_POST["fraidcuenta"],
+        		"cliente"=>$cliente
+        );    
         $respuesta = DatosFranquicia::registroFranquiciaModel($datosController, "ca_franquiciascuenta");
+     
         if($respuesta== "success"){
          echo "
             <script type='text/javascript'>
@@ -106,7 +111,6 @@ public function listaCuentasController(){
                 </script>
                   ";
         }
-
         else {
           echo '<script> windows.location= "index.php" </script>';
          // header("location:index.php");

@@ -103,12 +103,12 @@ class ConsultaSeccionesController
                 if ($num_reg != 0) {
                    
                         
-                        $secciones['celdaComent']= "<a class=\"btn btn-block btn-info\" href='index.php?action=indlistasecciones&tiposec=coment&secc=" . $idser . "." . $row ["sec_numseccion"] . "&referencia=" . $refer . "&numrep=" . $numrep . "'>
-<span style=\"font-size: 12px\">".T_("COMENTARIO")."</span></a>";
+                        $secciones['celdaComent']= "<a  class=\"btn btn-block btn-info\" href='index.php?action=indlistasecciones&tiposec=coment&secc=" . $idser . "." . $row ["sec_numseccion"] . "&referencia=" . $refer . "&numrep=" . $numrep . "'>
+<i class=\"fa fa-comment fa-lg\" aria-hidden=\"true\"></i></a>";
                     
                 } else {
                     $secciones['celdaComent']= "<a class=\"btn btn-block btn-info\" disabled>
-<span style=\"font-size: 12px\">".T_("COMENTARIO")."</span></a>";
+<i class=\"fa fa-comment fa-lg\" aria-hidden=\"true\"></i></a>";
                 }
                 
                 
@@ -131,13 +131,13 @@ class ConsultaSeccionesController
                     
                     if (sizeof($rs1) > 0) {
                         $imagenes= "<a class=\"btn btn-block btn-info\" data-trigger=\"gallery_".$row["sec_numseccion"]."\"  href='index.php?action=indlistasecciones&tiposec=img&secc=".$idser.".".
-                            $row ["sec_numseccion"] ."&numrep=".$numrep."'><i class=\"fa fa-image\"></i></a>";
+                            $row ["sec_numseccion"] ."&numrep=".$numrep."'  ><i class=\"fa fa-image\"></i></a>";
                    
                     foreach($rs1 as $row_max ) {
                         
                         $rutaFoto="fotografias/".$row_max["id_ruta"];
                         
-                        $imagenes.='<a href="'.$rutaFoto.'" data-fancybox="gallery_'.$row["sec_numseccion"].'"  style="display:none;">
+                        $imagenes.='<a href="'.$rutaFoto.'" data-caption="'.$row_max["id_descripcion"].'" data-fancybox="gallery_'.$row["sec_numseccion"].'"  style="display:none;">
                               foto
                                 </a>';
                         
@@ -148,7 +148,7 @@ class ConsultaSeccionesController
                 }
                 else
                     $secciones['celdaImg']="<a class=\"btn btn-block btn-info\" disabled>
-<span style=\"font-size: 12px\"><i class=\"fa fa-image\"></i></span></a>";
+<i class=\"fa fa-image\"></i></a>";
                     
                     /*             * ************************************************************************************************************* */
                     //excepcion para la liga de los datos generales
@@ -160,7 +160,7 @@ class ConsultaSeccionesController
                         $OPD = $idclien . "." . $idser . "." . $numrep . "." . $idcuen . "." . $row ["sec_numseccion"] . "." . $iduneg;
                         $liga = "index.php?action=indlistasecciones&tiposec=" . $row["sec_tiposeccion"] . "&Op=";
                     }
-                    $secciones['celdaSumniv']= "<a href='" . $liga . $OPD . "' class='btn btn-block btn-info' ><span style='font-size: 12px'>".T_("DETALLE")."</span></a>";
+                    $secciones['celdaSumniv']= "<a href='" . $liga . $OPD . "' class='btn btn-block btn-info' ><span style='font-size: 10px'>".T_("DETALLE")."</span></a>";
                     $this->listaSecciones[]=$secciones;
                     $cont++;
     }

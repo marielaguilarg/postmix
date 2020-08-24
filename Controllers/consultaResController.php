@@ -67,7 +67,9 @@ class consultaResController {
 		/*         * ************************************** */
 		$usuario = $_SESSION ["NombreUsuario"];
 		/*         * ************************************** */
-		
+		if(!isset($_SESSION["UsuarioInd"]))
+			$_SESSION["UsuarioInd"]=$usuario;
+		$_SESSION["clienteind"]=1;
 		//reinicio variables de session
 		$_SESSION["fperiodo"] = "";
 		$_SESSION["fcuenta"] = "";
@@ -112,14 +114,16 @@ class consultaResController {
 		$banserv=0;
 		$bancuenta=0;
 		$banfran=0;
-		if($uscliente==0||$uscliente=='')//puede ver todos
+		if($grupo=="adm"||$uscliente==0||$uscliente=='')//puede ver todos
 		{
 		
 			$bancli=1;
 			$banserv=1;
 			$bancuenta=1;
 			$banfran=1;
-		}
+			$rs_cli=DatosCuenta::listaClientesModel("ca_clientes");
+			$this->OPCLIENTES=Utilerias::crearSelectOnChange($rs_cli, "crcliente", "cargaContenidoCliente(this.value)");
+		}else
 		
 			
 			$this->OPCLIENTES=$this->buscaCliente($uscliente).'<input type="hidden" value="'.$uscliente.'" name="crcliente" id="crcliente">';
@@ -133,7 +137,7 @@ class consultaResController {
 ca_servicios.ser_descripcioning FROM `muestreo`.`ca_servicios`
         where `ca_servicios`.`cli_idcliente`='$uscliente';";
 				$sql_serv=DatosServicio::vistaServicioxCliente($uscliente, "ca_servicios");
-				$this->OPSERVICIOS=Utilerias::crearSelectOnChange($sql_serv,'crservicio','cargaContenidoCliente(this.id,\''.$filniv.'\')');
+				$this->OPSERVICIOS=Utilerias::crearSelectOnChange($sql_serv,'crservicio','');
 				//      echo "fin";
 				$banserv=1;
 				$bancuenta=1;

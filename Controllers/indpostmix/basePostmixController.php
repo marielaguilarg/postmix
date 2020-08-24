@@ -52,7 +52,7 @@ class BasePostmixController
     @session_start();
     $opcion=filter_input(INPUT_GET,"archivo", FILTER_SANITIZE_STRING); 	//opcionj para saber si genera el archivo o despliega el html
     $_SESSION["clienteind"]=1;
-    $_SESSION["servicionind"]=1;
+    $_SESSION["servicioind"]=1;
     //$cuenta=$_POST["cuenta"];
     $servicio=$_SESSION["servicioind"];
     $cliente=$_SESSION["clienteind"];
@@ -66,16 +66,21 @@ class BasePostmixController
     // crea lista de fecha de inspeccion
     // validamos el grupo
     if($gpous=="muf"){
-       $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis FROM ins_generales  Inner Join ca_unegocios ON ins_generales.i_idcliente = ca_unegocios.cli_idcliente
-      AND ins_generales.i_unenumpunto = ca_unegocios.une_id
-      WHERE YEAR(ins_generales.i_fechavisita) >=  '2013' AND ins_generales.i_claveservicio =  :servicio and
+       $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis 
+FROM ins_generales  Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
+      WHERE YEAR(ins_generales.i_fechavisita) >=  '2013' 
+AND ins_generales.i_claveservicio =  :servicio and
       concat(ca_unegocios.une_cla_region,'.',ca_unegocios.une_cla_pais,'.',ca_unegocios.une_cla_zona,'.',ca_unegocios.une_cla_estado)='".$refer."'
       GROUP BY ins_generales.i_fechavisita ORDER BY ins_generales.i_fechavisita DESC");
     }else{
-        $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis FROM ins_generales WHERE YEAR(ins_generales.i_fechavisita) >=  '2013' AND ins_generales.i_claveservicio =  :servicio GROUP BY ins_generales.i_fechavisita ORDER BY ins_generales.i_fechavisita DESC");
+        $ssql=("SELECT date_format(ins_generales.i_fechavisita,'%d-%m-%Y') as fecvis 
+FROM ins_generales WHERE YEAR(ins_generales.i_fechavisita) >=  '2013' 
+AND ins_generales.i_claveservicio =  :servicio GROUP BY ins_generales.i_fechavisita 
+ORDER BY ins_generales.i_fechavisita DESC");
     }
     $rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$servicio));
-   
+
+    
     foreach ($rs as $row) {
         $this->listaFechas[]=$row["fecvis"];
      
@@ -88,13 +93,13 @@ class BasePostmixController
     {
     
         $_SESSION["clienteind"]=1;
-        $_SESSION["servicionind"]=1;
+        $_SESSION["servicioind"]=1;
         $gpous=$_SESSION["GrupoUs"]; 
         $this->opcion=filter_input(INPUT_GET, "op",FILTER_SANITIZE_STRING);
         /*para la opcion de extraer bd o resumen de result.*/
         if($this->opcion=="bp"){
             $this->titulo1=T_("EXTRAER BASE POSTMIX");
-            $this->subtitulo=T_("Reporte por periodo");
+            $this->subtitulo=T_("REPORTE POR PERIODO");
         }else
             if($this->opcion=="CSD"){
                 $this->titulo1="SURVEY DATA";
@@ -111,17 +116,18 @@ class BasePostmixController
             /***************para las listas de seleccion******************/
             
            $rs=DatosCuenta::cuentasxCliente2("ca_cuentas",$_SESSION["clienteind"]);
+           $i=0;
             foreach ($rs as $row) {
                 
                 $this->listaCuentas[]="<div  >".
-                    " <input type=\"radio\" name=\"cuenta\" value=\"".$row["cue_id"]."\" />".$row["cue_descripcion"]."</div>";
+                    " <input type=\"checkbox\" id=\"cuenta_".$i++."\" name=\"cuenta[]\" value=\"".$row["cue_id"]."\" />".$row["cue_descripcion"]."</div>";
               
             }
          }
     }
     public function vistaHistoricoPV(){
         $_SESSION["clienteind"]=1;
-        $_SESSION["servicionind"]=1;
+        $_SESSION["servicioind"]=1;
         foreach ($_POST as $nombre_campo => $valor) {
             $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
             
@@ -427,7 +433,9 @@ class BasePostmixController
                         $direccion="imprimirReporte.php?punvta=".$row_rs_sql_c["une_id"]."&tipo_consulta=v";
                         $uneg=array();
                         $uneg['NomPuntoVenta']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_descripcion"] . "</a></td>" ;
-                        $uneg['Pepsi']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_idpepsi"] . "</a></td>" ;
+                      //  $uneg['Pepsi']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_idpepsi"] . "</a></td>" ;
+                        $uneg['NUD']= "<td  class='$color'><a href='".$direccion."'>" . $row_rs_sql_c ["une_num_unico_distintivo"] . "</a></td>" ;
+                        
                         // $html->asignar ( 'ICuenta', "<td  class='$color' ><a href='".$direccion."'>" . $row_rs_sql_c ["une_idcuenta"] . "</a></td>" );
                         $uneg['CiudadN']= "<td  class='$color' ><a href='".$direccion."'>" . $row_rs_sql_c ["une_dir_municipio"] . "</a></td>" ;
                         $uneg[ 'Direccion']="<td  class='$color' ><a href='".$direccion."'>" . $row_rs_sql_c ["direccion"] . "</a></td>" ;

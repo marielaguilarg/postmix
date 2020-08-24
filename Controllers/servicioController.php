@@ -55,7 +55,7 @@ public function vistaServiciosController(){
                 <!-- /.col -->
                 <div class="col-sm-4 border-right">
                   <div class="description-block">
-                   <button type="button" class="btn btn-block btn-info"><span style="font-size: 12px"><a href="index.php?action=listaseccion&idser='.$item["ser_id"].'"> <i class="fa fa-file-text fa-lg" aria-hidden="true"  ></i> </a></span></button>
+                   <a class="btn btn-block btn-info" style="font-size: 12px" href="index.php?action=listaseccion&idser='.$item["ser_id"].'"> Cuestionario </a>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -63,7 +63,7 @@ public function vistaServiciosController(){
                 <div class="col-sm-4">
                   <div class="description-block">
                  
-                  <button type="button" class="btn btn-block btn-info"><a href="index.php?action=listaservicio&idb='.$item["ser_id"].'"><i class="fa fa-trash-o fa-lg"></i></a></button>
+                  <a class="btn btn-block btn-info" onclick="return dialogoEliminar()" href="index.php?action=listaservicio&idb='.$item["ser_id"].'"><i class="fa fa-trash-o"></i></a>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -113,22 +113,58 @@ echo '<div class="form-group col-md-6">
                   }  
                 }
                 echo '</select>
+                </div>
+
+                <div class="form-group col-md-6">
+                <label >ESTATUS</label>
+               <select class="form-control" name="seridestatus" id="seridestatus" required>
+';
+                             
+                  if($respuesta['ser_estatus']==1){
+                    echo '<option value="'.$respuesta["ser_estatus"].'" selected="selected">Activado</option>';
+                    echo '<option value="2">Desactivado</option>';
+                  }else{
+                    echo '<option value="1">Activado</option>';   
+                    echo '<option value="'.$respuesta["ser_estatus"].'" selected="selected">Desactivado</option>';
+                  }  
+                
+                echo '</select>
+                </div>
+                  
+
+        <div class="form-group col-md-6">
+                <label >A CARGO DE </label>
+               <select class="form-control" name="seridacargo" id="seridacargo" required>
+';
+                             
+                  if($respuesta['ser_acargo']==1){
+                    echo '<option value="'.$respuesta["ser_acargo"].'" selected="selected">Muesmerc</option>';
+                    echo '<option value="2">El cliente</option>';
+                  }else{
+                    echo '<option value="1">Muesmerc</option>';   
+                    echo '<option value="'.$respuesta["ser_acargo"].'" selected="selected">El Cliente</option>';
+                  }  
+                
+                echo '</select>
                 </div>'
                   ;
-
                 
 }
 
   public function actualizarServicioController(){
     
+    
+
     if(isset($_POST["sernombreesp"])){
 
             $datosController= array("id"=>$_POST["idsereditar"],
                                     "nomesp"=>$_POST["sernombreesp"],
                                     "noming"=>$_POST["sernombreing"],
-                                    "idclien"=>$_POST["seridcliente"]
+                                    "idclien"=>$_POST["seridcliente"],
+                                    "idest"=>$_POST["seridestatus"],
+                                    "idcargo"=>$_POST["seridacargo"],
                                     ); 
-
+                  
           $respuesta = DatosServicio::actualizarServicioModel($datosController, "ca_servicios");
 
         if($respuesta=="success"){
@@ -136,7 +172,9 @@ echo '<div class="form-group col-md-6">
             <script type='text/javascript'>
                 window.location='index.php?action=listaservicio'
                 </script>
-                  ";} else {
+                  ";
+        } 
+                  else {
           echo "error";
         }
     }
@@ -155,7 +193,9 @@ echo '<div class="form-group col-md-6">
       
         $datosController=array("nomesp"=>$_POST["sernombreesp"],
                                "noming"=>$_POST["sernombreing"],
-                               "idclien"=>$_POST["seridcliente"]
+                               "idclien"=>$_POST["seridcliente"],
+                               "idest"=>1,
+                               "idacargo"=>$_POST["seridacargo"],                 
                                     );        
         
         $respuesta = DatosServicio::registroServicioModel($datosController, "ca_servicios");

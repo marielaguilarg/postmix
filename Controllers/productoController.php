@@ -13,7 +13,9 @@ class ProductoController{
 	$respuesta =DatosAbierta::actualizatiporeac($seccion, $servicioController,$tiposec, "cue_secciones");
 
 	echo '<div class="row">
-    <div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevoproducto&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
+    <div class="col-md-12" style="
+    margin-top: 7px;
+"><button  class="btn btn-default pull-right" style="margin-right: 18px"><a href="index.php?action=nuevoproducto&id='.$seccion.'&ids='.$servicioController.'" > <i class="fa fa-plus-circle" aria-hidden="true"></i>  NUEVO  </a></button>
      </div>
      </div>';
 
@@ -73,7 +75,7 @@ class ProductoController{
    	public function botonRegresaProductoController(){
 		$datosController = $_GET["id"];
 		$servicioController = $_GET["ids"];
-   		echo ' <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=V"> Cancelar </a></button>';
+   		echo ' <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=sn&sec='.$datosController.'&sv='.$servicioController.'&ts=V"> Cancelar </a>';
 	}
 
 	public function registrarProductos(){              
@@ -203,11 +205,18 @@ class ProductoController{
 	
 
 	public function reporteProductoController(){
-
-		$nrep = $_GET["nrep"];
-		$sec = $_GET["sec"];
-		$sv=$_GET["sv"];
-
+       include ("Utilerias/leevar.php");
+	
+		switch($admin){
+			case "insertar":	
+			$this->insertarProducto();
+			break;
+			case "eli":
+				$this->eliminarRepProducto();
+				break;
+			default	:
+				
+		
 			echo '<div class="row">
 	<div class="col-md-12" ><button  class="btn btn-default pull-right" style="margin-right: 18px; margin-top:15px; margin-bottom:15px; "><a href="index.php?action=rsn&sec='.$sec.'&sv='.$sv.'&ts=VN&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a></button>
 	 </div>
@@ -228,8 +237,15 @@ class ProductoController{
 
 
 	$respuesta = DatosProducto::vistaRepProductosModel($datosController, "ins_detalleproducto");
-
+	$i=1;
+	$bac=1;
 		foreach($respuesta as $row => $item){
+			
+			if(($i-1)%3==0){
+				echo '<div class="row">';
+				$bac=0;
+			}
+			
 	echo '
       <!----- Inicia contenido ----->
        
@@ -302,19 +318,19 @@ class ProductoController{
                   <!-- /.description-block -->
                 </div>
 				</div>
-              <div class="row" style="border-bottom: #F4F4F4 Solid 1px">
-			<div class="col-sm-6 border-right">
-                  <div class="description-block">
-                    <h5 class="description-text"><strong>Fecha de produccion</strong></h5>
-                    <span class="description-text-2">';
+              <div class="row" style="border-bottom: #F4F4F4 Solid 1px">';
+	//		<div class="col-sm-6 border-right">';
+//                   <div class="description-block">
+//                     <h5 class="description-text"><strong>Fecha de produccion</strong></h5>
+//                     <span class="description-text-2">';
 
-					$fecprod=SubnivelController::cambiaf_a_normal($item["ip_fechaproduccion"]);
+// 					$fecprod=SubnivelController::cambiaf_a_normal($item["ip_fechaproduccion"]);
 
-                     echo $fecprod.'</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-            <div class="col-sm-6 border-right">
+//                      echo $fecprod.'</span>
+//                   </div>
+//                   <!-- /.description-block -->
+//                 </div>
+           echo ' <div class="col-sm-12 border-right">
                   <div class="description-block">
                     <h5 class="description-text"><strong>Fecha de caducidad</strong></h5>
                     <span class="description-text-2">';
@@ -324,28 +340,28 @@ class ProductoController{
                   <!-- /.description-block -->
                 </div>
 				</div>
-				<div class="row">
-			<div class="col-sm-4 border-right">
-                  <div class="description-block">
-                    <h5 class="description-text"><strong>Edad dias</strong></h5>
-                    <span class="description-text-2">'.$item["ip_edaddias"].'</span>
-                  </div>
-                  <!-- /.description-block -->
-                </div>
-            <div class="col-sm-4 border-right">
+				<div class="row">';
+// 			<div class="col-sm-4 border-right">
+//                   <div class="description-block">
+//                     <h5 class="description-text"><strong>Edad dias</strong></h5>
+//                     <span class="description-text-2">'.$item["ip_edaddias"].'</span>
+//                   </div>
+//                   <!-- /.description-block -->
+//                 </div>
+           echo ' <div class="col-sm-6 border-right">
                   <div class="description-block">
                     <h5 class="description-text"><strong>Semanas</strong></h5>
                     <span class="description-text-2">'.$item["ip_semana"].'</span>
                   </div>
                   <!-- /.description-block -->
                 </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                   <div class="description-block">
                     <h5 class="description-text"><strong>Estatus</strong></h5>
                     <span class="description-text-2">';
 					if ($item["ip_estatus"]=="I"){
                     	echo "INSTALADO";
-                    } else if ($item["ip_condicion"]=="A"){
+                    } else if ($item["ip_estatus"]=="A"){
                     	echo "ALMACENADO";
                     }	
                     echo '</span>
@@ -370,7 +386,7 @@ class ProductoController{
                 <!-- /.col -->
                 <div class="col-sm-4">
                   <div class="description-block">
-                 <button type="button" class="btn btn-block btn-info"><i class="fa fa-trash"></i></button>
+                 <a href="index.php?action=rsn&ts=V&sv='.$sv.'&nrep='.$nrep.'&pv='.$pv.'&secc='.$sec.'.'.$item["ip_numrenglon"].'&admin=eli" class="btn btn-block btn-info"><i class="fa fa-trash"></i></a>
                   </div>
                   <!-- /.description-block -->
                 </div>
@@ -383,9 +399,15 @@ class ProductoController{
           <!-- /.box -->
         </div>
        ';
-
+                    if(($i)%3==0){
+                    	
+                    	echo '</div>';
+                    	$bac=1;
+                    }
+                    $i++;
 	} // foreach
 echo '</section>';
+		}
 }
 
 public function nuevoRepProductoController(){
@@ -412,16 +434,16 @@ echo '
         <div class="box box-info">
             
             <div class="box-body">
-  			<form role="form"  method="post">          
+  			<form role="form"  method="post" action="index.php?action=rsn&sec='.$sec.'&sv='.$ser.'&ts=V&admin=insertar&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'">          
               <div class="form-group">
                <div class="form-group col-md-12">
-                <label for="Sistemano" class="col-sm-2 control-label">Sistema No.</label>
+                <label for="Sistemano" class="col-sm-2 control-label">SISTEMA NO.</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="numsistema" placeholder="">
+                    <input type="text" class="form-control" id="numsistema" name="numsistema" placeholder="">
                 </div>
 				  </div>
               <div class="form-group col-md-12">
-                <label for="Producto" class="col-sm-2 control-label">Producto</label>
+                <label for="Producto" class="col-sm-2 control-label">PRODUCTO</label>
                 <div class="col-sm-10">
                     
 				<select class="form-control" name="numcatalogo" id="numcatalogo">
@@ -436,20 +458,34 @@ echo '
 				  </div>
 				 </div> 
               <div class="form-group col-md-12">
-                <label for="TotalDeCajas" class="col-sm-2 control-label">Total de cajas</label>
+                <label for="TotalDeCajas" class="col-sm-2 control-label">TOTAL DE CAJAS</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="registros" placeholder="">
+                    <input type="text" class="form-control" id="registros" name="lugarcajasno" placeholder="">
                 </div>
-				  </div>';
+				  </div>
+ <div class="form-group col-md-12">
+                <label for="feccad1" class="col-sm-2 control-label">FECHA CADUCIDAD</label>
+                <div class="col-sm-10">
+   <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                <input type="text" name="feccad" id="datepicker" class="form-control" size="10" maxlenght="10">
+				</div>
+</div>
+				  </div>
 
-		$ingreso = new ProductoController();
-		$ingreso ->nuevoRepDetProductoController();
+
+';
+
+	
 
 
                  echo ' <div class="row">
 		<div class="col-md-12" >
-		<button  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;" onclick><a href="index.php?action=rsn&sec='.$sec.'&sv='.$ser.'&ts=GV&idc='.$idc.'&pv='.$pv.'&nrep='.$nrep.'" >  Aceptar  </a></button>
-		<button type="submit" class="btn btn-info pull-right">Guardar</button>
+		<a  class="btn btn-default pull-right" style="margin-right: 18px margin-top:15px; margin-bottom:15px;" 
+href="index.php?action=rsn&sec='.$sec.'&sv='.$sv.'&ts=V&idc='.$idc.'&pv='.$_GET["pv"].'&nrep='.$nrep.'" >  CANCELAR  </a>
+		<button type="submit" class="btn btn-info pull-right">GUARDAR</button>
 		 </div>
 		 </div>
               </div>
@@ -468,9 +504,149 @@ echo '
 
 }
 
+public function insertarProducto(){
+	include ('Utilerias/leevar.php');
+	
+	$numseccom = $sec;
+	
+	$numrep=$nrep;
+
+
+	$idser=$_SESSION["rservicio"];
+	
+	//obtiene el numero de cuenta
+	
+	$numcuenta=$idc;
+	
+	$datinisec=SubnivelController::obtienedato($numseccom,1);
+	$londatsec=SubnivelController::obtienelon($numseccom,1);
+	$numsec=substr($numseccom,$datinisec,$londatsec);
+	$datinireac=SubnivelController::obtienedato($numseccom,2);
+	$londatreac=SubnivelController::obtienelon($numseccom,2);
+	$numreac=substr($numseccom,$datinireac,$londatreac);
+	$datinicom=SubnivelController::obtienedato($numseccom,3);
+	$londatcom=SubnivelController::obtienelon($numseccom,3);
+	$numcom=substr($numseccom,$datinicom,$londatcom);
+	$datinicar=SubnivelController::obtienedato($numseccom,4);
+	$londatcar=SubnivelController::obtienelon($numseccom,4);
+	$numcar=substr($numseccom,$datinicar,$londatcar);
+	$datinicom2=SubnivelController::obtienedato($numseccom,5);
+	$londatcom2=SubnivelController::obtienelon($numseccom,5);
+	$numcom2=substr($numseccom,$datinicom2,$londatcom2);
+	
+	//validar si la seccion del reporte ya existe, si no, lo das de alta, si si, lo editas
+	if ($numren){
+		$ssqle=("SELECT * FROM `ins_detallerproducto` WHERE `ins_detallerpoducto`.`ip_claveservicio` = ".$idser." 
+AND `ins_detalleproducto`.`ip_numreporte` = ".$numrep."  
+AND concat(ip_numseccion,'.',ip_numreactivo,'.',ip_numcomponente,'.',ip_numcaracteristica1,'.',
+ip_numcaracteristica2) = '".$numseccom."' and ip_numrenglon=".$numren);
+		
+		$numRows = DatosProducto::buscarRenglon($idser, $numrep, $numseccom, $numren, "ins_detallerproducto");
+		
+	}else{
+		$numRows=0;
+	}
+	
+	if ($numRows != 0){	//no existe en la base, lo doy de alta
+		$operac="actualiza";
+		
+	}else{
+		$operac="nueva";
+	}
+	
+	try{
+		
+// 	for($i=1;$i<=$registros;$i++)
+// 	{
+		//busca numero de renglon
+		if ($operac=="nueva"){
+			// todo esto se repetirá n veces
+			$sqlnr="select max(ip_numrenglon) as claveren 
+FROM `ins_detalleproducto` WHERE `ins_detalleproducto`.`ip_claveservicio` = ".$idser." 
+AND `ins_detalleproducto`.`ip_numreporte` = ".$numrep." AND ip_numseccion = '".$numseccom."';";
+			$numren=DatosProducto::buscarRenglon2($idser, $numrep, $numseccom,  "ins_detalleproducto");
+			$numren++;
+		}
+		//echo "xx".eval("$lugarcajasno".$i);
+		//die();
+	//	$sinetiq="sinetiq".$i;
+	//	$lugarcajasno="lugarcajasno".$i;
+	//	$feccad="feccad".$i;
+		
+		if($feccad!="")
+			$feccad=SubnivelController::fecha_mysqlbs($feccad);
+			
+			if($numsec==6)
+				$estatus="I";
+			if($numsec==7)
+				$estatus="A";
+			if ($sinetiq ){
+				$valsinet=-1;
+			}else{
+				$valsinet=0;
+			}
+			//calcula fecha de producccion
+			
+			//  2.- guarda o actualiza la seccion
+			if ($operac=="nueva") {
+				$sSQL= "insert into ins_detalleproducto (ip_claveservicio, ip_numreporte,
+ ip_numseccion, ip_numrenglon, ip_numsistema, ip_descripcionproducto, ip_numcajas, 
+ip_fechaproduccion, ip_fechacaducidad, ip_estatus, ip_sinetiqueta) values ('".$idser."',
+ ".$numrep.", ".$numsec.", ".$numren.", ".$lugarsisno.", '".$lugarprod."', ".$lugarcajasno.",
+ '".$fecprod."', '".$$feccad."', '".$$estatus."', ".$valsinet.");";
+				
+				//			echo $sSQL;
+				// actualiza calculos
+				//$sqlcal="SELECT datediff(now(),ip_fechaproduccion) as edad, if((datediff(now(),ip_fechaproduccion))<60,'Vigente','Caduco') as Condicion, ceil(if((datediff(now(),ip_fechaproduccion))>0,(datediff(now(),ip_fechaproduccion))/7,1)) as semana FROM ins_detalleproducto where ip_claveservicio='".$idser."' and ip_numreporte=".$numrep." and ip_numseccion=".$numsec." and ip_numrenglon=".$numren;
+				$sqlfecprod="update ins_detalleproducto set ip_fechaproduccion=(ip_fechacaducidad+ interval -70 day) where ip_claveservicio='".$idser."' and ip_numreporte=".$numrep." and ip_numseccion=".$numsec." and ip_numrenglon=".$numren;
+				//busca fecha de inspeccion
+				$sqlfecins="SELECT `ins_generales`.`i_fechavisita` FROM `ins_generales` WHERE `ins_generales`.`i_claveservicio` =  '".$idser."' AND `ins_generales`.`i_numreporte` =  '".$numrep."'";
+				
+				$rsin=DatosGenerales::vistaReporteGenerales($idser, $numrep, "ins_generales");
+			
+				$fecins=$rsin['i_fechavisita'];
+				
+			
+				// $sqlcal="Update ins_detalleproducto set ip_edaddias=datediff('".$fecins."',ip_fechaproduccion), ip_condicion= if((datediff('".$fecins."',ip_fechaproduccion))<=70,'V','C'), ip_semana=ceil(if((datediff('".$fecins."',ip_fechaproduccion))>0,(datediff('".$fecins."',ip_fechaproduccion))/7,1)) where ip_claveservicio='".$idser."' and ip_numreporte=".$numrep." and ip_numseccion=".$numsec." and ip_numrenglon=".$numren;
+				
+				if( $valsinet==0) //para los que tienen etiqueta
+					$sqlcal="update ins_detalleproducto set ip_edaddias=datediff('".$fecins."',ip_fechaproduccion) , ip_condicion=if((datediff('".$fecins."',ip_fechaproduccion))<=70,'V','C'),  ip_semana=if((datediff('".$fecins."',ip_fechaproduccion))>0,if(((datediff('".$fecins."',ip_fechaproduccion))/7)>0 and ((datediff('".$fecins."',ip_fechaproduccion))/7)<=1,0,ceil((datediff('".$fecins."',ip_fechaproduccion)/7))-1),0)  where ip_claveservicio='".$idser."' and ip_numreporte=".$numrep." and ip_numseccion=".$numsec." and ip_numrenglon=".$numren.";";
+			} else {    // ya existe el registro
+				$sSQL=("Update ins_detalleabierta Set ida_descripcionreal='".$descom."', ida_aceptado=".$valacepta ." where ida_claveservicio = '".$idser."' and ida_numreporte =".$numrep." and ida_numseccion=".$numsecc." and ida_numreactivo=".$numreac." and ida_numcomponente=".$numcom." and ida_numcaracteristica1=".$numcar." and ida_numcaracteristica2=".$numcom2." and ida_numcaracteristica3=".$numcar2.";");
+			}  // termina if de guardado de info
+			$rsi=DatosProducto::insertarProducto($idser, $numrep, $numsec, $numren, $numsistema, $numcatalogo, $lugarcajasno,null, $feccad, $estatus, null);
+			$rsp=DatosProducto::actualizarFechaProduccion($idser, $numrep, $numsec, $numren,"ins_detalleproducto" );
+			$rse=DatosProducto::actualizarEdad($idser, $numrep, $numsec, $numren, $fecins, "ins_detalleproducto");
+//	} //fin for para todos los renglones
+// 	if ($comengen) { // guarda comentario de seccion
+// 		//valida si el comentario ya existe.
+// 		$ssqlco=("SELECT * FROM `ins_secciones` WHERE `ins_secciones`.`is_claveservicio` =  ".$idser." AND `ins_secciones`.`is_numreporte` =  '".$numrep."' AND `ins_secciones`.`is_numseccion` =  '".$numsecc."'");
+// 		$rsco = mysql_query($ssqlco);
+// // 		$numRowsc = mysql_num_rows($rsco);
+// // 		if ($numRowsc == 0){	//no existe en la base, lo doy de alta
+// // 			$sSQL= "insert into ins_secciones (is_claveservicio, is_numreporte, is_numseccion, is_comentario) values (".$idser.", ".$numrep.", ".$numsecc.", '".$comengen."');";
+			
+			
+// // 		} else {    // ya existe el registro
+// // 			$sSQL=("Update ins_secciones Set is_comentario='".$comengen."' where  is_claveservicio = '".$idser."' and is_numreporte ='".$numrep."' and is_numseccion=".$numsecc.";");
+// // 		}
+// 	}
+	
+	$local="Location: MEIprincipal.php?op=V&secc=".$numseccom;
+	echo "
+		<script type='text/javascript'>
+	     window.location.href='index.php?action=rsn&sec=".$numseccom."&ts=V&sv=".$idser."&nrep=".$numrep."&pv=".$_SESSION["runeg"]."';
+		</script>";
+	}catch(Exception $ex){
+		echo Utilerias::mensajeError($ex->getMessage());
+		
+		
+	}
+}
+
 public function nuevoRepDetProductoController(){
 
-	echo "entre a producto controller";
+	
 	$ncajas=$_POST["registros"];	
 
 //	if (isset($_POST["registros"]) {
@@ -527,6 +703,38 @@ echo '
 
 
 }
+
+	public function eliminarRepProducto(){
+		include "Utilerias/leevar.php";
+		$idsec = $secc;
+		$idser=$_SESSION["rservicio"];
+		
+		$numrep=$nrep;
+		
+		
+		
+		// calcula el id del servicio
+		$datini=SubnivelController::obtienedato($secc,1);
+		$londat=SubnivelController::obtienelon($secc,1);
+		$seccion=substr($secc,$datini,$londat);
+		
+		$ssqle=("DELETE FROM ins_detalleproducto 
+WHERE ip_claveservicio = ".$idser." AND ip_numreporte = ".$numrep."  
+AND concat(ip_numseccion,'.',ip_numrenglon) = '".$idsec."'");
+		//echo $ssqle;
+		try{
+		DatosProducto::eliminarProducto($idser, $numrep, $idsec,  "ins_detalleproducto");	
+		
+		echo "
+		<script type='text/javascript'>
+	     window.location.href='index.php?action=rsn&sec=".$seccion."&ts=V&sv=".$idser."&nrep=".$numrep."&pv=".$_SESSION["runeg"]."';
+		</script>";
+	}catch(Exception $ex){
+		echo Utilerias::mensajeError($ex->getMessage());
+		
+		
+	}
+	}
 
 }
 ?>	

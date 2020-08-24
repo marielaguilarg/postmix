@@ -98,6 +98,7 @@ class GruposController
         DatosGrupo::insertarGrupo($numgroup,$nomesp,"cnfg_grupos");
         $this->mensaje='<div class="alert alert-success">La información se guardó correctamente</div>';
        $this->NOMESP="";
+       echo Utilerias::enviarPagina("index.php?action=slistagrupos");
         }catch(Exception $ex){
             $this->mensaje='<div class="alert aler-danger">'.$ex->getMessage().". Intente nuevamente</div>";
         }
@@ -110,7 +111,8 @@ class GruposController
         try{
        DatosGrupo::eliminarGrupo($id,"cnfg_grupos");
        $this->mensaje='<div class="alert alert-success"">Se actualizó el grupo correctamente</div>';
-    }catch(Exception $ex){
+       echo Utilerias::enviarPagina("index.php?action=slistagrupos");
+        }catch(Exception $ex){
         $this->mensaje='<div class="alert aler-danger">'.$ex->getMessage().". Intente nuevamente</div>";
     }
     }
@@ -124,7 +126,7 @@ class GruposController
             try{
             DatosGrupo::actualizarGrupo($idper,$nomesp,"cnfg_grupos");
             $this->mensaje='<div class="alert alert-success"">Se actualizó el grupo correctamente</div>';
-          
+            echo Utilerias::enviarPagina("index.php?action=slistagrupos");
         }catch(Exception $ex){
             $this->mensaje='<div class="alert aler-danger">'.$ex->getMessage().". Intente nuevamente</div>";
         }

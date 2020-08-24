@@ -62,7 +62,7 @@ $mes = $aux[0];
 
 $soloanio = $aux[1];
 
- if($mes-12>=0) { // calculo para los 12m
+if($mes-12>=0) { // calculo para los 12m
         $z=$mes-12+1;
 
         $mes_consulta_ant=$aux[1]."-".$z."-01";
@@ -73,7 +73,7 @@ $soloanio = $aux[1];
 
         $mes_consulta_ant=($aux[1]-1)."-".$z."-01";
     
-    }
+}
     $fmes_consulta=$aux[1]."-".$aux[0]."-01";
   
   
@@ -116,10 +116,13 @@ WHERE ins_generales.i_claveservicio=$servicio  ";
  { $sqlt.=" and une_cla_zona=".$zona;
  $nivel=3;}
 
+ 
+$sqlt.=" and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <='$fmes_consulta'
 
-$sqlt.=" and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <='$fmes_consulta' 
+
 and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >='$mes_consulta_ant'
-AND ide_valorreal<>''
+
+ AND ide_valorreal<>''
 AND
 ins_detalleestandar.ide_numseccion=".$seccion." 
 AND `red_indicador`=-1";

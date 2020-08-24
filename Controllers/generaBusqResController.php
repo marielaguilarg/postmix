@@ -10,8 +10,8 @@ class GeneraBusqResController {
 	$fechaasig_fin = $fechafin . '.' . $fechafin2;
 	$Usuario=$_SESSION["NombreUsuario"];
 	$_SESSION["UsuarioInd"]=$Usuario;
-	$vclienteu = 1;
-	$vserviciou = 1;
+	$vclienteu = $crcliente;
+	$vserviciou = $crservicio;
 	$sql_del_us = "delete from tmp_estadistica WHERE tmp_estadistica.usuario =:Usuario";
 	//echo "<br>3".$sql_del_us;
 	 DatosTemporales::eliminarEstadistica($Usuario);

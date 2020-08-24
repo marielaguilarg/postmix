@@ -17,6 +17,7 @@ class ResumenResxRepController
 
     private $listaImagenes;
     private $lb_notita_img;
+    public $ligaImprimir;
 
     public function vistaResumenResxRep()
     {
@@ -66,8 +67,9 @@ class ResumenResxRepController
         // echo $query_isec;
         $rs_isec = DatosImagenDetalle::getImagenDetalle($vservicio, $numrep, "ins_imagendetalle");
         foreach ($rs_isec as $row_isec) {
-            $this->listaImagenes[] = "fotografias/".$row_isec["id_ruta"];
-           
+             $imagen["ruta"]= "fotografias/".$row_isec["id_ruta"];
+             $imagen["descripcion"]=$row_isec["id_descripcion"];
+             $this->listaImagenes[]=$imagen;
         }
         if (sizeof($rs_isec) > 0)//si hay imagenes
         	$this->lb_notita_img= "(" . strtoupper(T_("Este reporte contiene imagenes")) . ")";
@@ -83,6 +85,7 @@ class ResumenResxRepController
         // $html->asignar('refer', $OPD);
         
         $this->ligaconsultarRep = 'index.php?action=indconsultasecciones&numrep=' . $numrep . '&referencia=' . $OPD;
+        $this->ligaImprimir="imprimirReporte.php?admin=repinsp&sv=".$vservicio."&numrep=".$numrep;
         //
         // $html->asignar('INFOAREA', $infoarea.'</td><td>
         // <a href="MENindprincipal.php?op=mindi&admin=res&mes=' . $mes . '&ptv=' . $pto_vta . '&fily=' . $idcuen . '.' . $franquiciacta.'" >'.T_("CONSULTAR HISTORIAL DEL PUNTO DE VENTA").' </a></td>');

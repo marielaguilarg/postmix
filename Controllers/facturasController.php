@@ -42,7 +42,7 @@ ORDER BY i_numreporte";
             $finnom="fin".$nrep;
             $valfin=${$finnom};
             $ban=0;
-          //  echo "<br>".$comenom."--".$valfin."--".$valchk;
+          //  echo "<br>".$comenom."--".$comnom."--".$valfin;
             $fact="";
             $fin='';
             if ($valchk) {	  //si
@@ -116,6 +116,7 @@ ORDER BY i_numreporte";
                                  "factura"=>$fact,
             		           "fin"=>$fin
                                 );
+          
             DatosGenerales::actualizarDatosFactura($parametros,"ins_generales");}
         }
         $this->mensaje='<div class="alert alert-success" role="alert">Los datos se actualizaron correctamente</div>';
@@ -321,7 +322,7 @@ group by ide_idmuestra";
                     }
                 }else{
                     //echo $row['i_finalizado'];
-                    if ($row['i_finalizado']==-1) {
+                    if ($row['i_finalizado']==-1||$row['i_finalizado']==1) {
                         $fina="checked";
                     }else{
                         $fina="";

@@ -32,18 +32,20 @@ class ArchivoAguaController {
 		
 		define(VACIO,"");
 		include "Utilerias/leevar.php";
-		$user = $_SESSION["Usuario"];
+		$user = $_SESSION["NombreUsuario"];
 		
-		
+	
 		$arrcolores=array("azul"=>"48","verde"=>"31","naranja"=>"orange","amarillo"=>"yellow",
 				"rojo"=>"62","verdeo"=>"30","gris"=>"gray", "blanco"=>"white", "verdef"=>"green", "rojof"=>"60" );
 		
 		$this->arrcolores=array("azul"=>"ff0066cc","verde"=>"ffd3c9da",
 				"rojo"=>"ff5dade2","verdeo"=>"ff308cd8" );
+		
 		try{
 			$rsu=UsuarioModel::getUsuario($user, "cnfg_usuarios");
 			foreach ($rsu as $rowu) {
 				$gpous= $rowu[cus_clavegrupo];
+				
 				if ($gpous=='lab')
 					$tipocons= $rowu[cus_tipoconsulta];
 			}
@@ -121,7 +123,15 @@ class ArchivoAguaController {
 		
 		//**** creo archivo ****
 		//**** creo encabezado ****
-		$enctablas=array("SERVICIO","NO DE MUESTRA","TIPO DE MUESTRA","ORIGEN DE LA MUESTRA","NO DE TOMA","FUENTE DE ABASTECIMIENTO", "NO DE UNIDADES FISICOQUIMICO","CAPACIDAD UNIDADES FISICOQUIMICO","NO DE UNIDADES MICROBIOLOGICO","CAPACIDAD DE UNIDADES MIRCOBIOLOGICO","ID CLIENTE","PUNTO DE VENTA","NO DE REPORTE","MES DE ASIGNACION","AUDITOR","FECHA Y HORA DE RECOLECCION","FECHA Y HORA DE ENTREGA","TIEMPO TRANSCURRIDO","LABORATORIO","ESTATUS","CAUSA DE CANCELACION","ANALISTA FISICOQUIMICO","FECHA DE CAPTURA FSICOQUIMICO","TIEMPO TRANSCURRIDO FISICOQUIMICO","ANALISTA MICROBIOLOGICO","FECHA DE CAPTURA MICROBIOLOGICO","TIEMPO TRANSCURRIDO MICROBIOLOGICO","FRANQUICIA DEL CLIENTE","CUENTA","REGION","ESTADO","CIUDAD","FRANQUICIA DE LA CUENTA","DIRECCION DEL PUNTO DE VENTA");
+		$enctablas=array("SERVICIO","NO DE MUESTRA","TIPO DE MUESTRA","ORIGEN DE LA MUESTRA","NO DE TOMA",
+				"FUENTE DE ABASTECIMIENTO", "NO DE UNIDADES FISICOQUIMICO","CAPACIDAD UNIDADES FISICOQUIMICO",
+				"NO DE UNIDADES MICROBIOLOGICO","CAPACIDAD DE UNIDADES MIRCOBIOLOGICO","NUD",
+				"PUNTO DE VENTA","NO DE REPORTE","MES DE ASIGNACION","AUDITOR","FECHA Y HORA DE RECOLECCION",
+				"FECHA Y HORA DE ENTREGA","TIEMPO TRANSCURRIDO","LABORATORIO","ESTATUS","CAUSA DE CANCELACION",
+				"ANALISTA FISICOQUIMICO","FECHA DE CAPTURA FSICOQUIMICO","TIEMPO TRANSCURRIDO FISICOQUIMICO",
+				"ANALISTA MICROBIOLOGICO","FECHA DE CAPTURA MICROBIOLOGICO","TIEMPO TRANSCURRIDO MICROBIOLOGICO",
+				"FRANQUICIA DEL CLIENTE","CUENTA","REGION","ESTADO","CIUDAD","FRANQUICIA DE LA CUENTA",
+				"DIRECCION DEL PUNTO DE VENTA");
 		
 		/*** creo emcabezado de resultados ****/
 		$sql="SELECT
@@ -220,7 +230,7 @@ if (cue_reactivosestandardetalle.red_numcaracteristica2=20,15,cue_reactivosestan
   mue_capacidadFQ,
   mue_numunidadesMB,
   mue_capacidadMB,
-  une_idpepsi,
+  une_num_unico_distintivo,
   une_descripcion,
   mue_numreporte,
   mesas,
@@ -363,7 +373,7 @@ FROM
     aa_muestras.mue_numunidadesMB,
     aa_muestras.mue_capacidadMB,
     ca_unegocios.une_descripcion,
-    ca_unegocios.une_idpepsi,
+    ca_unegocios.une_num_unico_distintivo,
     aa_muestras.mue_numreporte,
     ins_generales.i_mesasignacion AS mesas,
     aa_muestras.mue_fechahora,
@@ -566,7 +576,6 @@ ca_franquiciascuenta.cue_clavecuenta =  '$clacta' AND
 ca_franquiciascuenta.fc_idfranquiciacta =  '$clafrancta'";
 				
 				$nomfrancta= DatosFranquicia::nombreFranquicia($clacta, $clafrancta, $this->cliente);
-				
 				
 				//actuaiza servicio
 				$sqlser="SELECT ca_servicios.ser_descripcionesp FROM ca_servicios WHERE ca_servicios.ser_claveservicio =  '$idserv'";

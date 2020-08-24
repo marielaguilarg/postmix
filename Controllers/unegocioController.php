@@ -40,6 +40,7 @@ private $numpunto;
 private $cuenta;
 private $mensaje;
 private $ciudades;
+public $fecest;
 
 public function vistaunegocioController() {
 	$admin=filter_input(INPUT_GET, "admin",FILTER_SANITIZE_STRING);
@@ -77,7 +78,7 @@ if (isset($_POST["opcionuneg"])||$estado!=0)
 foreach ($respuesta as $row => $item) {
 echo '  <tr>
 	      
-	       <td>'.$item["une_dir_estado"].'</td>
+	       <td>'.$item["est_nombre"].'</td>
            <td>'.$item["une_dir_municipio"].'</td>
            <td>' . $item["une_num_unico_distintivo"] . '</td>
 			<td>
@@ -156,7 +157,7 @@ $op = "%" . $_POST["opcionuneg"] . "%";
 foreach ($respuesta as $row => $item) {
 echo '  <tr>
 	              
-	                  <td>'.$item["une_dir_estado"].'</td>
+	                  <td>'.$item["est_nombre"].'</td>
            <td>'.$item["une_dir_municipio"].'</td>
                       <td>' . $item["une_num_unico_distintivo"] . '</td>
 	                  <td>
@@ -221,7 +222,7 @@ echo '<h3 class="box-title">' . $respuesta["une_descripcion"] . '</h3>
               
              
                <div class="row" >
-                 <div class="row" >
+                
                    <div class="col-sm-4 border-right">
                   <div class="description-block">
                     <h5 class="description-text">ID PEPSI</h5>
@@ -241,9 +242,7 @@ echo '<h3 class="box-title">' . $respuesta["une_descripcion"] . '</h3>
                 <div class="col-sm-4">
                   <div class="description-block">
   
-                 <button type="button" class="btn btn-block btn-info" style="width: 80%"><a href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a></button>
-				  
-
+                 <a class="btn btn-block btn-primary"  href="index.php?action=runegociocomp&idc='.$idc.'&uneg='.$respuesta["une_id"].'&sv='.$serv.'"> Detalle </a>
 ';
 }
 
@@ -271,7 +270,7 @@ echo '<div class="col-sm-4 border-right">
            if ($totsol>0){
               $respuesta =DatosSolicitud::estatusSolicitudModel($numrep, $serv, "sol_estatussolicitud");
               $final=$respuesta["sol_estatussolicitud"];
-              if ($final =3){
+              if ($final ==3){
                   echo '<strong> '.$item["i_numreporte"].'</a>';
                }  else { # estatus diferente a 3
                   echo '<strong> <a href="index.php?action=editarep&sv='.$serv.'&pv='.$uneg.'&nrep='.$item["i_numreporte"].'&idc='.$idc.'">'.$numrep.'</a>';
@@ -484,6 +483,9 @@ public function vistanomRservDet(){
     $un=$_GET["uneg"];
     $respuesta = DatosSeccion::vistaNombreServModel($datosController,"ca_servicios");
     echo '<li><a href="index.php?action=runegociodetalle&idc='.$idc.'&sv='.$datosController.'&un='.$un.'">SERVICIO: '.$respuesta["ser_descripcionesp"]. '</a></li>';
+    $unegocio = DatosUnegocio::vistaUnegocioDetalle($un,"ca_unegocios");
+    echo '<li><a href="index.php?action=runegociodetalle&sv='.$datosController.'&un='.$un.'&idc='.$idc.'">PUNTO DE VENTA: '.$unegocio["une_descripcion"]. '</a></li>';
+    
   //}
 }
 
@@ -517,7 +519,22 @@ if ($respuesta == "success") {
 }
 }
 else
-{$respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
+{
+	// asigna nuevo numero de punto de venta
+	$sqlc="SELECT
+Max(ca_unegocios.une_numpunto) AS ulnum
+FROM ca_unegocios
+";
+	$rsm=Conexion::ejecutarQuerysp($sqlc);
+	
+	foreach ($rsm as $rowm){
+		$nvonum = $rowm["ulnum"] + 1;
+		$datosController["numpun"]=$nvonum;
+	}
+	date_default_timezone_set('America/Mexico_City');
+	
+	$datosController["fecest"]= date("Y/m/d");
+	$respuesta = DatosUnegocio::registrarUnegocio($datosController, "ca_unegocios");
 
             if ($respuesta == "success") {
 
@@ -689,6 +706,8 @@ $this->clanivel3 = $row["une_cla_zona"];
 $this->clanivel4 = $row['une_cla_estado'];
 $this->clanivel5 = $row["une_cla_ciudad"];
 $this->clanivel6 = $row["une_cla_franquicia"];
+$this->numpunto= $row["une_numpunto"];
+$this->fecest= $row['une_fechaestatus'];
 $rs = Datosnuno::vistaN1Model("ca_nivel1");
 foreach ($rs as $rown) {
 if ($rown["n1_id"] == $this->clanivel1) {
@@ -843,13 +862,15 @@ public function listaClientesCuentas(){
 
   foreach($respuesta as $row => $item){
        echo '<li class="treeview">
-<a><i class="fa fa-circle-o"></i>'.substr($item["cli_nombre"],0,15).' <span class="pull-right-container">
+<a><i class="fa fa-circle-o"></i>'.substr($item["cli_nombre"],0,13).' <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span></a>';
        echo "  <ul class=\"treeview-menu\">";
        $respcuentas= DatosCuenta::vistaCuentasxCliente($item["cli_id"],"ca_cuentas");
+    
        foreach($respcuentas as $row2 => $item2){
-            echo '<li><a href="index.php?action=nuevaunegocio&refer='.$item2["cue_id"].'"><i class="fa fa-circle-o"></i>'.substr($item2["cue_descripcion"],0,15).'</a></li>';
+      
+       	echo '<li><a href="index.php?action=nuevaunegocio&refer='.$item2["cue_id"].'"><i class="fa fa-circle-o"></i>'.str_replace("Ñ","&Ntilde;",substr($item2["cue_descripcion"],0,12)).'</a></li>';
            
        }
        echo "</ul></li>";

@@ -109,6 +109,7 @@ class ConfiguracionSDController
          DatosCnfgSurveyData::ejecutarInsert($sql2);
          DatosCnfgSurveyData::ejecutarInsert($sql3);
          $this->mensaje='<div class="alert alert-success">Configuración exitosa</div>';
+         echo Utilerias::enviarPagina("index.php?action=ssurveydata");
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage().". Intente de nuevo</div>";
         }
@@ -120,6 +121,7 @@ class ConfiguracionSDController
         try{
         DatosCnfgSurveyData::eliminarCnfgSurveyData($col,"cnfg_surveydata");
         $this->mensaje='<div class="alert alert-success">Columna eliminada</div>';
+        echo Utilerias::enviarPagina("index.php?action=ssurveydata");
     }catch(Exception $ex){
         $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage()."</div>";
     }
@@ -132,6 +134,7 @@ class ConfiguracionSDController
        
         DatosCnfgSurveyData::insertarCnfgSurveyData($numcol, $tiporeac, $numreactivo, $descripcion, $nomcol, $numren, $valini, "cnfg_surveydata");
         $this->mensaje='<div class="alert alert-success">Columna agregada</div>';
+        echo Utilerias::enviarPagina("index.php?action=ssurveydata");
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage()."</div>";
         }
@@ -150,6 +153,7 @@ where surv_numerocol=".$numcol2." and `surv_numeroreac`='$reactivo'  LIMIT 1;");
         try{
         DatosCnfgSurveyData::editarCnfgSurveyData($numcol, $numcol2,  $reactivo, $descripcion, $nomcol, $numren, $valini, "cnfg_surveydata");
         $this->mensaje='<div class="alert alert-success">Columna actualizada</div>';
+        echo Utilerias::enviarPagina("index.php?action=ssurveydata");
         }catch(Exception $ex){
             $this->mensaje='<div class="alert alert-danger">'.$ex->getMessage()."</div>";
         }

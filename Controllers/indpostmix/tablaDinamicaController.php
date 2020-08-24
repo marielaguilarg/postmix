@@ -57,7 +57,7 @@ class TablaDinamicaController {
         $solomes = $aux[0];
 
         $soloanio = $aux[1];
-
+		
         if ($solomes - 12 >= 0) { // calculo para los 12m
             $z = $solomes - 12 + 1;
 
@@ -890,15 +890,15 @@ ins_detalleestandar.ide_numcaracteristica3=:carac3 ";
 
         $auxper = explode(".", $fperiodo);
         $aux = explode('.', $mes_consulta);
-        if ($mes - 6 >= 0) { // calculo para los 6m
         $mes = $aux[0];
-            $z = $mes - 6 + 1;
-
-            $mes_pivote = $aux[1] . "-" . $z . "-01";
+        if ($mes - 6 >= 0) { // calculo para los 6m
+        	$z = $mes - 6 + 1;
+        	
+        	$mes_pivote = $aux[1] . "-" . $z . "-01";
         } else {
-            $z = 7 + $mes;
-
-            $mes_pivote = ($aux[1] - 1) . "-" . $z . "-01";
+        	$z = 7 + $mes;
+        	
+        	$mes_pivote = ($aux[1] - 1) . "-" . $z . "-01";
         }
         $fmes_consulta = $aux[1] . "-" . $aux[0] . "-01";
         $mes_consulta_ant = ($aux[1] - 1) . "-" . $aux[0] . "-01";
@@ -932,10 +932,11 @@ sum(1) as tot,
 cue_reactivosestandardetalle.red_parametroesp, cue_reactivosestandardetalle.red_parametroing,
 cue_reactivosestandardetalle.red_estandar,";
         if ($auxper[0] && $auxper[0] != 0) {
-            $sql .= " if(ins_generales.i_mesasignacion=:fmes_consulta,1,0) as mes,";
+            $sql .= " if(ins_generales.i_mesasignacion=:mes_consulta,1,0) as mes,";
         }
         if ($auxper[1] && $auxper[1] != 0) {
-            $sql .= " if(str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >=:mes_pivote and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <=:fmes_consulta,2,0 ) as 6mes,";
+            $sql .= " if(str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >=:mes_pivote
+ and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <=:fmes_consulta,2,0 ) as 6mes,";
             $parametros["mes_pivote"] = $mes_pivote;
         }
         if ($auxper[2] && $auxper[2] != 0) {
@@ -979,6 +980,7 @@ ins_detalleestandar.ide_numcomponente=:com and
 ins_detalleestandar.ide_numcaracteristica1=:carac1 and
 ins_detalleestandar.ide_numcaracteristica2=:carac2 and
 ins_detalleestandar.ide_numcaracteristica3=:carac3 ";
+        $parametros["mes_consulta"] = $mes_consulta;
         $parametros["fmes_consulta"] = $fmes_consulta;
         $parametros["mes_consulta_ant"] = $mes_consulta_ant;
         $parametros["seccion"] = $seccion;
@@ -1047,7 +1049,7 @@ ins_detalleestandar.ide_numcaracteristica3=:carac3 ";
         $sql .= " order by 
 ca_unegocios.cue_clavecuenta,
 
-ca_unegocios.une_cla_estado";
+ca_unegocios.une_cla_estado, anio_asig desc, mes_asig desc";
 
         $res = Conexion::ejecutarQuery($sql, $parametros);
 
@@ -1311,6 +1313,7 @@ ca_unegocios.une_cla_estado";
      */
 
     function tamanioMuestra($mes_consulta, $referencia, $permiso, $filx, $fily, $tx, $ty) {
+    
         $campGrup["C"] = "cue_clavecuenta";
         $campGrup["F"] = "fc_idfranquiciacta";
         $campGrup["P"] = "une_id";
@@ -1347,7 +1350,99 @@ ca_unegocios.une_cla_estado";
 
         $grupo = $_SESSION["GrupoUs"];
         $vidiomau = $_SESSION["idiomaus"];
+        $sql1 = "SELECT
 
+ca_unegocios.cue_clavecuenta,
+ca_unegocios.une_cla_region,
+ca_unegocios.une_cla_pais,
+ca_unegocios.une_cla_zona,
+ca_unegocios.une_cla_estado,
+ca_unegocios.une_cla_ciudad,
+ca_unegocios.une_cla_franquicia,
+ca_unegocios.fc_idfranquiciacta,
+       		
+
+    COUNT(ca_unegocios.une_id) AS tot
+        		
+FROM
+ca_unegocios
+        		
+ WHERE
+ ca_unegocios.une_estatus=1";
+        $parametros1=array();
+        if (isset($filx["pais"]) && $filx["pais"] != "") {
+        	$sql1 .= "    and ca_unegocios.une_cla_region=:pais";
+        	$parametros1["pais"] = $filx["pais"];
+        }
+        
+        if (isset($filx["uni"]) && $filx["uni"] != "") {
+        	$sql1 .= " and  ca_unegocios.une_cla_pais=:uni";
+        	$parametros1["uni"] = $filx["uni"];
+        }
+        
+        if (isset($filx["zon"]) && $filx["zon"] != "") {
+        	$sql1 .= "  and     ca_unegocios.une_cla_zona=:zon";
+        	$parametros1["zon"] = $filx["zon"];
+        }
+        			
+        if (isset($fily["cta"]) && $fily["cta"] != "") {
+        	$sql1 .= " and ca_unegocios.cue_clavecuenta=:cta";
+        	$parametros1["cta"] = $fily["cta"];
+        }
+        if (isset($filx["reg"]) && $filx["reg"] != "") {
+        	$sql1 .= " and ca_unegocios.une_cla_estado=:reg";
+        	$parametros1["reg"] = $filx["reg"];
+        }
+        if (isset($filx["ciu"]) && $filx["ciu"] != "") {
+        	$sql1 .= " and ca_unegocios.une_cla_ciudad=:ciu";
+        	$parametros1["ciu"] = $filx["ciu"];
+        }
+        if (isset($filx["niv6"]) && $filx["niv6"] != "") {
+        	$sql1 .= " and ca_unegocios.une_cla_franquicia=:niv6";
+        	$parametros1["niv6"] = $filx["niv6"];
+        }
+        if (isset($fily["fra"]) && $fily["fra"] != "") {
+        	$sql1 .= " and ca_unegocios.fc_idfranquiciacta=:fra";
+        	$parametros1["fra"] = $fily["fra"];
+        }
+        								
+        $sql1.=" GROUP BY
+
+ca_unegocios.une_cla_region";
+        if (isset($filx["pais"]) && $filx["pais"] != "")
+        	$sql1.=" ,ca_unegocios.une_cla_pais";
+        if (isset($filx["uni"]) && $filx["uni"] != "")
+        										
+        	$sql1.=" ,ca_unegocios.une_cla_zona";
+        if (isset($filx["zon"]) && $filx["zon"] != "")
+        	$sql1.=" ,ca_unegocios.une_cla_estado ";
+        $sql1.=" ,ca_unegocios.cue_clavecuenta  ";
+        if (isset($fily["cta"]) && $fily["cta"] != "")
+        	$sql1.=" ,ca_unegocios.fc_idfranquiciacta";
+        if (isset($filx["reg"]) && $filx["reg"] != "")
+        	$sql1.=" ,ca_unegocios.une_cla_ciudad";
+        if (isset($filx["ciu"]) && $filx["ciu"] != "")
+        	$sql1.=" ,ca_unegocios.une_cla_franquicia";
+        if ((isset($filx["niv6"]) && $filx["niv6"] != "") || (isset($fily["fra"]) && $fily["fra"] != ""))
+        	$sql1.=" ,une_claveunegocio";
+        															
+       		$sql1.=" order by
+ca_unegocios.cue_clavecuenta,
+ca_unegocios.une_cla_estado";
+        															
+        															
+        	$res1 = Conexion::ejecutarQuery($sql1,$parametros1);
+        	//die();
+        	$matriz = array();
+        	$total_cuen = array();
+        	//lleno la matriz
+        	foreach($res1 as $row) {
+        		$cuenta = $row[$campGrup[$ty]]; //sera eje y
+        		$region = $row[$campNivel[$tx]]; //será eje x
+        																
+        																
+        	$matriz[$cuenta][$region]["muestratot"] = $row["tot"];
+        }
 
         $sql = "SELECT
 
@@ -1362,7 +1457,7 @@ ca_unegocios.une_cla_franquicia,
 ca_unegocios.fc_idfranquiciacta,
 ins_generales.i_unenumpunto,
     une_id,
-    COUNT(ca_unegocios.une_cla_estado) AS tot,
+  /*  COUNT(ca_unegocios.une_cla_estado) AS tot,*/
 sum(IF(ins_generales.i_mesasignacion='$mes_consulta', IF(ide_numseccion IS NOT NULL,1,0),0)) AS mes,
  sum(IF(STR_TO_DATE(CONCAT('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >='$mes_pivote' 
   AND STR_TO_DATE(CONCAT('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <='$fmes_consulta', IF(ide_numseccion IS NOT NULL,1,0),0 )) AS 6mes,
@@ -1373,7 +1468,7 @@ FROM
 ca_unegocios
 LEFT JOIN ins_generales ON   ca_unegocios.une_id = ins_generales.i_unenumpunto 
    AND ((STR_TO_DATE(CONCAT('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <=:fmes_consulta
- AND STR_TO_DATE(CONCAT('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >:mes_consulta_ant)  or ca_unegocios. une_estatus=1)
+ AND STR_TO_DATE(CONCAT('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >:mes_consulta_ant)  and ca_unegocios. une_estatus=1)
      LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` AND `ide_numreporte`=`i_numreporte`
 AND `ide_numseccion`=:seccion
  AND `ide_numreactivo`=:reac
@@ -1425,7 +1520,7 @@ ins_generales.i_claveservicio =  :servicio";
 //            $sql.=" and ca_unegocios.cue_clavecuenta='$permiso' ";
 //    }
         if (isset($fily["cta"]) && $fily["cta"] != "") {
-            $sql .= " and ca_unegocios.cue_clavecuenta=" . $fily["cta"];
+            $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
             $parametros["cta"] = $fily["cta"];
         }
         if (isset($filx["reg"]) && $filx["reg"] != "") {
@@ -1441,7 +1536,7 @@ ins_generales.i_claveservicio =  :servicio";
             $parametros["niv6"] = $filx["niv6"];
         }
         if (isset($fily["fra"]) && $fily["fra"] != "") {
-            $sql .= " and ca_unegocios.fc_idfranquiciacta=" . $fily["fra"];
+            $sql .= " and ca_unegocios.fc_idfranquiciacta=:fra";
             $parametros["fra"] = $fily["fra"];
         }
 
@@ -1469,8 +1564,7 @@ ca_unegocios.une_cla_region";
 ca_unegocios.cue_clavecuenta,
 ca_unegocios.une_cla_estado";
 //echo "<br>".$sql;
-        $matriz = array();
-        $total_cuen = array();
+       
         $res = Conexion::ejecutarQuery($sql, $parametros);
         //echo $sql;
         //lleno la matriz
@@ -1483,7 +1577,7 @@ ca_unegocios.une_cla_estado";
             $matriz[$cuenta][$region][2]["muestra"] = $row["6mes"];
             $matriz[$cuenta][$region][3]["muestra"] = $row["12mes"];
             
-            $matriz[$cuenta][$region]["muestratot"] = $row["tot"];
+          //  $matriz[$cuenta][$region]["muestratot"] = $row["tot"];
             $total_cuen[$cuenta][1]["muestra"] += $matriz[$cuenta][$region][1]["muestra"];
             $total_cuen[$cuenta][2]["muestra"] += $matriz[$cuenta][$region][2]["muestra"];
             $total_cuen[$cuenta][3]["muestra"] += $matriz[$cuenta][$region][3]["muestra"];
@@ -1736,7 +1830,7 @@ ca_unegocios.une_cla_estado";
                         $reng1 = "";
 //         
                         //   echo "<br>".$cuen."][".$reg."][".$per."--".$matriz[$cuen][$reg][$per]["tot"];
-                        //     echo "--".$auxper[$per - 1]."-- ".$per;
+                         //    echo "--".$auxper[$per - 1]."-- ".$per;
                         if ($auxper[$per - 1] == 1) {
                             $matriz[$cuen][$reg][$per]["tot"] = $matriz[$cuen][$reg][$per]["tot"] + $matriz[$cuen][$reg][$per - 1]["tot"];
                             $matriz[$cuen][$reg][$per]["acep"] = $matriz[$cuen][$reg][$per]["acep"] + $matriz[$cuen][$reg][$per - 1]["acep"];
@@ -1819,7 +1913,7 @@ ca_unegocios.une_cla_estado";
                 }
              
 
-
+             
                 //despliego totales por region
                 //   $rowdata = array();
                 $rowdata[] = T_("TOTAL");
@@ -1900,32 +1994,37 @@ ca_unegocios.une_cla_estado";
         }
         //
         //columna totales x cuenta
-
+        if($k>1){
         $tablitaxnivel = new TablitaDinamica;
         $tablitaxnivel->setNombreNivel(T_("TOTALES"));
         $listacuentas = array();
+        $ligax="";
+     
+        $ligauni = $filx["pais"] . "." .$filx["uni"] . "." .$filx["zon"];
+        if ($tx == 3)
+        	$ligauni = $filx["pais"] . "." .$filx["uni"] ;
+        if ($tx == 4)
+        {    $ligauni = $filx["pais"] . "." .$filx["uni"] . "." .$filx["zon"];
+        	$ligax="";
+        }
+        	
+        if ($tx == 5)
+            $ligax = $filx["reg"].".";
+        if ($tx == 6)
+        	$ligax = $filx["reg"] . "." . $filx["ciu"];
+        if ($tx == 7)
+        	$ligax = $filx["reg"] . "." . $filx["ciu"]. "." . $filx["niv6"];
+        				
         for ($r = 0; $r < count($renglones); $r++) {
             $rowdata = array();
             $cuen = $renglones[$r][0];
             $tablacuenta = new ResumenResultadoxPeriodo;
             
             $tablacuenta->setNombrefranquicia($gupcta.":".$renglones[$r][1]);
-            $ligax = "";
-            $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-            if ($tx == 3)
-                $ligauni = $filx["pais"] . "." . $filx["uni"];
-            if ($tx == 4) {
-                $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-                $ligax = "";
-            }
-
-            if ($tx == 5)
-                $ligax = $filx["reg"] . ".";
-            if ($tx == 6)
-                $ligax = $filx["reg"] . "." . $filx["ciu"];
-            if ($tx == 7)
-                $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $filx["niv6"];
-
+            $fily[$indy] = $cuen;
+         
+            $ligay = $fily["cta"] . "." . $fily["fra"];
+        
             for ($per = 1; $per < 4; $per++) {
                 $porc = 0;
                 $porcm = 0;
@@ -1991,7 +2090,7 @@ ca_unegocios.une_cla_estado";
             $listacuentas[] = $tablacuenta;
             //$output['aaData'][] = array_map(utf8_encode, $rowdata);
         }
-
+        
 
 
 
@@ -2000,31 +2099,32 @@ ca_unegocios.une_cla_estado";
         $tablacuenta = new ResumenResultadoxPeriodo;
         $tablacuenta->setNombrefranquicia(T_("GRAN TOTAL"));
         $tablacuenta->setEstotal(true);
-
-        $ligax = "";
-        $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
+	
+        $ligax="";
+        $ligauni = $filx["pais"] . "." .$filx["uni"] . "." .$filx["zon"];
         if ($tx == 2)
-            $ligauni = $filx["pais"] . "." . $filx["uni"];
-        if ($tx == 3) {
-            $ligauni = $filx["pais"] . "." . $filx["uni"] . "." . $filx["zon"];
-        }
-        if ($tx == 4)
-            $ligax = $filx["reg"];
-
-        if ($tx == 5)
-            $ligax = $filx["reg"] . ".";
-        if ($tx == 6)
-            $ligax = $filx["reg"] . "." . $filx["ciu"];
-        if ($tx == 7)
-            $ligax = $filx["reg"] . "." . $filx["ciu"] . "." . $filx["niv6"];
-        if ($ty == "F")
-            $ligay = $fily["cta"];
-        else if ($ty == "P")
-            $ligay = $fily["cta"] . "." . $fily["fra"];
-        else if ($ty == "PP")
-            $ligay = $fily["cta"] . "." . $fily["fra"] . "." . $fily["pv"];
-        else
-            $ligay = "";
+        	$ligauni = $filx["pais"] . "." .$filx["uni"] ;
+        	if ($tx == 3)
+        	{    $ligauni = $filx["pais"] . "." .$filx["uni"] . "." .$filx["zon"];
+        	
+        	}
+        	if ($tx == 4)
+        		$ligax = $filx["reg"];
+        		
+        	if ($tx == 5)
+        			$ligax = $filx["reg"].".";
+        	if ($tx == 6)
+        		$ligax = $filx["reg"] . "." . $filx["ciu"];
+        	if ($tx == 7)
+        		$ligax = $filx["reg"] . "." . $filx["ciu"]."." . $filx["niv6"];
+        	if ($ty == "F")
+        		$ligay = $fily["cta"];
+        	else if ($ty == "P")
+        		$ligay = $fily["cta"].".".$fily["fra"];
+        	else if ($ty == "PP")
+        		$ligay = $fily["cta"].".".$fily["fra"].".".$fily["pv"];
+        			else
+        		$ligay="";
         for ($per = 1; $per < 4; $per++) {
             $reng1 = $reng2 = $reng3 = "";
             if ($auxper[$per - 1] == 1) {
@@ -2070,9 +2170,9 @@ ca_unegocios.une_cla_estado";
         $tablitaxnivel->setListaResultadosxcuenta($listacuentas);
 
         $output[] = $tablitaxnivel;
-
+        }
 //    $output['aaData'][] = $rowdata;
-        //     var_dump($output);
+         //    var_dump($output);
         return $output;
     }
 
@@ -2447,15 +2547,24 @@ if ($permiso == -1) {
    
     $colorsem = $sem;
     $fperiodo = $per;
-    $worksheet->setCellValue("A2",T_("INDICADORES POST MIX")." ".$this->mes_asig);
-    $worksheet->getStyle("A2")->applyFromArray($indiTit1);
-     
-   // die($referencia);
-    $letra =$this->pintaTablaExcel($worksheet,$mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $fperiodo);
-    $worksheet->mergeCells("A3:".Utilerias::michr($letra-1)."3");
-    $worksheet->mergeCells("A2:".Utilerias::michr($letra-1)."2");
-    $worksheet->mergeCells("A4:".Utilerias::michr($letra-1)."4");
-    $worksheet->getRowDimension('1')->setRowHeight(70);
+    if($worksheet){
+    	$worksheet->setCellValue("A2",T_("INDICADORES POST MIX")." ".$this->mes_asig);
+    	$worksheet->getStyle("A2")->applyFromArray($indiTit1);
+    	
+    	// die($referencia);
+    	$letra =$this->pintaTablaExcel($worksheet,$mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $fperiodo);
+    	$worksheet->mergeCells("A3:".Utilerias::michr($letra-1)."3");
+    	$worksheet->mergeCells("A2:".Utilerias::michr($letra-1)."2");
+    	$worksheet->mergeCells("A4:".Utilerias::michr($letra-1)."4");
+    	$worksheet->getRowDimension('1')->setRowHeight(70);
+    }else{
+    	
+    	$tabla =$this->pintaTablaImp($mes_asig, $referencia, $permiso, $filx, $fily, $nivel, $reng, $tiposec, $rdata, $colorsem, $fperiodo);
+    	
+    	$this->listaResultados=$tabla;
+  
+    
+    }
   //  $this->listaResultados=$tabla;
    
 }
@@ -2771,26 +2880,7 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
                 $matriz[$cuen][$reg][$per]["acep"] = $matriz[$cuen][$reg][$per]["acep"] + $matriz[$cuen][$reg][$per - 1]["acep"];
                 $acept = $matriz[$cuen][$reg][$per]["acep"];
                 $total = $matriz[$cuen][$reg][$per]["tot"];
-                 if ($auxdatamos[0] == 1) {
-
-                        if ($matrizmuestra[$cuen][$reg]["muestratot"] != 0 && $total > 0) {
-					//	$msg="muestratot =".$matrizmuestra[$cuen][$reg]["muestratot"]." total=".$total;
-					//	$SQLGEN= 'insert into INSTRUCTIONS (textosql) values ("'.$msg.'");';
-					//	$rs1=@mysql_query($SQLGEN);
-
-						
-                            $porcm = $matriz[$cuen][$reg][$per]["tot"] / $matrizmuestra[$cuen][$reg]["muestratot"];
-                            $porcm = round($porcm * 100, 1);
-                        }
-                        else
-                            $porcm = "";
-
-
-                      
-                        $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm);
-                        $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
-                        
-                 }
+                
                   if ($auxdatamos[1] == 1) {
                         if ($total == 0) {
                             $total = "";
@@ -2800,6 +2890,23 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
                         $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
                         
                     }
+                    if ($auxdatamos[0] == 1) {
+                    	
+                    	if ($matrizmuestra[$cuen][$reg]["muestratot"] != 0 && $total > 0) {
+                    		$porcm =  $matrizmuestra[$cuen][$reg][$per]["muestra"]/ $matrizmuestra[$cuen][$reg]["muestratot"];
+                    		$porcm = round($porcm * 100, 1);
+                    	}
+                    	else
+                    		$porcm = "";
+                    		
+                    		
+                    		
+                    		
+                    		$worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm);
+                    		$worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                    		
+                    }
+                    
                 if ($total != 0)
                 {    $porc = $acept / $total * 100;
                     $porc=round($porc, 1);
@@ -2840,25 +2947,26 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
                     $porc = " ";
                     $totaltemp = "";
                 }
-            if ($auxdatamos[0] == 1) {
-                    if ($totalmuestra[$cuen]["muestratot"] != 0 && $total_cuen[$cuen][$per]["tot"] > 0) {
-                        $porcm = $total_cuen[$cuen][$per]["tot"] / $totalmuestra[$cuen]["muestratot"];
-                        $porcm = round($porcm * 100, 1);
-                    }
-                    else
-                        $porcm = "";
-
-
-                  //  $reng1 = '<strong><span style="color:#999999" >' . $porcm . '</span></strong><br>';
-                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
-                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
-                    
-                }
+           
                 if ($auxdatamos[1] == 1) {
                  //   $reng2 = '<strong><span style="color:#999999"  >' . $totaltemp . '</span></strong><br>';
                     $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $totaltemp );
                     $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
                     
+                }
+                if ($auxdatamos[0] == 1) {
+                	if ($totalmuestra[$cuen]["muestratot"] != 0 && $total_cuen[$cuen][$per]["tot"] > 0) {
+                		$porcm = $total_cuen[$cuen][$per]["tot"] / $totalmuestra[$cuen]["muestratot"];
+                		$porcm = round($porcm * 100, 1);
+                	}
+                	else
+                		$porcm = "";
+                		
+                		
+                		//  $reng1 = '<strong><span style="color:#999999" >' . $porcm . '</span></strong><br>';
+                		$worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
+                		$worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                		
                 }
             //$tab_cuenta->nuevacolest($reng2.$reng1.'<strong> <span >  ' . $porc. "</span></strong>", $clase, "");
             $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porc);
@@ -2906,21 +3014,7 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
             else {
                 $porc = "";
             }
-             if ($auxdatamos[0] == 1) {
-
-                    if ($totalreg[$reg]["muestratot"] != 0 && $totalreg[$reg][$per]["tot"] > 0) {
-                        $porcm = $totalreg[$reg][$per]["tot"] / $totalreg[$reg]["muestratot"];
-                        $porcm = round($porcm * 100, 1);
-                    }
-                    else
-                        $porcm = "";
-
-                    //  $rowdata[] =$totalreg[$reg][$per]["tot"].'-'.round($porc,1);
-                 //   $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
-                    $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
-                    $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
-                    
-             }
+            
                 //  echo $reg."--".$per."--".$totalreg[$reg][$per]["tot"]."<br>";
                 if ($auxdatamos[1] == 1) {
                     if ($totalreg[$reg][$per]["tot"] > 0) {
@@ -2934,6 +3028,21 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
                     $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
                     
                 }
+                if ($auxdatamos[0] == 1) {
+                	
+                	if ($totalreg[$reg]["muestratot"] != 0 && $totalreg[$reg][$per]["tot"] > 0) {
+                		$porcm = $totalreg[$reg][$per]["tot"] / $totalreg[$reg]["muestratot"];
+                		$porcm = round($porcm * 100, 1);
+                	}
+                	else
+                		$porcm = "";
+                		
+                		//  $rowdata[] =$totalreg[$reg][$per]["tot"].'-'.round($porc,1);
+                		//   $reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
+                		$worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porcm );
+                		$worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+                		
+                }
          //   $tab_cuenta->nuevacolest($reng2.$reng1.' <span >  ' . $porc . "</span>", "cabcols", "");
             $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $porc);
             $worksheet->getStyle(Utilerias::michr($letra++).$renglon)->applyFromArray($cabcols);
@@ -2946,21 +3055,22 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
     for ($per = 1; $per < 4; $per++) {
     	$porcm = $porc = 0;
            $renglon=$renglonini;
-          if ($auxdatamos[0] == 1) {
-                if ($totalfin["muestratot"] != 0 && $totalfin[$per]["tot"] > 0)
-                    $porcm = $totalfin[$per]["tot"] / $totalfin["muestratot"];
-
-               // $reng1 =  round($porcm * 100, 1) . '</span><br>';
-                $worksheet->setCellValue(Utilerias::michr($letra).$renglon, round($porcm * 100, 1)  );
-                $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
-                
-          }
+         
             if ($auxdatamos[1] == 1) {
                // $reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '">' . $totalfin[$per]["tot"] . '</span><br>';
                 $worksheet->setCellValue(Utilerias::michr($letra).$renglon, $totalfin[$per]["tot"]   );
                 $worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
                 
             
+            }
+            if ($auxdatamos[0] == 1) {
+            	if ($totalfin["muestratot"] != 0 && $totalfin[$per]["tot"] > 0)
+            		$porcm = $totalfin[$per]["tot"] / $totalfin["muestratot"];
+            		
+            		// $reng1 =  round($porcm * 100, 1) . '</span><br>';
+            		$worksheet->setCellValue(Utilerias::michr($letra).$renglon, round($porcm * 100, 1)  );
+            		$worksheet->getStyle(Utilerias::michr($letra).($renglon++))->applyFromArray($clase);
+            		
             }
 
         if ($totalfin[$per]["tot"]) {
@@ -2981,6 +3091,369 @@ $worksheet->getStyle("A3:A4")->applyFromArray($indiTit2);
     
     
     return $letra;
+}
+
+
+function pintaTablaImp($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty, $tiposec, $rdata, $colorsem, $fperiodo) {
+	
+	$vidiomau = $_SESSION["idiomaus"];
+	
+	
+	$rs = $this->Consulta($mes_asig, $referencia, $permiso, $filx, $fily, $fperiodo);
+	
+	$tab_cuenta = new Tablahtml("tablabord");
+	$clave_cue = 1;
+	$acumtot = 0;
+	$acumacep = 0;
+	$campNivel[3] = "une_cla_zona";
+	$campNivel[4] = "une_cla_estado";
+	$campNivel[5] = "une_cla_ciudad";
+	$campNivel[6] = "une_cla_franquicia";
+	$campNivel[7] = "une_id";
+	$campGrup["C"] = "cue_clavecuenta";
+	$campGrup["F"] = "fc_idfranquiciacta";
+	$campGrup["P"] = "une_id";
+	$campGrup["PP"] = "une_id";
+	$nivel = $tx;
+	$edo = $filx["reg"];
+	$cuenta = filter_input(INPUT_GET,"cta",FILTER_SANITIZE_NUMBER_INT);
+	$cd = $filx["ciu"];
+	$niv6 = $filx["niv6"];
+	$zona = 3;
+	
+	$clave_cue = 1;
+	$acumtot = 0;
+	$acumacep = 0;
+	$totalreg = array();
+	$auxdatamos = explode(".", $rdata); //guarda los datos que se muestran si num pruebas tam muestra o %
+	$total_cuen = array();
+	
+	//verifico que haya resultados si no consulto el nombre de la seccion
+	$nomAux = null;
+	
+	if (sizeof($rs) <= 0) {
+		$nomAux = DatosEst::buscaIndicadores($referencia, $vidiomau,$this->servicio);
+		
+		foreach($nomAux as $indicador){
+			$nomseccion = $indicador[1];
+			$estandar = $indicador[2];
+		}
+	}else
+	{  foreach ($rs as $row) {
+		
+		$periodo = $acept = $acumtot = 0;
+		$cuenta = $row[$campGrup[$ty]]; //sera eje y
+		$region = $row[$campNivel[$tx]]; //serÃ¡ eje x
+		
+		if ($vidiomau == 2) {
+			$nomseccion = $row["red_parametroing"];
+		} else {
+			$nomseccion = $row["red_parametroesp"];
+		}
+		$estandar = $row["red_estandar"];
+		if ($row["mes"] == 1) {
+			$periodo = 1;
+			$acept = $row["pasa"];
+			$acumtot = $row["tot"];
+		}
+		else
+			
+			if ($row["6mes"] == 2) {
+				$periodo = 2;
+				$acept = $row["pasa"];
+				$acumtot = $row["tot"];
+			} else
+				if ($row["12mes"] == 3) {
+					$periodo = 3;
+					$acept = $row["pasa"];
+					$acumtot = $row["tot"];
+				}
+			
+			if ($cuenta > 0 && $region > 0) {
+				$matriz[$cuenta][$region][$periodo]["acep"] = $acept;
+				$matriz[$cuenta][$region][$periodo]["tot"] = $acumtot;
+				$total_cuen[$cuenta][$periodo]["acep"]+=$acept;
+				$total_cuen[$cuenta][$periodo]["tot"]+=$acumtot;
+			}
+			//inicializo
+			$totalreg[$region][$periodo]["tot"] = 0;
+			$totalreg[$region][$periodo]["acep"] = 0;
+	}
+	}
+	
+	
+	
+	$this->nombreSeccion=$nomseccion;
+	$this->estandar= $estandar;
+	if ($ty == "C") {
+		$gupcta = T_("CUENTA");
+		$renglones =$this->cuentas($permiso, $filx);
+		
+		$indy = "cta";
+	}
+	if ($ty == "F") {
+		$gupcta = T_("FRANQUICIA");
+		$renglones =$this->franquicias($fily["cta"], $filx);
+		$indy = "fra";
+	}
+	if ($ty == "P") {
+		$gupcta = T_("PUNTO VENTA");
+		$renglones = $this->puntosVenta($zona, $filx, $fily);
+	}
+	if ($ty == "PP") {
+		$gupcta = T_("PUNTO VENTA");
+		$renglones = $this->puntoVenta($zona, $filx, $fily);
+	}
+	
+	
+	$tab_cuenta->nuevoren();
+	//$tab_cuenta->nuevacol($nomseccion."<br>".$estandar, "", "");
+	
+	$tab_cuenta->nuevacolestanch(Estructura::nombreNivel($nivel, $vidiomau), "cabcols", "", "16%");
+	
+	
+	//busco nombre de regiones
+	$num_regs = 0;
+	switch ($nivel) {
+		case 2: //busco estados
+			$columnas = $this->unidadesNeg($mes_asig, $referencia, $filx, $fily);
+			$nivf = "uni";
+			
+			break;
+		case 3: //busco estados
+			$columnas = $this->zonas($mes_asig, $referencia, $filx, $fily);
+			$nivf = "zon";
+			
+			break;
+		case 4: //busco estados
+			$columnas = $this->regiones( $mes_asig, $referencia, $filx, $fily);
+			$nivf = "reg";
+			break;
+		case 5:
+			$columnas = $this->ciudades( $mes_asig, $referencia, $permiso, $filx, $fily);
+			
+			$nivf = "ciu";
+			
+			break;
+		case 6:
+			
+			//$columnas = niv6($zona, $edo, $cd);
+			//             echo $zona."--". $mes_asig."--".  $referencia."--". $permiso."--";
+			//             var_dump($filx);
+			//             var_dump($fily);
+			//             echo $this->servicio;
+			$columnas = $this->niv6( $mes_asig, $referencia, $permiso, $filx, $fily);
+			$nivf = "niv6";
+			break;
+	}
+	
+	for ($i = 0; $i < count($columnas); $i++) {
+		
+		$tab_cuenta->nuevacolestanch($columnas[$i][1], "cabcol", "3", "12%");
+		$num_regs++; //cuento el num. de regiones
+	}
+	//    while($row_reg=mysql_fetch_array($rs_reg)) {
+	//        $tab_cuenta->nuevacolestanch($row_reg["est_nombre"], "cabcol", "3","12%");
+	//
+	//    }
+	$tab_cuenta->nuevacolestanch(T_("TOTALES"), "cabcols", "3", "12%");
+	
+	// despliego tit de meses
+	$tab_cuenta->nuevoren();
+	//    $num_regs=mysql_num_rows($rs_reg);
+	$tab_cuenta->nuevacolest($gupcta, "cabcol", "");
+	$auxper=explode(".", $fperiodo);
+	$periodos = array();
+	// if($auxper[0])
+	array_push($periodos, "M");
+	//if($auxper[1])
+	array_push($periodos, "6M");
+	//if($auxper[2])
+	array_push($periodos, "12M");
+	for ($reg = 0; $reg < $num_regs + 1; $reg++) {
+		for ($per = 0; $per < 3; $per++) {
+			$tab_cuenta->nuevacolestanch($periodos[$per], "cabcol", "", "4%");
+		}
+	}
+	//despliego la matriz
+	
+	$totales_cue = 0;
+	$totace_cue = 0;
+	$contest = 0;
+	$estilo1 = "rencrema";
+	$estilo2 = "renazul";
+	$r = 0;
+	//busco tamaÃ±o de muestra
+	if ($auxdatamos[0] == 1) {
+		
+		$arrmuestra = $this->tamanioMuestra($mes_asig, $referencia, $permiso, $filx, $fily, $tx, $ty);
+		$matrizmuestra = $arrmuestra[0];
+		$totalmuestra = $arrmuestra[1];
+	}
+	$totalfin = array();
+	for ($r = 0; $r < count($renglones); $r++) {
+		if ($contest % 2 == 0) {
+			$clase = $estilo1;
+		}
+		else
+			$clase = $estilo2;
+			$cuen = $renglones[$r][0];
+			$tab_cuenta->nuevoren();
+			$tab_cuenta->nuevacolest($renglones[$r][1], $clase, "");
+			if ($num_regs > 1)// si son todas empiezo en 0
+				$ini = 1;
+				else
+					$ini = $permiso;
+					for ($k = 0; $k < sizeof($columnas); $k++) {
+						$reng1 = $reng2 = $reng3 = "";
+						$reg = $columnas[$k][0];
+						for ($per = 1; $per < 4; $per++) { //despliego cada periodo
+							//                if($matriz[$cuen][$reg][$per]["acep"]!=""){
+							$matriz[$cuen][$reg][$per]["tot"] = $matriz[$cuen][$reg][$per]["tot"] + $matriz[$cuen][$reg][$per - 1]["tot"];
+							$matriz[$cuen][$reg][$per]["acep"] = $matriz[$cuen][$reg][$per]["acep"] + $matriz[$cuen][$reg][$per - 1]["acep"];
+							$acept = $matriz[$cuen][$reg][$per]["acep"];
+							$total = $matriz[$cuen][$reg][$per]["tot"];
+							if ($auxdatamos[0] == 1) {
+								
+								if ($matrizmuestra[$cuen][$reg]["muestratot"] != 0 && $total > 0) {
+									$porcm =  $matrizmuestra[$cuen][$reg][$per]["muestra"]/ $matrizmuestra[$cuen][$reg]["muestratot"];
+									$porcm = round($porcm * 100, 1);
+								}
+								else
+									$porcm = "";
+									
+									
+									$reng1 = '<span style="color:#999999" >' . $porcm . '</span><br>';
+							}
+							if ($auxdatamos[1] == 1) {
+								if ($total == 0) {
+									$total = "";
+								}
+								$reng2 = '<span style="color:#999999" ">' . $total . '</span><br>';
+							}
+							if ($total != 0)
+							{    $porc = $acept / $total * 100;
+							$porc=round($porc, 1);
+							}
+							else
+								$porc = "";
+								
+								$tab_cuenta->nuevacolest($reng2.$reng1.' <span >' .$porc  . '</span>', $clase, "");
+								//acumulo por mes
+								$totalreg[$reg][$per]["tot"]+=$total;
+								$totalreg[$reg][$per]["acep"]+=$acept;
+								
+								
+								//                }
+								//                else
+									//                     $tab_cuenta->nuevacolest(VACIO,$clase,"");
+						}
+						$totalreg[$reg]["muestratot"]+=$matrizmuestra[$cuen][$reg]["muestratot"];
+					}
+					//despliego totales por cuenta
+					for ($per = 1; $per < 4; $per++) {
+						$reng1 = $reng2 = $reng3 = "";
+						$total_cuen[$cuen][$per]["acep"] = $total_cuen[$cuen][$per]["acep"] + $total_cuen[$cuen][$per - 1]["acep"];
+						$total_cuen[$cuen][$per]["tot"] = $total_cuen[$cuen][$per]["tot"] + $total_cuen[$cuen][$per - 1]["tot"];
+						if ($total_cuen[$cuen][$per]["tot"] != 0)
+							$porc = $total_cuen[$cuen][$per]["acep"] / $total_cuen[$cuen][$per]["tot"] * 100;
+							else
+								$porc = " ";
+								if ($total_cuen[$cuen][$per]["tot"] > 0) {
+									$porc = $total_cuen[$cuen][$per]["acep"] / $total_cuen[$cuen][$per]["tot"] * 100;
+									$porc = round($porc, 1);
+									$totaltemp = $total_cuen[$cuen][$per]["tot"];
+								} else {
+									$porc = " ";
+									$totaltemp = "";
+								}
+								if ($auxdatamos[0] == 1) {
+									if ($totalmuestra[$cuen]["muestratot"] != 0 && $total_cuen[$cuen][$per]["tot"] > 0) {
+										$porcm = $total_cuen[$cuen][$per]["tot"] / $totalmuestra[$cuen]["muestratot"];
+										$porcm = round($porcm * 100, 1);
+									}
+									else
+										$porcm = "";
+										
+										
+										$reng1 = '<strong><span style="color:#999999" >' . $porcm . '</span></strong><br>';
+								}
+								if ($auxdatamos[1] == 1) {
+									$reng2 = '<strong><span style="color:#999999"  >' . $totaltemp . '</span></strong><br>';
+								}
+								$tab_cuenta->nuevacolest($reng2.$reng1.'<strong> <span >  ' . $porc. "</span></strong>", $clase, "");
+								$totalfin[$per]["acep"]+=$total_cuen[$cuen][$per]["acep"];
+								$totalfin[$per]["tot"]+=$total_cuen[$cuen][$per]["tot"];
+					}
+					$contest++;
+					$totalfin["muestratot"]+=$totalmuestra[$cuen]["muestratot"];
+	}
+	
+	//despliego totales por region
+	$tab_cuenta->nuevoren();
+	$tab_cuenta->nuevacolest(T_("TOTALES"), "cabcols", "");
+	for ($k = 0; $k < sizeof($columnas); $k++) {
+		$reng1 = $reng2 = $reng3 = "";
+		$reg = $columnas[$k][0];
+		for ($per = 1; $per < 4; $per++) {
+			
+			if ($totalreg[$reg][$per]["tot"] != 0)
+			{     $porc = $totalreg[$reg][$per]["acep"] / $totalreg[$reg][$per]["tot"] * 100;
+			$porc=round($porc, 1);
+			}
+			else {
+				$porc = "";
+			}
+			if ($auxdatamos[0] == 1) {
+				
+				if ($totalreg[$reg]["muestratot"] != 0 && $totalreg[$reg][$per]["tot"] > 0) {
+					$porcm = $totalreg[$reg][$per]["tot"] / $totalreg[$reg]["muestratot"];
+					$porcm = round($porcm * 100, 1);
+				}
+				else
+					$porcm = "";
+					
+					//  $rowdata[] =$totalreg[$reg][$per]["tot"].'-'.round($porc,1);
+					$reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . $porcm . '</span><br>';
+			}
+			//  echo $reg."--".$per."--".$totalreg[$reg][$per]["tot"]."<br>";
+			if ($auxdatamos[1] == 1) {
+				if ($totalreg[$reg][$per]["tot"] > 0) {
+					
+					
+					$reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '" >' . $totalreg[$reg][$per]["tot"] . '</span><br>';
+				} else {
+					$reng2 = '<br>';
+				}
+			}
+			$tab_cuenta->nuevacolest($reng2.$reng1.' <span >  ' . $porc . "</span>", "cabcols", "");
+		}
+	}
+	//despliego totales finales
+	for ($per = 1; $per < 4; $per++) {
+		$reng1 = $reng2 = $reng3 = "";
+		if ($auxdatamos[0] == 1) {
+			if ($totalfin["muestratot"] != 0 && $totalfin[$per]["tot"] > 0)
+				$porcm = $totalfin[$per]["tot"] / $totalfin["muestratot"];
+				
+				$reng1 = '<span style="color:#999999;  font-weight:bold" title="%' . T_("tam. muestra") . '">' . round($porcm * 100, 1) . '</span><br>';
+		}
+		if ($auxdatamos[1] == 1) {
+			$reng2 = '<span style="color:#999999;  font-weight:bold" title="' . T_("no. pruebas") . '">' . $totalfin[$per]["tot"] . '</span><br>';
+		}
+		
+		if ($totalfin[$per]["tot"]) {
+			$porc = $totalfin[$per]["acep"] / $totalfin[$per]["tot"] * 100;
+			
+			$tab_cuenta->nuevacolest($reng2.$reng1 . round($porc, 1), "cabcols", "");
+		} else {
+			$tab_cuenta->nuevacolest(VACIO, "cabcols", "");
+		}
+	}
+	
+	$cad = $tab_cuenta->cierretabla();
+	
+	return $cad;
 }
     function getNombreSeccion() {
         return $this->nombreSeccion;

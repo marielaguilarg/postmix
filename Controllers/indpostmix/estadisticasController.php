@@ -41,6 +41,7 @@ class EstadisticasController {
                 //error_log("variable $key_get viene desde $ _GET");
             }
         }
+     
         if($admin!=1)
         { $this->busqueda=new GenerarBusquedaController;
         $this->busqueda->generarBusquedaRes();
@@ -65,35 +66,29 @@ class EstadisticasController {
 //  inicializo etiquetas por idioma
 //  -----------------------------------
 
-
-
         $cuenta = $cta;
-
+     
         if (isset($filx)) {
             $auxx = explode(".", $filx);
             $auxy = explode(".", $fily);
             $cuenta = $auxy[0];
+        
+//             $filx=array();
+//         $filx["reg"] = $auxx[0];
+//         $filx["ciu"] = $auxx[1];
+//         $filx["niv6"] = $auxx[2];
         }
-
-
-        $filx["reg"] = $auxx[0];
-
-        $filx["ciu"] = $auxx[1];
-        $filx["niv6"] = $auxx[2];
-
-
         $gfiluni = $filuni;
 
         $auxuni = explode(".", $gfiluni);
 
-        $filx["pais"] = $auxuni[0];
-        $filx["uni"] = $auxuni[1];
-        $filx["zon"] = $auxuni[2];
-
-
+//         $filx["pais"] = $auxuni[0];
+//         $filx["uni"] = $auxuni[1];
+//         $filx["zon"] = $auxuni[2];
 
         if ($admin==1) {// vengo de consulta resultados
-            // var_dump($_SESSION);
+//              var_dump($_SESSION);
+//              ();
             $gfilx = $_SESSION["ffilx"];
             $gfily = $_SESSION["ffily"];
             $gfiluni = $_SESSION["ffiluni"];
@@ -112,8 +107,12 @@ class EstadisticasController {
             $auxy = explode(".", $gfily);
 
             $cuenta = $auxy[0];
-
+            if($cuenta==""){
+            	$cuenta=$_SESSION["fcuenta"];
+            	$fily=$cta.".";
+            }
             $franquiciacta = $auxy[1];
+
 
             //   $periodo = $_SESSION["fperiodo"];
         }
@@ -139,7 +138,8 @@ class EstadisticasController {
         }
 //   echo "  la cuenta es  ".$numseccion;
 
-
+	//	echo "llegue aqui";
+		
 
         $filtros = array('unidadneg', "franquicia", "region", "zona", "cedis");
 
@@ -176,7 +176,7 @@ class EstadisticasController {
             $nomseccion = $resseccion ["sec_descripcionesp"];
         }
         $tiposec = $resseccion ["sec_tiposeccion"];
-
+		//echo "sera aqui"; 
         //  $this->nombreSeccion= $tit_secciones[$tit - 2];
         $this->nombreSeccion = $nomseccion;
 // excepcion para cambiar el tipo de seccion de la seccion 2
@@ -194,11 +194,11 @@ class EstadisticasController {
 //el nombre del componente pasa a genera estadistica
 //if ($numop != '') //si hay datos muestra la grafica
 //{
-//echo "hola  ".$numop;
 
+  
         $this->generarEstadisticas($tiposec, $numop, $mes, $filx, $fily,$ptv);
         
-       
+        
           if (isset($ptv)) {
             $unidadnegocio = $ptv;
 
@@ -217,7 +217,7 @@ class EstadisticasController {
 //var_dump($_SESSION);
 //reviso la pagina anterior en el historico
 
-
+      //    echo "y aca"; die();
 
         $ult = sizeof($_SESSION["historico"]) - 2;
 //veo grupo para saber a donde regresa
@@ -421,16 +421,16 @@ class EstadisticasController {
         agregarRuta("c", $rutaact, T_("ESTADISTICAS"));
     }
     */
-    public function vistaCumplimientoEstabl($cump, $subseccionl, $tiposec) {
+    public function vistaCumplimientoEstabl($cump, $subseccion1, $tiposec) {
         $this->vserviciou = $_SESSION["servicioind"];
         $this->vclienteu = $_SESSION["clienteind"];
 //guardofiltro
-        $_SESSION["frefer"] = $subseccionl;
+        $_SESSION["frefer"] = $subseccion1;
 
 
         $usuario_act = $_SESSION["UsuarioInd"];
 //obtengo numero de seccion
-        $aux_sec = explode(".", $subseccionl);
+        $aux_sec = explode(".", $subseccion1);
         $numseccion = $aux_sec[0];
 //incluyo encabezado
 
@@ -465,11 +465,11 @@ class EstadisticasController {
         $leyenda_estno = T_('ESTABLECIMIENTOS QUE NO CUMPLEN CON EL ESTANDAR');
         switch ($tiposec) {
             case 'E':
-                if ($subseccionl == '8.0.1.0.0.9') {// query para proporcion agua jarabe
-                    $query_si = $this->cumplimientoProporcion($usuario_act, $subseccionl, "si");
-                    $query_no = $this->cumplimientoProporcion($usuario_act, $subseccionl, "no");
+                if ($subseccion1 == '8.0.1.0.0.9') {// query para proporcion agua jarabe
+                    $query_si = $this->cumplimientoProporcion( "si");
+                    $query_no = $this->cumplimientoProporcion( "no");
                     $this->notaEstabl = "(" . T_("Se muestra el porcentaje de pruebas") . ")";
-                    $parametros = array("usuario_act" => $usuario_act, "subseccion1" => $subseccionl);
+                    $parametros = array("usuario_act" => $usuario_act, "subseccion1" => $subseccion1);
                     $leyenda_estsi = T_('ESTABLECIMIENTOS CON MAS DEL 80% DE PRUEBAS DENTRO DEL ESTANDAR');
                     $leyenda_estno = T_('ESTABLECIMIENTOS CON MENOS DEL 80% DE PRUEBAS DENTRO DEL ESTANDAR');
                 } else {
@@ -533,8 +533,8 @@ and tmp_estadistica.usuario=:usuario_act
 //            echo $query_no;
                     //verifico el tipo de evalucion para saber si ser� un renglon o varios
                     $sqlte = "select re_tipoevaluacion from cue_reactivosestandar 
-                where concat(sec_numseccion,'.',r_numreactivo,'.',re_numcomponente) =:subseccionl and ser_claveservicio=:vserviciou;";
-                    $parametros = array("subseccionl" => substr($subseccionl, 0, 5), "vserviciou" => $this->vserviciou);
+                where concat(sec_numseccion,'.',r_numreactivo,'.',re_numcomponente) =:subseccion1 and ser_claveservicio=:vserviciou;";
+                    $parametros = array("subseccion1" => substr($subseccion1, 0, 5), "vserviciou" => $this->vserviciou);
                     $result = Conexion::ejecutarQuery($sqlte, $parametros);
 
                     foreach ($result as $rowg) {
@@ -572,7 +572,7 @@ Inner Join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
 INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`=`ca_unegocios`.`fc_idfranquiciacta`
 
 where 
-concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo)=:subseccion1 
+concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo)=:subseccion1
     and ins_detalle.id_claveservicio=:vserviciou
 and id_noaplica>-1 and tmp_estadistica.usuario=:usuario_act 
 and id_aceptado=-1";
@@ -621,7 +621,7 @@ INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion1 
              and ins_generales.i_claveservicio=:vserviciou
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act
+AND ins_detalleproducto.ip_sinetiqueta<>-1  and tmp_estadistica.usuario=:usuario_act
  group by ip_numreporte having valor>=80";
                 $query_no = "SELECT
 sum(ins_detalleproducto.ip_numcajas) AS totaceptado,
@@ -640,7 +640,7 @@ INNER JOIN `ca_franquiciascuenta` ON `ca_franquiciascuenta`.`fc_idfranquiciacta`
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion1 
              and ins_generales.i_claveservicio=:vserviciou
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null) and tmp_estadistica.usuario=:usuario_act
  group by ip_numreporte having valor<80";
 //echo $query_no;
 
@@ -655,14 +655,15 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
             $orden = $aux[0];
             $forma = $aux[1];
         }
-        $parametros2 = array("subseccion1" => $subseccionl, "vserviciou" => $this->vserviciou, "usuario_act" => $usuario_act);
+        $parametros2 = array("subseccion1" => $subseccion1, "vserviciou" => $this->vserviciou, "usuario_act" => $usuario_act);
 
 //echo $query_si;
         if ($cump == "si") { //devuelve los que cumplen
+        
             $query_si = $this->ordenar($query_si, $orden, $forma, $tiposec);
-            
+          
             $result = Conexion::ejecutarQuery($query_si, $parametros2);
-         //   die();
+           
 
             $lb_ESTABLECIMIENTOS_QUEC = $leyenda_estsi;
         } else {        //devuelve los que no cumplen
@@ -674,7 +675,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
         }
 
         $contl = 1;
-        $subsubseccion = substr($subseccionl, 0, strrpos($subseccionl, "."));
+        $subsubseccion = substr($subseccion1, 0, strrpos($subseccion1, "."));
         //   echo $subsubseccion;
         $this->listaEstablecimientos = array();
         $k = 0;
@@ -729,7 +730,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
                 
                 if ($tiposec == "E")
                 {   
-                    If (($subseccionl=="5.0.2.0.0.17") ||  ($subseccionl=="5.0.2.0.0.18")) {
+                    If (($subseccion1=="5.0.2.0.0.17") ||  ($subseccion1=="5.0.2.0.0.18")) {
                         
                         //echo "entre a valor 17 o 18";
                         
@@ -784,8 +785,8 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
       $this->filtrosSel=new ConsultaIndicadores();
         if ($tiposec == 'V')
 
-        //  $html->asignar ( 'nomcomp', nombreSeccion($subseccionl, $vidiomau) );
-            $nomcomp = $this->nombreSeccion($subseccionl, $vidiomau);
+        //  $html->asignar ( 'nomcomp', nombreSeccion($subseccion1, $vidiomau) );
+        	$nomcomp = DatosSeccion::nombreSeccionIdioma($subseccion1, $this->vserviciou,$vidiomau);
        
         $this->filtrosSel->setNombre_seccion($nomcomp);
       
@@ -821,6 +822,7 @@ AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_a
     }
 
     function cumplimientoProporcion($opcion) {
+    	
         if ($opcion == "si")
             $query = "SELECT
 cue_reactivosestandardetalle.red_parametroesp AS descesp,
@@ -831,7 +833,7 @@ ins_generales.i_numreporte rep,ca_unegocios.cue_clavecuenta,i_unenumpunto,
 cue_reactivosestandardetalle.red_tipodato,
 cue_reactivosestandardetalle.red_clavecatalogo,
 ca_unegocios.une_dir_municipio as ciudad,
-ca_nivel3.zona_nombre as franquicia, red_estandar as estandar,
+ca_nivel3.n3_nombre as franquicia, red_estandar as estandar,
 sum(if(ide_aceptado<0,100,0))/sum(1) as valor, sum(if(ide_aceptado<0,100,0))/sum(1) as valor2
 FROM
 ins_detalleestandar
@@ -841,11 +843,11 @@ AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.re
 Inner Join ins_generales ON ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte and ins_detalleestandar.ide_claveservicio=ins_generales.i_claveservicio
 Inner Join tmp_estadistica ON ins_generales.i_numreporte = tmp_estadistica.numreporte
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
-Inner Join ca_nivel3 ca_unegocios.une_cla_zona = ca_nivel3.n3_id
+Inner Join ca_nivel3 on ca_unegocios.une_cla_zona = ca_nivel3.n3_id
 where cue_reactivosestandardetalle.red_grafica=-1 and
-        ins_generales.i_claveservicio='1'  AND ide_valorreal<>'' and
+        ins_generales.i_claveservicio=:vserviciou  AND ide_valorreal<>'' and
         concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente
-,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) = :subseccionl
+,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) = :subseccion1
 and tmp_estadistica.usuario=:usuario_act
 group by  i_numreporte having valor>=80";
         else
@@ -858,7 +860,7 @@ ca_unegocios.cue_clavecuenta,i_unenumpunto,
 cue_reactivosestandardetalle.red_tipodato,
 cue_reactivosestandardetalle.red_clavecatalogo,
 ca_unegocios.une_dir_municipio as ciudad,
-ca_nivel3.zona_nombre as franquicia, red_estandar as estandar,
+ca_nivel3.n3_nombre as franquicia, red_estandar as estandar,
 sum(if(ide_aceptado<0,100,0))/sum(1) as valor, sum(if(ide_aceptado<0,100,0))/sum(1) as valor2
 FROM
 ins_detalleestandar
@@ -870,8 +872,8 @@ Inner Join tmp_estadistica ON ins_generales.i_numreporte = tmp_estadistica.numre
 Inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
 Inner Join ca_nivel3 ON ca_unegocios.une_cla_zona = ca_nivel3.n3_id
 where cue_reactivosestandardetalle.red_grafica=-1 and  concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente
-,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) = :subseccionl
-and tmp_estadistica.usuario=:usuario_act  and ins_generales.i_claveservicio='1'  AND ide_valorreal<>''
+,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) = :subseccion1
+and tmp_estadistica.usuario=:usuario_act  and ins_generales.i_claveservicio=:vserviciou  AND ide_valorreal<>''
 
 group by  i_numreporte having valor<80";
 //echo $query;
@@ -943,7 +945,7 @@ ca_catalogosdetalle.cad_idopcion =  :red_valormin";
     }
 
 // llega la referencia de la seccion
-    function tamanioMuestra($mes_consulta, $filx, $gfily, $usuario, $referencia, $tiposec) {
+    function tamanioMuestraOrig($mes_consulta, $filx, $gfily, $usuario, $referencia, $tiposec) {
         $aux_sec = explode(".", $referencia);
 
 
@@ -972,9 +974,12 @@ ca_catalogosdetalle.cad_idopcion =  :red_valormin";
 
         $grupo = $_SESSION["grupous"];
         $vidiomau = $_SESSION["idiomaus"];
+      
+   
+        					
         if ($tiposec == "E") {
             $sql = "SELECT
- sum(IF(ide_numseccion IS NOT NULL,1,0) )*100/sum(1) as tam_muestra
+  round(sum(IF(ide_numseccion IS NOT NULL,1,0) )*100/COUNT(DISTINCT `une_id`),2) as tam_muestra
 
 FROM
 ca_unegocios
@@ -997,7 +1002,7 @@ ins_generales.i_claveservicio = :servicio  and une_estatus=1";
         } else
         if ($tiposec == "P") {
             $sql = "SELECT
-SUM(IF(ins_detalle.id_aceptado=-1,1,0))*100/SUM(1) AS tam_muestra
+round(SUM(IF(ins_detalle.id_aceptado=-1,1,0))*100/COUNT(DISTINCT `une_id`),2) AS tam_muestra
 FROM
 ca_unegocios
 LEFT JOIN (ins_generales 
@@ -1013,7 +1018,8 @@ ins_generales.i_claveservicio =  :servicio  and une_estatus=1";
             $parametros = array("servicio" => $this->vserviciou, "usuario" => $usuario, "aux_sec0" => $aux_sec[0], "aux_sec1" => $aux_sec[1]);
         } else {
             $sql = "SELECT
-SUM(IF(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0))*100/SUM(1) AS tam_muestra
+round(SUM(IF(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0))*100/COUNT(DISTINCT `une_id`),2) AS tam_muestra
+
 
 FROM
 ca_unegocios
@@ -1024,10 +1030,14 @@ LEFT JOIN (ins_generales
 LEFT JOIN ins_detalleproducto
 ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte AND ins_detalleproducto.ip_claveservicio = `i_claveservicio`
 AND  ins_detalleproducto.ip_numseccion = :referencia  
-AND ins_detalleproducto.ip_sinetiqueta=0 and une_estatus=1";
+AND ins_detalleproducto.ip_sinetiqueta<>-1 and une_estatus=1";
+
             $parametros = array("usuario" => $usuario, "referencia" => $referencia);
         }
-
+	$sql.=" and
+ca_unegocios.une_cla_region=1 and
+ca_unegocios.une_cla_pais=1 and
+ca_unegocios.une_cla_zona=5  ";
         if (isset($fily["cta"]) && $fily["cta"] != "")
             $sql .= " and ca_unegocios.cue_clavecuenta=" . $fily["cta"];
         if (isset($filx["reg"]) && $filx["reg"] != "")
@@ -1039,10 +1049,8 @@ AND ins_detalleproducto.ip_sinetiqueta=0 and une_estatus=1";
         if (isset($fily["fra"]) && $fily["fra"] != "")
             $sql .= " and ca_unegocios.fc_idfranquiciacta=" . $fily["fra"];
 
-//echo $sql;
-     //   echo "**********";
-
-    //    var_dump($parametros);
+   
+      
         $result_cat = Conexion::ejecutarQuery($sql, $parametros);
         
         foreach ($result_cat as $row) {
@@ -1093,6 +1101,197 @@ cnfg_usuarios.cus_servicio=1";
         }
         return $result;
     }
+    function tamanioMuestra($mes_consulta,$filx,$fily, $usuario, $referencia,$tiposec) {
+    
+    	$aux_sec = explode(".", $referencia);
+    	$seccion = $aux_sec[0];
+    	$gfilx = $filx;
+    	$gfily = $fily;
+    	$gnivel = $niv;
+    	$reng = $ren;
+    	
+    	$aux = explode(".", $gfilx);
+    	
+    	$filx = array();
+    	$filx["reg"] = $aux[0];
+    	
+    	$filx["ciu"] = $aux[1];
+    	$filx["niv6"] = $aux[2];
+    
+    	$auxy = explode(".", $gfily);
+    	
+    	$fily = array();
+    	$fily["cta"] = $auxy[0];
+    	$fily["fra"] = $auxy[1];
+    	$aux=explode('.', $mes_consulta);
+    	$mes=$aux[0];
+    	if($mes-6>=0) { // calculo para los 6m
+    		$z=$mes-6+1;
+    		
+    		$mes_pivote=$aux[1]."-".$z."-01";
+    	}
+    	else {
+    		$z=7+$mes;
+    		
+    		$mes_pivote=($aux[1]-1)."-".$z."-01";
+    	}
+    	$fmes_consulta=$aux[1]."-".$aux[0]."-01";
+    	$mes_consulta_ant=($aux[1]-1)."-".$aux[0]."-01";
+    	    	
+    	
+    	$grupo=$_SESSION["GrupoUs"];
+    	$vidiomau=$_SESSION["idiomaus"];
+    	//saco total de pvs
+    
+    	$sql1="SELECT
+COUNT(une_id) AS tot
+    			
+FROM
+ca_unegocios
+    			
+WHERE
+
+ca_unegocios.une_cla_region=1 AND
+ca_unegocios.une_cla_pais=1 AND
+ca_unegocios.une_cla_zona=5 AND une_estatus=1";
+    	
+    	if (isset($fily["cta"]) && $fily["cta"] != "") {
+    		$sql1 .= " and ca_unegocios.cue_clavecuenta=:cta";
+    		$parametros1["cta"] = $fily["cta"];
+    	}
+    	if (isset($filx["reg"]) && $filx["reg"] != "") {
+    		$sql1.= " and ca_unegocios.une_cla_estado=:reg";
+    		$parametros1["reg"] = $filx["reg"];
+    	}
+    	if (isset($filx["ciu"]) && $filx["ciu"] != "") {
+    		$sql1 .= " and ca_unegocios.une_cla_ciudad=:ciu";
+    		$parametros1["ciu"] = $filx["ciu"];
+    	}
+    	if (isset($filx["niv6"]) && $filx["niv6"] != "") {
+    		$sql1 .= " and ca_unegocios.une_cla_franquicia=:niv6";
+    		$parametros1["niv6"] = $filx["niv6"];
+    	}
+    	if (isset($fily["fra"]) && $fily["fra"] != "") {
+    		$sql1 .= " and ca_unegocios.fc_idfranquiciacta=:fra";
+    		$parametros1["fra"] = $fily["fra"];
+    	}
+    	$res1=Conexion::ejecutarQuery($sql1,$parametros1);
+    	$totalpv=0;
+    	foreach($res1 as $row) {
+    							
+    							
+    							
+    			$totalpv= $row["tot"];
+    							
+    	}
+    
+    	if($tiposec=="E")
+    	{	$sql="SELECT
+ round(sum(IF(ide_numseccion IS NOT NULL,1,0) )*100/$totalpv,2) as tam_muestra
+ 
+FROM
+ins_generales
+ inner join tmp_estadistica on tmp_estadistica.numreporte=ins_generales.i_numreporte
+ and tmp_estadistica.usuario=:usuario
+
+LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
+AND `ide_numreporte`=`i_numreporte`
+AND `ide_numseccion`=:aux_sec0
+ AND `ide_numreactivo`=:aux_sec1
+  AND `ide_numcomponente`=:aux_sec2
+  AND `ide_numcaracteristica1`=:aux_sec3
+  AND `ide_numcaracteristica2`=:aux_sec4
+  AND `ide_numcaracteristica3`=:aux_sec5
+  AND `ide_numrenglon`=1
+where
+
+i_claveservicio = :servicio ";
+    	$parametros=array("aux_sec0"=>$aux_sec[0],
+    			"aux_sec1"=>$aux_sec[1],
+    			"aux_sec2"=>$aux_sec[2],
+    			"aux_sec3"=>$aux_sec[3],
+    			"aux_sec4"=>$aux_sec[4],
+    			"aux_sec5"=>$aux_sec[5],
+    	);
+    	}else
+    		if($tiposec=="P")
+    		{	$sql="SELECT
+round(SUM(IF(ins_detalle.id_aceptado=-1,1,0))*100/$totlapv,2) AS tam_muestra
+FROM
+ins_generales
+ INNER JOIN tmp_estadistica ON tmp_estadistica.numreporte=ins_generales.i_numreporte
+ AND tmp_estadistica.usuario=:usuario
+
+LEFT JOIN ins_detalle ON ins_detalle.id_claveservicio = i_claveservicio
+AND `id_numreporte`=i_numreporte
+AND `id_numseccion`=:aux_sec0
+ AND `id_numreactivo`=:aux_sec1
+where
+
+i_claveservicio =  :servicio ";
+    		$parametros=array("aux_sec0"=>$aux_sec0,
+    				"aux_sec1"=>$aux_sec1,
+    				"aux_sec2"=>$aux_sec2,
+    				"aux_sec3"=>$aux_sec3,
+    				"aux_sec4"=>$aux_sec4,
+    				"aux_sec5"=>$aux_sec5,
+    		);
+    	}
+    		else
+    		{$sql="SELECT
+round(SUM(IF(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0))*100/$totalpv,2) AS tam_muestra
+
+FROM
+ins_generales
+ INNER JOIN tmp_estadistica ON tmp_estadistica.numreporte=ins_generales.i_numreporte
+ AND tmp_estadistica.usuario=:usuario
+
+LEFT JOIN ins_detalleproducto
+ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
+ AND ins_detalleproducto.ip_claveservicio = `i_claveservicio`
+AND  ins_detalleproducto.ip_numseccion = :referencia
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null) 
+and ip_claveservicio=:servicio";
+    		$parametros=array("referencia"=>$referencia);
+    		
+    		}
+    		$parametros["usuario"]=$usuario;
+    		$parametros["servicio"]= $this->vserviciou;
+//     			if (isset($fily["cta"]) && $fily["cta"] != "") {
+//     				$sql .= " and ca_unegocios.cue_clavecuenta=:cta";
+//     				$parametros["cta"] = $fily["cta"];
+//     			}
+//        if (isset($filx["reg"]) && $filx["reg"] != "") {
+//         	$sql .= " and ca_unegocios.une_cla_estado=:reg";
+//         	$parametros["reg"] = $filx["reg"];
+//         }
+//         if (isset($filx["ciu"]) && $filx["ciu"] != "") {
+//         	$sql .= " and ca_unegocios.une_cla_ciudad=:ciu";
+//         	$parametros["ciu"] = $filx["ciu"];
+//         }
+//         if (isset($filx["niv6"]) && $filx["niv6"] != "") {
+//         	$sql .= " and ca_unegocios.une_cla_franquicia=:niv6";
+//         	$parametros["niv6"] = $filx["niv6"];
+//         }
+//         if (isset($fily["fra"]) && $fily["fra"] != "") {
+//         	$sql .= " and ca_unegocios.fc_idfranquiciacta=:fra";
+//         	$parametros["fra"] = $fily["fra"];
+//         }
+        
+     //   echo "<br>o el tamanio"; echo $sql; 
+$res=Conexion::ejecutarQuery($sql,$parametros);
+
+foreach($res as $row) {
+	
+	
+	
+	$total= $row["tam_muestra"];
+	
+}
+
+return $total;
+    															
+    }
 
     public function generarEstadisticas($tiposec, $numop, $mes_asig, $filx, $fily,$ptv) {
         set_time_limit(360);
@@ -1100,7 +1299,7 @@ cnfg_usuarios.cus_servicio=1";
 
         $ancho = 600;
         $alto = 300;
-
+       
 //llena la tabla de resultados
         switch ($tiposec) {
             case 'E' :
@@ -1161,7 +1360,7 @@ Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.i
 Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE
 	 ins_detalleproducto.ip_numseccion = :numop   and ins_detalleproducto.ip_claveservicio=:vserviciou
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act 
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario_act 
 GROUP BY
 ins_detalleproducto.ip_numseccion
 
@@ -1174,11 +1373,12 @@ tmp_estadistica.mes_asignacion ASC;	";
 
                 break;
         }
-//echo $tiposec."--".$this->vserviciou;
+
         $parametros = array("vserviciou" => $this->vserviciou, "numop" => $numop, "usuario_act" => $usuario_act);
       
         $result = Conexion::ejecutarQuery($sqlt, $parametros);
-       
+  // var_dump($result); die();
+      
         $this->estadisticas = new ResumenResultado;
         foreach ($result as $rowt) {
             $this->estadisticas->setTotalresultados($rowt ["total"]);
@@ -1203,18 +1403,21 @@ tmp_estadistica.mes_asignacion ASC;	";
                 //calcula la desvicion estandar para los reactivos de producto
                 $this->estadisticas->setDesviacion_estandar(round($rowt ["desviacion"], 3));
             }  // termina validcion de E para coliformes, cuenta total y ecoli
+           
+       
             if ($tiposec == 'V') {
                 $queryd = "SELECT sqrt(sum(pow((ip_semana-" . $rowt ["promedio"] . "),2)*`ins_detalleproducto`.`ip_numcajas`)/sum(`ip_numcajas`)) as desviacion
 FROM ins_detalleproducto Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
  Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
  WHERE	 ins_detalleproducto.ip_numseccion = :numop 
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act  and cue_secciones.ser_claveservicio=:vserviciou
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario_act  and cue_secciones.ser_claveservicio=:vserviciou
 GROUP BY
 ins_detalleproducto.ip_numseccion
 ORDER BY
 tmp_estadistica.mes_asignacion ASC;";
                 $parametros2 = array("vserviciou" => $this->vserviciou, "numop" => $numop, "usuario_act" => $usuario_act);
                 $resultd = Conexion::ejecutarQuery($queryd, $parametros2);
+               
                 foreach ($resultd as $rowd) {
                     $this->estadisticas->setDesviacion_estandar(round($rowd ["desviacion"], 2));
                 }
@@ -1256,14 +1459,17 @@ tmp_estadistica.mes_asignacion ASC;";
                 $nom_componente = $rowt ["descesp"];
             } // fin de idioma
           
-            if ($tiposec == "V")
-                $this->tit_cumplaj= '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("EDAD PROMEDIO POR PRODUCTO");
-        }
+             }
 
-
-//busco tama�o de la muestra
         $tamanio = $this->tamanioMuestra($mes_asig, $filx, $fily, $usuario_act, $numop, $tiposec);
-        
+        if ($tiposec == "V")
+        { 	$this->tit_cumplaj= '<span class="SubtituloGraf">' . $nom_componente . "</span><br>" . T_("EDAD PROMEDIO POR PRODUCTO");
+//       echo "****".$tamanio;
+//       echo $this->estadisticas->getTotalresultados();
+      //  $tamanio=$tamanio/$this->estadisticas->getTotalresultados();
+        }
+//busco tama�o de la muestra
+      //  echo "o el tamanio"; die();
         if ( $ptv == "") {
             $cad='<div class="table-responsive">
                 <table class="table no-margin">

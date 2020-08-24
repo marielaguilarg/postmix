@@ -22,7 +22,7 @@ class ArchivoVMController
     public function descargarArchivo(){
         include "Utilerias/leevar.php";
       
-        
+    
       
        
         //$cuenta=$_POST["cuenta"];
@@ -42,9 +42,29 @@ class ArchivoVMController
             //        "amarillo"=>PHPExcel_Style_Color::COLOR_YELLOW,"rojo"=>PHPExcel_Style_Color::COLOR_RED,"verdeo"=>PHPExcel_Style_Color::COLOR_DARKGREEN,
             //        "gris"=>PHPExcel_Style_Color::COLOR_WHITE, "verdef"=>PHPExcel_Style_Color::COLOR_DARKGREEN, "rojof"=>PHPExcel_Style_Color::COLOR_DARKRED );
             if($consulta=='t')			//revisamos si será consulta de todas las cuentas
-                $cuenta='-1';					 //o sólo de 1
-          
-                     //CREA EL ARCHIVO PARA EXPORTAR
+                $wherecuenta='-1';
+            else//o sólo de 1
+            { $cuenta=$_POST["cuenta"];
+                
+                
+                //reviso si es más de 1
+                if(sizeof($cuenta)>1 )
+                {
+                	$varin="";
+                	foreach($cuenta as $num){
+                		$varin.=$num.",";
+                	}
+                	
+                	$varin=substr($varin, 0,strlen($varin)-1); //quito ultima ,
+                	
+                	$wherecuenta="($varin)";
+                }
+                else{
+                	
+                	$wherecuenta="(".$cuenta[0].")";
+                	
+                }
+            }    //CREA EL ARCHIVO PARA EXPORTAR
               $nomcuenta="Resumen_de_resultados".date("dmyHi");
                     
               $arch= "../Archivos/".$nomcuenta.".xlsx";
@@ -53,8 +73,9 @@ class ArchivoVMController
               $this->workbook =new PHPExcel();
                 
              $this->worksheet =$this->workbook->getActiveSheet();
-              $this->workbook->getActiveSheet()->setTitle($cuenta);
-             $this->reporte($cuenta,$arch);				//funcion que hace el reporte
+              $this->workbook->getActiveSheet()->setTitle("Resumen");
+            
+             $this->reporte($wherecuenta,$arch);				//funcion que hace el reporte
                     // creaarch($arch,$cadtabla);
               
               $this->im=$this->ttotal=$this->ttotal2=0;
@@ -126,13 +147,12 @@ left join( select * from ins_detalleproducto where  ins_detalleproducto.ip_clave
 ins_detalleproducto.ip_numreporte = ins_generales.i_numreporte
  INNER JOIN `ca_unegocios` ON `une_id`=i_unenumpunto
             WHERE ins_generales.i_mesasignacion =:fechaini
-  AND  `cue_clavecuenta`=:cuenta
+  AND  `cue_clavecuenta`in ".$cuenta." 
             AND ins_generales.i_claveservicio=:servicio
 GROUP BY ins_detalleproducto.ip_numreporte ORDER BY ins_generales.i_fechavisita ASC";
                 //              echo $cad."<br>";
                 $parametros=array("fechaini"=>$fechaini,
-                    "servicio"=>$this->servicio,
-                    "cuenta"=>$cuenta
+                    "servicio"=>$this->servicio
                 );
                 $res=Conexion::ejecutarQuery($cad,$parametros);
              
@@ -167,13 +187,12 @@ a.ide_numrenglon =  '1'  GROUP BY a.ide_numseccion, a.ide_numreactivo, a.ide_num
 as a ON a.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN `ca_unegocios` ON `une_id`=i_unenumpunto
             WHERE ins_generales.i_mesasignacion =:fechaini
-  AND  `cue_clavecuenta`=:cuenta  AND ins_generales.i_claveservicio=:servicio
+  AND  `cue_clavecuenta`in ".$cuenta."   AND ins_generales.i_claveservicio=:servicio
 ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
                 $parametros=array("fechaini"=>$fechaini,
                     "servicio"=>$this->servicio,
                     "sec"=>$sec,
-                    "com"=>$com,
-                    "cuenta"=>$cuenta
+                    "com"=>$com
                 );
                 $res=Conexion::ejecutarQuery($cad,$parametros);
                 break;
@@ -218,14 +237,14 @@ ORDER BY ins_generales.i_fechavisita, ins_generales.i_numreporte ASC ";
             and ins_detalle.id_numseccion=9
 and ins_detalle.id_numreactivo in(1,2,3,4,5,6,7,8) )  as ins_detalle on ins_generales.i_numreporte = ins_detalle.id_numreporte
 INNER JOIN `ca_unegocios` ON `une_id`=i_unenumpunto
-            WHERE `cue_clavecuenta`=:cuenta
+            WHERE `cue_clavecuenta`in ".$cuenta." 
 and  ins_generales.i_claveservicio=:servicio and
  ins_generales.i_mesasignacion =:fechaini
         
  group by ins_generales.i_numreporte  ORDER BY ins_generales.i_fechavisita ASC, ins_detalle.id_numseccion ASC";
                 $parametros=array("fechaini"=>$fechaini,
                     "servicio"=>$this->servicio,
-                    "cuenta"=>$cuenta
+                    
                 );
                 $res=Conexion::ejecutarQuery($cad,$parametros);
                 break;
@@ -251,15 +270,15 @@ AND ins_detalleestandar.ide_numcaracteristica3 =:car";
          $cad.=" and   ins_detalleestandar.ide_claveservicio =:servicio) as ins_detalleestandar on ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
 INNER JOIN `ca_unegocios` ON `une_id`=i_unenumpunto
             WHERE ins_generales.i_mesasignacion =:fechaini
-  AND  `cue_clavecuenta`=:cuenta
+  AND  `cue_clavecuenta`in ".$cuenta." 
  AND ins_generales.i_claveservicio=:servicio
 ORDER BY ins_generales.i_fechavisita,ins_generales.i_numreporte ASC";
             $parametros=array("fechaini"=>$fechaini,
                 "servicio"=>$this->servicio,
                 "sec"=>$sec,
                 "com"=>$com,
-                "car"=>$car,
-                "cuenta"=>$cuenta
+                "car"=>$car
+                
             );
             $res=Conexion::ejecutarQuery($cad,$parametros);
             return $res;
@@ -595,7 +614,7 @@ WHERE  ins_generales.i_claveservicio=:servicio AND ins_generales.i_mesasignacion
             'font' => array("size"    => 10,
             "name"    => 'Arial Unicode MS'
         ));
-      
+   
         if ($cuenta!=-1)			//cuando cuenta es -1 significa que es un reporte de todas las cuentas
         {    //si no hace la consulta de los datos del negocio de una cuenta
             $sSQL="SELECT
@@ -611,14 +630,14 @@ ins_generales
 inner Join ca_unegocios ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
 inner Join ca_nivel2 ON  ca_unegocios.une_cla_pais = ca_nivel2.n2_id
 WHERE
-	ca_unegocios.cue_clavecuenta =:cuenta AND
+	ca_unegocios.cue_clavecuenta in ".$cuenta."  AND
 	ins_generales.i_mesasignacion =:fechaini AND
                 
 ins_generales.i_claveservicio=:servicio  ORDER BY
 	ins_generales.i_fechavisita ASC;";
-            $parametros=array("cuenta"=>$cuenta,
+            $parametros=array(
                 "fechaini"=>$fechaini,
-               "cuenta"=>$cuenta,
+             
                 "servicio"=>$this->servicio
             );
         } else		//para todas las cuentas
@@ -731,14 +750,14 @@ ins_generales.i_claveservicio=:servicio  ORDER BY
         WHERE
 		ins_generales.i_mesasignacion =:fechaini AND
         ins_generales.i_claveservicio=:servicio   AND
-		cue_clavecuenta =:cuenta AND
+		cue_clavecuenta in ".$cuenta."  AND
 		a.ide_numseccion =  '8' AND
 		a.ide_numcomponente =  '1' AND
 		a.ide_numcaracteristica3 =  '9' and
 		ins_generales.i_numreporte=:rep";
             //echo "<br>".$sSQL1;
             $parametros=array("fechaini"=>$fechaini,
-                "cuenta"=>$cuenta,
+                
                 "servicio"=>$this->servicio,
                 "rep"=>$rep);
         } else		//para todas
@@ -873,13 +892,13 @@ WHERE
 	and cue_reactivosestandardetalle.red_numcaracteristica2=9
 	and	ins_generales.i_mesasignacion =:fechaini
 	 AND
-	cue_clavecuenta =:cuenta AND
+	cue_clavecuenta in ".$cuenta." AND
 	 ins_detalleestandar.ide_numseccion =  '8' AND
 	 ins_detalleestandar.ide_numcomponente =  '1' AND
 	 ins_detalleestandar.ide_numcaracteristica3 =  '9' GROUP BY
 	 ins_detalleestandar.ide_numreporte order by ins_generales.i_fechavisita ASC";
             $parametros=array("fechaini"=>$fechaini,
-               "cuenta"=>$cuenta,
+               
                 "servicio"=>$this->servicio);
             }
                 //echo $sSQL1;
@@ -1221,7 +1240,7 @@ WHERE
     }
     
     /****************************************GENERA REPORTE POR CUENTA***************************/
-    function reporte($cuenta,$nomarchivo) {
+    function reporte($pcuenta,$nomarchivo) {
         
         include "Utilerias/leevar.php";
         
@@ -1253,8 +1272,9 @@ WHERE
      
         
         $ren_ex=1;
+        
      
-        if ($cuenta=='-1')	//despliega encabezado para todas las cuentas
+        if ($pcuenta=='-1')	//despliega encabezado para todas las cuentas
         {
          
             //$cadarchivo.="<td height='60' style='font:bold; color:#FFFFFF' bgcolor=\"".$arrcolores["azul"]."\" colspan=3>".$enctablas[0]."  DEL PERIODO:  ".$anio1."</td></tr><tr>";
@@ -1265,7 +1285,7 @@ WHERE
             		'font' => array('italic' => true,'bold' => true,"size"    => 12,
                 'name'    => 'Arial'
             ));
-            
+           
             $this->worksheet->setCellValue($this->michr($letra).$ren_ex, $enctablas[0]."  DEL PERIODO:  ".$anio1);
             $this->worksheet->getStyle($this->michr($letra).$ren_ex)->applyFromArray($text_format);
             $this->worksheet=$this->rangoCeldas($letra, $ren_ex, 4,$text_format);
@@ -1274,8 +1294,14 @@ WHERE
         }
         else 
         {
-             $res=DatosCuenta::editarCuentaModel($cuenta,"ca_cuentas");
+        	$cuenta=$_POST["cuenta"];	
+        	//die(sizeof($cuenta));
+        	if(sizeof($cuenta)==1){
+             $res=DatosCuenta::editarCuentaModel($cuenta[0],"ca_cuentas");
+        	
              $nomcuenta=$res["cue_descripcion"];
+        	}
+        	else $nomcuenta=$enctablas[0];
             // $cadarchivo.="<td height='60' style='font:bold; color:#FFFFFF' bgcolor=\"".$arrcolores["azul"]."\" colspan=3>".$enctablas[0]."  ".$nomcuenta." DEL PERIODO:  ".$anio1."</td></tr><tr>";
             $letra=65;
             $text_format = array(
@@ -1376,16 +1402,16 @@ WHERE
                 $fin=12;
             }
             $cont=0;
-            
+          
             for($i=$mes1;$i<=$fin;$i++) {
                 
                 //$cadtabla=$cadtabla."<tr>";
                 //$cadtabla=$cadtabla."<td height=\"15\">";
                 //$fecha_i=$i.'.'.$l;
                 //echo "fff".substr('000'.($i+1),-2);
-                
+               
                 //$cadtabla=4this->$cadtabla.unegocio($cuenta,$fecha_i,$cont,$this->servicio, $this->cliente)."</td><td>;;;</td>";
-                $coordenada=$this->unegocio($cuenta,$fecha_i,$cont,$ren_ex);
+                $coordenada=$this->unegocio($pcuenta,$fecha_i,$cont,$ren_ex);
                      
                 $letra=69;
                 //15
@@ -1395,7 +1421,7 @@ WHERE
                     
                     //$letra=principal($j,$cuenta,$fecha_i,$cont,$letra,$renglon);				//despliega todas las columnas del reporte
                     
-                    $letra=$this->creaSeccion($j, $cuenta, $fecha_i, $cont, $ren_ex, $letra);
+                    $letra=$this->creaSeccion($j, $pcuenta, $fecha_i, $cont, $ren_ex, $letra);
                     //echo "<br>aceptados afuera col".$j." ".$aceptados[$this->im][$j];
                     
                     // $letra++;

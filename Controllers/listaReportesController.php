@@ -32,11 +32,12 @@ ca_unegocios.une_dir_municipio,concat(une_dir_calle,' ',
 
     une_dir_numeroext,' ',
 
-    une_dir_colonia) as direccion,une_dir_estado
+    une_dir_colonia) as direccion,une_dir_estado,est_nombre
 FROM tmp_estadistica 
   INNER JOIN ins_generales ON tmp_estadistica.numreporte = ins_generales.i_numreporte 
   INNER JOIN ca_unegocios ON 
      ins_generales.`i_unenumpunto` = ca_unegocios.une_id
+inner join `ca_uneestados` ON `est_id`=`une_dir_idestado`
 where tmp_estadistica.usuario=:usuario and ins_generales.i_claveservicio=:vserviciou ";
 
 			$parametros = array("vserviciou" => $this->vserviciou, "usuario" => $usuario);
@@ -52,28 +53,28 @@ where tmp_estadistica.usuario=:usuario and ins_generales.i_claveservicio=:vservi
 			$numreportes = sizeof( $this->listaReportes  );
 			if ( $ban== 1) {
 				//echo $numreportes;
-				if($numreportes>10){
-					$this->pages = new Paginator($numreportes, 9, array(
-							10,
-							3,
-							6,
-							9,
-							12,
-							25,
-							50,
-							100,
-							250,
-							'All'
-					));
-					$sql_c.=" limit ".$this->pages->limit_start.",".$this->pages->limit_end;
+// 				if($numreportes>10){
+// 					$this->pages = new Paginator($numreportes, 9, array(
+// 							10,
+// 							3,
+// 							6,
+// 							9,
+// 							12,
+// 							25,
+// 							50,
+// 							100,
+// 							250,
+// 							'All'
+// 					));
+// 					$sql_c.=" limit ".$this->pages->limit_start.",".$this->pages->limit_end;
 				
 					
 					
-					$this->listaReportes = Conexion::ejecutarQuery( $sql_c,$parametros );
+// 					$this->listaReportes = Conexion::ejecutarQuery( $sql_c,$parametros );
 					
 					
 			
-				}
+// 				}
 			if ($numreportes == 0) {
 				$this->NumeroReportes="<label style='color:#F00'>Su búsqueda no produjo ningún resultado !!!</label>" ;
 			} else {

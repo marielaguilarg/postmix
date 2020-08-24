@@ -106,7 +106,8 @@ ON pa_numprueba=red_numcaracteristica2 order by pa_numprueba");
 		try{
 		
 			DatosPruebaAnalisis::insertar($idserv,$numcomp, $numreacen, $tipoana,"aa_pruebaanalisis");
-		
+			
+			echo Utilerias::enviarPagina("index.php?action=nuevaprueba&serv=".$idserv);
 		}catch (Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}
@@ -122,7 +123,7 @@ ON pa_numprueba=red_numcaracteristica2 order by pa_numprueba");
 	   try{
 			
 	   	DatosPruebaAnalisis::borrarPruebaAnalisis($idserv,$_SESSION['catalogo'],$np,  "aa_pruebaanalisis");
-			
+	   echo 	Utilerias::enviarPagina("index.php?action=listapruebasdet&id=".$_SESSION['catalogo']."&serv=".$idserv);
 		}catch (Exception $ex){
 			$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 		}
@@ -134,6 +135,7 @@ ON pa_numprueba=red_numcaracteristica2 order by pa_numprueba");
 				
 				DatosPruebaAnalisis::actualizar($idserv,$numcomp,$reacenlace,  $tipoana,"aa_pruebaanalisis");
 				Utilerias::mensajeExito("La prueba se actualizó correctamente");
+			
 			}catch (Exception $ex){
 				$this->mensaje=Utilerias::mensajeError($ex->getMessage());
 			}
@@ -155,7 +157,7 @@ ON pa_numprueba=red_numcaracteristica2 order by pa_numprueba");
 		$opcionc="<option value='MB'>MICROBIOLOGICO</option>";
 		$opcionc=$opcionc."<option value='FQ'>FISICOQUIMICO</option>";
 		$tipocampo="
-<div ><select name='tipoana' id='tipoana'>".$opcionc."</select></div>";
+<div ><select class='form-control' name='tipoana' id='tipoana'>".$opcionc."</select></div>";
 		$this->datocardet=$tipocampo;
 		
 		
@@ -180,7 +182,7 @@ cue_reactivosestandardetalle.ser_claveservicio =:idserv";
 				$opcionc1=$opcionc1."<option value=".$rowca[red_numcaracteristica2].">".$rowca[red_parametroesp]."</option>";
 			}
 		}
-		$tipocampo="<div ><select name='numreacen' id='numreacen'>".$opcionc1."</select></div>";
+		$tipocampo="<div ><select class='form-control' name='numreacen' id='numreacen'>".$opcionc1."</select></div>";
 		
 		$this->datocardet1=$tipocampo;
 	}

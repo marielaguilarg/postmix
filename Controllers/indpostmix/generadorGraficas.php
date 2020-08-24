@@ -44,7 +44,7 @@ Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.i
 Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion 
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act 
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario_act 
     and cue_secciones.ser_claveservicio=:vserviciou
 GROUP BY
 ins_detalleproducto.ip_numseccion, ip_condicion;	";
@@ -155,7 +155,7 @@ Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.i
 Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE
 	 ins_detalleproducto.ip_numseccion = :subseccion
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario_act
     and ins_detalleproducto.ip_claveservicio=:vserviciou
 GROUP BY
 ins_detalleproducto.ip_numseccion,
@@ -268,7 +268,7 @@ Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.i
 Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE
 	 ins_detalleproducto.ip_numseccion = :seccion 
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null) and tmp_estadistica.usuario=:usuario_act
             and cue_secciones.ser_claveservicio=:vserviciou
 GROUP BY
 ins_detalleproducto.ip_numseccion,
@@ -588,7 +588,7 @@ Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones
 Inner Join ca_catalogosdetalle ON ins_detalleproducto.ip_descripcionproducto = ca_catalogosdetalle.cad_idopcion
 WHERE
 	 ins_detalleproducto.ip_numseccion =:seccion  and ins_detalleproducto.ip_claveservicio=:vserviciou
-AND ins_detalleproducto.ip_sinetiqueta=0  and tmp_estadistica.usuario=:usuario_act and ca_catalogosdetalle.cad_idcatalogo=2
+AND (ins_detalleproducto.ip_sinetiqueta<>-1 or ins_detalleproducto.ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario_act and ca_catalogosdetalle.cad_idcatalogo=2
 GROUP BY
 ins_detalleproducto.ip_numseccion,
 

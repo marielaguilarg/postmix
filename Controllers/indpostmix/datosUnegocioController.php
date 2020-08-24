@@ -18,7 +18,7 @@ class DatosUnegocioController
     $this->titulo=T_("INFORMACION GENERAL DEL ESTABLECIMIENTO");
    include "Utilerias/leevar.php";
     $lista = $numrep;
-    $idser=$_SESSION["servicionind"];
+    $idser=$_SESSION["servicioind"];
     $cliente=$cli;
   
    

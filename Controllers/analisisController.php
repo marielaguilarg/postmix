@@ -75,20 +75,20 @@ WHERE aa_recepcionmuestradetalle.mue_idmuestra =:ntoma ";
 $sql_1.=" GROUP BY aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_estatus";
 		
 		$rs_1 = Conexion::ejecutarQuery($sql_1,array("ntoma"=>$ntoma));
-
+	
 		foreach($rs_1 as $row_1) {
 			$this->TITULO=$row_1['cli_nombrecliente'];
 			$this->TITULO2=$row_1["ser_descripcionesp"];
 			$this->TITULO4=$row_1["une_descripcion"];
-		    $nomsec="No. DE MUESTRA : ". $ntoma."  ".$titulo[$tipoAna];
+		    $nomsec="NO. DE MUESTRA : ". $ntoma."  ".$titulo[$tipoAna];
 			$numrep=$row_1["mue_numreporte"];
 			$idserv=$row_1["ide_claveservicio"];
 			$tipomue=$row_1["mue_tipomuestra"];
 			$this->TITULO5=$nomsec;
 			$this->ntoma=$ntoma;
 			$this->numcom=$tipomue;
-			$this->NUMREP ="Reporte No. : ".$row_1["mue_numreporte"];
-			$this->FechaVisita=  "Fecha de Visita : " .Utilerias::formato_fecha($row_1["i_fechavisita"]);
+			$this->NUMREP ="REPORTE NO. : ".$row_1["mue_numreporte"];
+			$this->FechaVisita=  "FECHA DE VISITA : " .Utilerias::formato_fecha($row_1["i_fechavisita"]);
 		}
 	
 		// crea encabezados
@@ -112,11 +112,11 @@ ins_detalleestandar.ide_idmuestra =:ntoma group by ide_numrenglon";
 		//echo $sqlnr;
 		$rsnr=Conexion::ejecutarQuery($sqlnr,array("idserv"=>$idserv,"numrep"=>$numrep,"tipoana"=>$tipoAna,"ntoma"=>$ntoma));
 		$cont = 0;
-		
+	
 		$nreg=sizeof($rsnr);
 		
 		if ($nreg<=0) {
-			$bnvo='<a class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=nuevoanalisis&ncomp='.$tipomue.'&ntoma='.$ntoma.'&tipo='.$tipoAna.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
+			$bnvo='<a class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=nuevoanalisis&ncomp='.$tipomue.'&sv='.$idserv.'&ntoma='.$ntoma.'&tipo='.$tipoAna.'"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
 ';
 			$this->botnvo=$bnvo;
 		}
@@ -140,10 +140,11 @@ ins_detalleestandar.ide_idmuestra =:ntoma group by ide_numrenglon";
 			$rscue=DatosMuestra::vistaResultados($idserv,1,$tipoAna,$tipomue,"aa_pruebaanalisis");
 		
 			
-			
+		
 			$cont_rea=0;
+			
 			foreach ($rscue as $rowcue) {
-				
+			
 				$tipoeva=$rowcue['re_tipoevaluacion'];
 				$ssqldet="SELECT `ins_detalleestandar`.`ide_claveservicio`, `ins_detalleestandar`.`ide_numreporte`, 
 `ins_detalleestandar`.`ide_numseccion`, `ins_detalleestandar`.`ide_numreactivo`, `ins_detalleestandar`.`ide_numcomponente`, 
@@ -173,14 +174,17 @@ ins_detalleestandar.ide_numcomponente =:componente";
 				"componente"=> $rowcue["re_numcomponente"]
 				);
 				$rsc=Conexion::ejecutarQuery($ssqldet,$parametros);
-			
+				$resultado=array();
+				$resultado["atributo"]=$rowcue["red_parametroesp"];
+				$estandar=$rowcue["red_estandar"];
+				$resultado["estandar"]=$estandar;
 				if(sizeof($rsc))
 					foreach ($rsc as $rowdet) {
-						$resultado=array();
-						$resultado["atributo"]=$rowcue["red_parametroesp"];
 						
-						$estandar=$rowcue["red_estandar"];
-						$resultado["estandar"]=$estandar;
+					
+						
+					
+					
 						$tipocat=$rowcue["red_tipodato"];
 						$resacep=$rowdet["ide_aceptado"];
 					
@@ -194,7 +198,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 								$valpond = $rowdet["ide_ponderacion"];
 								
 								$valreal=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$numcat,$valop);
-								
+							
 								
 								break;
 							case "N" :
@@ -291,15 +295,15 @@ ins_detalleestandar.ide_numcomponente =:componente";
 		}
 		
 		$this->Nmues=$ntoma;
-		
+		$this->cargarTitulos($admin,$ntoma,"MB");
 		$rss=DatosMuestra::buscarComponenteMuestra($ntoma,"ins_detalleestandar");
-		//var_dump($rss);
+	
 		foreach ($rss as $rows){
 			$idserv=$rows["ide_claveservicio"];
 			$idcomp=$rows["ide_numcomponente"];
 		}
 			
-		//echo "***";
+	
 		
 		$rsd=DatosMuestra::vistaResultados($idserv, 1, "MB", $idcomp, "aa_pruebaanalisis");
 		$i=1;
@@ -356,7 +360,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 	
  	public function nuevoAnalisisFQ(){
 		include "Utilerias/leevar.php";
-	
+
 		if ($ncomp) {
 			if (!isset($_SESSION['ncomp'])) {
 				$_SESSION['ncomp']=$ncomp;
@@ -379,7 +383,7 @@ ins_detalleestandar.ide_numcomponente =:componente";
 		
 		$this->Nmues=$ntoma;
 		
-		
+		$this->cargarTitulos($admin, $ntoma, "FQ");
 		$rss=DatosEst::buscarEstandarMuestra($ntoma,"ins_detalleestandar");
 		foreach ($rss as $rows){
 			$idserv=$rows["ide_claveservicio"];
@@ -532,10 +536,10 @@ cue_reactivosestandardetalle.re_numcomponente =  :idcomp";
 ins_detalleestandar Inner Join cue_secciones ON ins_detalleestandar.ide_claveservicio = cue_secciones.ser_claveservicio 
 AND ins_detalleestandar.ide_numseccion = cue_secciones.sec_numseccion 
 WHERE cue_secciones.sec_indagua =  '1' AND
-ins_detalleestandar.ide_idmuestra =:ntoma
+ins_detalleestandar.ide_idmuestra =:ntoma and ide_claveservicio=:servicio
 GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
 	//		echo $sqlfq."--".$ntoma;	
-		$rsfq=Conexion::ejecutarQuery($sqlfq,array("ntoma"=>$ntoma));
+		$rsfq=Conexion::ejecutarQuery($sqlfq,array("ntoma"=>$ntoma, "servicio"=>$idserv));
 		
 		if(sizeof($rsfq)!=0) {   // existen resultados de analisis
 			foreach ($rsfq as $rownr){
@@ -543,6 +547,11 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 				$numrep=$rownr['ide_numreporte'];
 				$idserv=$rownr['ide_claveservicio'];
 			}
+		}
+		else{
+			 //algo raro pasó
+			 Utilerias::guardarError("analisisController::insertarAnalisisMB No se encontraron datos para la muestra ".$ntoma);
+		
 		}
 		$ncomp=$_SESSION['ncomp'];
 		$band=0;
@@ -557,11 +566,13 @@ cue_secciones.sec_indagua =  '1' AND
 cue_reactivosestandardetalle.re_numcomponente =:ncomp AND
 aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 		
-	//	echo $sqltr;
+		
 		
 		$rsc=Conexion::ejecutarQuery($sqltr,array("idserv"=>$idserv,"ncomp"=>$ncomp));
-		var_dump($rsc);
+		//var_dump($rsc);
+	
 		try{
+			$ban51=true; //bandera que indica si se acpetan los resultados
 		foreach ($rsc as $rowc){
 			$pondreal=0;
 			$aceptado=0;
@@ -573,7 +584,7 @@ aa_pruebaanalisis.pa_tipoanalisis =  'MB'");
 				$valcom=${$nomcam};
 				
 			}
-			//echo $valcom;
+			
 			if($valcom!=""){
 				$band=1;
 				if (is_numeric($valcom)) {
@@ -1057,10 +1068,11 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 					//  2.- guarda o actualiza la seccion
 					// if ($operac=="nueva") {
 				//	$numcar2=$rowc['red_numcaracteristica2'];
-					
+					if($aceptado==0) //no se aceptó
+						$ban51=false;
 					
 					if(strlen($valcom)>0){
-						   //    echo "otra2 ".$valcom."  --";
+						  //    echo "otra2 ".$valcom."  --";
 // 						$sSQL= "insert into ins_detalleestandar (ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1,
 //                             ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon,ide_ponderacion,ide_aceptado,ide_numcolarc, ide_idmuestra)
 //                             values ('".$idser."', ".$numrep.", ".$idsec.", ".$numreac.", ". .", ".$numcar.",
@@ -1069,7 +1081,7 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 								"numrep"=>$numrep,
 								"numsec"=>$idsec,
 								"numreac"=>$numreac,
-								"numcom"=>". .",
+								"numcom"=>$numcom,
 								"numcar"=>$numcar,
 								"numcom2"=>$numcom2,
 								"numcar2"=>$numcar2,
@@ -1080,8 +1092,10 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 								"numcolarc"=>1,
 								"ntoma"=>$ntoma
 						);
-						var_dump($datosController);
-						DatosEst::insertaRepEstandarDetalleToma($datosController, "ins_detalleestandar");
+						
+					$res=DatosEst::insertaRepEstandarDetalleToma($datosController, "ins_detalleestandar");
+					if($res=="error")
+						throw new Exception("Error al insertar");
 					}
 				} //fin del if que valida si es numerico
 			} // fin del if que valida si valcom tiene dato
@@ -1095,7 +1109,7 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 			$rsco = DatosSeccion::RegistrosEnSeccion($idserv,$numrep,$numsecc,$ins_secciones);
 			$numRowsc = sizeof($rsco);
 			$datosController= array("numsec"=>$numsecc,
-					"idser"=>$idser,
+					"idser"=>$idserv,
 					"numrep"=>$numrep,
 					"valreal"=>null,
 					"nivacep"=>null,
@@ -1114,33 +1128,132 @@ from cue_reactivosestandar where `re_numcomponente`=:ncomp and `ser_claveservici
 			}
 		}
 		
-		if(isset($_SESSION["Usuario"]))
-			$recmues= $_SESSION["Usuario"];
-			
+		//if(isset($_SESSION["Usuario"]))
+// 			$recmues=UsuarioModel::getUsuarioId($_SESSION["Usuario"],"cnfg_usuarios");
+		date_default_timezone_set('America/Mexico_City');
 			$fecvis=date("Y-m-d H:i:s");
+		//inicio transaccion
+		
+		    try{
+		   
 			if ($band==1){
-				$sqlu="UPDATE aa_muestras SET aa_muestras.mue_nomanalistaMB='$recmues',aa_muestras.mue_fechoranalisisMB='$fecvis', aa_muestras.mue_estatusMB=3 WHERE aa_muestras.mue_idmuestra='$ntoma'";
+				$tran=Conexion::conectar();
+				$tran->beginTransaction();
+// 				$sqlu="UPDATE aa_muestras SET aa_muestras.mue_nomanalistaMB='$recmues',aa_muestras.mue_fechoranalisisMB='$fecvis', aa_muestras.mue_estatusMB=3 WHERE aa_muestras.mue_idmuestra='$ntoma'";
 			
-			$rsu=DatosMuestra::actualizarAnalisis($recmues, $fecvis, $ntoma);
-			}
+// 				$rsu=DatosMuestra::actualizarAnalisis($_SESSION["NombreUsuario"], $fecvis, $ntoma);
+				$stmt=$tran->prepare("UPDATE aa_muestras
+SET aa_muestras.mue_nomanalistaMB=:recmues,
+aa_muestras.mue_fechoranalisisMB=:fecvis,
+ aa_muestras.mue_estatusMB=3
+WHERE aa_muestras.mue_idmuestra=:ntoma and mue_claveservicio=:servicio");
+				
+				$stmt-> bindParam(":servicio", $idserv, PDO::PARAM_INT);
+				$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+				$stmt-> bindParam(":recmues", $_SESSION["NombreUsuario"], PDO::PARAM_STR);
+				
+				$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
+				
+				$stmt->execute();
+			//	$stmt->debugDumpParams();
+				
+			
 			//actualiza estatus de la muestra
 			// revisa estatus
 		
-			$rsp=DatosMuestra::listaMuestrasxIdMuestra($ntoma,"aa_muestras");
+			$rsp=DatosMuestra::listaMuestrasxIdMuestra($ntoma,$idserv,"aa_muestras");
 			foreach ($rsp as $rowca){
 				$valFQ=$rowca["mue_estatusFQ"];
 				$valMB=$rowca["mue_estatusMB"];
 			}
-			//echo $valFQ;
-			//echo $valMB;
 			
-			if ($valFQ==3 && $valMB==3) {
+			
+			if ($valFQ==3) {
 				//echo "si son iguales";
-				DatosMuestra::actualizarEstatus(5,$ntoma);
+				//	DatosMuestra::actualizarEstatus(5,$ntoma);
+				$stmt=$tran->prepare("UPDATE aa_muestras
+SET aa_muestras.mue_estatusmuestra=5
+WHERE aa_muestras.mue_idmuestra=:ntoma and mue_claveservicio=:servicio");
+				
+				$stmt-> bindParam(":servicio", $idserv, PDO::PARAM_INT);
+				$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+			
+				
+				$stmt-> execute();
+			
 			}
-		
+			$tran->commit();
+			Utilerias::guardarError("\ntermino transaccion");
+			}
+		    }catch(Exception $ex){
+		    	$tran->rollBack();
+		    	throw new Exception("Error al actualizar la muestra");
+		    }
+		    if ($valFQ==3) {
+		    	Utilerias::guardarError("\nfinalizando reporte");
+		    	$this->finalizarReporte($idserv, $numrep, $ban51,"MB");
+		    }
+		//	echo Utilerias::enviarPagina("index.php?action=analisisFQ&tipo=MB&ntoma=".$ntoma);
+		    echo Utilerias::mensajeExito("Los resultados se guardaron correctamente");
+		    
 		}catch(Exception $ex){
-			Utilerias::mensajeError($ex->mensaje);
+			Utilerias::guardarError("Error al actualizar la muestra MB sv".$idserv."rep ". $numrep.$ex->getMessage());
+			echo Utilerias::mensajeError($ex->getMessage());
+		}
+	}
+	
+	public function cargarTitulos($admin,$ntoma,$tipoAna){
+		$titulo=array();
+		$titulo["FQ"]="ANALISIS FISICOQUIMICO";
+		$titulo["MB"]="ANALISIS MICROBIOLOGICO";
+		$sql_1 = "SELECT
+  aa_recepcionmuestradetalle.mue_idmuestra,
+  aa_recepcionmuestradetalle.rmd_estatus,
+  ca_unegocios.une_descripcion,
+  aa_muestras.mue_numreporte,
+  ins_generales.i_fechavisita,
+  ca_clientes.cli_nombre,
+  ca_servicios.ser_descripcionesp,
+  aa_muestras.mue_tipomuestra,
+  ins_detalleestandar.ide_claveservicio
+FROM
+  aa_recepcionmuestradetalle
+  INNER JOIN aa_muestras
+    ON aa_recepcionmuestradetalle.mue_idmuestra = aa_muestras.mue_idmuestra
+  INNER JOIN ins_generales
+    ON aa_muestras.mue_numreporte = ins_generales.i_numreporte
+  INNER JOIN ca_unegocios
+    ON ins_generales.i_unenumpunto = ca_unegocios.une_id
+				
+  INNER JOIN ca_servicios
+    ON ins_generales.i_claveservicio = ca_servicios.ser_id
+  INNER JOIN ca_clientes
+    ON ca_clientes.cli_id = ca_servicios.`ser_idcliente`
+  INNER JOIN ins_detalleestandar
+    ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio
+    AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+    AND aa_muestras.mue_idmuestra = ins_detalleestandar.ide_idmuestra
+WHERE aa_recepcionmuestradetalle.mue_idmuestra =:ntoma ";
+		if($admin=="cons"){
+			$sql_1.=" and aa_muestras.mue_estatusmuestra =  '5' ";
+		}
+		$sql_1.=" GROUP BY aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestradetalle.rmd_estatus";
+		
+		$rs_1 = Conexion::ejecutarQuery($sql_1,array("ntoma"=>$ntoma));
+		
+		foreach($rs_1 as $row_1) {
+			$this->TITULO=$row_1['cli_nombrecliente'];
+			$this->TITULO2=$row_1["ser_descripcionesp"];
+			$this->TITULO4=$row_1["une_descripcion"];
+			$nomsec="NO. DE MUESTRA : ". $ntoma."  ".$titulo[$tipoAna];
+// 			$numrep=$row_1["mue_numreporte"];
+// 			$idserv=$row_1["ide_claveservicio"];
+			$tipomue=$row_1["mue_tipomuestra"];
+			$this->TITULO5=$nomsec;
+			$this->ntoma=$ntoma;
+			$this->numcom=$tipomue;
+			$this->NUMREP ="REPORTE NO. : ".$row_1["mue_numreporte"];
+			$this->FechaVisita=  "FECHA DE VISITA : " .Utilerias::formato_fecha($row_1["i_fechavisita"]);
 		}
 	}
 	
@@ -1155,18 +1268,22 @@ ins_detalleestandar.ide_claveservicio FROM
 ins_detalleestandar Inner Join cue_secciones ON ins_detalleestandar.ide_claveservicio = cue_secciones.ser_claveservicio 
 AND ins_detalleestandar.ide_numseccion = cue_secciones.sec_numseccion WHERE
 cue_secciones.sec_indagua =  '1' AND
-ins_detalleestandar.ide_idmuestra =  :ntoma
+ins_detalleestandar.ide_idmuestra =  :ntoma 
 GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
 		
 		
-		$rsfq=DatosEst::ConsultaAgua($ntoma);
-		var_dump($rsfq);
+		$rsfq=DatosEst::ConsultaAgua($ntoma,$idserv);
+	
 		if(sizeof($rsfq)!=0) {   // existen resultados de analisis
 			foreach ( $rsfq as  $rownr){
 				$numren=$rownr['ide_numrenglon'];
 				$numrep=$rownr['ide_numreporte'];
 				$idserv=$rownr['ide_claveservicio'];
 			}
+		}
+		else{
+			//algo raro pasó
+			Utilerias::guardarError("analisisController::insertarAnalisisMB No se encontraron datos para la muestra ".$ntoma);
 		}
 		$ncomp=$_SESSION['ncomp'];
 		$band=0;
@@ -1193,9 +1310,11 @@ cue_secciones.sec_indagua =  '1' AND
 cue_reactivosestandardetalle.re_numcomponente =:ncomp AND
 aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 		
-		//echo $sqltr."--".$idserv."--".$ncomp;
+	
 		try{
 		$rsc=Conexion::ejecutarQuery($sqltr, array("idserv"=>$idserv,"ncomp"=>$ncomp));
+		$ban51=true;
+	
 		foreach ($rsc as $rowc){
 			$pondreal=0;
 			$aceptado=0;
@@ -1234,8 +1353,8 @@ aa_pruebaanalisis.pa_tipoanalisis =  'FQ'");
 					$calesp=$rowc['red_calculoespecial'];
 					$tipcalesp=$rowc['red_tipocalculo'];
 					$tipoper=$rowc['red_tipooperador'];
-					
-					
+				
+				
 					if ($calesp) {
 						switch($tipoper) {
 							case "A" :
@@ -1286,7 +1405,7 @@ and `sec_numseccion`=5;";
 					
 					$rsg=Conexion::ejecutarQuery($sqlte,array("ncomp"=>$ncomp));
 					$num_reg = sizeof($rsg);
-					
+			
 					foreach ($rsg as $rowg){
 						$tipoeva=$rowg['re_tipoevaluacion'];
 					}
@@ -1408,7 +1527,7 @@ and `sec_numseccion`=5;";
 									$valop=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$numcat,$valcom);
 									
 									if ($valmin!=""){
-										if ($valop == $valmin) {
+										if ($valcom == $valmin) {
 											$pondreal=0;
 											$aceptado=-1;
 										} else {
@@ -1421,9 +1540,9 @@ and `sec_numseccion`=5;";
 							}
 							break;
 						case "1" :   // una linea
-							//7echo $tipodato;
+						
 							//echo $valcom;
-							
+						
 							if ($numren==1){ //realiza calculo para uno
 								switch ($tipodato){
 									case "N" :
@@ -1540,7 +1659,7 @@ and `sec_numseccion`=5;";
 										
 										
 										if ($valmin!=""){
-											if ($valop == $valmin) {
+											if ($valcom == $valmin) {
 												$pondreal=$valpond;
 												$aceptado=-1;
 											} else {
@@ -1673,7 +1792,7 @@ and `sec_numseccion`=5;";
 								
 								
 								if ($valmin!=""){
-									if ($valop == $valmin) {
+									if ($valcom == $valmin) {
 										$pondreal=$valpond;
 										$aceptado=-1;
 									} else {
@@ -1693,9 +1812,13 @@ and `sec_numseccion`=5;";
 					// if ($operac=="nueva") {
 					$numcar2=$rowc['red_numcaracteristica2'];
 					//  echo "otra ".$valcom."  --";
-					
+					if($idser==5&&$aceptado>-1){
+						//con uno no acepto se rechaza 
+						$ban51=false;
+						
+ 					}
 					if(strlen($valcom)>0){
-						//       echo "otra2 ".$valcom."  --";
+						     
 					
 						
 						$datosModel["idser"]=$idser;
@@ -1719,7 +1842,7 @@ and `sec_numseccion`=5;";
 			} // fin del if que valida si valcom tiene dato
 		}  // fin del foreach
 		
-		//echo $sSQL;
+		
 		if ($comengen) { // guarda comentario de seccion
 			//valida si el comentario ya existe.
 			
@@ -1728,36 +1851,200 @@ and `sec_numseccion`=5;";
 			
 		}
 		
-		if(isset($_SESSION["Usuario"]))
-			$recmues= $_SESSION["Usuario"];
-			
+	//	if(isset($_SESSION["Usuario"]))
+// 			$recmues=UsuarioModel::getUsuarioId($_SESSION["Usuario"],"cnfg_usuarios");
+// 			var_dump($recmues);
+// 			var_dump($_SESSION);
+// 			echo "**".$recmues["cus_usuario"];
+// 			die();
+			date_default_timezone_set('America/Mexico_City');
 			$fecvis=date("Y-m-d H:i:s");
+			//inicio transaccion
+			try{
+			
 			if ($band==1){
-				$rsu=DatosMuestra::actualizarAnalisisFQ($recmues, $fecvis, $ntoma);
+				$tran=Conexion::conectar();
+				$tran->beginTransaction();
+				//$rsu=DatosMuestra::actualizarAnalisisFQ($_SESSION["NombreUsuario"], $fecvis, $ntoma);
+				$stmt=$tran->prepare("UPDATE aa_muestras
+SET aa_muestras.mue_nomanalistaFQ=:recmues,
+aa_muestras.mue_fechoranalisisFQ=:fecvis,
+ aa_muestras.mue_estatusFQ=3
+WHERE aa_muestras.mue_idmuestra=:ntoma");
+			
+				//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
+				$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+				$stmt-> bindParam(":recmues", $_SESSION["NombreUsuario"], PDO::PARAM_STR);
 				
-			}
+				$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
+				
+				$stmt-> execute();
+			
 			
 			//actualiza estatus de la muestra
 			// revisa estatus
 			$sqlp="SELECT aa_muestras.mue_estatusFQ, aa_muestras.mue_estatusMB 
 FROM aa_muestras WHERE aa_muestras.mue_idmuestra =:ntoma'";
-			$rsp=DatosMuestra::listaMuestrasxIdMuestra($ntoma, "aa_muestras");
+			$rsp=DatosMuestra::listaMuestrasxIdMuestra($ntoma,$idserv, "aa_muestras");
 			foreach ($rsp as $rowca){
 				$valFQ=$rowca["mue_estatusFQ"];
 				$valMB=$rowca["mue_estatusMB"];
 			}
-			//echo $valFQ;
-			//echo $valMB;
 			
-			if ($valFQ==3 && $valMB==3) {
-				//echo "si son iguales";
-				$sqla="UPDATE aa_muestras SET aa_muestras.mue_estatusmuestra=5 WHERE aa_muestras.mue_idmuestra='$ntoma'";
-				$rsu=DatosMuestra::actualizarEstatus(5,$ntoma);
+			
+			if ($valMB==3) {
+				$stmt=$tran->prepare("UPDATE aa_muestras
+SET aa_muestras.mue_estatusmuestra=5
+WHERE aa_muestras.mue_idmuestra=:ntoma and mue_claveservicio=:servicio");
+				
+				//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
+				$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+				$stmt-> bindParam(":servicio", $idserv, PDO::PARAM_INT);
+				
+				
+				$stmt-> execute();
+				//ya terminaron los resultados
+				//inserto resultado certificado
+				
+// 				$sqla="UPDATE aa_muestras SET aa_muestras.mue_estatusmuestra=5 WHERE aa_muestras.mue_idmuestra='$ntoma'";
+// 				DatosMuestra::actualizarEstatus(5,$ntoma);
+				
 			}
+			$tran->commit();
+			
+			}
+			}catch (Exception $ex){
+				$tran->rollBack();
+				throw new Exception("Error al actualizar la muestra");
+			}
+			
+			if ($valMB==3) {
+				$this->finalizarReporte($idserv, $numrep, $ban51,"FQ");
+			}
+			echo Utilerias::mensajeExito("Los resultados se guardaron correctamente");
+		//	echo Utilerias::enviarPagina("index.php?action=analisisFQ&tipo=FQ&ntoma=".$ntoma);
 		}catch (Exception $ex){
-			Utilerias::mensajeError($ex->getMessage());
+			error_log("Hubo un error al guardar el analisis FQ sv".$idserv."rep:". $numrep.$ex->getMessage());
+			echo Utilerias::mensajeError($ex->getMessage());
 		}
 			
+	}
+	
+	public function finalizarReporte($idserv, $numrep,$ban51,$tipo){
+		try{
+		if($idserv==5||$idserv==3){
+			$opcnoap=0;
+			Utilerias::guardarError("Finalizando reporte:".$numrep." sv:".$idserv." vengo de ".$tipo);
+			
+			if ($ban51) {    //si es aceptado
+				$opcsel=-1;
+				// 					$datosController= array("nser"=>$idser,
+				// 							"nsec"=>4,
+				// 							"nreac"=>1,
+				// 							"ncuen"=>$idc,
+				// 					);
+				
+				//$ponderacion = DatosPond::leePonderacionReactivo($datosController, "cue_reactivosdetalle");
+				// 					if ($ponderacion["rd_ponderacion"]){
+				// 						$valpond=$ponderacion["rd_ponderacion"];
+				// 					} else {
+				// 						$valpond=0;
+				// 					}
+				//reviso el resultado del otro analisis
+				$sqlana="SELECT COUNT(pa_tipoanalisis), ABS(SUM(ide_aceptado))
+				FROM
+				aa_pruebaanalisis INNER JOIN cue_reactivosestandardetalle ON aa_pruebaanalisis.pa_numcomponente = cue_reactivosestandardetalle.re_numcomponente
+				AND aa_pruebaanalisis.pa_numprueba = cue_reactivosestandardetalle.red_numcaracteristica2 AND aa_pruebaanalisis.pa_numservicio = cue_reactivosestandardetalle.ser_claveservicio
+				INNER JOIN cue_secciones ON cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio
+				AND cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion
+				INNER JOIN `ins_detalleestandar` ON `ide_claveservicio`=`cue_reactivosestandardetalle`.`ser_claveservicio`
+				AND `cue_reactivosestandardetalle`.`sec_numseccion`=`ide_numseccion`
+				AND `ide_numreactivo`= `r_numreactivo`
+				AND `ide_numcomponente`=`re_numcomponente`
+				AND `ide_numcaracteristica1`=`re_numcaracteristica`
+				AND `ide_numcaracteristica2`=`re_numcomponente2`
+				AND `ide_numcaracteristica3`=`red_numcaracteristica2`
+				WHERE
+				cue_reactivosestandardetalle.ser_claveservicio =:servicio AND
+				cue_secciones.sec_indagua =  '1' AND
+				aa_pruebaanalisis.pa_tipoanalisis =:tipoana AND
+				cue_reactivosestandardetalle.re_numcomponente =1
+				AND `ide_numreporte`=:reporte";
+				if($tipo=="FQ") $tipoana="MB";
+						else $tipoana="FQ";
+				
+				$resultado=Conexion::ejecutarQuery($sqlana, array("reporte"=>$numrep,"servicio"=>$idserv,"tipoana"=>$tipoana));
+			//	var_dump($resultado);
+				if($resultado)
+				{	$res=$resultado[0];
+					
+					if($res[0]==$res[1]){
+						Utilerias::guardarError( "aqui");
+					}
+				
+					
+				}
+				else {
+					$opcsel=0;
+					$valpond=0;
+				}
+			}else {   // si no es aceptado
+				$opcsel=0;
+				$valpond=0;
+			}
+			if($idserv==3)
+			{	$secc=5;
+				
+			}
+			else if($idserv==5){
+				$secc=5;
+			}
+			
+			$datosController= array("idser"=>$idserv,
+					"numrep"=>$numrep,
+					"numsec"=>$secc,
+					"numreac"=>1,
+					"valpond"=>$valpond,
+					"descom"=>null,
+					"opcsel"=>$opcsel,
+					"opcnoap"=>$opcnoap,
+			);
+			Utilerias::guardarError("***".$opcsel);
+		//	$respuesta = DatosPond::insertaregistroPonderado($datosController, "ins_detalle");
+			//si ya existe actualiza
+			$sql="SELECT * FROM ins_detalle WHERE `id_claveservicio`=:servicio
+AND id_numreporte=:reporte AND id_numseccion=:seccion AND id_numreactivo=1";
+$respuesta=Conexion::ejecutarQuery($sql, array("reporte"=>$numrep,"servicio"=>$idserv,"seccion"=>$secc));
+if($respuesta)
+foreach($respuesta as $row){
+	
+
+			DatosPond::actualizarRegistroPonderado($datosController, "ins_detalle");
+			
+}else
+//es nuevo 
+$respuesta = DatosPond::insertaregistroPonderado($datosController, "ins_detalle");
+
+//finalizando reporte
+			#valida que ya se genero el registro en la parte principal
+Utilerias::guardarError("***ahora si");
+				date_default_timezone_set('America/Mexico_City');
+			
+				$respuesta =DatosGenerales::actualizafinalizadofec($idserv, $numrep,date("Y-m-d"), "ins_generales");
+				Utilerias::guardarError("***ahora si2".$respuesta);
+				$respuesta =DatosGenerales::finalizaSolicitud($idserv, $numrep, "3", "cer_solicitud");
+			//	print("<script language='javascript'>alert('El reporte No. $numrep ha sido finalizado'); </script>");
+				
+			
+		
+			
+			
+				Utilerias::guardarError("***finalicé el reporte con ".$opcsel);
+		}
+		}catch(Exception $ex){
+			Utilerias::guardarError(date("Y-m-d h:i:s")." Error al finalizar el reporte ".$numrep." servicio ".$idserv." ".$ex->getMessage());
+		throw new Exception("Error al finalizar");
+	}
 	}
 	/**
 	 * @return mixed
