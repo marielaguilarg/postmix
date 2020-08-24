@@ -2,6 +2,13 @@
   
     <!-- Content Header (Page header) -->
     <section class="content-header">
+    <script type="text/javascript" >
+function dialogoEliminar(){
+	if(confirm("¿ESTA SEGURO QUE DESEA ELIMINAR?"))
+		return true;
+	else return false;
+}
+ </script>
       <h1>CUENTAS &nbsp; &nbsp; <small></small></h1>
       
     </section>

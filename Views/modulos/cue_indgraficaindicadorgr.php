@@ -125,15 +125,7 @@ marker.name(" ");
             scale.ticks().interval(10);
 
 // configure the axis
-            /*  var axis = gauge.axis();
-             axis.minorTicks(true);
-             axis.minorTicks().stroke('#cecece');
-             axis.width('1%');
-             axis.offset('29.5%');
-             axis.orientation('top');
-             
-             // format axis labels
-             axis.labels().format('{%value}%');*/
+         
 // set paddings
             gauge.padding([0, 3]);
 //add a listener
@@ -147,10 +139,7 @@ marker.name(" ");
 
         function dibujarTablaGraf(container, urlDatos, idtabla,idioma) {
         	var	preloader = anychart.ui.preloader();
-        	// render preloader to the DOM
-           //	preloader.render();
-//             	  preloader = anychart.ui.preloader();
-//               	// cover only chart container
+        	
          	preloader.render(document.getElementById(container));
               	// show preloader
             preloader.visible(true);
@@ -180,6 +169,13 @@ marker.name(" ");
                     else
                         contents.push(["", "Por el momento no hay información.Intente otra consulta"]);
                 }
+                //un row vacio
+                 contents.push([
+                            // create line charts in the first column
+                            "", // get names for second column
+                            ""
+                            
+                        ]);
 
 // set table content
                 table.contents(contents);
@@ -204,47 +200,12 @@ marker.name(" ");
 
 // set table container and initiate draw
                 table.container(stage).draw();
-               
-                //preloader.visible(false);
-
-// Settings for table content
-
-
-
-// create legend
-//  var legend = anychart.standalones.legend();
-//
-//  legend.title().enabled(false);
-//  legend.titleSeparator().enabled(false);
-//  legend.paginator().enabled(false);
-//  legend.fontSize("10px").itemsLayout("horizontal").iconTextSpacing(0).align("right").position("center-bottom").padding(0).margin(0).itemsSpacing(0);
-//  legend.parentBounds(anychart.math.rect(0, 15, stage.width(),15));
-//  legend.background().enabled(false);
-//  legend.container(stage).draw();
-
-          //      dibujarTabla(idtabla, data);
-
+   
             });
         //  preloader.visible(false);
         }
 
-        function dibujarTabla(idtabla, datos) {
-
-            var table = $('<table>').addClass('table no-margin');
-          
-            table.append(' <tr>  <th>ATRIBUTO</th> <th >ESTANDAR</th>' +
-                    ' <th  >%</th>' +
-                    ' </tr>');
-            table.append("<tbody>");
-            for (i = 0; i < datos.length; i++) {
-                var row = '<tr><td>' + datos[i][0] + '</td>' +
-                        '<td>' + datos[i][1] + '</td>' +
-                        '<td>' + datos[i][2] + '</td></tr>';
-                table.append(row);
-            }
-		
-            $('#' + idtabla).append(table);
-        }
+    
     
             
 <?php
@@ -298,7 +259,7 @@ foreach ( $graficaIndicador->getListaSecciones () as $seccionind ) {
 				</div>
 				<div class="box-body">
 					<form name="form1" action="index.php?action=indgraficaindicadorgr"
-						method="post">
+						method="post" >
 						<div class="row">
 							<div class="col-sm-4 border-right filtros">
 								<input name="alertanav" type="hidden" id="alertanav"
@@ -334,19 +295,19 @@ echo $graficaIndicador->getListanivel5 ();
 echo $graficaIndicador->getListanivel6 ();
 
 ?>
-                        
-                        <div class="form-group">
-									<input name="action" type="hidden"
-										value="indgraficaindicadorgr"> <label><?php echo T_("PERIODO")?></label>
+                     </div>
+							<div class="col-sm-4 border-right">
+							<div class="form-group">
+								<input name="action" type="hidden"
+										value="indgraficaindicadorgr">
+										<label><?php echo T_("PERIODO")?></label>
+									
 									<select name="anio" class="form-control" id="anio_asig"
 										required>
 										<option value=""><?php echo T_("Seleccione el periodo")?></option>       
 <?php echo $graficaIndicador->getOpciones_anio(); ?>
-                            </select>
-								</div>
-							</div>
-							<div class="col-sm-4 border-right">
-								<div class="form-group">
+                            </select></div>
+                            <div class="form-group">
 									<label><?php echo T_("MES");?></label> <select
 										class="form-control" name="mes_solo" id="mes" required>
 										<option value="" selected><?php echo T_("Seleccione el mes")?></option>

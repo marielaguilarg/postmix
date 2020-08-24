@@ -1,18 +1,24 @@
  <section class="content-header">
-  <div class="row" style="margin-top:-40px;" >
-
-   <h1 style="font-size:25px; margin-left: 15px; ">
+ <div style="margin-top:10px">
+ </div>
+<?php
+	$ingreso = new ReporteController();
+	echo $ingreso->vistaEncabezado();
+	?>
+	
+   <h1>
 
    SECCIONES DEL REPORTE <small></small></h1>  
 
 
-</div>
+
      
 <ol class="breadcrumb" >
 
 <?php
-$ingreso = new ReporteController();
+
 $ingreso -> vistaRnomservController();
+echo $ingreso->ligaRegresar;
 ?>        
         
 </ol>
@@ -28,7 +34,7 @@ $ingreso -> vistaRnomservController();
 
 <?php
 
-$ingreso = new ReporteController();
+
 $ingreso -> vistaseccionReporteController();
 
 

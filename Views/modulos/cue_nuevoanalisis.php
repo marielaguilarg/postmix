@@ -1,4 +1,77 @@
 <script language="JavaScript" type="text/JavaScript">
+function validarSiNumero(numero){
+    if (!/^([0-9.])*$/.test(numero))
+	 return true;
+	 else return false;
+	alert("El valor " + numero + " no es un número");
+  }
+
+function validar(){
+	var frm = document.getElementById("form1");
+	band=0;
+	vn=0;
+	var largo
+    vcero=0; 
+//valido para coliformes
+
+	if($("#itipoana").val()=="MB")
+	{
+	
+		val2=$("input[name='desc18']").val();
+		val1=$("input[name='desc17']").val();
+		
+		if(($("input[name='desc18']").val().length>0&&val2>0)&&(val1.length>0&&val1==0))
+		{	alert("SI EL RESULTADO DE E COLI ES DIFERENTE DE 0\nEL RESULTADO DE COLIFORMES TOTALES NO PUEDE SER 0,\nFAVOR DE VERFICAR");
+		return false;
+		}
+				
+	
+	}
+	for (i=0;i<frm.elements.length;i++)
+	{
+		
+	
+	    if (frm.elements[i].type=="text"&&frm.elements[i].name!="itipoana") {    
+		  largo = frm.elements[i].value.length
+	        if(largo==0) {   //campo nulo
+			   band++;
+			} 
+			
+			if (validarSiNumero(frm.elements[i].value) == true)   {	
+				  vn++;  
+			} 
+			
+			 if (frm.elements[i].value==0) {
+			      vcero++;	  
+			}
+		}		  
+	}
+
+	if (vn>0) {
+	    alert ("Existen caracteres especiales, el sistema solo acepta valores numéricos, favor de corregir.")
+	    return false;  
+	} else if (band>0) {
+	        if (confirm("Un campo vacío significa que no se realizó la prueba y por lo tanto no hay resultado que capturar. ¿Desea continuar?")) {
+		        if (vcero>0) {
+				  if (confirm ("Cero significa que se realizó la prueba y ese fue su resultado. ¿Desea continuar? ")) {
+				      return true;
+		          } else {
+				      return false;
+				  }  // CONFIRMACION DE CERO
+				} // SI HAY CERO
+			} else {
+				   return false;
+		    } // CONFIRMACION DE VACIO	
+	} else if (vcero>0) {
+	   if (confirm ("Cero significa que se realizó la prueba y ese fue su resultado. ¿Desea continuar?")) {
+		   return true;
+	   } else {
+		   return false;
+	   }  // CONFIRMACION DE CERO	
+	} // SI HAY VACIO			   
+}
+
+//-->
 
 </script>
 
@@ -44,7 +117,9 @@ NUEVO REGISTRO
             </div>
             <!-- /.box-header -->
              <div class="box-body table-responsive no-padding">
-              <table class="table table-hover table-striped">
+             <input type="hidden" id="itipoana" name="itipoana" value="<?= filter_input(INPUT_GET, "tipo", FILTER_SANITIZE_STRING)?>">
+               <input type="hidden" id="idserv" name="idserv" value="<?= filter_input(INPUT_GET, "sv", FILTER_SANITIZE_STRING)?>">
+            <table class="table table-hover table-striped">
               <thead>
             <tr>
 
@@ -78,14 +153,11 @@ NUEVO REGISTRO
 
             </div>
 <div class="box-footer">
- <a class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=analisisFQ&tipo=<?php echo $tipo.'&ntoma='.$analisisController->getNmues()?>"> Cancelar </a> 
-                 
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button></div>
-            <!-- /.box-body -->
-  
 
-</form>
-          </div>
+  <div class="pull-right">   
+                  <button type="submit" class="btn btn-info">Guardar</button>
+                  <a class="btn btn-default" style="margin-left: 10px" href="index.php?action=analisisFQ&tipo=<?php echo $tipo.'&ntoma='.$analisisController->getNmues()?>"> Cancelar </a> 
+ </div></div>
 
 </section>
 

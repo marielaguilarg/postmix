@@ -4,8 +4,23 @@
                         $unegocioContoller->vistaindBuscarpv();
                     ?>
 
-
+	<link rel="stylesheet" href="js/tablesaw/tablesaw.css">
    <script type="text/javascript" src="js/MENindcomboboxcuenta.js"></script>
+   <script src="js/tablesaw/tablesaw.js"></script>
+	<script src="js/tablesaw/tablesaw-init.js"></script>
+	<script type="text/javascript">
+<!--
+function buscarAvanzada() {
+	if (document.getElementById) { //se obtiene el id
+		var el = document.getElementById("dregion"); //se define la variable "el" igual a nuestro div
+		el.style.display = (el.style.display == 'none') ? 'block' : 'none'; //damos un atributo display:none que oculta el div
+			el = document.getElementById('dunidadneg');
+			el.style.display = (el.style.display == 'none') ? 'block' : 'none'; //damos un atributo display:none que oculta el div
+			
+	}
+}
+//-->
+</script>
 <section class="content-header">
      <h1 class="box-title">&nbsp;</h1>
     <ol class="breadcrumb">
@@ -25,21 +40,22 @@
         <form name="form1" method="post"	action="index.php?action=indbuscapv">
         <div class="row">
             
-              <div class="col-sm-4">
+              <div class="col-sm-6">
               
             <div class="form-group ">
 
               
-                    <div >
+                
                         <label><?php echo T_("PUNTO DE VENTA")?>:  </label>
                         <input type="text" name="fil_ptoventa" id="fil_ptoventa" class="form-control" placeholder="Escribe palabra relacionada con el punto de venta" >
       <input name="busqueda" type="hidden" value="1" />
 
                     </div>
                 <div>
-                    <label><?php echo T_("ID PEPSI:")?>  </label>    <input name="fil_idpepsi" class="form-control" type="text" size="30" value=""  />
+                    <label><?php echo T_("NUD:")?>  </label>    <input name="fil_idpepsi" class="form-control" type="text" size="30" value=""  />
                 </div>
                 </div>
+                 <div class="col-sm-6">
                    <div class="form-group ">
         <label><?php echo T_("CUENTA")?></label>
      
@@ -58,30 +74,29 @@
                 echo $franq;
             }
             ?></div>
-       
+       </div>
     </div>
+   
+<div class="col-md-12" style="padding-bottom:10px">  
+<a onclick="buscarAvanzada()" href="javascript:void(0);"><?php echo T_("BUSQUEDA AVANZADA")?></a>   
+  </div>
 
-            </div>
-      
-<div class=" col-md-4">     
-  
-      
-       
-            
-   
-   
-            <?php   echo $unegocioContoller->getListanivel1() ?>
+  </div>
+  <div class="row" style="border-top: solid #f4f4f4; padding: 10px 15px;">
+        
+  <div class="col-md-6" id="dunidadneg" style="display:none">
+             <?php   echo $unegocioContoller->getListanivel1() ?>
             <input	name="varnivel2" type="hidden" id="varnivel2" value="<?php echo $unegocioContoller->getVarnivel() ?>" />
-                          
           <?php   echo $unegocioContoller->getListanivel2() ?>
      <?php   echo $unegocioContoller->getListanivel3() ?>
-   
-    
-</div>
-                <div class=" col-md-4">     
+   </div>
+
+                <div class="col-md-6" > 
+                 <div id="dregion" style="display:none">    
       <?php   echo $unegocioContoller->getListanivel4() ?>
       <?php   echo $unegocioContoller->getListanivel5() ?>
       <?php   echo $unegocioContoller->getListanivel6() ?>
+      </div>
     <div>
     <span class="input-group-btn">
     <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i><?php echo T_("BUSCAR")?></button>
@@ -100,26 +115,28 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
-                <table class="table table-striped">
+                <table  class="tablesaw table-striped" data-tablesaw-mode="stack">
+                <thead>
                     <tr>
                         <th><?php echo T_("PUNTO DE VENTA")?></th>
-                        <th ><?php echo T_("ID PEPSI")?></th>
+                        <th ><?php echo T_("NUD")?></th>
                         <th ><?php echo T_("CIUDAD")?></th>
                         <th ><?php echo T_("DIRECCION") ?></th>
                     </tr>
-
+<thead>
+<tbody>
                     <?php
                   foreach($unegocioContoller->getListaunegocios() as $renglon){
                      echo " <tr>";
                       echo $renglon["NomPuntoVenta"];
-                       echo $renglon["Pepsi"];
+                       echo $renglon["Nud"];
                        echo $renglon["CiudadN"];
                        echo $renglon["Direccion"];
                        echo  "</tr>";
                       
                   }
                     ?>
-
+</tbody>
                 </table>
             </div>
             <!-- /.box-body -->

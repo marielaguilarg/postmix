@@ -1,3 +1,10 @@
+      <script type="text/javascript" >
+function dialogoEliminar(){
+	if(confirm("¿ESTA SEGURO QUE DESEA ELIMINAR?"))
+		return true;
+	else return false;
+}
+ </script>
     <section class="content-header">
       <h1>SECCIONES <small></small></h1>
 <ol class="breadcrumb" >

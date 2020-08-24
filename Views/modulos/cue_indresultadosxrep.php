@@ -1,7 +1,9 @@
 <?php $resultadosxrepCont=new ResumenResxRepController;
   $resultadosxrepCont->vistaResumenResxRep();
   ?>
-
+<link rel="stylesheet" href="js/tablesaw/tablesaw.css">
+<script src="js/tablesaw/tablesaw.js"></script>
+	<script src="js/tablesaw/tablesaw-init.js"></script>
 <script type="text/javascript" language="javascript">
  function MostrarFilas(Fila, objeto) {
 var elementos = document.getElementsByName(Fila);
@@ -59,7 +61,9 @@ var elementos = document.getElementsByName(Fila);
    
     foreach($resultadosxrepCont->getListaImagenes() as $rutaimg){
         echo "<div class='col-md-4'>   <div class='mr-2'>";
-        echo '  <a data-fancybox="gallery" href="'.$rutaimg.'" '.$display.'><img src="'.$rutaimg.'" width="350" height="234"></a>';
+        echo '<a data-fancybox="gallery" href="'.$rutaimg["ruta"].'" '.$display.' data-caption="'.$rutaimg["descripcion"].'">
+<img src="'.$rutaimg["ruta"].'" width="350" height="234">
+</a>';
         if($cont==3)
             $display="style='display:none;'";
         $cont++;
@@ -77,6 +81,7 @@ var elementos = document.getElementsByName(Fila);
       <!-- Buttons, labels, and many other things can be placed here! -->
       <!-- Here is a label for example -->
       <a class="btn btn-info btn-sm" href="<?php echo $resultadosxrepCont->getLigaconsultarRep()?>" onClick="guardarLiga(this, \'REPORTE\');"><?php echo T_("CONSULTAR TODO EL REPORTE"); ?></a>
+      <a class="btn btn-info btn-sm" href="<?php echo $resultadosxrepCont->ligaImprimir?>" title ="Imprimir" target="_blank" ><i class="fa fa-print"></i></a>
 </div>
     </div>
     </section>

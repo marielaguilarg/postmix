@@ -1,8 +1,14 @@
 <section class="content-header">
-      <h1>FRANQUICIAS &nbsp; &nbsp; <small></small></h1>
+      <h1>Franquicias &nbsp; &nbsp; <small></small></h1>
      
     </section>
-
+   <script type="text/javascript" >
+function dialogoEliminar(){
+	if(confirm("¿ESTA SEGURO QUE DESEA ELIMINAR?"))
+		return true;
+	else return false;
+}
+ </script>
     <!-- Main content -->
     <section class="content container-fluid">
 

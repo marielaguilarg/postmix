@@ -149,7 +149,7 @@ foreach ($respuesta as $key => $row) {
 	$numunid=$row['mue_numunidadesMB'];
 	$idserv=$row['ide_claveservicio'];
 	$fechamue=$row['mue_fechahora'];
-	$fecmue=cambiaf_a_normal($fechamue)." ". $row['horamues'];
+	$fecmue=cambiaf_a_normal($fechamue);
 
     $puntovta = DatosMuestra::vistaDatosPunto($idserv, $ntoma, "ca_unegocios");
     
@@ -239,28 +239,28 @@ foreach ($respuesta as $key => $row) {
 
     $pdf->MultiCell(25,4,'UNIDADES ENTREGADAS', 0, '' , FALSE);
     $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(62);
+    $pdf->SetY(62);
     $pdf->SetX(114);
-	$pdf->Cell(30,4,$numunid, 0, 0 ,'C', FALSE);
+    $pdf->Cell(30,4,$numunid, 0, 0 ,'C', FALSE);
     $pdf->SetFont('Arial','',6);
     $pdf->SetY(54);
     $pdf->SetX(138);
-
+    
     $pdf->MultiCell(20,4,'CAPACIDAD (ml)', 0, '' , FALSE);
     $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(62);
+    $pdf->SetY(62);
     $pdf->SetX(134);
-	$pdf->Cell(30,4,$numcap, 0, 0 ,'C', FALSE);
-	
+    $pdf->Cell(30,4,$numcap, 0, 0 ,'C', FALSE);
+   
     $pdf->SetFont('Arial','',6);	
     $pdf->SetY(52);
     $pdf->SetX(158);
 
     $pdf->MultiCell(20,4,'FECHA Y HORA DE TOMA', 0, '' , FALSE);
     $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(61);
+    $pdf->SetY(61);
     $pdf->SetX(160);
-//	$pdf->Cell(30,4,$fecmue, 0, 0 ,'C', FALSE);
+    //	$pdf->Cell(30,4,$fecmue, 0, 0 ,'C', FALSE);
     $pdf->MultiCell(18,4,$fecmue, 0, '' , FALSE);
     $pdf->SetFont('Arial','',6);
     $pdf->SetY(54);

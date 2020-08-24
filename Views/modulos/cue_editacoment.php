@@ -24,13 +24,15 @@
               $opcion ->editarComentController();
               $opcion ->actualizarComentController();
               ?>
+              <div class="pull-right">
+              <button type="submit" class="btn btn-info">GUARDAR</button>
+             
               <?php
               $opcion = new seccionController();
               $opcion ->botonRegresaEditComentario();
               ?>
                    
-                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
-             
+                </div>
               
               
              </div>

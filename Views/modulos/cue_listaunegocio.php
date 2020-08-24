@@ -1,3 +1,7 @@
+<script type="text/javascript" src="js/stacktable.js/stacktable.js"></script>
+<link href="js/stacktable.js/stacktable.css" rel="stylesheet">
+
+ 
 <script type="text/javascript">
 <!--
 function nuevoAjax()
@@ -58,9 +62,12 @@ function buscaCiudades(estado, referuni)
 	
 	//}
 }
+$(document).ready(function() {
+	$("#tabla1").stacktable();
+	});
 //-->
 </script>
-    <section class="content-header">
+   <section class="content-header">
       <h1>PUNTOS DE VENTA &nbsp; &nbsp; <small></small></h1>
       
     </section>
@@ -115,8 +122,8 @@ $ingreso->iniciarFiltros();
               <h3 class="box-title">RESULTADO DE BUSQUEDA</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <table class="table">
+            <div class="box-body ">
+              <table class="table table-striped stacktable" id="tabla1">
                 <tr>
                   
                   <th style="width: 20%">ESTADO </th>
@@ -157,7 +164,7 @@ $ingreso -> vistaUnegocioController();
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
    
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+ 
     <script src="js/jquery.cascading-drop-down.js"></script>
     <script>
     $('.form-control').ssdCascadingDropDown({

@@ -4,6 +4,9 @@
     display: none;
 }
 </style>
+<link rel="stylesheet" href="js/tablesaw/tablesaw.css">
+<script src="js/tablesaw/tablesaw.js"></script>
+	<script src="js/tablesaw/tablesaw-init.js"></script>
 <script language="JavaScript" type="text/JavaScript"> 
 
  function MostrarFilas(Fila,objeto) {

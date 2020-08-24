@@ -26,8 +26,10 @@
 
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listacuenta"> CANCELAR </a></button>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
+                 <div class="pull-right">
+                 <button type="submit" class="btn btn-info ">GUARDAR</button>
+                  <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listacuenta"> CANCELAR </a>
+                    </div>
                  </div>
               </form>
         </div>

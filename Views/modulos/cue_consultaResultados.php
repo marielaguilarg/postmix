@@ -22,6 +22,41 @@ function CambiaIdioma(pagina,idioma)
 	//window.parent.Pie.location="index.php?action=consultaResultados&lan="+idioma;
 	window.location=pagina;
 }
+function cargaContenidoCliente(a)
+{
+	if(a>0){
+	var parametro={"claclien":a,
+cta:"1"
+			};
+
+	$.ajax({
+		data:parametro,
+	url:"comboboxclienteserv.php",
+	type:"post",
+	beforeSend:function(){
+		$("#crservicio").html("cargando...");
+	},
+	success:function(response){
+		var arr=response.split("¬¬");
+	
+		if(arr.length>0)
+		{	primera=arr[0];
+		$("#cuenta").append("<option value='0'>- TODOS -</option>");
+		$("#cuenta").append(arr[1]);}
+		else
+			primera=response;
+		$("#crservicio").append("<option value='0'>- TODOS -</option>");
+		$("#crservicio").append(primera);
+		
+	
+	}
+	});
+	}else
+	{	
+		$("#crservicio").html("cargando...");
+		$("#crservicio").append("<option value='0'>- TODOS -</option>");
+	}
+}
 //-->
 </script>
    <script type="text/javascript" src="js/MENindcomboboxcuenta.js"></script>
@@ -46,14 +81,25 @@ function CambiaIdioma(pagina,idioma)
             <h3 class="box-title"><?php echo T_("ESTIMADO USUARIO, PARA CONSULTAR LOS RESULTADOS DEFINA LOS SIGUIENTES CRITERIOS:")?></h3>
         </div>
         <div class="box-body">
-        <form name="form1" method="post"	action="index.php?action=resumenresultados&admin=prin">
+        <form name="form1" method="get"	action="index.php?action=resumenresultados&admin=prin">
         <div class="row align-items-center">
-            
-              <div class="col-md-6">
+        <input type="hidden" name="action" value="resumenresultados" >
+        <input type="hidden" name="admin" value="prin">
+            <div class="col-md-6" >
+             <div class="form-group">
+                    <label><?php echo T_("CLIENTE") ?></label>
+					  <?php echo $consultaResCon->getOPCLIENTES()?>
+					  </div>
+					<!-- inicioBloque: divServicio -->
+						   <div class="form-group ">
+        <label><?php echo T_("SERVICIO")?></label>
+					 <?php echo $consultaResCon->getOPSERVICIOS()?>
+					 </div>
+					
               
          
 				
-                <div class="form-group">
+                <div class="form-group" id="tipomer"  style="display:none">
                     <label><?php echo T_("TIPO MERCADO")?>  </label>  
                     <?php echo $consultaResCon->getOPMERCADO();?>
                 </div>

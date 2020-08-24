@@ -1,21 +1,27 @@
+ <script src="js/eliminar.js"></script>
 <section class="content-header">
-      <h1>COMENTARIOS ESTANDAR<small></small></h1>
-<ol class="breadcrumb" >
+<div class="row" style="margin-top:-40px;" >
+   <h1 style="font-size:25px; margin-left: 15px; ">
+      COMENTARIOS ESTANDAR</h1>
+     </div>
+      <ol class="breadcrumb" >
 <?php
 				$ingreso = new EstandarController();
 				$ingreso -> titestcom();
 				?>
         
-</ol>
-				<?php
+</ol> 
+ </section>
+			
+          
+     
+	<section class="content container-fluid">
+		<?php
 				$ingreso = new EstandarController();
 				$ingreso -> botonnuevoestandarcoment();
 				?>
-          
-       
-	<section class="content container-fluid">
 		<div class="box">			
-	              <table class="table" table-condensed>
+	              <table class="table table-condensed">
 	                <tr>
 	                  <th style="width: 5%">No.</th>
 	                  <th style="width: 36%">COMENTARIOS</th>
@@ -27,6 +33,6 @@
 				$ingreso -> vistaestandarcoment();
 				?> 
 	                
-	                </table>
-	         </div>
+	               
+	        
 		</section>                

@@ -1,15 +1,28 @@
  <section class="content-header">
  <!-- generar nombre de seccion -->
- <div class="row" style="margin-top:-40px;" >
+ <script type="text/javascript" >
+function dialogoEliminar(){
+	if(confirm("¿ESTA SEGURO QUE DESEA ELIMINAR?"))
+		return true;
+	else return false;
+}
+ </script>
 
-    <h1 style="font-size:25px; margin-left: 15px; ">
-	<?php
+<div style="margin-top:10px">
+ </div>
+<?php
 	$ingreso = new ReporteController();
+	echo $ingreso->vistaEncabezado();
+	
+	?>
+	
+    <h1 >
+	<?php
 	$ingreso -> vistaNombreSeccion();
 	?>     
 
-   <small></small></h1>  
-	<h1>
+   </h1>  
+	
 
 	<?php
 	if ($_GET["ts"]=="P"){
@@ -20,31 +33,49 @@
 		  $ingreso = new EstandarController();
 		  $ingreso -> nivelCumplimientoEstandar();
 		  
-		}else{
-
-			echo '<small>     </small></h1>';
 		}
 	}	
 	?>
      
 
-</div>
 
 	<ol class="breadcrumb"  >
 	<?php
 	$ingreso = new ReporteController();
 	$ingreso -> vistaRnomservController();
+	$ingreso->SeleccionaseccionLigabc();
+	echo $ingreso->ligaRegresar;
 	?>     
     </ol>
 
 </section>
-
+<script>
+function ajax_print(url){
+    $.ajax(url).
+    done(function(data){
+        var S = "#Intent;scheme=rawbt;";
+        var P =  "package=ru.a402d.rawbtprinter;end;";
+        window.location.href="intent:base64,"+data+S+P;
+      
+    });
+return false;
+}
+function ajax_printz(url){
+    $.ajax(url).
+    done(function(data){
+      
+        window.location.href="arrowhead://x-callback-url/cpclcode?code="+data;
+      
+    });
+return false;
+}
+</script>
 
 
 <?php
 	
-      $vista = new ReporteController();
-      $vista -> SeleccionaseccionReporteController();
+ 
+$ingreso -> SeleccionaseccionReporteController();
 
 ?>
 	

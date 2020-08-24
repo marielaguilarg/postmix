@@ -59,16 +59,17 @@ $ingreso -> vistaNomServicioController();
            <input type="checkbox" name="indmues" id="indmues" />
             </div> 
            <div class="box-footer col-md-12">
-                  
-                  
+                    <div class="pull-right">   
+                  <button type="submit" class="btn btn-info">GUARDAR</button>  
+                 
                   <?php
 
               $registro = New SeccionController();
               $registro-> botonRegresaSeccionController();
               //$registro->  actualizarSeccionController();
               ?>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
-                 </div>
+              </div>
+                  </div>
 
                  <!-- Pie de formulario -->
                 

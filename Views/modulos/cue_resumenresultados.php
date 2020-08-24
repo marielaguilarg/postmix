@@ -7,7 +7,8 @@
 }
 
 </style>
-
+<script type="text/javascript" src="js/stacktable.js/stacktable.js"></script>
+<link href="js/stacktable.js/stacktable.css" rel="stylesheet">
 <script language="JavaScript" type="text/JavaScript"> 
 
 function enviar(direccion)
@@ -59,6 +60,9 @@ var elementos = document.getElementsByName(Fila);
 	//	objeto.parent.innerHTML="otra cosa";
 
 }
+ $(document).ready(function() {
+		$(".stacktable").stacktable();
+		});
 </script>
 
 <?php

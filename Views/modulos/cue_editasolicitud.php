@@ -1,4 +1,4 @@
-<link href="../css/Estilosind.css" rel="stylesheet" type="text/css">
+
 <script language="JavaScript" type="text/JavaScript">
 <!--
 
@@ -7,14 +7,31 @@ function oCargar(action){
 document.dform.action=action;
 document.dform.submit();
 }
-
-function carganiv2(a)
+$(document).ready(function()
 {
-	document.aform.action="index.php?action=editasolicitud&admin=validadato"
+
+	$("#idcta").focusout(function(){
+	cargarniv();
+	}
+	);
+	$("#cta").focusout(function(){
+		cargarniv();
+	}
+			);
+});
+
+function cargarniv()
+{
+
+	if($("#idcta").val()!=""&&$("#idcta").val().length>1)
+		if($("#cta").val()>=1)
+		{	
+	document.aform.action="index.php?action=editasolicitud&admin=validadato";
 	document.aform.submit();
+		
+	}
 	//alert(a.value);
 }
-
 function validar(form){
 	if(form.desuneg.value==''){
 		alert("Por favor, escribe el Nombre del Punto de Venta");
@@ -36,12 +53,7 @@ function validar(form){
 		   form.numext.focus();
 		   form.numext.select();
 		   return false;
-	} else if(form.col.value==''){
-		alert("Por favor, escribe la Colonia");
-		form.col.focus();
-		form.col.select();
-		return false;
-	}else if(form.del.value==''){
+	} else if(form.del.value==''){
 		alert("Por favor, escribe la Delegación");
 		form.del.focus();
 		form.del.select();
@@ -105,7 +117,7 @@ function validar1(dform){
      include 'Controllers/certificacionController.php';
      $certificacionController=new CertificacionController();
      $certificacionController->vistaEditaSolicitud();
-   echo  $certificacionController->getMsg();
+ 
                     ?>
 <section class="content-header">
       <h1> NUEVA SOLICITUD</h1>
@@ -124,40 +136,44 @@ function validar1(dform){
                  <form role="form" action="index.php?action=editasolicitud&admin=ingsol&nsol=<?php echo $certificacionController->getUnegocio()['CLAVEUNINEG']?>"  name="aform" method="post" enctype="multipart/form-data"  onsubmit="return validar(this);"> 
                  
                 <!-- Datos iniciales alta de punto de venta -->
-                 
-                  <div class="form-group col-md-6">
+              
+                  <div class="form-group col-md-12">
                   <label>NO. SOLICITUD :</label>
-                   <?php echo $certificacionController->getUnegocio()['CLAVEUNINEG']?>
+                   <?php 
+                   echo $certificacionController->getUnegocio()["CLAVEUNINEG"]?>
       </div>
-     
-       <div class="form-group col-md-6"><label> CUENTA  :</label>
+         
+                 
+                  
+                
+       <div class="form-group col-md-6"><label> *CUENTA  :</label>
         <select class="form-control" name="cta" id="cta" required> <option value="">- - - - - - - - - - - </option><?php echo $certificacionController->getListaCuentas()?></select>       </div>
-     <div class="form-group col-md-6"><label>ID CUENTA  :</label>
-        <input class="form-control" required name="idcta" type="text" id="idcta" value="<?php echo $certificacionController->getUnegocio()['IDC']?>" size="60" onChange="carganiv2(this)"/>
+     <div class="form-group col-md-6"><label>*ID CUENTA  :</label>
+        <input class="form-control" required name="idcta" type="text" id="idcta" value="<?php echo $certificacionController->getUnegocio()['IDC']?>" size="60" />
      </div>
-        <div class="form-group col-md-6"><label>NOMBRE DEL PUNTO DE VENTA  :</label>
+        <div class="form-group col-md-6"><label>*NOMBRE DEL PUNTO DE VENTA  :</label>
         <input class="form-control" name="desuneg" required type="text" id="desuneg" value="<?php echo $certificacionController->getUnegocio()['NOMUNEG'] ?>" size="60">
         <input class="form-control" name="clauneg" type="hidden" value="<?php echo $certificacionController->getUnegocio()['CLAVEUNINEG'] ?>" />
         <input class="form-control" name="numpun" type="hidden" value="<?php echo $certificacionController->getUnegocio()['NPUN'] ?>" />
         </div>
      
-        <div class="form-group col-md-6"><label>CONTACTO :</label>
+        <div class="form-group col-md-6"><label>*CONTACTO :</label>
        <input class="form-control" name="conuneg" required type="text" id="conuneg" value="<?php echo $certificacionController->getUnegocio()['ICON'] ?>" size="60">        </div>
     
-         <div class="form-group col-md-6"><label>TELEFONO :</label>
+         <div class="form-group col-md-6"><label>*TELEFONO :</label>
         <input class="form-control" name="tel" required type="text" id="tel" value="<?php echo $certificacionController->getUnegocio()['TELUNEG'] ?>" size="60" maxlength="25">        </div>
      
-       <div class="form-group col-md-6"><label>TELEFONO MOVIL:</label>
+       <div class="form-group col-md-6"><label>*TELEFONO MOVIL:</label>
         <input class="form-control" name="cel" required type="text" id="cel" value="<?php echo $certificacionController->getUnegocio()['TELCEL'] ?>" size="60" maxlength="25">        </div>
      
-       <div class="form-group col-md-6"><label>CORREO ELECTRONICO :</label>
+       <div class="form-group col-md-6"><label>*CORREO ELECTRONICO :</label>
        <input class="form-control" name="email" required type="text" id="email" value="<?php echo $certificacionController->getUnegocio()['MAIL'] ?>" size="60">        </div>  
      
     
-        <div class="form-group col-md-6"><label>CALLE :</label>
+        <div class="form-group col-md-6"><label>*CALLE :</label>
        <input class="form-control" name="calle" required type="text" id="calle" value="<?php echo $certificacionController->getUnegocio()['CALLEUNEG'] ?>" size="60">        </div>
     
-         <div class="form-group col-md-6"><label>NUMERO EXTERIOR :</label>
+         <div class="form-group col-md-6"><label>*NUMERO EXTERIOR :</label>
         <input class="form-control" name="numext"  required type="text" id="noext" value="<?php echo $certificacionController->getUnegocio()['NUMEXUNEG'] ?>" size="60">        </div>
     
          <div class="form-group col-md-6"><label>  NUMERO INTERIOR :</label>
@@ -172,13 +188,13 @@ function validar1(dform){
        <div class="form-group col-md-6"><label>COLONIA :</label>
         <input class="form-control" name="col" type="text" id="col" value="<?php echo $certificacionController->getUnegocio()['COLUNEG'] ?>" size="60">        </div>
      
-        <div class="form-group col-md-6"><label> DELEGACION O MUNICIPIO :</label>
+        <div class="form-group col-md-6"><label> *DELEGACION O MUNICIPIO :</label>
         <input class="form-control" name="del" required type="text" id="del" value="<?php echo $certificacionController->getUnegocio()['DELEGUNEG'] ?>" size="60">        </div>
       
-        <div class="form-group col-md-6"><label> CIUDAD :</label>
+        <div class="form-group col-md-6"><label> *CIUDAD :</label>
         <input class="form-control" name="mun" required type="text" id="mun" value="<?php echo $certificacionController->getUnegocio()['MUNUNEG'] ?>" size="60">        </div>
      
-        <div class="form-group col-md-6"><label> ESTADO :</label>
+        <div class="form-group col-md-6"><label> *ESTADO :</label>
         
         <select class="form-control" name="edo" id="edo" required> <option value="">- - - - - - - - - - - </option><?php echo $certificacionController->getListaEstados()?></select>       </div>
      
@@ -189,7 +205,7 @@ function validar1(dform){
         <input class="form-control" name="ref" type="text" id="ref" value="<?php echo $certificacionController->getUnegocio()['REFUNEG'] ?>" size="60"> 
              </div>
     
-        <div class="form-group col-md-6"><button type="submit" class="btn btn-info pull-right">   Guardar </button></div>
+        <div class="form-group col-md-12"><button type="submit" class="btn btn-info pull-right">   Guardar </button></div>
           
      
 </form>
@@ -197,53 +213,7 @@ function validar1(dform){
 </div>
  </div>
  </div>
- <div class="row">
-   <div class="col-md-12">
-             <div class="box box-info">
-             <div class="box-header with-border">ARCHIVOS</div>
-             <div class="box-body">
-<?php echo $certificacionController->getSubtitulo();
-?>
-<?php 
-     foreach($certificacionController->getListaSolDet() as $detalle){
-        echo $detalle["id_arc_exist"];
-  
-       echo $detalle["arc_exist"];
-          
-      }
-     ?>
-  
-</div>
-</div>
-</div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-             <div class="box box-info">
-             <div class="box-header with-border">COMENTARIOS</div>
-             <div class="box-body"> 
-<form  name="cform" action="index.php?action=editasolicitud&admin=ingcom" method="post" enctype="multipart/form-data"> 
 
-       <?php 
-       echo $certificacionController->getEnc_comen();
-       ?>
-      
-       <?php 
-        foreach ($certificacionController->getListaComentarios() as $comentario){
-         echo $comentario['fec'];        
-        
-         echo $comentario['hor'];       
-       
-          echo $comentario['user'];
-        
-         echo $comentario['comen'];       
-
-        }?>
- 
- </form>
-</div></div>
-</div>
-</div>
 <div class="row">
   <div class="col-md-12">
              <div class="box box-info">

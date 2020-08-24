@@ -29,15 +29,17 @@
 
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
+                 <div class="pull-right">
+                       <button type="submit" class="btn btn-info ">GUARDAR</button> 
                    <?php
                  $registro = New abiertaController();
                   $registro->botonRegresaabdetEController() ?>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
+             
                   <?php
                  $registro = New abiertaController();     
                  //$registro-> registraabdetController();  
                 // $registro->botonRegresaabdetController() ?>
-
+</div>
                  </div>
 
               </form>

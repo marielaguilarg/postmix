@@ -1,5 +1,4 @@
-<link rel="stylesheet"
-	href="views/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
 
 <link href="views/dist/css/dataTables.bootstrap.min.css"
 	rel="stylesheet">
@@ -21,7 +20,6 @@
 <script type="text/javascript" language="javascript"
 	src="views/dist/js/responsive.bootstrap.min.js"></script>
 
-<script src="views/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <script language="JavaScript" type="text/JavaScript">
 
@@ -87,7 +85,25 @@ function validar(form){
 		return false;
 	}
 }
-
+function ajax_print(url){
+    $.ajax(url).
+        done(function(data){
+        	var S = "#Intent;scheme=rawbt;";
+            var P =  "package=ru.a402d.rawbtprinter;end;";
+            window.location.href="intent:base64,"+data+S+P;
+          console.log("intent:base64,"+data+S+P);
+        });
+    return false;
+}
+function ajax_printz(url){
+    $.ajax(url).
+    done(function(data){
+      
+        window.location.href="arrowhead://x-callback-url/cpclcode?code="+data;
+      
+    });
+return false;
+}
 //-->
 
 </script>
@@ -110,12 +126,6 @@ $recepcionController->vistaListaRecepcion ();
 <section class="content container-fluid">
 <?php  echo $recepcionController->getMensaje()?>
 	<!----- Inicia contenido ----->
-<div class="row">
-<div class="col-md-12">
-    
-<a class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=nuevarecepcion"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
-       </div>
-   </div>
 
 	<div class="row">
 
@@ -211,6 +221,15 @@ foreach ( $recepcionController->getListaRecepciones() as $recepcion ) {
 		</div>
 
 	</div>
+
+<div class="row">
+   <div class="col-md-4" style="margin-top:3px">&nbsp;</div>
+<div class="col-md-4" style="text-align:center">
+    
+<a class="btn  btn-primary " href="index.php?action=nuevarecepcion"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
+       </div>
+       <div class="col-md-4" style="margin-top:3px">&nbsp;</div>
+   </div>
 
 	<!----- Finaliza contenido ----->
 

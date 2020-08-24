@@ -1,5 +1,5 @@
 <section class="content-header">
-      <h1>COMENTARIOS <small></small></h1>
+      <h1>Comentarios <small></small></h1>
 <ol class="breadcrumb" >
 <?php
 $ingreso = new seccionController();
@@ -15,7 +15,7 @@ $ingreso = new seccionController();
 $ingreso -> botonnuevocoment();
 ?>        
        
-	</section>
+
 
 	<section class="content container-fluid">
 		<div class="box">
@@ -34,4 +34,4 @@ $ingreso -> botonnuevocoment();
 	                
 	                </table>
 	         </div>
-		</div>
+		</section>                

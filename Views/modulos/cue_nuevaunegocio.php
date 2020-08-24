@@ -23,7 +23,7 @@
                   <label>NOMBRE</label>
                   <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $idc?>" >
                   <input type="text" class="form-control" name="desuneg" id="desuneg" required>
-                
+                <input name="numpun" type="hidden" value="<?= $unegocioContoller->getNumpunto() ?>" >
                 </div>
                 <div class="form-group col-md-4">
                   <label>ID PEPSI</label>
@@ -200,12 +200,14 @@
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
-                 
+                 <div class="pull-right">
+                      <button type="submit" class="btn btn-info">GUARDAR</button>
+             
                  <?php
                  echo '
-                 <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listaunegocio&idc='.$idc.'"> CANCELAR </a> ';
+                 <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=listaunegocio&idc='.$idc.'"> CANCELAR </a> ';
                  ?>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
+                 </div>
               </div>
               </form>
               </div>

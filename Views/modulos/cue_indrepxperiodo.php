@@ -1,6 +1,32 @@
+<?php
 
+$basepController = new BasePostmixController();
+$basepController->vistaReportePeriodo();
+
+?>
 <script type="text/javascript">
 <!--
+$(document).ready(function(){
+		
+		$("input[name='consulta']").change(function() {
+	totcuentas=<?php echo sizeof($basepController->getListaCuentas()) ?>;
+	
+if($("input[name='consulta']:checked").val()=="t")
+{
+	
+	for(i=0;i<totcuentas;i++){
+	
+		$("#cuenta_"+i).prop('checked',false);
+
+	}
+		
+}
+	
+})}
+);
+
+
+
 function muestra(id)
 {
 	if (document.getElementById)
@@ -27,11 +53,7 @@ function oculta(id, id2)
 }
 //-->
 </script>
-<?php
 
-$basepController = new BasePostmixController();
-$basepController->vistaReportePeriodo();
-?>
   <section class="content-header">
                 <h2><?php echo $basepController->getTitulo1()?></h2>
      
@@ -141,7 +163,7 @@ $basepController->vistaReportePeriodo();
 
 
 						<div class="form-check">
-							<input class="form-check-input" name="consulta" type="radio"
+							<input class="form-check-input" name="consulta" id="consulta" type="radio"
 								value="t" checked="checked" onClick="oculta('cuentas')"> <?php echo T_("TODAS LAS CUENTAS")?>
 						</div>
 					</div>

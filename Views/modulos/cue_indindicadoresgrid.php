@@ -361,7 +361,7 @@ $j=1;$bac=1;
        <div class="row">
        <div class="col-md-12" >
 
-          <div class="box box-info" id="region_<?php echo $j;?>" >
+          <div class="box box-info collapsed-box" id="region_<?php echo $j;?>" >
 
             <div class="box-header with-border" id="hregion_<?php echo $j;?>" >
 
@@ -369,7 +369,7 @@ $j=1;$bac=1;
 
               <div class="box-tools pull-right">
 
-               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
 
                 </button>
 

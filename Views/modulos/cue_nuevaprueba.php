@@ -53,9 +53,11 @@ PRUEBAS PARA EL ANALISIS DE AGUA <br><small><?php echo $pruebaController->getTIT
    
   </div>
   <div class="box-footer col-md-12">
-       <A  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listapruebasdet&serv=<?php echo $pruebaController->getIds()?>"> Cancelar </a>
-                
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
+
+       <button type="submit" class="btn btn-info">GUARDAR</button>
+       <a class="btn btn-default" style="margin-left: 10px" href="index.php?action=listapruebasdet&serv=<?php echo $pruebaController->getIds()?>"> CANCELAR </a>
+                </div>
+
               </div>
               
 </form></div>

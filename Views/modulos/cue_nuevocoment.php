@@ -17,18 +17,21 @@
               <div class="form-group col-md-6">
                 <label >DESCRIPCIÓN EN ESPAÑOL</label>
                
-                    <input name="descesp" id="descesp" class="form-control" required>
+                    <input name="descesp" id="descesp" class="form-control" >
                 </div>
                 <div class="form-group col-md-6">
                     <label >DESCRIPCION EN INGLES</label>
-                    <input name="descing" id="descing" class="form-control" required>
+                    <input name="descing" id="descing" class="form-control" >
                   </div>
+                  <div class="pull-right">
+                   <button type="submit" class="btn btn-info">GUARDAR</button>
+                   
               <?php
               $opcion = new seccionController();
               $opcion ->botonRegresaComentarioController();
               ?>
-                   
-                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
+                   </div>
+               
               </div>
                </form>
               </div>

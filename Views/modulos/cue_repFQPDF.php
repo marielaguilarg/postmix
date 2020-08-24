@@ -68,31 +68,31 @@ $pdf->Rect(100,75,18,8);
 $pdf->Rect(118,75,40,8);
 $pdf->Rect(158,75,48,8);
 
-$pdf->Rect(16,83,64,5);
-$pdf->Rect(80,83,20,5);
-$pdf->Rect(100,83,18,5);
-$pdf->Rect(118,83,40,5);
-$pdf->Rect(158,83,48,5);
+$pdf->Rect(16,83,64,10);
+$pdf->Rect(80,83,20,10);
+$pdf->Rect(100,83,18,10);
+$pdf->Rect(118,83,40,10);
+$pdf->Rect(158,83,48,10);
 
 // cuadros del LABORATORIO
-$pdf->Rect(16,95,64,8);
-$pdf->Rect(80,95,64,8);
-$pdf->Rect(144,95,62,8);
+$pdf->Rect(16,99,64,8);
+$pdf->Rect(80,99,64,8);
+$pdf->Rect(144,99,62,8);
 
-$pdf->Rect(16,103,64,5);
-$pdf->Rect(80,103,64,5);
-$pdf->Rect(144,103,62,5);
+$pdf->Rect(16,107,64,5);
+$pdf->Rect(80,107,64,5);
+$pdf->Rect(144,107,62,5);
 
 // cuadros del RESULTADO
-$pdf->Rect(16,114,6,4);
-$pdf->Rect(22,114,35,4);
-$pdf->Rect(57,114,35,4);
-$pdf->Rect(92,114,18,4);
+$pdf->Rect(16,118,6,4);
+$pdf->Rect(22,118,35,4);
+$pdf->Rect(57,118,35,4);
+$pdf->Rect(92,118,18,4);
 
-$pdf->Rect(110,114,6,4);
-$pdf->Rect(116,114,35,4);
-$pdf->Rect(151,114,35,4);
-$pdf->Rect(186,114,20,4);
+$pdf->Rect(110,118,6,4);
+$pdf->Rect(116,118,35,4);
+$pdf->Rect(151,118,35,4);
+$pdf->Rect(186,118,20,4);
 
 $pdf->Rect(15,226,193,6);
 
@@ -129,9 +129,15 @@ $pdf->Cell( 0 , 8 , "AGUA POST MIX" , 0, 0 , 'C',true );
 $pdf->SetY(38);
 $pdf->SetX(16);
 $pdf->SetFont('Arial','B',12);
-$pdf->Cell(0,6,'ANALISIS FISICOQUIMICO', 0, 0 ,'C', true);
+if($action=="repFQPDF")
+{$titulo="FISICOQUIMICO";
+$tipoit="FQ";}
+else if($action=="repMBPDF")
+{$titulo="MICROBIOLOGICO";
+$tipoit="MB";}
+$pdf->Cell(0,6,'ANALISIS '.$titulo, 0, 0 ,'C', true);
 
-$respuesta = DatosMuestra::vistaItem($ntoma, "FQ", "aa_muestras");
+$respuesta = DatosMuestra::vistaItem($ntoma, $tipoit, "aa_muestras");
      
 foreach ($respuesta as $key => $row) {	# code...
 	$fecharec=$row["rm_fechahora"];
@@ -144,13 +150,13 @@ foreach ($respuesta as $key => $row) {	# code...
 	$nomrec=$row['rm_personarecibe'];	     
 	$estatusmues=$row['mue_estatusmuestra'];      
 	$numrep=$row['mue_numreporte'];   
-	$numcap=$row['mue_capacidadFQ'];   
+	$numcap=$row['mue_capacidad'.$tipoit];   
 	//$fecvis=$fechavis." ".$row['horarec'];
 	$tipo=$row['re_descripcionesp'];   
-	$numunid=$row['mue_numunidadesFQ'];
+	$numunid=$row['mue_numunidades'.$tipoit];
 	$fechamue=$row['mue_fechahora'];
 	$idserv=$row['ide_claveservicio'];
-	$fecmue=cambiaf_a_normal($fechamue)." ". $row['horamues'];
+	$fecmue=cambiaf_a_normal($fechamue);
 	//$fecmue=$fechamue." ".$row['horamues'];
 
 // busca datos del punto de venta
@@ -206,7 +212,7 @@ $pdf->MultiCell(15,4,'ANALISIS', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
 	$pdf->SetY(61);
     $pdf->SetX(33);
-	$pdf->Cell(20,4,'FISICOQUIMICO', 0, 0 ,'C', FALSE);
+	$pdf->Cell(20,4,$titulo, 0, 0 ,'C', FALSE);
 
 $pdf->SetFont('Arial','',6);
 $pdf->SetY(54);
@@ -282,7 +288,7 @@ $pdf->SetX(16);
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(0,4,'DATOS DEL PUNTO DE VENTA', 0, 0 ,'C', TRUE);
 
-
+$ancholin=6;
 // siguiente linea
 $pdf->SetY(77);
 $pdf->SetX(16);
@@ -291,7 +297,7 @@ $pdf->MultiCell(65,4,'NOMBRE', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
 	$pdf->SetY(84);
     $pdf->SetX(25);
-	$pdf->Cell(50,4,$nomuneg, 0, 0 ,'C', FALSE);
+    $pdf->MultiCell(50,4,$nomuneg, 0, 'C', FALSE);
 
 $pdf->SetY(77);
 $pdf->SetX(48);
@@ -300,7 +306,7 @@ $pdf->MultiCell(85,4,'ID CLIENTE', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
 	$pdf->SetY(84);
     $pdf->SetX(65);
-	$pdf->Cell(48,4,$idclien, 0, 0 ,'C', FALSE);
+    $pdf->Cell(48,4,$idclien, 0, 0 ,'C', FALSE);
 
 $pdf->SetY(77);
 $pdf->SetX(97);
@@ -309,7 +315,7 @@ $pdf->MultiCell(25,4,'REPORTE', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
 	$pdf->SetY(84);
     $pdf->SetX(85);
-	$pdf->Cell(50,4,$numrep, 0, 0 ,'C', FALSE);
+    $pdf->Cell(50,4,$numrep, 0, 0 ,'C', FALSE);
 
 $pdf->SetY(75);
 $pdf->SetX(120);
@@ -317,8 +323,8 @@ $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(40,4,'RESPONSABLE EN EL PUNTO DE VENTA', 0, '' , FALSE);
 $pdf->SetFont('Arial','B',7);
 	$pdf->SetY(84);
-    $pdf->SetX(100);
-	$pdf->Cell(75,4,$respvis, 0, 0 ,'C', FALSE);
+    $pdf->SetX(120);
+    $pdf->MultiCell(40,4,$respvis, 0, '', FALSE);
 
 $pdf->SetY(77);
 $pdf->SetX(170);
@@ -329,51 +335,51 @@ $pdf->SetFont('Arial','B',7);
     $pdf->SetX(165);
 	$pdf->Cell(35,4,$fecvis, 0, 0 ,'C', FALSE);
 
-$pdf->SetY(90);
+$pdf->SetY(94);
 $pdf->SetX(16);
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(0,4,'DATOS DEL LABORATORIO', 0, 0 ,'C', TRUE);
 
 //$nomrec,, 
-$pdf->SetY(97);
+$pdf->SetY(101);
 $pdf->SetX(16);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(65,4,'NOMBRE', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(104);
+	$pdf->SetY(108);
     $pdf->SetX(16);
 	$pdf->Cell(65,4,$nomlab, 0, 0 ,'C', FALSE);
 
-$pdf->SetY(97);
+$pdf->SetY(101);
 $pdf->SetX(80);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(65,4,'RECIBIO', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(104);
+	$pdf->SetY(108);
     $pdf->SetX(90);
 	$pdf->Cell(45,4,$nomrec, 0, 0 ,'C', FALSE);
 
-$pdf->SetY(97);
+$pdf->SetY(101);
 $pdf->SetX(143);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(65,4,'FECHA Y HORA DE RECEPCION', 0, 'C' , FALSE);
 $pdf->SetFont('Arial','B',7);
-	$pdf->SetY(104);
+	$pdf->SetY(108);
     $pdf->SetX(150);
 	$pdf->Cell(45,4,$frec, 0, 0 ,'C', FALSE);
 
-$pdf->SetY(110);
+$pdf->SetY(114);
 $pdf->SetX(16);
 $pdf->SetFont('Arial','',7);
 $pdf->Cell(0,4,'RESULTADOS', 0, 0 ,'C', TRUE);
 
-$resul = DatosMuestra::vistaResultados($idserv, 1, 'FQ', $tipomue, "aa_pruebaanalisis");
+$resul = DatosMuestra::vistaResultados($idserv, 1, $tipoit, $tipomue, "aa_pruebaanalisis");
 
 	$i=1; 
-	$Y=120;
-	$YC=119;
-	$Y1=120;
-	$YC1=119;
+	$Y=124;
+	$YC=123;
+	$Y1=124;
+	$YC1=123;
 	
 	foreach ($resul as $key => $rowd) {
 		# code...
@@ -400,7 +406,7 @@ $resul = DatosMuestra::vistaResultados($idserv, 1, 'FQ', $tipomue, "aa_pruebaana
 	      $pdf->SetY($Y);
 		  $pdf->SetX(57);
 		  $pdf->SetFont('Arial','B',7);
-		  $pdf->MultiCell(35,4,$rowd["red_estandar"], 0, '' , FALSE);
+		  $pdf->MultiCell(35,4,utf8_decode($rowd["red_estandar"]), 0, '' , FALSE);
 
 
 
@@ -427,7 +433,7 @@ $resul = DatosMuestra::vistaResultados($idserv, 1, 'FQ', $tipomue, "aa_pruebaana
 	      $pdf->SetY($Y1);
 		  $pdf->SetX(151);
 		  $pdf->SetFont('Arial','B',7);
-		  $pdf->MultiCell(35,4,$rowd["red_estandar"], 0, '' , FALSE);
+		  $pdf->MultiCell(35,4,utf8_decode($rowd["red_estandar"]), 0, '' , FALSE);
 			$Y1+=12;
 			$YC1+=12;
 	   }
@@ -436,42 +442,42 @@ $resul = DatosMuestra::vistaResultados($idserv, 1, 'FQ', $tipomue, "aa_pruebaana
 
 
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(16);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(10,4,'No.', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(33);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(15,4,'PRUEBA', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(67);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(30,4,'ESTANDAR', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(94);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(30,4,'RESULTADO', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(110);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(15,4,'No.', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(128);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(15,4,'PRUEBA', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(160);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(30,4,'ESTANDAR', 0, '' , FALSE);
 
-$pdf->SetY(114);
+$pdf->SetY(118);
 $pdf->SetX(187);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(30,4,'RESULTADO', 0, '' , FALSE);
@@ -539,7 +545,10 @@ $pdf->SetY(238);
 $pdf->SetX(163);
 $pdf->SetFont('Arial','',6);
 $pdf->MultiCell(45,4,'FECHA Y HORA DE CAPTURA', 0, '' , FALSE);
-
-$resul = DatosMuestra::actualizaestatusrepFQ(2, $ntoma, "aa_muestras");
+if($tipoit=="FQ")
+	$resul = DatosMuestra::actualizaestatusrepFQ(2, $ntoma, "aa_muestras");
+else if($tipoit=="MB")
+	$resul = DatosMuestra::actualizaestatusrepMB(2, $ntoma, "aa_muestras");
+	
 $pdf->Output();
 ?>

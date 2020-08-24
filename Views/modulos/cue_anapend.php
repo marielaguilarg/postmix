@@ -3,6 +3,8 @@ function imprimirFQ(nsec){
 //'var mform = docume'nt.form1;
 //var nsec=document.getElementById(numsecc).value;
 	 window.open("index2.php?action=repFQPDF&ntoma="+nsec);
+	 setTimeout( window.location.href="index.php?action=anapend", 5000); 	 
+	
 	 //window.open('index2.php&ntoma=6579');
 	 //window.moveTo(0, 0);
 }
@@ -11,6 +13,7 @@ function imprimirMB(nsec){
 //var mform = document.form1;
 //   alert (mform.numsecc.value);
 	 window.open("index2.php?action=repMBPDF&ntoma="+nsec);
+	 setTimeout(window.location.href="index.php?action=anapend",5000);
 }
 
 function detalle(tipo,nsec){

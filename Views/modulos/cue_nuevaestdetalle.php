@@ -149,7 +149,25 @@ else if(op=="N")
                   <label>VALOR MAXIMO</label>
                   <input name="valmax" id="valmax" class="form-control" >
                 </div>
-
+                 <div class="form-group col-md-12">
+                   <label >ALERTA MODERADA</label>
+                   </div>
+  <div class="form-group col-md-6 tiponum">
+                   <label >SIGNO UNO</label>
+                    <input name="sigunomod" id="sigunomod" class="form-control" >
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                  <label>VALOR MINIMO</label>
+                  <input name="valminmod" id="valminmod" class="form-control" >
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                   <label >SIGNO DOS</label>
+                    <input name="sigdosmod" id="sigdosmod" class="form-control" >
+                </div>
+                <div class="form-group col-md-6 tiponum">
+                  <label>VALOR MAXIMO</label>
+                  <input name="valmaxmod" id="valmaxmod" class="form-control" >
+                </div>
 
                 <div class="form-group col-md-6">
                    <label >INCLUYE EN ARCHIVO</label>
@@ -217,10 +235,12 @@ else if(op=="N")
 
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
+                        <div class="pull-right">
+                    <button type="submit" class="btn btn-info">GUARDAR</button>
                   <?php
                  $registro = New EstandarController();
                   $registro->botonRegresaEstDetController() ?>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
+                 </div>
                   <?php
                  $registro = New EstandarController();     
                  $registro-> registraestdetController();  

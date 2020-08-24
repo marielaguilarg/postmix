@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="views/bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link href="views/dist/css/dataTables.bootstrap.min.css" rel="stylesheet">
 	<link href="views/dist/css/responsive.bootstrap.min.css" rel="stylesheet">
 
@@ -6,7 +5,7 @@
 	<script type="text/javascript" language="javascript" src="views/dist/js/dataTables.bootstrap.min.js"></script>
 	<script type="text/javascript" language="javascript" src="views/dist/js/dataTables.responsive.min.js"></script>
 	<script type="text/javascript" language="javascript" src="views/dist/js/responsive.bootstrap.min.js"></script>
-<script src="views/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
 <script language="JavaScript" type="text/JavaScript">
 
 $(document).ready(function() {
@@ -40,11 +39,12 @@ language: {
 
 <?php
 include 'Controllers/certificacionController.php';
+require "Models/crud_recepcionmuestra.php";
 $certificacionController=new CertificacionController();
 $certificacionController->vistaEstatusSolicitud();
 ?>
  <section class="content-header">
-      <h1>CERTIFICACION AGUA POSTMIX NUEVO PUNTO DE VENTA</h1>
+      <h1><?php echo $certificacionController->titulo?></h1>
      
     </section>
 

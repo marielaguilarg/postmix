@@ -30,8 +30,61 @@ if(direccion!="")
 
 
 
+$(document).ready(function() {
 
-//-->
+$('#example').DataTable( {
+
+language: {
+
+    processing:     "Procesando...",
+
+    search:         "Buscar:",
+
+    lengthMenu:    "Mostrar _MENU_ registros",
+
+    info:           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+
+    infoEmpty:      "Mostrando registros del 0 al 0 de un total de 0 registros",
+
+    infoFiltered:   "(filtrado de un total de _MAX_ registros)",
+
+    infoPostFix:    "",
+
+    loadingRecords: "Cargando...",
+
+    zeroRecords:    "No se encontraron resultados",
+
+    emptyTable:     "Ningún dato disponible en esta tabla",
+
+    paginate: {
+
+        first:      "Primero",
+
+        previous:   "Anterior",
+
+        next:       "Siguiente",
+
+        last:       "Último"
+
+    },
+
+    aria: {
+
+        sortAscending:  ": Activar para ordenar la columna de manera ascendente",
+
+        sortDescending: ": Activar para ordenar la columna de manera descendente"
+
+    }
+
+}
+
+} );
+
+} );
+
+
+
+
 
 </script>
 
@@ -87,25 +140,10 @@ $resumenRes->encabezaConsulta();
             <div class="tab-pane" id="tab_2">
                   <div class="box">
           
-            <div class="box-header">
-<form name="formfiltro" action="index.php?action=listaconsultaRep" method="post" > 
-  
- 
-              <h3 class="box-title"><?php echo T_("BUSCAR PUNTO DE VENTA")?></h3>
-
-             <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 250px;">
-                  <input type="text" name="fil_ptoventa" class="form-control pull-right" placeholder="Buscar">
-
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
-              </div></form>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover table-striped"">
+         
+            <div class="box-body ">
+              <table  class="table table-striped table-bordered dt-responsive" id="example">
+            <thead>
             <tr>
 
                 <th><?php  echo T_("REPORTE NO.")?></th>
@@ -122,7 +160,7 @@ $resumenRes->encabezaConsulta();
 
                 
             </tr>
-
+</thead>
     
 
         <tbody>
@@ -144,7 +182,7 @@ $resumenRes->encabezaConsulta();
                 <td><a href="<?php echo $direccion?>"> <?php echo $reporte["NumReporte"]?></a></td>
                 <td><a href="<?php echo $direccion?>"> <?php echo $reporte["PuntoVenta"]?></a></td>
                 <td><a href="<?php echo $direccion?>"> <?php echo $mes?></a></td>
-                <td><a href="<?php echo $direccion?>"> <?php echo $reporte["une_dir_estado"]?></a></td>
+                <td><a href="<?php echo $direccion?>"> <?php echo $reporte["est_nombre"]?></a></td>
                 <td><a href="<?php echo $direccion?>"> <?php echo $reporte["une_dir_municipio"]?></a></td>
                 <td><a href="<?php echo $direccion?>"> <?php echo $reporte["direccion"];?></a></td>
 
@@ -163,11 +201,7 @@ $resumenRes->encabezaConsulta();
             </div>
 
             <!-- /.box-body -->
-   <div class="box-footer clearfix">
-                <ul class="pagination pagination-sm no-margin pull-right">
-                 <?php if($listaRepController->getPages()!=null) echo $listaRepController->getPages()->display_pages() ?>
-                </ul>
-            </div>
+ 
 
 
           </div>

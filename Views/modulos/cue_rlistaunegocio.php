@@ -1,3 +1,5 @@
+<script type="text/javascript" src="js/stacktable.js/stacktable.js"></script>
+<link href="js/stacktable.js/stacktable.css" rel="stylesheet">
 <script type="text/javascript">
 <!--
 function nuevoAjax()
@@ -58,6 +60,9 @@ function buscaCiudades(estado, referuni)
 	
 	//}
 }
+$(document).ready(function() {
+	$("#tabla1").stacktable();
+	});
 //-->
 </script>
 <section class="content-header">
@@ -106,7 +111,7 @@ $ingreso->iniciarFiltros();
   </div>
   <div class="col-sm-3">
                  <span class="input-group-btn">
-                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>BUSCAR</button>
+                      <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i>Buscar</button>
                     </span>
                 </div>
          
@@ -122,11 +127,11 @@ $ingreso->iniciarFiltros();
            <div class="col-md-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">RESULTADO DE BUSQUEDA</h3>
+              <h3 class="box-title">RESULTADO DE LA BUSQUEDA</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
-              <table class="table">
+              <table class="table stacktable table-striped" id="tabla1">
                 <tr>
                   <th style="width: 20%">ESTADO </th>
                   <th style="width: 24%">MUNICIPIO</th>
@@ -140,24 +145,8 @@ $ingreso -> vistarunegocioController();
 
 ?>
 
-               </table>
-            </div>
-           
-          <!-- /.box -->
-        </div>
-        </div>
-
 
 	  <!----- Finaliza contenido ----->
     </section>
     <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
 
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">&nbsp; &nbsp; &nbsp;</div>
-    <!-- Default to the left --><strong>Copyright &copy; 2018 Muesmerc S.A. de C.V.</strong> Todos los derechos reservados. </footer>
-
-  <!-- Control Sidebar -->

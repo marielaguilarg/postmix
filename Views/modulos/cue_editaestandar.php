@@ -18,11 +18,14 @@
               ?>
                  
                 <div class="box-footer col-md-12">
+                <div class="pull-right">
+                 <button type="submit" class="btn btn-info">GUARDAR</button>
                  <?php     
                  $registro = New EstandarController();
               $registro-> botonRegresaEstController();
                  ?>
-                <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
+               
+              </div>
               </div>
               </form>
               </div>

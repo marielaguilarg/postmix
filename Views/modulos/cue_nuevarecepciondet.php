@@ -157,7 +157,7 @@ $nueva->vistaNuevo();
         <input type="hidden" name="numrecibo" id="numrecibo" maxlength="5" size="10" value="<?php echo $nueva->getNumrec()?>" />
     <input type="hidden" name="cat" id="cat" maxlength="5" size="10" value="<?php echo $nueva->getNumrec()?>" />
    
-      <input type="text" name="registros" id="registros" maxlength="5" size="10" value="1" />
+      <input type="text" name="registros" id="registros" maxlength="5" size="10" value="2" />
 	  <button  name="generar" type="button"  onClick="CrearTabla();" class="btn btn-info">ACEPTAR</button>
   </div>
  

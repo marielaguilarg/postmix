@@ -22,6 +22,8 @@ $estandarController->vistaEstandarDetalle();
 
       <!----- Inicia contenido ----->
              <?php 
+           
+             $num=1;
               //despliego los renglones
                 foreach($estandarController->getListaEstandar() as $numren=>$renglon){
                     ?>
@@ -29,7 +31,7 @@ $estandarController->vistaEstandarDetalle();
         	 <div class="col-md-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><?php echo  T_("RESULTADO") ." ". $numren;?></h3>
+              <h3 class="box-title"><?php echo  T_("RESULTADO") ." ". $num++;?></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">

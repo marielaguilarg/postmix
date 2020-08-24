@@ -49,7 +49,8 @@
       <div class="row">
         <div class="col-xs-8">
           <div class="checkbox icheck">
- <div class="g-recaptcha" data-sitekey="6Le3cF4UAAAAAFg-RgLwykPoI3ze4DmVEW9ncGr_"></div>
+<!--           <div class="g-recaptcha" data-sitekey="6LdZapsUAAAAAPcjkPWs8SrsV1s_EY8S73ut4jIg"></div> -->
+          
     
             <label>
               <input type="checkbox"> Recordarme
@@ -74,9 +75,6 @@
 
     
     <!-- /.social-auth-links -->
-
-    <a href="#">Olvide mi Contrase&ntilde;a</a><br>
-    
 
   </div>
   <!-- /.login-box-body -->

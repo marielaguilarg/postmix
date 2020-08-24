@@ -28,7 +28,7 @@ $ingreso -> vistanomRservController();
                 </div>
                 <!-- /.col -->
             </div>
-              </div>
+             
                <div class="row" >
                 <ul class="nav nav-stacked" style="border-top: solid #f4f4f4">
                   <li><a href="#"><strong> REPORTES</strong></a></li>
@@ -46,7 +46,7 @@ $ingreso -> vistanomRservController();
                    <!-- /. Fin Número de reportes -->
             </div>
               </div>
-               <div class="row" >
+            
                  <ul class="nav nav-stacked" style="border-top: solid #f4f4f4">                  
                  </ul>
                 
@@ -72,14 +72,14 @@ $ingreso -> vistanomRservController();
               ?>  
   
 
-                  </div>
+                  
                   <!-- /.description-block -->
                 </div>
                 <!-- /.col -->
             </div>
               </div>
               
-            </div>
+          
             <!-- /.box-body -->
           </div>
           <!-- /.box -->

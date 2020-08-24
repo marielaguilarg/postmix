@@ -1,3 +1,17 @@
+<link href="views/dist/css/dataTables.bootstrap.min.css" rel="stylesheet">
+
+	<link href="views/dist/css/responsive.bootstrap.min.css" rel="stylesheet">
+
+
+
+	<script type="text/javascript" language="javascript" src="views/dist/js/jquery.dataTables.min.js"></script>
+
+	<script type="text/javascript" language="javascript" src="views/dist/js/dataTables.bootstrap.min.js"></script>
+
+	<script type="text/javascript" language="javascript" src="views/dist/js/dataTables.responsive.min.js"></script>
+
+	<script type="text/javascript" language="javascript" src="views/dist/js/responsive.bootstrap.min.js"></script>
+
 <script language="JavaScript" type="text/JavaScript"> 
 function imprimirFQ(nsec){
 //'var mform = docume'nt.form1;
@@ -16,6 +30,59 @@ function imprimirMB(nsec){
 function imprimirPDF(){
 	 window.open('MEZprincipal.php?op=pdfFQ');
 }
+
+$(document).ready(function() {
+
+$('#tabla1').DataTable( {
+
+language: {
+
+    processing:     "Procesando...",
+
+    search:         "BUSCAR",
+
+    lengthMenu:    "Mostrar _MENU_ registros",
+
+    info:           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+
+    infoEmpty:      "Mostrando registros del 0 al 0 de un total de 0 registros",
+
+    infoFiltered:   "(filtrado de un total de _MAX_ registros)",
+
+    infoPostFix:    "",
+
+    loadingRecords: "Cargando...",
+
+    zeroRecords:    "No se encontraron resultados",
+
+    emptyTable:     "Ningún dato disponible en esta tabla",
+
+    paginate: {
+
+        first:      "Primero",
+
+        previous:   "Anterior",
+
+        next:       "Siguiente",
+
+        last:       "Último"
+
+    },
+
+    aria: {
+
+        sortAscending:  ": Activar para ordenar la columna de manera ascendente",
+
+        sortDescending: ": Activar para ordenar la columna de manera descendente"
+
+    }
+
+}
+
+} );
+
+} );
+
 
 </script>
 
@@ -41,26 +108,24 @@ $muestrasController->listaMuestrasRealizadas()?>
   <div class="box">
           
             <div class="box-header">
-<form name="formfiltro" action="#" method="post" > 
+<!-- <form name="formfiltro" action="#" method="post" >  -->
   
  
-              <h3 class="box-title"><?php echo "BUSCAR PUNTO DE VENTA"?></h3>
+<!--              <div class="box-tools"> -->
+          
+<!--                   <input type="text" name="fil_ptoventa" class="form-control pull-right" placeholder="Buscar"> -->
 
-             <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 250px;">
-                  <input type="text" name="fil_ptoventa" class="form-control pull-right" placeholder="Buscar">
-
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
-              </div></form>
+<!--                   <div class="input-group-btn"> -->
+<!--                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button> -->
+<!--                   </div> -->
+<!--                 </div> -->
+<!--               </div></form> -->
             </div>
             <!-- /.box-header -->
             
             
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover table-striped">
+            <div class="box-body">
+              <table id="tabla1" class="table table-striped table-bordered dt-responsive" style="width:100%">
               <thead>
             <tr>
 
@@ -69,25 +134,19 @@ $muestrasController->listaMuestrasRealizadas()?>
               
                 <th>SERVICIO</th>
 
-                <th>ID CLIENTE</th>
+                <th>NUD</th>
 
                 <th>PUNTO DE VENTA</th>
                 <th>LABORATORIO</th>
 
-                <th colspan="2">FISICOQUIMICO</th>
-                <th colspan="2">MICROBIOLOGICO</th>
+                <th>FISICOQUIMICO FECHA</th>
+                    <th>FISICOQUIMICO ANALISTA</th>
+                <th>MICROBIOLOGICO FECHA</th>
+                 <th>MICROBIOLOGICO ANALISTA</th>
 
                 
             </tr>
-			<tr><th></th>
-			<th></th>
-			<th></th>
-			<th></th>
-			<th></th>
-			<th>FECHA</th>
-			<th>ANALISTA</th>
-			<th>FECHA</th>
-			<th>ANALISTA</th></tr>
+			
     </thead>
 
         <tbody>
@@ -105,7 +164,7 @@ $muestrasController->listaMuestrasRealizadas()?>
             <tr>
 <td ><?php echo $reporte["mue_idmuestra"]?></td>
 <td ><?php echo $reporte["ser_descripcionesp"]?></td>
-<td ><?php echo $reporte["une_idpepsi"]?></td>
+<td ><?php echo $reporte["une_num_unico_distintivo"]?></td>
 	
                 <td> <?php echo $reporte["une_descripcion"]?></td>
                 <td ><?php echo $reporte["cad_descripcionesp"]?></td>

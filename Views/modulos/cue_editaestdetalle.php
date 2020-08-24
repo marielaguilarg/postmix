@@ -30,7 +30,7 @@
                   <?php
                  $registro = New EstandarController();
                   $registro->botonRegresaEdEstDetController() ?>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>  
+                  <button type="submit" class="btn btn-info pull-right">Guardar</button>  
                   <?php
                  $registro = New EstandarController();     
                  $registro-> actualizaEstandarDetalleController();  
@@ -81,3 +81,54 @@ function validar(form) {
 
 
   </div>
+    <script src="js/jquery.cascading-drop-down.js"></script>
+
+    <script>
+
+    $('.cascada').ssdCascadingDropDown({
+
+        nonFinalCallback: function(trigger, props, data, self) {
+
+
+
+            trigger.closest('form')
+
+                    .find('input[type="submit"]')
+
+                    .attr('disabled', true);
+
+
+
+        },
+
+        finalCallback: function(trigger, props, data) {
+
+
+
+            if (props.isValueEmpty()) {
+
+                trigger.closest('form')
+
+                        .find('input[type="submit"]')
+
+                        .attr('disabled', true);
+
+            } else {
+
+                trigger.closest('form')
+
+                        .find('input[type="submit"]')
+
+                        .attr('disabled', false);
+
+            }
+
+
+
+        }
+
+    });
+
+</script>
+  
+  

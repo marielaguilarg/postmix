@@ -40,10 +40,12 @@
                   </select>
                 </div>
                 <div class="box-footer col-md-12">
-                <a  class="btn btn-default pull-right" style="margin-left: 10px" href="index.php?action=listaservicio"> Cancelar </a>      
-                 
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
-                
+                 <div class="pull-right"> 
+                                  
+                <button type="submit" class="btn btn-info">Guardar</button>
+                <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=listaservicio"> Cancelar </a>      
+
+                </div>
               </div>
               </form>
               </div>

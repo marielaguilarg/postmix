@@ -23,8 +23,10 @@ $registro-> actualizarClienteController();
 
                 </div>
                 <div class="box-footer" style="padding-top: 50px; border-bottom: hidden">
-                <button type="submit" class="btn btn-default pull-right" style="margin-left: 10px">Cancelar</button>
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                <div class="pull-right">
+                  <button type="submit" class="btn btn-info ">Guardar</button>
+                <a type="submit" class="btn btn-default" style="margin-left: 10px" href="index.php?action=listacliente" >Cancelar</a>
+              </div>
               </div>
                </form>
               </div>

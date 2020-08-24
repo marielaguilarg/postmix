@@ -32,7 +32,8 @@
                     <input type="hidden" class="form-control" name="ncuenta" id="ncuenta" value="<?php echo $unegocioContoller->getCuenta();?>" >
               
                   <input type="hidden" class="form-control" name="idpv" id="idpv" value="<?php echo $id?>">
-               
+               <input name="numpun" type="hidden" value="<?= $unegocioContoller->getNumpunto() ?>" size="80">
+                <input name="fecest" type="hidden" id="fecest" value="<?= $unegocioController->fecest ?>" >
                   <input type="text" class="form-control" name="desuneg" id="desuneg" value="<?php echo $unegocioContoller->getDesuneg(); ?>" required>
                   
                 </div>
@@ -221,8 +222,10 @@
                 </div>
                  <!-- Pie de formulario -->
                  <div class="box-footer col-md-12">
-                  <button  class="btn btn-default pull-right" style="margin-left: 10px"><a href="index.php?action=listaunegocio&idc=<?php echo $idc; ?>"> CANCELAR </a></button>
-                  <button type="submit" class="btn btn-info pull-right">GUARDAR</button>
+                 <div class="pull-right">
+                    <button type="submit" class="btn btn-info">GUARDAR</button>
+                  <a  class="btn btn-default" style="margin-left: 10px" href="index.php?action=listaunegocio&idc=<?php echo $idc; ?>"> CANCELAR </a>
+               </div>
               </div>
               </form>
               </div>

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="views/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<script src="views/dist/js/jquery-3.0.0.min.js"></script>
 
 	<link href="views/dist/css/dataTables.bootstrap.min.css" rel="stylesheet">
 
@@ -14,7 +14,6 @@
 
 	<script type="text/javascript" language="javascript" src="views/dist/js/responsive.bootstrap.min.js"></script>
 
-<script src="views/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <script language="JavaScript" type="text/JavaScript">
 
@@ -23,8 +22,10 @@
 $(document).ready(function() {
 
 $('#example').DataTable( {
-
+	  "order": [[ 1, "desc" ]],
+	     "lengthMenu": [[25, 50, -1], [25, 50, "Todos"]],
 language: {
+	
 
     processing:     "Procesando...",
 
@@ -74,7 +75,7 @@ language: {
 
 
 
-function imprimirCER(nsec){
+function imprimirCER(nsec,serv){
 
 //'var mform = document.form1;
 
@@ -82,13 +83,15 @@ function imprimirCER(nsec){
 
 	// window.open('MEZprincipal.php?op=anaFQ&admin=imp&ntoma='+mform.numsecc.value);
 
-	 window.open('imprimirReporte.php?admin=impcert&nrep='+nsec);
-
+	 window.open('imprimirReporte.php?admin=impcert&nrep='+nsec+'&sv='+serv);
+	//refresco para actualizar estatus
+	 setTimeout( window.location.href="index.php?action=listacertificados&sv="+serv, 5000); 	 
+		
 }
 
 
 
-function imprimirANA(nsec){
+function imprimirANA(nsec,serv){
 
 //'var mform = document.form1;
 
@@ -96,7 +99,10 @@ function imprimirANA(nsec){
 
 	// window.open('MEZprincipal.php?op=anaFQ&admin=imp&ntoma='+mform.numsecc.value);
 
-	 window.open('imprimirReporte.php?admin=impanag&nrep='+nsec);
+	 window.open('imprimirReporte.php?admin=impanag&nrep='+nsec+"&sv="+serv);
+	 //refresco para actualizar estatus
+	 setTimeout( window.location.href="index.php?action=listacertificados&sv="+serv, 5000); 	 
+		
 
 }
 
@@ -170,17 +176,17 @@ $certificacionController->vistaListaCertificados();
 
             <div class="box-body">
 
-             <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+             <table id="example" class="table table-striped table-bordered dt-responsive" style="width:100%">
 
         <thead>
 
             <tr>
-
+                <th>Punto de venta</th>
                 <th>No. solicitud</th>
 
                 <th>ID cuenta</th>
 
-                <th>Punto de venta</th>
+              
 
                 <th>Inicio proceso</th>
 
@@ -213,20 +219,18 @@ $certificacionController->vistaListaCertificados();
             ?>
 
             <tr>
-
+                <td><?php echo $solicitud["Punto"]?></td>
                 <td><?php echo $solicitud["Numcert"]?></td>
 
                 <td><?php echo $solicitud["idcuen"]?></td>
-
-                <td><?php echo $solicitud["Punto"]?></td>
-
+          
                 <td><?php echo $solicitud["fechaini"]?></td>
 
                 <td><?php echo $solicitud["fechater"];?></td>
 
                 <td><?php echo $solicitud["diastrans"]?></td>
 
-                <td><?php echo $solicitud["Nrep"]?></td>
+                <td><?php echo $solicitud["Nrep"]." ".$solicitud["estatus"]?></td>
 
                 <td><?php echo $solicitud["resul"]?></td>
 

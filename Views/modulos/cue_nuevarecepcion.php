@@ -50,9 +50,11 @@ $accion="insertar";}
     
   </div>
   <div class="box-footer col-md-12">
-       <a  class="btn btn-default pull-right" style="margin-left: 10px" type="button" href="index.php?action=listarecepcion" > Cancelar </a>
+  <div class="pull-right">
+    <button type="submit" class="btn btn-info">GUARDAR</button>
+       <a  class="btn btn-default" style="margin-left: 10px" type="button" href="index.php?action=listarecepcion" > CANCELAR </a>
+                </div>
                 
-                  <button type="submit" class="btn btn-info pull-right">Guardar</button>
               </div>
               
 </form></div>

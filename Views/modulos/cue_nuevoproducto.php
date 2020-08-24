@@ -15,8 +15,7 @@
               $registro = New ProductoController();
               $registro-> nuevoProductoController();
              // $registro-> registrarEstandarController();
-              ?>
-
+              ?></div>
                 <div class="form-group col-md-12">
                  <label >SELECCION DE DATO</label>
                
@@ -30,19 +29,19 @@
                 </div>
                 <div class="form-group col-md-12">
                  <label >LUGAR EN ARCHIVO</label>
-               <div class="col-sm-10">
+             
                     <input name="lugarsyd" id="lugarsyd" class="form-control" >
-                </div>
-
+                
+</div>
                 <div class="box-footer col-md-12">
-                      
+                <div class="pull-right">         
+                <button type="submit" class="btn btn-info">Guardar</button>
                       <?php
 
               $registro = New ProductoController();
               $registro-> botonRegresaProductoController();
               ?>
-                 
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+              </div>
               </div>
               </form>
 

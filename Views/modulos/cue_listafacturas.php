@@ -14,6 +14,7 @@
 
 $(document).ready(function() {
 $('#example').DataTable( {
+	   paging:   false,
 language: {
     processing:     "Procesando...",
     search:         "Buscar:",
@@ -42,7 +43,32 @@ language: {
 include 'Controllers/facturasController.php';
 $facturasController=new FacturasController();
 $facturasController->vistaListaFacturas();
-?>  <!-- Main content -->   <section class="content container-fluid">     <!----- Inicia contenido ----->     <?php echo $facturasController->getMensaje()?>      <div class="row">    	 <div class="col-md-12">     <div class="box">    <div class="box-header">    <h3 class="box-title">REGISTRO FACTURAS</h3>   </div>   <!-- /.box-header -->   <?php $facturasController->getMensaje()?>   <div class="box-body">    <form id="form1" name="form1" method="post" action="index.php?action=listafacturas&admin=crear">  <input name="mini" type="hidden" value="<?php echo $facturasController->getMesini()?>">                   <input name="mfin" type="hidden" value="<?php echo $facturasController->getMfin()?>">                   <input name="mesfin" type="hidden" value="<?php  echo $facturasController->getMesfin()?>">                   <input name="cclien" type="hidden" value="<?php echo $facturasController->getCclien()?>">                   <input name="cserv" type="hidden" value="<?php echo $facturasController->getCserv()?>">         <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%"> <thead>  <tr>     <th>NO. </th>                <th>NO. REPORTE</th>                <th>PUNTO DE VENTA</th>                <th>MES ASIGNACION</th>                 <th>NO. MUESTRA</th>                  <th>EMBOTELLADORA</th>                   <th>NO.FACTURA</th>                       <th>SIN COBRO</th>                   <th>FINALIZADO </th>                     </tr>
+?>  <!-- Main content -->   <section class="content container-fluid">   
+  <!----- Inicia contenido ----->     <?php echo $facturasController->getMensaje()?>    
+    <div class="row">    	 <div class="col-md-12">     <div class="box">  
+      <div class="box-header"> 
+         <h3 class="box-title">REGISTRO FACTURAS</h3>   </div> 
+           <!-- /.box-header -->   <?php $facturasController->getMensaje()?> 
+             <div class="box-body">  
+             <form id="form1" name="form1" method="post" action="index.php?action=listafacturas&admin=crear"> 
+              <input name="mini" type="hidden" value="<?php echo $facturasController->getMesini()?>">    
+              <input name="mfin" type="hidden" value="<?php echo $facturasController->getMfin()?>"> 
+              <input name="mesfin" type="hidden" value="<?php  echo $facturasController->getMesfin()?>">  
+              <input name="cclien" type="hidden" value="<?php echo $facturasController->getCclien()?>"> 
+              <input name="cserv" type="hidden" value="<?php echo $facturasController->getCserv()?>">
+              
+              <table id="example" class="table table-striped dt-responsive nowrap" style="width:100%"> 
+              <thead>
+                <tr><th>NO. </th> 
+                    <th>NO. REPORTE</th>           
+                    <th>PUNTO DE VENTA</th>         
+                    <th>MES ASIGNACION</th>      
+                    <th>NO. MUESTRA</th>  
+                    <th>EMBOTELLADORA</th>  
+                    <th>NO.FACTURA</th>  
+                    <th>SIN COBRO</th>  
+                    <th>FINALIZADO </th> 
+                    </tr>
         </thead>
         <tbody>
         
@@ -55,7 +81,16 @@ $facturasController->vistaListaFacturas();
                 <td><?php echo $factura["nrep"]?></td>
                 <td><?php echo $factura["punvta"]?></td>
                 <td><?php echo $factura["mesas"]?></td>
-                <td><?php echo $factura["nmue"];?></td>      <td><?php echo $factura["idemb"]?></td> <td><?php echo $factura["numfac"]?></td>
-                <td><?php echo $factura["sincob"]?></td> <td><?php echo $factura["final"]?></td>         </tr>      <?php } //fin foreach?>        </tbody>    </table>    <div><button  type="submit" class="btn btn-info pull-right">Guardar</button></div></form>
+                <td><?php echo $factura["nmue"];?></td>    
+                  <td><?php echo $factura["idemb"]?></td> 
+                  <td><?php echo $factura["numfac"]?></td>
+                <td><?php echo $factura["sincob"]?></td>
+                 <td><?php echo $factura["final"]?></td>     
+                     </tr>      <?php } //fin foreach?>     
+                        </tbody>  
+                          </table> 
+                             <div>
+                          <button  type="submit" class="btn btn-info pull-right">Guardar</button>
+                          </div></form>
             </div>            <!-- /.box-body -->      </div>          <!-- /.box -->        </div>        </div>	  <!----- Finaliza contenido ----->
     </section>

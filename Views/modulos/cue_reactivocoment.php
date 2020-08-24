@@ -1,20 +1,25 @@
+ <script src="js/eliminar.js"></script>
 <section class="content-header">
-      <h1>COMENTARIOS PONDERADO <small></small></h1>
+     <div class="row" style="margin-top:-40px;" >
+   <h1 style="font-size:25px; margin-left: 15px; ">
+   COMENTARIOS PONDERADO </h1>
+   </div>
 <ol class="breadcrumb" >
-<?php
-				$ingreso = new PonderacionController();
-				$ingreso -> tituloPonderaController();
-				?>
-        
+<?php 
+$ingreso = new PonderacionController();
+$ingreso->breadcrumbComent();
+?>
         
 </ol>
-				<?php
-				$ingreso = new PonderacionController();
+</section>
+				
+          
+       
+	<section class="content container-fluid">
+	<?php
+				
 				$ingreso -> botonnuevorcoment();
 				?>
-          
-    </section>   
-	<section class="content container-fluid">
 		<div class="box">
 	 			
 	              <table class="table" table-condensed>
