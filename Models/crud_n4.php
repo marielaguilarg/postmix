@@ -81,5 +81,83 @@ class Datosncua extends Conexion{
              return $nombre;
 
         }
+        
+        function add($n4_idn3,$n4_nombre,$tabla){
+        	
+        	$stmt = Conexion::conectar()-> prepare("SELECT max(n4_id) FROM $tabla ");
+        	
+        
+        	$stmt-> execute();
+        	
+        	
+        	
+        	$res= $stmt->fetch();
+        
+        	if($res)
+        		$n4_id=$res[0]+1;
+        	else
+        		$n4_id=1;
+        		echo $n4_id;
+        	$query = "INSERT INTO $tabla  (n4_idn3, n4_id, n4_nombre)
+		VALUES (
+			:n4_idn3,
+			:n4_id,
+			:n4_nombre)";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n4_idn3' => $n4_idn3, ':n4_id' => $n4_id, ':n4_nombre' => $n4_nombre))){
+        		
+        		return (Conexion::conectar()->lastInsertId());
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Update a row in ca_nivel4
+         * @param array data
+         */
+        function update($n4_idn3,$n4_nombre,$n4_id, $tabla){
+        	
+        	$query = "UPDATE $tabla SET
+		`n4_idn3` = :n4_idn3,
+		`n4_nombre` = :n4_nombre
+	WHERE n4_id = :n4_id ";
+        	
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n4_idn3' => $n4_idn3, ':n4_nombre' => $n4_nombre, ':n4_id' => $n4_id ))){
+        		
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Delete a row in ca_nivel4
+         * @param Int n4_id
+         */
+        function del($n4_id,$tabla){
+        	
+        	$query = "DELETE FROM $tabla WHERE n4_id = :n4_id";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	if ($q->execute(array(':n4_id' => $n4_id ))){
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
 
 }

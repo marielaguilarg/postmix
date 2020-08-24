@@ -46,6 +46,24 @@ public function vistaAbiertaModeln3($servicioModel, $datosModel, $tabla){
 
 		return $stmt->fetchAll();
 	}
+	
+	
+	public function getAbiertaModeln3($servicioModel, $datosModel, $tabla){
+		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, 
+r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, 
+ra_descripcioning FROM $tabla
+ WHERE ser_claveservicio=:ids and concat(sec_numseccion,'.',r_numreactivo,'.',ra_numcomponente) =:nsec");
+		
+		
+		
+		
+		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
+		$stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_STR);
+		
+		$stmt-> execute();
+		
+		return $stmt->fetch();
+	}
 
 
 
@@ -498,7 +516,9 @@ public function vistaAbDetModel($servicioModel, $datosModel, $tabla){
 	}
 	
 	public function getReactivoAbiertoxReactivo($servicioModel, $datosModel, $tabla){
-	    $stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp, ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,'.', r_numreactivo)=:nsec");
+	    $stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion,
+ r_numreactivo, ra_numcomponente, ra_numcaracteristica, ra_numcomponente2, ra_descripcionesp,
+ ra_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,'.', r_numreactivo)=:nsec");
 	    
 	    $stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
 	    $stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
@@ -523,13 +543,13 @@ and ida_numcaracteristica1=:caract1 and ida_numcaracteristica2=:caract2 and ida_
 	    $stmt-> bindParam(":componente", $componente, PDO::PARAM_INT);
 	    $stmt-> bindParam(":caract1", $caract1, PDO::PARAM_INT);
 	    $stmt-> bindParam(":caract2", $caract2, PDO::PARAM_INT);
-	    $stmt-> bindParam(":renglon", $caract3, PDO::PARAM_INT);
-	    $stmt-> bindParam(":caract3", $renglon, PDO::PARAM_INT);
+	    $stmt-> bindParam(":caract3", $caract3, PDO::PARAM_INT);
+	    $stmt-> bindParam(":renglon", $renglon, PDO::PARAM_INT);
 	    $stmt-> bindParam(":reporte", $reporte, PDO::PARAM_INT);
 	    
 	    
 	    $stmt-> execute();
-	    
+	
 	    return $stmt->fetchAll();
 	
 	    
@@ -621,7 +641,10 @@ and ida_numcaracteristica1=:caract1 and ida_numcaracteristica2=:caract2 and ida_
 	}	
 
 	public function vistaReporteAbiertoDetalle($idser, $idsec, $idrep, $numren, $tabla){
-		$stmt=Conexion::conectar()->prepare("SELECT ida_claveservicio, ida_numreporte, ida_numseccion, ida_numreactivo, ida_numcomponente,  ida_numcaracteristica1,  ida_numcaracteristica2,  ida_numcaracteristica3,  ida_descripcionreal, ida_comentario,  ida_aceptado,  ida_numrenglon, rad_formatoreactivo, rad_clavecatalogo, rad_descripcionesp 
+		$stmt=Conexion::conectar()->prepare("SELECT ida_claveservicio, ida_numreporte, 
+ida_numseccion, ida_numreactivo, ida_numcomponente,  ida_numcaracteristica1,  
+ida_numcaracteristica2,  ida_numcaracteristica3,  ida_descripcionreal, ida_comentario,
+  ida_aceptado,  ida_numrenglon, rad_formatoreactivo, rad_clavecatalogo, rad_descripcionesp 
 	FROM  $tabla 
 	Inner Join cue_reactivosabiertosdetalle
 		          ON ida_claveservicio = ser_claveservicio 
@@ -748,7 +771,9 @@ ra_numcaracteristica,'.',ra_numcomponente2)=:nsec and ser_claveservicio= :ids");
 	
 	
 public function vistanuevoAbiertoDetalle($idser, $idsec, $tabla){
-		$stmt=Conexion::conectar()->prepare("SELECT * FROM `cue_reactivosabiertosdetalle` WHERE `cue_reactivosabiertosdetalle`.`ser_claveservicio` = :idser AND concat(sec_numseccion,'.', r_numreactivo,'.', ra_numcomponente,'.', ra_numcaracteristica,'.', ra_numcomponente2) =:idsec order by rad_numcaracteristica2");
+		$stmt=Conexion::conectar()->prepare("SELECT * FROM `cue_reactivosabiertosdetalle`
+ WHERE `cue_reactivosabiertosdetalle`.`ser_claveservicio` = :idser 
+AND concat(sec_numseccion,'.', r_numreactivo,'.', ra_numcomponente,'.', ra_numcaracteristica,'.', ra_numcomponente2) =:idsec order by rad_numcaracteristica2");
 
 
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
@@ -757,7 +782,7 @@ public function vistanuevoAbiertoDetalle($idser, $idsec, $tabla){
 			$stmt-> execute();
 			return $stmt->fetchall();
 		
-			$stmt->close();
+		
 
 	}
 	
@@ -787,12 +812,12 @@ public function vistanuevoAbiertoDetalle($idser, $idsec, $tabla){
 		$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numcom2", $datosModel["numcom2"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numcar2", $datosModel["numcar2"], PDO::PARAM_INT);
-		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_STR);
 		$stmt-> bindParam(":valacepta", $datosModel["valacepta"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
 	
 		IF($stmt-> execute()){
-
+		
 				return "success";
 			}
 			
@@ -805,4 +830,65 @@ public function vistanuevoAbiertoDetalle($idser, $idsec, $tabla){
 			$stmt->close();
     }
 
+    public function borrarRepAbiertaDet ($idser,$numrep,$idsec, $tabla){
+    	$ssqle=("DELETE FROM $tabla WHERE ida_claveservicio = :idser
+AND ida_numreporte = :numrep  AND concat(ida_numseccion,'.',ida_numreactivo,'.',
+ida_numcomponente,'.',ida_numcaracteristica1,'.',ida_numcaracteristica2,'.',
+ida_numrenglon) = :idsec");
+    	
+    	try{
+    	$stmt=Conexion::conectar()->prepare($ssqle);
+    	$stmt->bindParam(":idser", $idser, PDO::PARAM_INT);
+    	$stmt->bindParam(":numrep", $numrep, PDO::PARAM_INT);
+    	$stmt->bindParam(":idsec", $idsec, PDO::PARAM_STR);
+    	
+    	
+    	if(!$stmt->execute()){
+    		
+    		throw new Exception("Error al eliminiar de la base de datos");
+    	}
+    	
+    	}catch(Exception $ex){
+    		throw new Exception("Error al eliminiar de la base de datos");
+    	
+    	}
+    
+    }
+    
+    
+    public function consultaGraficaCumplimiento($usuario,$servicio,$nsec){
+        $stmt=Conexion::conectar()->prepare("  SELECT
+  SUM(IF(`ida_descripcionreal`>25,1,0))/COUNT(`numreporte`)*100 AS nivaceptren
+ , `cue_reactivosabiertosdetalle`.`rad_descripcionesp`
+    , `cue_reactivosabiertosdetalle`.`rad_descripcioning`
+    ,concat(`cue_reactivosabiertosdetalle`.`sec_numseccion`,'.'
+    ,r_numreactivo,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcomponente`,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcaracteristica`,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcomponente2`,'.'
+    , `cue_reactivosabiertosdetalle`.`rad_numcaracteristica2`) as refer
+FROM
+    `ins_detalleabierta`
+    INNER JOIN `tmp_estadistica` 
+        ON (`ins_detalleabierta`.`ida_numreporte` = `tmp_estadistica`.`numreporte`)
+   INNER JOIN `cue_reactivosabiertosdetalle` 
+        ON (`ins_detalleabierta`.`ida_claveservicio` = `cue_reactivosabiertosdetalle`.`ser_claveservicio`) AND (`ins_detalleabierta`.`ida_numseccion` = `cue_reactivosabiertosdetalle`.`sec_numseccion`) AND (`ins_detalleabierta`.`ida_numreactivo` = `cue_reactivosabiertosdetalle`.`r_numreactivo`) AND (`ins_detalleabierta`.`ida_numcomponente` = `cue_reactivosabiertosdetalle`.`ra_numcomponente`) AND (`ins_detalleabierta`.`ida_numcaracteristica1` = `cue_reactivosabiertosdetalle`.`ra_numcaracteristica`) AND (`ins_detalleabierta`.`ida_numcaracteristica2` = `cue_reactivosabiertosdetalle`.`ra_numcomponente2`) AND (`ins_detalleabierta`.`ida_numcaracteristica3` = `cue_reactivosabiertosdetalle`.`rad_numcaracteristica2`)
+        
+        WHERE CONCAT(`ida_numseccion`,'.',`ida_numreactivo`,'.',`ida_numcomponente`,'.',
+`ida_numcaracteristica1`,'.',`ida_numcaracteristica2`,'.',`ida_numcaracteristica3`)=:seccion 
+        AND `ida_claveservicio`=:servicio
+        AND `usuario`=:usuario 
+       GROUP BY ida_numcaracteristica3");
+        
+        $stmt-> bindParam(":usuario", $usuario, PDO::PARAM_STR);
+        $stmt-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
+        $stmt-> bindParam(":seccion", $nsec, PDO::PARAM_STR);
+        
+        $stmt-> execute();
+       // $stmt->debugDumpParams();
+        return $stmt->fetchAll();
+       
+        
+    }
+    
 }

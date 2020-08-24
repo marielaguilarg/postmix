@@ -217,10 +217,20 @@ where cus_usuario=:usuario ";
 
             $grupo=$row["cus_clavegrupo"];
 
-            if ($grupo == "cli" || $grupo == "muf") {
+            if ($grupo == "cli") {
 
-                $refer = $row["cus_nivel4"] . "." . $row["cus_nivel5"] . "." . $row["cus_nivel6"];
+            	$refer =$row["cus_nivel4"] . "." . $row["cus_nivel5"] . "." . $row["cus_nivel6"];
 
+            }
+            if($grupo=="muf") {
+            	if($row["cus_nivel4"]!=0)
+            		$refer=$row["cus_nivel1"].".".$row["cus_nivel2"].".".$row["cus_nivel3"].".".$row["cus_nivel4"];
+            		else if($row["cus_nivel3"]!=0)
+            			$refer=$row["cus_nivel1"].".".$row["cus_nivel2"].".".$row["cus_nivel3"];
+            			else if($row["cus_nivel2"]!=0)
+            				$refer=$row["cus_nivel1"].".".$row["cus_nivel2"];
+            				else
+            					$refer=$row["cus_nivel1"];
             }
 
             if ($grupo == "cue") {
@@ -416,7 +426,7 @@ public function getUsuarioId($id,$tabla){
                 $SelectNivel,$select1,$select2,$select3,$select4,$select5,$select6,$idioma,$uscliente,$usservicio, $solcer,$tabla){
                   
                     
-
+/* vamos a usar un id numerico porque el login ya es el correo*/
                     
                     
 	    $sql2 = "INSERT INTO ".$tabla."(cus_usuario,cus_contrasena,cus_nombreusuario,cus_empresa,cus_cargo,cus_telefono,cus_email,cus_clavegrupo,

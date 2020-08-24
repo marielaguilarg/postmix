@@ -29,7 +29,7 @@ GROUP BY
 aa_recepcionmuestradetalle.mue_idmuestra";
 
         
-
+       
         $stmt = Conexion::conectar()-> prepare($sqllab);
 
         
@@ -38,7 +38,7 @@ aa_recepcionmuestradetalle.mue_idmuestra";
 
         $stmt-> execute();
 
-        
+       
 
         return $stmt->fetchall();
 
@@ -265,10 +265,11 @@ VALUES (:serv,:ulpar, :numrecibo,:nmues,:tipo, :totmb,1)";
 aa_recepcionmuestra.rm_estatus=2 
 WHERE aa_recepcionmuestra.rm_idrecepcionmuestra=:numrecibo";
     	$stmt = Conexion::conectar()-> prepare($sSQLu1);
-    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_INT);
+    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
     	$stmt-> bindParam(":numrecibo", $numrecibo, PDO::PARAM_INT);
     	
     	if(!$stmt-> execute()){
+    		
     		throw new Exception("Error al actualizar la fecha");
     	}
     }

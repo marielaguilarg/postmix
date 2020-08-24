@@ -102,7 +102,7 @@ class DatosCuenta extends Conexion{
         $stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE cue_id = :ids");
 
         $stmt->bindParam(":ids", $datosModel, PDO::PARAM_INT);
-
+     
         IF ($stmt->execute()) {
 
             return "success";
@@ -350,7 +350,7 @@ Inner Join ca_cuentas ON ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id  ";
         $parametros = array(
             "scli" => $cliente
         );
-
+;
         $res = Conexion::ejecutarQuery($sql_cuentas, $parametros);
 
         return $res;

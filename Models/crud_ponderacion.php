@@ -228,7 +228,7 @@ public function buscaponderacion($datossec, $datoscta, $datosser, $datosreac, $t
 		$stmt-> bindParam(":idserv", $datoserv, PDO::PARAM_INT);
 
 		$stmt-> execute();
-
+	
 		return $stmt->fetchall();
 	
 		$stmt->close();
@@ -237,7 +237,7 @@ public function buscaponderacion($datossec, $datoscta, $datosser, $datosreac, $t
 public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 		$stm1=Conexion::conectar()->prepare("SELECT max(rc_numcomentario) as clavecom FROM $tabla WHERE ser_claveservicio =:idser AND concat(sec_numseccion,'.',r_numreactivo) =:idsec");
 		
-		$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_INT);
+		$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_STR);
 		$stm1-> bindParam(":idser", $datoserv, PDO::PARAM_INT);
 		$stm1-> execute();
 		return $stm1->fetch();
@@ -291,7 +291,7 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 
 			$stmt-> bindParam(":comesp", $datosModel["nomesp"], PDO::PARAM_STR);
 			$stmt-> bindParam(":coming", $datosModel["noming"], PDO::PARAM_STR);
-			$stmt-> bindParam(":idsec", $datosModel["idsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $datosModel["idsec"], PDO::PARAM_STR);
 			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
 			
 			IF($stmt-> execute()){
@@ -312,7 +312,7 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM cue_reactivoscomentarios WHERE concat(sec_numseccion,'.',r_numreactivo,'.',rc_numcomentario)=:idb and ser_claveservicio=:ids");
 
-		$stmt-> bindParam(":idb", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":idb", $datosModel, PDO::PARAM_STR);
 		$stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
 
 		IF($stmt-> execute()){
@@ -332,7 +332,7 @@ public function CalculaultimoReacComentModel($datosModel, $datoserv, $tabla){
 	public function vistaPonderacionReactivoModel($datosModel, $datoserv, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT rd_clavecuenta, rd_ponderacion, rd_fechainicio, rd_fechafinal FROM cue_reactivosdetalle WHERE concat(sec_numseccion,'.',r_numreactivo)=:numsec and ser_claveservicio=:servicio");
 
-		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_STR);
 		$stmt-> bindParam(":servicio", $datoserv, PDO::PARAM_INT);
 
 		$stmt-> execute();
@@ -381,7 +381,8 @@ concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) =  :referencia 
 
 function listaReactivos($vservicio, $referencia, $reporte) {
     
-    $SQL_PRESION_O = "SELECT  id_aceptado as nivaceptren, cue_reactivos.r_descripcionesp, cue_reactivos.r_descripcioning, id_noaplica
+    $SQL_PRESION_O = "SELECT  id_aceptado as nivaceptren, cue_reactivos.r_descripcionesp, 
+cue_reactivos.r_descripcioning, id_noaplica,id_numreactivo
 FROM ins_detalle
 Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
 WHERE
@@ -487,12 +488,11 @@ public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT r_descripcionesp FROM cue_reactivos where ser_claveservicio=:sv and concat(sec_numseccion,'.',r_numreactivo)=:nsec");
 
 		$stmt-> bindParam(":sv", $sv, PDO::PARAM_INT);
-		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_STR);
 		$stmt-> execute();
-
+		
 		return $stmt->fetch();
-
-		$stmt->close();
+		
 	}
 	
 	public function verificaSeccionPondera($datosModel, $tabla){
@@ -551,7 +551,7 @@ public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
 		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
 		$stmt-> bindParam(":valpond", $datosModel["valpond"], PDO::PARAM_INT);
-		$stmt-> bindParam(":descom", $datosModel["descom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":descom", $datosModel["descom"], PDO::PARAM_STR);
 		$stmt-> bindParam(":opcsel", $datosModel["opcsel"], PDO::PARAM_INT);
 		$stmt-> bindParam(":opcnoap", $datosModel["opcnoap"], PDO::PARAM_INT);
 
@@ -567,6 +567,43 @@ public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
 			};
 
 			$stmt->close();
+	}
+	
+	public function actualizarRegistroPonderado($datosModel, $tabla){
+		$sql="UPDATE $tabla
+SET 
+ 
+  `id_ponderacionreal` =:valpond,
+  `id_comentario` = :descom,
+  `id_aceptado` =:opcsel,
+  `id_noaplica` =:opcnoap
+WHERE `id_claveservicio` =:idser
+    AND `id_numreporte` =:numrep
+    AND `id_numseccion` =:numsec
+    AND `id_numreactivo` =:numreac;";
+		$stmt = Conexion::conectar()->prepare($sql);
+		
+		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec", $datosModel["numsec"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numreac", $datosModel["numreac"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valpond", $datosModel["valpond"], PDO::PARAM_INT);
+		$stmt-> bindParam(":descom", $datosModel["descom"], PDO::PARAM_STR);
+		$stmt-> bindParam(":opcsel", $datosModel["opcsel"], PDO::PARAM_INT);
+		$stmt-> bindParam(":opcnoap", $datosModel["opcnoap"], PDO::PARAM_INT);
+		
+		IF($stmt-> execute()){
+			
+			return "success";
+		}
+		
+		else {
+		//$stmt->debugDumpParams();
+			return "error";
+			
+		};
+		
+		$stmt->close();
 	}
 
     public function borrarPonderacionAnterior($nser, $nrep, $nsec, $tabla){
@@ -590,6 +627,28 @@ public function calculasumapond($sv, $nrep, $nsec, $noap, $acep, $tabla){
 		}
 
 		$stmt->close();	
+	}
+	
+	//llegan las secciones separadas por comas en listasec para usarse en en in
+	public function graficaCumplimiento($listasec,$vservicio,$usuario){
+	    $sql_reporte_e = "SELECT
+Sum(if(ins_detalle.id_aceptado=-1,1,0)) /(count(ins_detalle.id_noaplica))*100 AS nivaceptren,
+cue_reactivos.r_descripcionesp,
+cue_reactivos.r_descripcioning,concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) as ref
+FROM
+ins_detalle
+Inner Join cue_reactivos ON ins_detalle.id_claveservicio = cue_reactivos.ser_claveservicio AND ins_detalle.id_numseccion = cue_reactivos.sec_numseccion AND ins_detalle.id_numreactivo = cue_reactivos.r_numreactivo
+Inner Join tmp_estadistica ON ins_detalle.id_numreporte = tmp_estadistica.numreporte
+where 
+concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) in (".substr($listasec,0,strlen($listasec)-1).")
+and id_noaplica>-1 and tmp_estadistica.usuario=:usuario 
+    and ins_detalle.id_claveservicio=:vserviciou
+group by ins_detalle.id_numseccion,
+ins_detalle.id_numreactivo;";
+        $parametros = array("vserviciou" => $vservicio, "usuario" => $usuario);
+        $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
+	    return $rs_sql_reporte_e;
+	    
 	}
 
  

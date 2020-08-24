@@ -178,7 +178,7 @@ VALUES (:servicio,:reporte,:sigId,:ruta);";
 	
 	public function actualizarSolicitud($refer,  $desuneg, 	 $status, 	$idcuenta, 	 $cta, 	 $fecape,	 $conuneg, 	 $email,  $calle, 	 $numext, 	 $numint, 
  $mz,  $lt,  $col, 	 $del, 	$mun,  $edo, $cp, 	 $ref,	 $tel,  $cel, 	 $user, 	$numpun, 	 $clauneg){
-	    $sSQL=("update cer_solicitud set sol_claveservicio=:refer,
+	    $sSQL=("update cer_solicitud set 
  sol_descripcion=:desuneg, 
 sol_estatussolicitud=:status, 
 sol_idcuenta=:idcta, 
@@ -200,7 +200,7 @@ sol_dir_referencia=:ref,
  sol_dir_telefono=:tel, 
 sol_dir_telmovil=:cel,
 sol_solicitante=:user,
- sol_numpunto =:numpun where sol_idsolicitud=:clauneg;");
+ sol_numpunto =:numpun where sol_idsolicitud=:clauneg and sol_claveservicio=:refer;");
 	    try{
 	        $stmt = Conexion::conectar()-> prepare($sSQL);
 	    
@@ -230,8 +230,10 @@ sol_solicitante=:user,
 	    $stmt-> bindParam(":clauneg", $clauneg, PDO::PARAM_INT);
 	  
 	    if(!$stmt-> execute())
-	        throw new Exception("Error al actualizar la solicitud");
-	  //  $stmt->debugDumpParams();
+ 	    {  // $stmt->debugDumpParams();
+	    	throw new Exception("Error al actualizar la solicitud");
+	    }
+	  // 
 	    }catch(Exception $ex){
 	        throw new Exception("Error al actualizar la solicitud");
 	    }
@@ -276,7 +278,11 @@ sol_solicitante=:user,
 	        $stmt-> bindParam(":clauneg", $clauneg, PDO::PARAM_INT);
 	        
 	       if(!$stmt-> execute())
-	           throw new Exception("Error al insertar la solicitud");
+	       {
+	       	//$stmt->debugDumpParams();
+	       	throw new Exception("Error al insertar la solicitud");
+	       
+	       }
 	    }catch(Exception $ex){
 	        throw new Exception("Error al insertar solicitud");
 	    }
@@ -293,6 +299,60 @@ and (sol_estatussolicitud=1 or sol_estatussolicitud=2);";
 	    
 	    return $stmt->fetchAll();
 	    
+	}
+	public function registrarNumReporte($numpun, $numrep){
+				$sqls="UPDATE cer_solicitud SET cer_solicitud.sol_numrep=:numrep
+WHERE cer_solicitud.sol_numpunto = :npunto 
+ AND isnull(cer_solicitud.sol_numrep) AND sol_estatussolicitud <> 5";
+				
+				try{
+					$stmt = Conexion::conectar()-> prepare($sqls);
+					
+					$stmt-> bindParam(":npunto", $numpun, PDO::PARAM_INT);
+					$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+					date_default_timezone_set('America/Mexico_City');
+					$fecvis=date("Y-m-d H:i:s");
+					error_log($fecvis.": El punto de venta que se registro: ".$sqls." variables: numpun=".$numpun." numrep=".$numrep,3,"errorespostmix.log");
+					
+					
+					if(!$stmt-> execute()){
+						
+						throw new Exception("Error al actualizar la solicitud");
+						
+					}
+						//  $stmt->debugDumpParams();
+							}catch(Exception $ex){
+					
+					throw new Exception("Error al actualizar la solicitud");
+				}
+			
+				
+	}
+	
+	public function actualizarEstatus($estatus, $numrep,$servicio){
+		$sqls="UPDATE `cer_solicitud`
+	SET
+	`sol_estatussolicitud` =:estatus
+		WHERE `sol_claveservicio` =:servicio
+			AND `sol_numrep`=:reporte and sol_estatussolicitud<>5 ;";
+		
+		try{
+			$stmt = Conexion::conectar()-> prepare($sqls);
+			
+			$stmt-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
+			$stmt-> bindParam(":reporte", $numrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":estatus", $estatus, PDO::PARAM_INT);
+				
+			
+			$stmt-> execute();
+							
+			 
+		}catch(Exception $ex){
+			Utilerias::guardarError("crud_solicitudes::actualizarEstatus ".$ex->getMessage());
+			throw new Exception("Error al actualizar estatus de la solicitud");
+		}
+		
+		
 	}
 	
 	

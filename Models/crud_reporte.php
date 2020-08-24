@@ -15,7 +15,7 @@ class DatosReporte extends Conexion{
 
 		return $stmt->fetch();
 
-		$stmt->close();
+		
 	}
 
 
@@ -28,9 +28,77 @@ class DatosReporte extends Conexion{
 
 		return $stmt->fetch();
 
-		$stmt->close();
+		
+	}
+	
+	public function apartarNumReporte($numser,$usuario){
+		$stmt = Conexion::conectar()-> prepare("SELECT max(numreporte) AS numrep
+				 FROM temp_insgenerales WHERE claveservicio=:numser");
+		
+		$stmt-> bindParam(":numser", $numser, PDO::PARAM_INT);
+		$stmt-> execute();
+		
+		$ulrep=$stmt->fetch();
+	
+		if ($ulrep&&$ulrep["numrep"]) {
+			
+			$numrep=$ulrep["numrep"];
+		} else {
+			//busco en insgenerales
+			$general=DatosReporte::CalculaNumReporte($numser, "ins_generales");
+			
+			if ($general) {
+				$numrep=$general["numrep"];
+			} else {
+			$numrep=0;
+			}
+		}
+		$numrep+=1;
+		$stmt->closeCursor();
+		//ahora si lo aparto en la tabla temporal
+		try{
+		$stmt = Conexion::conectar()-> prepare("INSERT INTO `temp_insgenerales`
+            (`claveservicio`,
+             `numreporte`,
+             `usuario`)
+VALUES (:claveservicio,
+        :numreporte,
+        :usuario);");
+		
+		$stmt-> bindParam(":claveservicio", $numser, PDO::PARAM_INT);
+		$stmt-> bindParam(":numreporte", $numrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":usuario", $usuario, PDO::PARAM_STR);
+		$stmt-> execute();
+		}catch(Exception $ex){
+			throw new Exception ("Hubo un error al generar el número de reporte");
+		}
+		return $numrep;
+		
+		
 	}
 
+	
+	public function eliminarReporteTemporal($numser,$numrep,$usuario){
+		try{
+			//elimino todos sus reportes para que no queden reportes perdidos
+			$stmt = Conexion::conectar()-> prepare("delete 
+					 FROM temp_insgenerales WHERE  usuario=:usuario");
+			
+// 			$stmt-> bindParam(":numser", $numser, PDO::PARAM_INT);
+// 			$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":usuario", $usuario, PDO::PARAM_STR);
+			$res=$stmt-> execute();
+		//	$stmt->debugDumpParams();
+		//	die();
+		
+		}catch(Exception $ex){
+			Utilerias::guardarError("Hubo un error al eliminar el número de reporte".$ex->getMessage());
+		}
+	
+		
+		
+	}
+	
 
 
 }

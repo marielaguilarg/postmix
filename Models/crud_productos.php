@@ -123,7 +123,7 @@ Inner Join ins_detalleproducto ON ins_generales.i_claveservicio = ins_detallepro
 Inner Join cue_secciones ON ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
 WHERE `ins_generales`.`i_numreporte` = :reporte and ins_generales.i_claveservicio=:servicio
 				     AND  ins_detalleproducto.ip_numseccion =:referencia
-					 AND ins_detalleproducto.ip_sinetiqueta=0
+					 AND ins_detalleproducto.ip_sinetiqueta<>-1
 GROUP BY  `ins_detalleproducto`.`ip_numreporte`, `ins_detalleproducto`.`ip_numseccion`";
 //echo $SQL_FJARABER;
    $stmt = Conexion::conectar()-> prepare($SQL_FJARABER);
@@ -142,9 +142,9 @@ GROUP BY  `ins_detalleproducto`.`ip_numreporte`, `ins_detalleproducto`.`ip_numse
             $res[0] = $ROW_FJARABE ["sec_descripcionesp"];
         $res[1] = "< 10 " . T_("semanas");
         if ($ROW_FJARABE ['NIVELACEPTACION'] >= 80)
-            $res[2] = "tache";
-        else
             $res[2] = "paloma";
+        else
+            $res[2] = "tache";
         $res[3] = $referencia;
     }
     return $res;
@@ -163,6 +163,183 @@ GROUP BY  `ins_detalleproducto`.`ip_numreporte`, `ins_detalleproducto`.`ip_numse
 			$stmt->close();
 
 	}
+
+	public function buscarRenglon($idser,$numrep,$numseccom,$numren, $tabla){
+		$ssqle=("SELECT count(*) FROM $tabla
+ WHERE `ins_detallerpoducto`.`ip_claveservicio` = :idser
+AND `ins_detalleproducto`.`ip_numreporte` = :numrep
+AND concat(ip_numseccion,'.',ip_numreactivo,'.',ip_numcomponente,'.',ip_numcaracteristica1,'.',
+ip_numcaracteristica2) = ':numseccom' and ip_numrenglon=:numren");
+		$stmt=Conexion::conectar()->prepare($ssqle);
+		
+		$stmt-> bindParam(":idser",$idser , PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep",$numrep , PDO::PARAM_INT);
+		$stmt-> bindParam(":numseccom",$numseccom , PDO::PARAM_STR);
+		$stmt-> bindParam(":numren",$numren , PDO::PARAM_INT);
+		
+		$stmt-> execute();
+		
+		$res=$stmt->fetch();
+		$total=$res[0];
+		return $total;
+		
+		
+		
+	}
+	public function buscarRenglon2($idser,$numrep,$numseccom, $tabla){
+		$sqlnr="select max(ip_numrenglon) as claveren
+FROM `ins_detalleproducto` WHERE `ins_detalleproducto`.`ip_claveservicio` = :idser
+AND `ins_detalleproducto`.`ip_numreporte` = :numrep AND ip_numseccion = :numseccom;";
+		
+		$stmt=Conexion::conectar()->prepare($sqlnr);
+		
+		$stmt-> bindParam(":idser",$idser , PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep",$numrep , PDO::PARAM_INT);
+		$stmt-> bindParam(":numseccom",$numseccom , PDO::PARAM_STR);
+		
+		$stmt-> execute();
+		
+		$res=$stmt->fetch();
+		$renglones=$res["claveren"];
+		return $renglones;
+		
+		
+		
+	}
+	public function insertarProducto($idser,
+ $numrep, $numsec, $numren, $lugarsisno, $lugarprod, $lugarcajasno,
+ $fecprod, $feccad, $estatus, $valsinet){
+		$sSQL= "insert into ins_detalleproducto 
+(ip_claveservicio, ip_numreporte, 
+ip_numseccion, ip_numrenglon, ip_numsistema, ip_descripcionproducto, ip_numcajas,
+ ip_fechaproduccion, ip_fechacaducidad, ip_estatus, ip_sinetiqueta) 
+values (:idser, :numrep,
+ :numsec, :numren, :lugarsisno, :lugarprod, :lugarcajasno,
+ :fecprod, :feccad, :estatus, :valsinet)";
+		try{
+		$stmt=Conexion::conectar()->prepare($sSQL);
+		
+		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+		$stmt-> bindParam(":numrep",$numrep, PDO::PARAM_INT);
+		$stmt-> bindParam(":numsec",$numsec, PDO::PARAM_INT);
+		$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+		$stmt-> bindParam(":lugarsisno",$lugarsisno, PDO::PARAM_INT);
+		$stmt-> bindParam(":lugarprod", $lugarprod, PDO::PARAM_STR);
+		$stmt-> bindParam(":lugarcajasno",$lugarcajasno, PDO::PARAM_INT);
+		$stmt-> bindParam(":fecprod", $fecprod, PDO::PARAM_STR);
+		$stmt-> bindParam(":feccad", $feccad, PDO::PARAM_STR);
+		$stmt-> bindParam(":estatus",$estatus, PDO::PARAM_STR);
+		$stmt-> bindParam(":valsinet", $valsinet, PDO::PARAM_INT);
+		
+		if(!$stmt->execute())
+			throw new Exception("Error al insertar registro");
+		}catch(Exception $ex){
+	
+			throw new Exception("Error al insertar detalle producto");
+		}
+	
+		
+	}
+	
+	public function actualizarFechaProduccion($idser,$numrep,$numsec,$numren, $tabla){
+		$sqlfecprod="update $tabla set 
+ip_fechaproduccion=(ip_fechacaducidad+ interval -70 day) 
+where ip_claveservicio=:idser and ip_numreporte=:numrep 
+and ip_numseccion=:numsec and ip_numrenglon=:numren";
+		
+		try{
+			$stmt=Conexion::conectar()->prepare($sqlfecprod);
+			
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $numsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+			
+			
+			if(!$stmt->execute())
+				throw new Exception("Error al actualizar registro");
+		}catch(Exception $ex){
+			
+			throw new Exception("Error al actualizar detalle producto");
+		}
+		
+		
+	}
+	
+	public function actualizarEdad($idser,$numrep,$numsec,$numren,$fecins, $tabla){
+		$sqlcal="update $tabla 
+set ip_edaddias=datediff(:fecins,ip_fechaproduccion) , 
+ip_condicion=if((datediff(:fecins,ip_fechaproduccion))<=70,'V','C'),  
+ip_semana=if((datediff(:fecins,ip_fechaproduccion))>0,if(((datediff(:fecins,
+ip_fechaproduccion))/7)>0 and ((datediff(:fecins,ip_fechaproduccion))/7)<=1,0,
+ceil((datediff(:fecins,ip_fechaproduccion)/7))-1),0)  
+where ip_claveservicio=:idser and ip_numreporte=:numrep and ip_numseccion=:numsec and ip_numrenglon=:numren";
+		
+		
+		try{
+			$stmt=Conexion::conectar()->prepare($sqlcal);
+			
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $numsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
+			
+			$stmt-> bindParam(":fecins", $fecins, PDO::PARAM_STR);
+			if(!$stmt->execute())
+				throw new Exception("Error al actualizar registro");
+		}catch(Exception $ex){
+			$stmt->debugDumpParams();
+			throw new Exception("Error al actualizar detalle producto");
+		}
+		
+		
+	}
+	
+	public function eliminarProducto($idser,$numrep,$numsec, $tabla){
+		$ssqle=("DELETE FROM $tabla
+WHERE ip_claveservicio = :idser AND ip_numreporte = :numrep
+AND concat(ip_numseccion,'.',ip_numrenglon) = :numsec");
+		
+		try{
+			$stmt=Conexion::conectar()->prepare($ssqle);
+			
+			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $numsec, PDO::PARAM_STR);
+			
+			if(!$stmt->execute())
+				throw new Exception("Error al eliminar registro");
+			
+		}catch(Exception $ex){
+		
+			throw new Exception("Error al eliminar detalle producto");
+		}
+		
+		
+	}
+	
+	public function consultaGraficaCumplimiento($listasec,$vservicio,$usuario){
+	  
+	    $sql_reporte_e = "SELECT
+(((SUM(if(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0)))*100)/(SUM(`ins_detalleproducto`.`ip_numcajas`))) AS NIVELACEPTACION,
+cue_secciones.sec_descripcionesp,
+cue_secciones.sec_descripcioning,ins_detalleproducto.ip_numseccion as secc
+FROM
+ins_detalleproducto
+Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
+Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
+WHERE
+	 ins_detalleproducto.ip_numseccion in (".substr($listasec,0,strlen($listasec)-1).")
+AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario
+    and ins_detalleproducto.ip_claveservicio=:vserviciou
+GROUP BY
+ins_detalleproducto.ip_numseccion
+ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_numreporte` ASC";
+	    $parametros = array("vserviciou" => $vservicio,  "usuario" => $usuario);
+	    $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
+	    return $rs_sql_reporte_e;
+	}
+	
 
 }
 

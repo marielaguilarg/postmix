@@ -103,7 +103,77 @@ class Datosncin extends Conexion{
         }
 
 
-
+        function add($n5_idn4,$n5_nombre,$tabla){
+        	$stmt = Conexion::conectar()-> prepare("SELECT max(n5_id) FROM $tabla ");
+        		$stmt-> execute();
+        	
+        	
+        	
+        	$res= $stmt->fetch();
+        	if($res)
+        		$n5_id=$res[0]+1;
+        	else
+        		$n5_id=1;
+        		
+        	$query = "INSERT INTO $tabla  (n5_idn4, n5_id, n5_nombre)
+		VALUES (
+			:n5_idn4,
+			:n5_id,
+			:n5_nombre)";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n5_idn4' => $n5_idn4, ':n5_id' => $n5_id, ':n5_nombre' => $n5_nombre))){
+        		return (Conexion::conectar()->lastInsertId());
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Update a row in ca_nivel5
+         * @param array data
+         */
+        function update($n5_idn4,$n5_nombre,$n5_id,$tabla){
+        	
+        	$query = "UPDATE $tabla SET
+		`n5_idn4` = :n5_idn4,
+		`n5_nombre` = :n5_nombre
+	WHERE n5_id = :n5_id ";
+        	
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n5_idn4' => $n5_idn4, ':n5_nombre' => $n5_nombre, ':n5_id' => $n5_id ))){
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Delete a row in ca_nivel5
+         * @param Int n5_id
+         */
+        function del($n5_id,$tabla){
+        	
+        	$query = "DELETE FROM $tabla WHERE n5_id = :n5_id";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	if ($q->execute(array(':n5_id' => $n5_id ))){
+        		
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
 
 
 

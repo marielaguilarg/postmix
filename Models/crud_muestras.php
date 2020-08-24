@@ -17,12 +17,12 @@ $tabla WHERE aa_muestras.mue_claveservicio =:nserv AND aa_muestras.mue_numreport
 
         $stmt->bindParam("nserv", $servicio,PDO::PARAM_INT);
 
-        $stmt->bindParam("nserv", $reporte,PDO::PARAM_INT);
+        $stmt->bindParam("nrep", $reporte,PDO::PARAM_INT);
 
         
 
         $stmt-> execute();
-
+//$stmt->debugDumpParams();
         return $stmt->fetchall();
 
         
@@ -35,7 +35,10 @@ $tabla WHERE aa_muestras.mue_claveservicio =:nserv AND aa_muestras.mue_numreport
 #vistaponderacion
 
 	public function vistaMuestras($estatusmues, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT  aa_muestras.mue_idmuestra, aa_muestras.mue_estatusmuestra, aa_muestras.mue_numreporte, aa_muestras.mue_estatusmuestra, aa_muestras.mue_estatusFQ, aa_muestras.mue_estatusMB, aa_recepcionmuestra.rm_embotelladora, une_descripcion, ser_descripcionesp
+		$stmt = Conexion::conectar()-> prepare("SELECT  aa_muestras.mue_idmuestra, aa_muestras.mue_estatusmuestra,
+ aa_muestras.mue_numreporte, aa_muestras.mue_estatusmuestra, aa_muestras.mue_estatusFQ,
+ aa_muestras.mue_estatusMB, aa_recepcionmuestra.rm_embotelladora,une_num_unico_distintivo, une_descripcion, 
+ser_descripcionesp
 			FROM aa_muestras 
 			inner join aa_recepcionmuestradetalle ON aa_muestras.mue_idmuestra = aa_recepcionmuestradetalle.mue_idmuestra
 			inner join aa_recepcionmuestra ON aa_recepcionmuestra.rm_idrecepcionmuestra = aa_recepcionmuestradetalle.rm_idrecepcionmuestra
@@ -55,8 +58,19 @@ $tabla WHERE aa_muestras.mue_claveservicio =:nserv AND aa_muestras.mue_numreport
 
 
     public function vistaMuestrasLab($estatusmues, $tipocons, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT  aa_muestras.mue_idmuestra, aa_muestras.mue_estatusmuestra, aa_muestras.mue_numreporte, aa_muestras.mue_estatusmuestra, aa_muestras.mue_estatusFQ, aa_muestras.mue_estatusMB , aa_recepcionmuestra.rm_embotelladora, une_descripcion, ser_descripcionesp
-			FROM aa_muestras inner join aa_recepcionmuestradetalle ON aa_muestras.mue_idmuestra = aa_recepcionmuestradetalle.mue_idmuestra inner join aa_recepcionmuestra ON aa_recepcionmuestra.rm_idrecepcionmuestra = aa_recepcionmuestradetalle.rm_idrecepcionmuestra inner join ins_generales ON aa_muestras.mue_numreporte = ins_generales.i_numreporte AND aa_muestras.mue_claveservicio = ins_generales.i_claveservicio inner join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id inner join ca_servicios ON ins_generales.i_claveservicio = ca_servicios.ser_id  WHERE aa_muestras.mue_estatusmuestra =:stmues AND aa_recepcionmuestra.rm_embotelladora =:tipocons GROUP BY aa_recepcionmuestradetalle.mue_idmuestra");
+		$stmt = Conexion::conectar()-> prepare("SELECT  aa_muestras.mue_idmuestra, aa_muestras.mue_estatusmuestra, 
+aa_muestras.mue_numreporte, aa_muestras.mue_estatusmuestra, aa_muestras.mue_estatusFQ, 
+aa_muestras.mue_estatusMB , aa_recepcionmuestra.rm_embotelladora, une_num_unico_distintivo,
+une_descripcion, ser_descripcionesp
+			FROM aa_muestras inner join aa_recepcionmuestradetalle
+ ON aa_muestras.mue_idmuestra = aa_recepcionmuestradetalle.mue_idmuestra 
+inner join aa_recepcionmuestra ON aa_recepcionmuestra.rm_idrecepcionmuestra = aa_recepcionmuestradetalle.rm_idrecepcionmuestra 
+inner join ins_generales ON aa_muestras.mue_numreporte = ins_generales.i_numreporte 
+AND aa_muestras.mue_claveservicio = ins_generales.i_claveservicio 
+inner join ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
+ inner join ca_servicios ON ins_generales.i_claveservicio = ca_servicios.ser_id  
+WHERE aa_muestras.mue_estatusmuestra =:stmues AND aa_recepcionmuestra.rm_embotelladora =:tipocons 
+GROUP BY aa_recepcionmuestradetalle.mue_idmuestra");
 		
 		$stmt-> bindParam(":stmues", $estatusmues, PDO::PARAM_INT);
 		$stmt-> bindParam(":tipocons", $tipocons, PDO::PARAM_INT);
@@ -69,7 +83,7 @@ $tabla WHERE aa_muestras.mue_claveservicio =:nserv AND aa_muestras.mue_numreport
 
 	public function vistaItem($ntoma, $tipoana, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT mue_idmuestra, mue_estatusmuestra,
-mue_origenmuestra,mue_tipomuestra,mue_numtoma,mue_numunidadesFQ,
+mue_origenmuestra,mue_tipomuestra,mue_numtoma,mue_numunidadesFQ,`mue_numunidadesMB`,`mue_capacidadMB`,
 mue_capacidadFQ,mue_fechahora,horamues,mue_numreporte,ide_claveservicio,rm_personarecibe,rm_embotelladora,rm_fechahora, 
 ide_idmuestra,ide_numreporte,ide_numseccion,re_numcomponente,re_descripcionesp, horarec FROM 
 (SELECT aa_muestras.mue_idmuestra, aa_muestras.mue_estatusmuestra,
@@ -127,9 +141,11 @@ cue_reactivosestandardetalle.ser_claveservicio, cue_reactivosestandardetalle.sec
 cue_reactivosestandardetalle.r_numreactivo, cue_reactivosestandardetalle.re_numcomponente, 
 cue_reactivosestandardetalle.re_numcaracteristica, cue_reactivosestandardetalle.re_numcomponente2, 
 cue_reactivosestandardetalle.red_numcaracteristica2, cue_reactivosestandardetalle.red_estandar, 
-cue_reactivosestandardetalle.red_tiporeactivo, red_tipodato
- FROM $tabla Inner Join cue_reactivosestandardetalle ON aa_pruebaanalisis.pa_numcomponente = cue_reactivosestandardetalle.re_numcomponente
- AND aa_pruebaanalisis.pa_numprueba = cue_reactivosestandardetalle.red_numcaracteristica2 AND aa_pruebaanalisis.pa_numservicio = cue_reactivosestandardetalle.ser_claveservicio
+cue_reactivosestandardetalle.red_tiporeactivo, red_tipodato,red_clavecatalogo
+ FROM $tabla 
+Inner Join cue_reactivosestandardetalle ON aa_pruebaanalisis.pa_numcomponente = cue_reactivosestandardetalle.re_numcomponente
+ AND aa_pruebaanalisis.pa_numprueba = cue_reactivosestandardetalle.red_numcaracteristica2 
+AND aa_pruebaanalisis.pa_numservicio = cue_reactivosestandardetalle.ser_claveservicio
 Inner Join cue_secciones ON cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio 
 AND cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion 
 WHERE cue_reactivosestandardetalle.ser_claveservicio =:idser AND cue_secciones.sec_indagua = :indagua 
@@ -141,7 +157,7 @@ AND aa_pruebaanalisis.pa_tipoanalisis = :tipoana AND cue_reactivosestandardetall
 		$stmt-> bindParam(":tipomue", $tipomue, PDO::PARAM_INT);
 		
 		$stmt-> execute();
-//$stmt->debugDumpParams();
+
 		return $stmt->fetchall();
 
 	}
@@ -188,13 +204,20 @@ AND aa_pruebaanalisis.pa_tipoanalisis = :tipoana AND cue_reactivosestandardetall
 
 
 	public function vistaMuestrasRep($tipomues, $nrep, $idser, $tabla){
-		$stmt = Conexion::conectar()-> prepare("SELECT aa_muestras.mue_idmuestra,aa_muestras.mue_estatusmuestra,aa_muestras.mue_tipomuestra, aa_muestras.mue_numunidadesFQ,aa_muestras.mue_capacidadFQ,aa_muestras.mue_origenmuestra,aa_muestras.mue_numtoma, date(aa_muestras.mue_fechahora) AS fectom,time(aa_muestras.mue_fechahora) AS hortom,aa_muestras.mue_numreporte, aa_muestras.mue_numunidadesMB,aa_muestras.mue_capacidadMB,aa_muestras.mue_fuenteabas,aa_muestras.mue_claveservicio FROM aa_muestras WHERE aa_muestras.mue_numreporte =:nrep AND aa_muestras.mue_tipomuestra =:tipomues AND aa_muestras.mue_claveservicio = :idser ORDER BY aa_muestras.mue_idmuestra DESC");
+		$stmt = Conexion::conectar()-> prepare("SELECT aa_muestras.mue_idmuestra,
+aa_muestras.mue_estatusmuestra,aa_muestras.mue_tipomuestra, aa_muestras.mue_numunidadesFQ,
+aa_muestras.mue_capacidadFQ,aa_muestras.mue_origenmuestra,aa_muestras.mue_numtoma, 
+date(aa_muestras.mue_fechahora) AS fectom,time(aa_muestras.mue_fechahora) AS hortom,
+aa_muestras.mue_numreporte, aa_muestras.mue_numunidadesMB,aa_muestras.mue_capacidadMB,
+aa_muestras.mue_fuenteabas,aa_muestras.mue_claveservicio 
+FROM aa_muestras 
+WHERE aa_muestras.mue_numreporte =:nrep AND aa_muestras.mue_tipomuestra =:tipomues 
+AND aa_muestras.mue_claveservicio = :idser ORDER BY aa_muestras.mue_idmuestra DESC");
 		
 		$stmt-> bindParam(":tipomues", $tipomues, PDO::PARAM_INT);
 		$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_INT);
 		$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);		
 		$stmt-> execute();
-
 		return $stmt->fetchAll();
 
 	}
@@ -212,7 +235,10 @@ AND aa_pruebaanalisis.pa_tipoanalisis = :tipoana AND cue_reactivosestandardetall
 
 
 	public function muestraEnProceso($nser, $nrep, $tipomues, $estmues, $origen, $tabla){
-			$stmt = Conexion::conectar()-> prepare("SELECT Count(mue_idmuestra) AS totmuestras FROM aa_muestras WHERE mue_claveservicio=:nser AND mue_numreporte = :nrep AND mue_tipomuestra =:tipomues AND mue_origenmuestra =:origen and mue_estatusmuestra<=estmues GROUP BY mue_numreporte, mue_origenmuestra");
+			$stmt = Conexion::conectar()-> prepare("SELECT Count(mue_idmuestra) AS totmuestras 
+FROM aa_muestras WHERE mue_claveservicio=:nser AND mue_numreporte = :nrep 
+AND mue_tipomuestra =:tipomues AND mue_origenmuestra =:origen 
+and mue_estatusmuestra<=:estmues GROUP BY mue_numreporte, mue_origenmuestra");
 				
 			$stmt-> bindParam(":nser", $nser, PDO::PARAM_INT);
 			$stmt-> bindParam(":nrep", $nrep, PDO::PARAM_INT);
@@ -243,38 +269,45 @@ AND aa_pruebaanalisis.pa_tipoanalisis = :tipoana AND cue_reactivosestandardetall
 
 
 	public function insertaToma($datosModel, $tabla){
-			$stmt = Conexion::conectar()-> prepare("INSERT INTO aa_muestras (mue_claveservicio, mue_idmuestra, mue_estatusmuestra, mue_tipomuestra, mue_numunidadesFQ, mue_capacidadFQ, mue_origenmuestra, mue_numtoma, mue_fechahora, mue_numreporte, mue_numunidadesMB, mue_capacidadMB, mue_fuenteabas) values (:nser, :nummues, :estatus, :numcom,:unidadFQ,
-				:capacidadFQ,:origenmues,:numtoma,:fecvis,:numrep,:unidadMB,:capacidadMB,
-				:fuenteab)");
-				
-			$stmt-> bindParam(":nser", $datosModel["nser"], PDO::PARAM_INT);
-			$stmt-> bindParam(":nummues", $datosModel["nummues"], PDO::PARAM_INT);
-			$stmt-> bindParam(":estatus", $datosModel["estatus"], PDO::PARAM_INT);		
-			$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
-			$stmt-> bindParam(":unidadFQ", $datosModel["unidadFQ"], PDO::PARAM_INT);
-
-			$stmt-> bindParam(":capacidadFQ", $datosModel["capacidadFQ"], PDO::PARAM_INT);
-			$stmt-> bindParam(":origenmues", $datosModel["origen"], PDO::PARAM_INT);
-			$stmt-> bindParam(":numtoma", $datosModel["numtoma"], PDO::PARAM_INT);		
-			$stmt-> bindParam(":fecvis", $datosModel["fecvis"], PDO::PARAM_STR);
-			$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
-
-			$stmt-> bindParam(":unidadMB", $datosModel["unidadMB"], PDO::PARAM_INT);
-			$stmt-> bindParam(":capacidadMB", $datosModel["capacidadMB"], PDO::PARAM_INT);
-			$stmt-> bindParam(":fuenteab", $datosModel["fuenteab"], PDO::PARAM_INT);		
+		try{
+		$muestras=DatosMuestra::buscaUltimaMuestra("aa_muestras");
+		//var_dump($ulnummues);
 		
-			IF($stmt-> execute()){
-
-				return "success";
-			}
+		$nummuestra=$muestras["ulnummues"];
+		$nummuestra++;
+	
+		$stmt = Conexion::conectar()-> prepare("INSERT INTO aa_muestras (mue_claveservicio, mue_idmuestra, mue_estatusmuestra, mue_tipomuestra, mue_numunidadesFQ, mue_capacidadFQ, mue_origenmuestra, mue_numtoma, mue_fechahora, mue_numreporte, mue_numunidadesMB, mue_capacidadMB, mue_fuenteabas) values (:nser, :nummues, :estatus, :numcom,:unidadFQ,
+			:capacidadFQ,:origenmues,:numtoma,:fecvis,:numrep,:unidadMB,:capacidadMB,
+			:fuenteab)");
 			
-			else {
+		$stmt-> bindParam(":nser", $datosModel["nser"], PDO::PARAM_INT);
+		$stmt-> bindParam(":nummues",$nummuestra, PDO::PARAM_INT);
+		$stmt-> bindParam(":estatus", $datosModel["estatus"], PDO::PARAM_INT);		
+		$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":unidadFQ", $datosModel["unidadFQ"], PDO::PARAM_INT);
 
-				return "error";
+		$stmt-> bindParam(":capacidadFQ", $datosModel["capacidadFQ"], PDO::PARAM_INT);
+		$stmt-> bindParam(":origenmues", $datosModel["origenmues"], PDO::PARAM_INT);
+		$stmt-> bindParam(":numtoma", $datosModel["numtoma"], PDO::PARAM_INT);		
+		$stmt-> bindParam(":fecvis", $datosModel["fecvis"], PDO::PARAM_STR);
+		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
+
+		$stmt-> bindParam(":unidadMB", $datosModel["unidadMB"], PDO::PARAM_INT);
+		$stmt-> bindParam(":capacidadMB", $datosModel["capacidadMB"], PDO::PARAM_INT);
+		$stmt-> bindParam(":fuenteab", $datosModel["fuenteab"], PDO::PARAM_INT);		
+	
+		$stmt-> execute();
+		$stmt=null;
+		return $nummuestra;
+		}catch(Exception $ex)
+		{
+	
 		
-			};
-		
-			$stmt->close();
+			return "error";
+	
+		};
+	
+	
 
 	}
 
@@ -312,12 +345,12 @@ AND ins_detalleestandar.ide_numseccion = :nsec GROUP BY ins_detalleestandar.ide_
 	public function actualizarenglones($datosModel, $tabla){
         $stmt=Conexion::conectar()->prepare("UPDATE ins_detalleestandar set  ide_numrenglon = :numren WHERE ins_detalleestandar.ide_numreporte =:numrep AND ins_detalleestandar.ide_claveservicio =:nserv AND ins_detalleestandar.ide_numseccion =:nsec AND ins_detalleestandar.ide_numcomponente =:numcom and ins_detalleestandar. ide_numrenglon=:numrenant");
        
-			$stmt-> bindParam(":nserv", $nserv, PDO::PARAM_INT);
-			$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
-			$stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
-			$stmt-> bindParam(":nsec", $nsec, PDO::PARAM_INT);
-			$stmt-> bindParam(":numcom", $numcom, PDO::PARAM_INT);
-			$stmt-> bindParam(":numrenant", $numrenant, PDO::PARAM_INT);
+        $stmt-> bindParam(":nserv",$datosModel["nserv"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numren",$datosModel["numren"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numrep",$datosModel["numrep"], PDO::PARAM_INT);
+			$stmt-> bindParam(":nsec", $datosModel["nsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numcom", $datosModel["numcom"], PDO::PARAM_INT);
+			$stmt-> bindParam(":numrenant", $datosModel["numrenant"], PDO::PARAM_INT);
 
 			IF($stmt-> execute()){
 
@@ -349,7 +382,7 @@ public function insertaReactivoMuestra($datosModel, $tabla){
 			$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
 			$stmt-> bindParam(":pond", $datosModel["pond"], PDO::PARAM_INT);
 			$stmt-> bindParam(":aceptado", $datosModel["aceptado"], PDO::PARAM_INT);
-			$stmt-> bindParam(":colarc", $datosModel["colarc"], PDO::PARAM_INT);
+		//	$stmt-> bindParam(":colarc", $datosModel["colarc"], PDO::PARAM_INT);
 			$stmt-> bindParam(":nummues", $datosModel["nummues"], PDO::PARAM_INT);
 			
 			IF($stmt-> execute()){
@@ -375,7 +408,7 @@ ins_detalleestandar.ide_claveservicio";
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
     
     	$stmt-> execute();
-    	
+
     	return $stmt->fetchAll();
     }
     
@@ -388,11 +421,12 @@ WHERE aa_muestras.mue_idmuestra=:ntoma");
 			
     	//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
-    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_INT);
+    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_STR);
     	
-    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_INT);
+    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
     	
     	if(!$stmt-> execute()){
+    	
     		throw new Exception("Error al actualizar la muestra");
     	}
     }
@@ -406,9 +440,9 @@ WHERE aa_muestras.mue_idmuestra=:ntoma");
     	
     	//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
-    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_INT);
+    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_STR);
     	
-    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_INT);
+    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
     	
     	if(!$stmt-> execute()){
     		throw new Exception("Error al actualizar la muestra");
@@ -424,16 +458,16 @@ WHERE aa_muestras.mue_idmuestra=:ntoma");
     	
     	//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
-    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_INT);
+    	$stmt-> bindParam(":recmues", $recmues, PDO::PARAM_STR);
     	
-    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_INT);
+    	$stmt-> bindParam(":fecvis", $fecvis, PDO::PARAM_STR);
     	
     	if(!$stmt-> execute()){
     		throw new Exception("Error al actualizar la muestra");
     	}
     }
     
-    public function listaMuestrasxIdMuestra($ntoma,$tabla){
+    public function listaMuestrasxIdMuestra($ntoma,$servicio, $tabla){
     	
     	$sql_rep="SELECT aa_muestras.mue_fechahora, aa_muestras.mue_fecharecepcion, 
 aa_muestras.mue_fechoranalisisFQ, aa_muestras.mue_fechoranalisisMB, aa_muestras.mue_numreporte,
@@ -444,8 +478,37 @@ aa_muestras.mue_fechoranalisisMB) as ulfeclab,
 null,datediff(if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,
 aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_fechoranalisisMB),mue_fecharecepcion) ) AS dias_trans_lab,
 aa_muestras.mue_idmuestra, aa_muestras.mue_numunidadesFQ, aa_muestras.mue_numunidadesMB,
-aa_muestras.mue_estatusmuestra
+aa_muestras.mue_estatusmuestra,aa_muestras.mue_estatusFQ, aa_muestras.mue_estatusMB
+   FROM
+$tabla WHERE  aa_muestras.mue_idmuestra =:ntoma and mue_claveservicio=:servicio";
+
+$stmt=Conexion::conectar()->prepare($sql_rep);
+
+$stmt->bindParam("ntoma", $ntoma,PDO::PARAM_INT);
+$stmt->bindParam("servicio", $servicio,PDO::PARAM_INT);
+
+$stmt-> execute();
+//$stmt->debugDumpParams();
+return $stmt->fetchall();
+
+
+
+
+
+    }
+    public function olistaMuestrasxIdMuestra($ntoma, $tabla){
     	
+    	$sql_rep="SELECT aa_muestras.mue_fechahora, aa_muestras.mue_fecharecepcion,
+aa_muestras.mue_fechoranalisisFQ, aa_muestras.mue_fechoranalisisMB, aa_muestras.mue_numreporte,
+ aa_muestras.mue_claveservicio, aa_muestras.mue_idmuestra,
+ if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,aa_muestras.mue_fechoranalisisFQ,
+aa_muestras.mue_fechoranalisisMB) as ulfeclab,
+ if((aa_muestras.mue_fechoranalisisFQ ='0000-00-00 00:00:00') or (aa_muestras.mue_fechoranalisisMB ='0000-00-00 00:00:00'),
+null,datediff(if(aa_muestras.mue_fechoranalisisFQ>aa_muestras.mue_fechoranalisisMB,
+aa_muestras.mue_fechoranalisisFQ,aa_muestras.mue_fechoranalisisMB),mue_fecharecepcion) ) AS dias_trans_lab,
+aa_muestras.mue_idmuestra, aa_muestras.mue_numunidadesFQ, aa_muestras.mue_numunidadesMB,
+aa_muestras.mue_estatusmuestra,aa_muestras.mue_estatusFQ, aa_muestras.mue_estatusMB
+
 FROM
 
 $tabla WHERE  aa_muestras.mue_idmuestra =:ntoma";
@@ -453,10 +516,7 @@ $tabla WHERE  aa_muestras.mue_idmuestra =:ntoma";
 $stmt=Conexion::conectar()->prepare($sql_rep);
 
 $stmt->bindParam("ntoma", $ntoma,PDO::PARAM_INT);
-
-
-
-
+//$stmt->bindParam("servicio", $servicio,PDO::PARAM_INT);
 
 $stmt-> execute();
 //$stmt->debugDumpParams();
@@ -468,16 +528,39 @@ return $stmt->fetchall();
 
     }
     
-    public function actualizarEstatus($estatus,$ntoma){
+    public function actualizarEstatus($estatus,$servicio, $ntoma){
     	$stmt=Conexion::conectar()->prepare("UPDATE aa_muestras 
 SET aa_muestras.mue_estatusmuestra=:estatus
-WHERE aa_muestras.mue_idmuestra=:ntoma");
+WHERE aa_muestras.mue_idmuestra=:ntoma and mue_claveservicio=:servicio");
     	
-    	//$stmt-> bindParam(":esatatus", $estatus, PDO::PARAM_INT);
+    	$stmt-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
     	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
     	$stmt-> bindParam(":estatus", $estatus, PDO::PARAM_INT);
     	
+    	Utilerias::guardarError(" DatosMuestra:actualizarEstatus Se ejecutó:UPDATE aa_muestras 
+SET aa_muestras.mue_estatusmuestra=:estatus
+WHERE aa_muestras.mue_idmuestra=:ntoma con parametros estatus=".$estatus." ntoma=".$ntoma);
+    	
     	if(!$stmt-> execute()){
+    		
+    		throw new Exception("Error al actualizar la muestra");
+    	}
+    }
+    public function actualizarEstatusss($estatus,$ntoma){
+    	$stmt=Conexion::conectar()->prepare("UPDATE aa_muestras
+SET aa_muestras.mue_estatusmuestra=:estatus
+WHERE aa_muestras.mue_idmuestra=:ntoma ");
+    	
+    
+    	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+    	$stmt-> bindParam(":estatus", $estatus, PDO::PARAM_INT);
+    	
+    	Utilerias::guardarError(" DatosMuestra:actualizarEstatus Se ejecutó:UPDATE aa_muestras
+SET aa_muestras.mue_estatusmuestra=:estatus
+WHERE aa_muestras.mue_idmuestra=:ntoma con parametros estatus=".$estatus." ntoma=".$ntoma);
+    	
+    	if(!$stmt-> execute()){
+    		
     		throw new Exception("Error al actualizar la muestra");
     	}
     }
@@ -492,7 +575,92 @@ mue_fecharecepcion=now() where mue_idmuestra=:nmues";
     		throw new Exception("Error al actualizar la muestra");
     	}
     }
+    public function actualizarCausa($causaid,$ntoma){
+    	$ssqle=("UPDATE aa_muestras SET aa_muestras.mue_estatusmuestra =6,
+ aa_muestras.mue_causacan =:causaid WHERE aa_muestras.mue_idmuestra =  :ntoma");
+    	
+    	$stmt=Conexion::conectar()->prepare($ssqle);
+    	$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+    	$stmt-> bindParam(":causaid", $causaid, PDO::PARAM_INT);
+    	
+    	if(!$stmt-> execute()){
+    		throw new Exception("Error al actualizar la muestra");
+    	}
+    }
+    
+    public function vistaResultadosAgua($idser, $componente, $reporte,$tipo){
+//     	$stmt = Conexion::conectar()-> prepare("SELECT 
+// cue_reactivosestandardetalle.ser_claveservicio, cue_reactivosestandardetalle.sec_numseccion, 
+// cue_reactivosestandardetalle.r_numreactivo, cue_reactivosestandardetalle.re_numcomponente, 
+// cue_reactivosestandardetalle.re_numcaracteristica, cue_reactivosestandardetalle.re_numcomponente2, 
+// cue_reactivosestandardetalle.red_numcaracteristica2, cue_reactivosestandardetalle.red_estandar, 
+// cue_reactivosestandardetalle.red_tiporeactivo, red_tipodato,red_clavecatalogo,
+// `ide_valorreal`,`ide_aceptado`,
+// `red_valorminmoderado`,`red_valormaxmoderado`,`red_signounomoderado`,`red_signodosmoderado`
 
+//  FROM aa_pruebaanalisis
+// INNER JOIN cue_reactivosestandardetalle ON aa_pruebaanalisis.pa_numcomponente = cue_reactivosestandardetalle.re_numcomponente
+//  AND aa_pruebaanalisis.pa_numprueba = cue_reactivosestandardetalle.red_numcaracteristica2 
+// AND aa_pruebaanalisis.pa_numservicio = cue_reactivosestandardetalle.ser_claveservicio
+// INNER JOIN cue_secciones ON cue_reactivosestandardetalle.ser_claveservicio = cue_secciones.ser_claveservicio 
+// AND cue_reactivosestandardetalle.sec_numseccion = cue_secciones.sec_numseccion 
+// INNER JOIN `ins_detalleestandar` ON (`ins_detalleestandar`.`ide_claveservicio` = `cue_reactivosestandardetalle`.`ser_claveservicio`)
+//  AND (`ins_detalleestandar`.`ide_numseccion` = `cue_reactivosestandardetalle`.`sec_numseccion`) 
+//  AND (`ins_detalleestandar`.`ide_numreactivo` = `cue_reactivosestandardetalle`.`r_numreactivo`)
+//   AND (`ins_detalleestandar`.`ide_numcomponente` = `cue_reactivosestandardetalle`.`re_numcomponente`)
+//    AND (`ins_detalleestandar`.`ide_numcaracteristica1` = `cue_reactivosestandardetalle`.`re_numcaracteristica`)
+//     AND (`ins_detalleestandar`.`ide_numcaracteristica2` = `cue_reactivosestandardetalle`.`re_numcomponente2`)
+//  AND (`ins_detalleestandar`.`ide_numcaracteristica3` = `cue_reactivosestandardetalle`.`red_numcaracteristica2`)
+// WHERE cue_reactivosestandardetalle.ser_claveservicio =:serv AND cue_secciones.sec_indagua =1
+// AND aa_pruebaanalisis.pa_tipoanalisis =:tipo
+//  AND cue_reactivosestandardetalle.re_numcomponente =:componente
+//  AND `ide_numreporte`=:reporte
+// ");
+$sql="SELECT
+cue_reactivosestandardetalle.ser_claveservicio, cue_reactivosestandardetalle.sec_numseccion,
+cue_reactivosestandardetalle.r_numreactivo, cue_reactivosestandardetalle.re_numcomponente,
+cue_reactivosestandardetalle.re_numcaracteristica, cue_reactivosestandardetalle.re_numcomponente2,
+cue_reactivosestandardetalle.red_numcaracteristica2, cue_reactivosestandardetalle.red_estandar,
+cue_reactivosestandardetalle.red_tiporeactivo, red_tipodato,red_clavecatalogo,
+`ide_valorreal`,`ide_aceptado`,`red_valorminmoderado`,`red_valormaxmoderado`,`red_signounomoderado`,`red_signodosmoderado`
+    	 	FROM
+    	ins_detalleestandar
+    	INNER JOIN cue_reactivosestandardetalle
+    	ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio
+    	AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion
+    	AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo
+    	AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente
+    	AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1
+    	AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2
+    	AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3
+    	INNER JOIN cue_secciones
+    	ON cue_secciones.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio
+    	AND cue_secciones.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion
+    	INNER JOIN aa_pruebaanalisis ON aa_pruebaanalisis.pa_numcomponente = cue_reactivosestandardetalle.re_numcomponente
+    	AND aa_pruebaanalisis.pa_numprueba = cue_reactivosestandardetalle.red_numcaracteristica2
+    	AND aa_pruebaanalisis.pa_numservicio = cue_reactivosestandardetalle.ser_claveservicio
+    	WHERE ins_detalleestandar.ide_claveservicio =:serv
+    	AND ins_detalleestandar.ide_numreporte =:reporte
+    	AND cue_secciones.sec_indagua = '1'
+    	AND ins_detalleestandar.ide_numrenglon = '1'
+    	AND (ins_detalleestandar.ide_numcaracteristica3 <> 14
+    							AND ins_detalleestandar.ide_numcaracteristica3 <> 20
+    							AND ins_detalleestandar.ide_numcaracteristica3 <> 21
+    							AND ins_detalleestandar.ide_numcaracteristica3 <> 15
+    							) AND aa_pruebaanalisis.pa_tipoanalisis=:tipo";
+//echo $sql;
+    	$stmt = Conexion::conectar()-> prepare($sql);
+    	
+    								
+    	$stmt-> bindParam(":serv", $idser, PDO::PARAM_INT);
+    	//$stmt-> bindParam(":componente", $componente, PDO::PARAM_INT);
+    	$stmt-> bindParam(":reporte", $reporte, PDO::PARAM_STR);
+    	$stmt-> bindParam(":tipo", $tipo, PDO::PARAM_STR);
+    	$stmt-> execute();
+    //	$stmt->debugDumpParams();
+    	return $stmt->fetchall();
+    	
+    }
     
    
 

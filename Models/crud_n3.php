@@ -54,7 +54,7 @@ class Datosntres extends Conexion{
 
 	}	  
 
-public function vistatresModel($datosModel,$idn3,$tabla){
+	public function vistatresModel($datosModel,$idn3,$tabla){
 
 		$stmt = Conexion::conectar()-> prepare("SELECT n3_id, n3_nombre FROM $tabla WHERE n3_idn2=:idn2 and n3_id=:idn3");
 
@@ -97,9 +97,81 @@ public function vistatresModel($datosModel,$idn3,$tabla){
               $nombre = $row["n3_nombre"];
 
             }
-
-             return $nombre;
+			$res=null;
+			$stmt->closeCursor();
+			$stmt=null;
+        	return $nombre;
 
         }
+        
+        
+        /**
+         * Add a row in ca_nivel3
+         * @param array data
+         */
+        function add($n3_idn2,$n3_nombre,$tabla){
+        	
+        	$query = "INSERT INTO $tabla  (n3_idn2,  n3_nombre)
+		VALUES (
+			:n3_idn2,
+			
+			:n3_nombre)";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n3_idn2' => $n3_idn2, ':n3_nombre' => $n3_nombre))){
+        		return (Conexion::conectar()->lastInsertId());
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Update a row in ca_nivel3
+         * @param array data
+         */
+        function update($n3_id,$n3_idn2,$n3_nombre,$tabla){
+        	
+        	$query = "UPDATE $tabla SET
+		`n3_idn2` = :n3_idn2,
+		`n3_nombre` = :n3_nombre
+	WHERE n3_id = :n3_id ";
+        	
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	
+        	if ($q->execute(array(':n3_idn2' => $n3_idn2, ':n3_nombre' => $n3_nombre, ':n3_id' => $n3_id ))){
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        /**
+         * Delete a row in ca_nivel3
+         * @param Int n3_id
+         */
+        function del($n3_id,$tabla){
+        	
+        	$query = "DELETE FROM $tabla WHERE n3_id = :n3_id";
+        	$q = Conexion::conectar()->prepare($query);
+        	
+        	if ($q->execute(array(':n3_id' => $n3_id ))){
+        		return (1);
+        	}
+        	else{
+        		return(0);
+        	}
+        }
+        
+        
+        
+        
 
 }

@@ -70,9 +70,9 @@ class DatosSeccion extends Conexion {
 
         $stmt->bindParam(":nomesp", $datosModel["nomesp"], PDO::PARAM_STR);
 
-        $stmt->bindParam(":noming", $datosModel["noming"], PDO::PARAM_INT);
+        $stmt->bindParam(":noming", $datosModel["noming"], PDO::PARAM_STR);
 
-        $stmt->bindParam(":desesp", $datosModel["desesp"], PDO::PARAM_INT);
+        $stmt->bindParam(":desesp", $datosModel["desesp"], PDO::PARAM_STR);
 
         $stmt->bindParam(":desing", $datosModel["desing"], PDO::PARAM_STR);
 
@@ -322,12 +322,13 @@ class DatosSeccion extends Conexion {
         $stmt->execute();
 
 
+		
+        $res=$stmt->fetchall();
 
-        return $stmt->fetchall();
 
 
-
-        $stmt->close();
+        $stmt->closeCursor();
+        return $res;
     }
 
     public function CalculaultimoComentModel($datosModel, $tabla) {
@@ -834,7 +835,7 @@ WHERE `is_numreporte` = :numrep
 	}
 	
 	public function insertarSeccion($datosModel, $tabla){
-		$sql="INSERT INTO tabla
+		$sql="INSERT INTO $tabla
             (`is_claveservicio`,
              `is_numreporte`,
              `is_numseccion`,
@@ -863,68 +864,6 @@ VALUES (:servicio,
 		
 		}
 	}
-		
-	public function getNumImagen($datosModel, $tabla){
-		$sql="SELECT
-              Max(ins_imagendetalle.id_idimagen) AS id
-              FROM
-              $tabla
-              where ins_imagendetalle.id_imgclaveservicio=:servicio, and
-              ins_imagendetalle.id_imgnumreporte=:numreporte, and
-              ins_imagendetalle.id_imgnumseccion=:seccion and
-              ins_imagendetalle.id_imgnumreactivo=:reactivo";
-
-	    $stmt=Conexion::conectar()->prepare($sql);
-	    $stmt-> bindParam(":servicio", $datosModel["servicio"], PDO::PARAM_INT);
-		$stmt-> bindParam(":numreporte", $datosModel["numrep"], PDO::PARAM_INT);
-		$stmt-> bindParam(":seccion", $datosModel["seccion"], PDO::PARAM_INT);
-		$stmt-> bindParam(":reactivo", $datosModel["reactivo"], PDO::PARAM_INT);
-	     $stmt-> execute();
-	    
-	    return $stmt->fetch();    
-	}
-	
-	public function InsertaImagen($datosModel, $tabla){
-		$sqlcu = "INSERT INTO $tabla (`id_imgclaveservicio`,`id_imgnumreporte`,`id_imgnumseccion`,`id_imgnumreactivo`,`id_idimagen`,`id_ruta`,  `id_descripcion`,`id_presentar`)
-         VALUES (:servicio,:reporte,:seccion,:reactivo,:sigId,:ruta,:descripcion,:presentar);";
-            
-	    $stmt=Conexion::conectar()->prepare($sql);
-	    $stmt-> bindParam(":servicio", $datosModel["servicio"], PDO::PARAM_INT);
-		$stmt-> bindParam(":reporte", $datosModel["numrep"], PDO::PARAM_INT);
-		$stmt-> bindParam(":seccion", $datosModel["seccion"], PDO::PARAM_INT);
-		$stmt-> bindParam(":reactivo", $datosModel["reactivo"], PDO::PARAM_INT);
-		$stmt-> bindParam(":sigId", $datosModel["sigId"], PDO::PARAM_INT);
-		$stmt-> bindParam(":ruta", $datosModel["ruta"], PDO::PARAM_INT);
-		$stmt-> bindParam(":descripcion", $datosModel["descripcion"], PDO::PARAM_INT);
-		$stmt-> bindParam(":presentar", $datosModel["presentar"], PDO::PARAM_INT);
-	     if(!$stmt-> execute()){
-			
-		throw new Exception("Error al insertar");
-		
-		}  
-	}
-	
-	public function getListaImagenes($datosModel, $tabla){
-	$sql="SELECT id_ruta,id_idimagen, id_descripcion FROM ins_imagendetalle where ins_imagendetalle.id_imgclaveservicio=:idservicio and ins_imagendetalle.id_imgnumreporte=:idreporte and ins_imagendetalle.id_imgnumseccion=:idseccion";
-					
-					        
-	    $stmt=Conexion::conectar()->prepare($sql);
-	    $stmt-> bindParam(":idservicio", $datosModel["servicio"], PDO::PARAM_INT);
-		$stmt-> bindParam(":idreporte", $datosModel["numrep"], PDO::PARAM_INT);
-		$stmt-> bindParam(":idseccion", $datosModel["seccion"], PDO::PARAM_INT);
-		
-		 //if(!$stmt-> execute()){
-			
-		//throw new Exception("Error al insertar");
-		 $stmt-> execute();
-	    
-	    return $stmt->fetchall(); 
-		//}  
-	}
-	
-	
-	
-	
 	
  
 }

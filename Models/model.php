@@ -82,11 +82,16 @@ class EnlacesPaginas{
 			$enlacesModel == "listan4" ||
 			$enlacesModel == "listan5" ||
 			$enlacesModel == "listan6" ||
+			$enlacesModel == "nuevonivel" ||
 			$enlacesModel == "listacuenta" || 
 			$enlacesModel == "editacuenta" ||   
 			$enlacesModel == "nuevacuenta" || 
-			$enlacesModel == "nuevoReporteProducto"||  
-
+			$enlacesModel == "nuevoReporteProducto"|| 
+			$enlacesModel == "nuevocatalogo"||  
+			$enlacesModel == "listacatalogos"||  
+			$enlacesModel == "listacatalogosgen"||  
+			$enlacesModel == "listacatalogosgen2"||  
+			$enlacesModel == "listamesas"||  
 			#AQUI INICIA SECCION INDICADORES   
 			$enlacesModel == "indgraficaindicadorgrv2" ||
             $enlacesModel == "indgraficaindicadorgr" ||
@@ -129,7 +134,11 @@ class EnlacesPaginas{
 		    $enlacesModel == "editasolicitud" ||
 		    $enlacesModel == "listasolicitudes" ||
 		    $enlacesModel == "listacertificados"||
+			$enlacesModel == "listacertificadosg"||
+			$enlacesModel == "listaalertas"||
 		    $enlacesModel == "listaestatussolicitud"||
+				
+			$enlacesModel == "nuevasolicitudgepp"||
 		    
 		    //seccion de consultas
 		    $enlacesModel=="inicio_excel"||
@@ -154,8 +163,10 @@ class EnlacesPaginas{
 		    $enlacesModel=="seditasd"||
 		    $enlacesModel=="srespaldoimagenes"||
 		    $enlacesModel=="srestaurarimagen"||
-		    $enlacesModel=="seditasd"
-		    
+		    $enlacesModel=="seditasd"||
+		    $enlacesModel == "indgraficaindicadorv2" ||
+                            $enlacesModel == "indgraficaindicadorv3" ||
+		    $enlacesModel == "indgraficacobertura" 
 			 
 			 ){
 

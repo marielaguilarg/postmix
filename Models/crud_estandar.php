@@ -21,7 +21,7 @@ class DatosEst extends Conexion{
 	public function vistaEstandarModeln1($servicioModel, $datosModel, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, re_numcomponente, re_numcaracteristica, re_numcomponente2, re_descripcionesp, re_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,re_numcaracteristica,re_numcomponente2) =:nsec");
 		
-		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
 		$stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
 		
 		$stmt-> execute();
@@ -33,7 +33,7 @@ class DatosEst extends Conexion{
 		$stmt = Conexion::conectar()-> prepare("SELECT ser_claveservicio, sec_numseccion, r_numreactivo, re_numcomponente, re_numcaracteristica, re_numcomponente2, re_descripcionesp, re_descripcioning FROM $tabla WHERE ser_claveservicio=:ids and concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica) =:nsec");
 
 
-		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_INT);
+		$stmt-> bindParam(":nsec", $datosModel, PDO::PARAM_STR);
 		$stmt-> bindParam(":ids", $servicioModel, PDO::PARAM_INT);
 		
 		$stmt-> execute();
@@ -64,10 +64,11 @@ class DatosEst extends Conexion{
     }
 
 	public function actualizatiporeacn2($datosModel, $datosservicio, $tiposec, $tabla){
-        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET sec_tiposeccion=:tiposec WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo)=:numsec");
+        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET sec_tiposeccion=:tiposec 
+WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo)=:numsec");
        
 
-			$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
+			$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_STR);
 			$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
 			$stmt-> bindParam(":tiposec", $tiposec, PDO::PARAM_STR);
 
@@ -87,7 +88,9 @@ class DatosEst extends Conexion{
 
 
 public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabla){
-        $stmt=Conexion::conectar()->prepare("UPDATE cue_reactivosabiertosdetalle set rad_tiporeactivo=:tiposec where concat(sec_numseccion,r_numreactivo,ra_numcomponente,ra_numcaracteristica,ra_numcomponente2,rad_numcaracteristica2)=:numsec and ser_claveservicio=:numser");
+        $stmt=Conexion::conectar()->prepare("UPDATE cue_reactivosabiertosdetalle set 
+rad_tiporeactivo=:tiposec where 
+concat(sec_numseccion,r_numreactivo,ra_numcomponente,ra_numcaracteristica,ra_numcomponente2,rad_numcaracteristica2)=:numsec and ser_claveservicio=:numser");
        
      		$stmt-> bindParam(":numsec", $datosModeL, PDO::PARAM_INT);
 			$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
@@ -108,7 +111,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
     }
 
    public function actualizatiporeacn6a($datosModel, $datosservicio, $tiposec, $tabla){
-        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET rad_tiporeactivo=:tiposec WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo,ra_numcomponente,ra_caracteristica,ra_numcomponente2,rad_numcaracteristica2)=:numsec");
+        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET rad_tiporeactivo=:tiposec 
+WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo,ra_numcomponente,ra_caracteristica,ra_numcomponente2,rad_numcaracteristica2)=:numsec");
 
 		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
 			$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
@@ -129,7 +133,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
     }
 
 	public function actualizatiporeacn6e($datosModel, $datosservicio, $tiposec, $tabla){
-        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET rad_tiporeactivo=:tiposec WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo,re_numcomponente,re_caracteristica,re_numcomponente2,red_numcaracteristica2)=:numsec");
+        $stmt=Conexion::conectar()->prepare("UPDATE $tabla SET rad_tiporeactivo=:tiposec 
+WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo,re_numcomponente,re_caracteristica,re_numcomponente2,red_numcaracteristica2)=:numsec");
 
 		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
 			$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
@@ -151,7 +156,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function buscatiposec($datosModel, $datosservicio,  $tabla){
-        $stmt=Conexion::conectar()->prepare("SELECT sec_tiposeccion from cue_secciones where ser_claveservicio=:numser and sec_numseccion=:numsec");
+        $stmt=Conexion::conectar()->prepare("SELECT sec_tiposeccion from cue_secciones
+ where ser_claveservicio=:numser and sec_numseccion=:numsec");
 
 		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
 		$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
@@ -163,7 +169,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
     }
 
     public function buscatiporeac($datosModel, $datosservicio, $numreac, $tabla){
-        $stmt=Conexion::conectar()->prepare("SELECT r_tiporeactivo from cue_reactivos where sec_numseccion=:numsec and r_numreactivo=:numreac and ser_claveservicio=:numser");
+        $stmt=Conexion::conectar()->prepare("SELECT r_tiporeactivo from cue_reactivos 
+where sec_numseccion=:numsec and r_numreactivo=:numreac and ser_claveservicio=:numser");
 
       	$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
 		$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
@@ -177,7 +184,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function CalculaultimaEstModel($datosservicio, $datosModel, $tabla){
-		$stm1=Conexion::conectar()->prepare("SELECT max(re_numcomponente) as clavecomp from $tabla where ser_claveservicio=:idser and concat(sec_numseccion,r_numreactivo,re_numcaracteristica,re_numcomponente2)=:idsec");
+		$stm1=Conexion::conectar()->prepare("SELECT max(re_numcomponente) as clavecomp 
+from $tabla where ser_claveservicio=:idser and concat(sec_numseccion,r_numreactivo,re_numcaracteristica,re_numcomponente2)=:idsec");
 		
 			$stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
 			$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_INT);
@@ -189,7 +197,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function CalculaultimaEst3Model($datosservicio, $datosModel, $tabla){
-		$stm1=Conexion::conectar()->prepare("SELECT max(re_numcomponente2) as clavecomp from $tabla where ser_claveservicio=:idser and concat(sec_numseccion,r_numreactivo,re_numcomponente, re_numcaracteristica)=:idsec");
+		$stm1=Conexion::conectar()->prepare("SELECT max(re_numcomponente2) as clavecomp 
+from $tabla where ser_claveservicio=:idser and concat(sec_numseccion,r_numreactivo,re_numcomponente, re_numcaracteristica)=:idsec");
 		
 			
 			$stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
@@ -297,7 +306,9 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function actualizaestandar($datosModel, $tabla){
-		$stmt=Conexion::conectar()->prepare("UPDATE $tabla SET re_descripcionesp=:descripesp,re_descripcioning=:descriping,re_tipoevaluacion=:tipoeval WHERE ser_claveservicio=:numser and concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2)=:numsec");
+		$stmt=Conexion::conectar()->prepare("UPDATE $tabla SET re_descripcionesp=:descripesp,
+re_descripcioning=:descriping,re_tipoevaluacion=:tipoeval WHERE ser_claveservicio=:numser 
+and concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2)=:numsec");
 
 
 			$stmt-> bindParam(":numser", $datosModel["idser"], PDO::PARAM_INT);
@@ -323,7 +334,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function borraestandarController($datosModel, $datosservicio, $tabla){
-		$stmt=Conexion::conectar()->prepare("DELETE FROM $tabla WHERE concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2) =:idsec and ser_claveservicio=:idser");
+		$stmt=Conexion::conectar()->prepare("DELETE FROM $tabla 
+WHERE concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2) =:idsec and ser_claveservicio=:idser");
 
 
 			$stmt-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
@@ -345,7 +357,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 	}
 
 	public function borraEstandarDetModel($datosModel, $datosservicio, $tabla){
-		$stmt=Conexion::conectar()->prepare("Delete From $tabla Where concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:idsec and ser_claveservicio=:idser");
+		$stmt=Conexion::conectar()->prepare("Delete From $tabla 
+Where concat(sec_numseccion,r_numreactivo,re_numcomponente,re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:idsec and ser_claveservicio=:idser");
 
 
 			$stmt-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
@@ -371,7 +384,8 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 	public function buscacompModel($datosModel, $datosservicio, $tabla){
-	$stm1=Conexion::conectar()->prepare("SELECT re_numcomponente FROM $tabla WHERE concat(sec_numseccion,r_numreactivo) =:idsec and ser_claveservicio=:idser");
+	$stm1=Conexion::conectar()->prepare("SELECT re_numcomponente FROM $tabla 
+WHERE concat(sec_numseccion,r_numreactivo) =:idsec and ser_claveservicio=:idser");
 			
 			$stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
 			$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_STR);
@@ -384,11 +398,12 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 
 
 public function actpondModel($datosModel, $datosservicio, $valtipo, $tabla){
-	$stm1=Conexion::conectar()->prepare("UPDATE cue_reactivos SET r_tiporeactivo=:tiporeac Where concat(cue_reactivos.sec_numseccion,cue_reactivos.r_numreactivo)=:idsec and cue_reactivos.ser_claveservicio=:idser");
+	$stm1=Conexion::conectar()->prepare("UPDATE cue_reactivos SET r_tiporeactivo=:tiporeac 
+Where concat(cue_reactivos.sec_numseccion,cue_reactivos.r_numreactivo)=:idsec and cue_reactivos.ser_claveservicio=:idser");
 			
 			$stm1-> bindParam(":idser", $datosservicio, PDO::PARAM_INT);
 			$stm1-> bindParam(":idsec", $datosModel, PDO::PARAM_STR);
-			$smt1-> bindParam("tiporeac", $valtipo,PDO::PARAM_STR);
+			$stm1-> bindParam(":tiporeac", $valtipo,PDO::PARAM_STR);
 			$stm1-> execute();
 		
 			IF($stm1-> execute()){
@@ -459,9 +474,19 @@ public function actpondModel($datosModel, $datosservicio, $valtipo, $tabla){
 
 
 	public function insertaestandardetalle($datosModel, $tabla){
-		$stmt=Conexion::conectar()->prepare("insert into cue_reactivosestandardetalle (ser_claveservicio, sec_numseccion, r_numreactivo, re_numcomponente, re_numcaracteristica, re_numcomponente2, red_numcaracteristica2, red_parametroesp, red_parametroing, red_estandar, red_valormin, red_valormax, red_signouno, red_signodos, red_ponderacion, red_syd, red_lugarsyd, red_tipodato, red_clavecatalogo, red_grafica, red_calculoespecial,red_tipocalculo,red_tipooperador, red_tipografica,red_indicador, red_lugarindicador, red_rangor, 	red_rangoa, red_rangov,red_metodopepsi,red_refinternacinal) 
+		$stmt=Conexion::conectar()->prepare("insert into cue_reactivosestandardetalle 
+(ser_claveservicio, sec_numseccion, r_numreactivo, re_numcomponente, re_numcaracteristica,
+ re_numcomponente2, red_numcaracteristica2, red_parametroesp, red_parametroing,
+ red_estandar, red_valormin, red_valormax, red_signouno, red_signodos, red_ponderacion,
+ red_syd, red_lugarsyd, red_tipodato, red_clavecatalogo, red_grafica, red_calculoespecial,
+red_tipocalculo,red_tipooperador, red_tipografica,red_indicador, red_lugarindicador,
+ red_rangor, 	red_rangoa, red_rangov,red_metodopepsi,red_refinternacinal,
+red_valorminmoderado, red_valormaxmoderado, red_signounomoderado, red_signodosmoderado) 
             values (:idServicio,:numsec,:numreac,:numcom,:numcar,:numcom2,:numcar2,
-                     :desesp,:desing,:estandar,:valmin,:valmax,:siguno,:sigdos,:pondera,:sydata,:lugarsyd,:formato,:numcat,:grafica,:numcalesp,:tipocalesp,:posicionc,:tipo_grafica,:indicador,:lugarindi,:rangor,:rangoa,:rangov,:anapepsi,:refinter)");
+                     :desesp,:desing,:estandar,:valmin,:valmax,:siguno,:sigdos,:pondera,
+:sydata,:lugarsyd,:formato,:numcat,:grafica,:numcalesp,:tipocalesp,:posicionc,
+:tipo_grafica,:indicador,:lugarindi,:rangor,:rangoa,:rangov,:anapepsi,:refinter,:valminmod,:valmaxmod,
+:sigunomod,:sigdosmod)");
 
 
 		$stmt-> bindParam(":idServicio", $datosModel["idServicio"], PDO::PARAM_INT);
@@ -475,11 +500,11 @@ public function actpondModel($datosModel, $datosservicio, $valtipo, $tabla){
 		$stmt-> bindParam(":desesp", $datosModel["desesp"], PDO::PARAM_STR);
 		$stmt-> bindParam(":desing", $datosModel["desing"], PDO::PARAM_STR);
 		$stmt-> bindParam(":estandar", $datosModel["estandar"], PDO::PARAM_INT);
-		$stmt-> bindParam(":valmin", $datosModel["valmin"], PDO::PARAM_INT);
-		$stmt-> bindParam(":valmax", $datosModel["valmax"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valmin", $datosModel["valmin"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valmax", $datosModel["valmax"], PDO::PARAM_STR);
 
-		$stmt-> bindParam(":siguno", $datosModel["siguno"], PDO::PARAM_INT);
-		$stmt-> bindParam(":sigdos", $datosModel["sigdos"], PDO::PARAM_INT);
+		$stmt-> bindParam(":siguno", $datosModel["siguno"], PDO::PARAM_STR);
+		$stmt-> bindParam(":sigdos", $datosModel["sigdos"], PDO::PARAM_STR);
 		$stmt-> bindParam(":pondera", $datosModel["pondera"], PDO::PARAM_INT);
 		$stmt-> bindParam(":sydata", $datosModel["sydata"], PDO::PARAM_INT);
 		$stmt-> bindParam(":lugarsyd", $datosModel["lugarsyd"], PDO::PARAM_INT);
@@ -488,24 +513,29 @@ public function actpondModel($datosModel, $datosservicio, $valtipo, $tabla){
 		$stmt-> bindParam(":numcat", $datosModel["numcat"], PDO::PARAM_INT);
 		$stmt-> bindParam(":grafica", $datosModel["grafica"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numcalesp", $datosModel["numcalesp"], PDO::PARAM_INT);
-		$stmt-> bindParam(":tipocalesp", $datosModel["tipocalesp"], PDO::PARAM_STR);
+		$stmt-> bindParam(":tipocalesp", $datosModel["tipocalesp"], PDO::PARAM_INT);
 		$stmt-> bindParam(":posicionc", $datosModel["posicionc"], PDO::PARAM_INT);
 		$stmt-> bindParam(":tipo_grafica", $datosModel["tipo_grafica"], PDO::PARAM_STR);
 
 		$stmt-> bindParam(":indicador", $datosModel["indicador"], PDO::PARAM_INT);
 		$stmt-> bindParam(":lugarindi", $datosModel["lugarindi"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangor", $datosModel["rangor"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangoa", $datosModel["rangoa"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangov", $datosModel["rangov"], PDO::PARAM_INT);
+		$stmt-> bindParam(":rangor", $datosModel["rangor"], PDO::PARAM_STR);
+		$stmt-> bindParam(":rangoa", $datosModel["rangoa"], PDO::PARAM_STR);
+		$stmt-> bindParam(":rangov", $datosModel["rangov"], PDO::PARAM_STR);
 		$stmt-> bindParam(":anapepsi", $datosModel["anapepsi"], PDO::PARAM_STR);
 		$stmt-> bindParam(":refinter", $datosModel["refinter"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valminmod", $datosModel["valminmod"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valmaxmod", $datosModel["valmaxmod"], PDO::PARAM_STR);
+		
+		$stmt-> bindParam(":sigunomod", $datosModel["sigunomod"], PDO::PARAM_STR);
+		$stmt-> bindParam(":sigdosmod", $datosModel["sigdosmod"], PDO::PARAM_STR);
 		IF($stmt-> execute()){
 
 				return "success";
 			}
 			
 			else {
-
+			//$stmt->debugDumpParams();
 				return "error";
 		
 			};
@@ -520,7 +550,11 @@ public function actpondModel($datosModel, $datosservicio, $valtipo, $tabla){
 red_valormax, red_signouno, red_signodos, red_ponderacion, red_syd, red_lugarsyd, red_tiporeactivo, red_grafica,
  red_tipodato, red_clavecatalogo, red_calculoespecial, red_tipocalculo, red_tipooperador, red_posicioncalculo, 
 red_tipografica, red_indicador, red_rangor, red_rangoa, red_rangov, red_metodopepsi, red_refinternacinal, 
-red_lugarindicador FROM cue_reactivosestandardetalle 
+red_lugarindicador, `red_valorminmoderado`,
+  `red_valormaxmoderado`,
+  `red_signounomoderado`,
+  `red_signodosmoderado`
+ FROM cue_reactivosestandardetalle 
 where concat(sec_numseccion,r_numreactivo,re_numcomponente,
 re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:numsec and ser_claveservicio=:numser");
 	
@@ -529,25 +563,39 @@ re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:numsec and ser_
 		
 		$stmt-> execute();
 		return $stmt->fetch();
-		$stmt->close();
+	
 
 			
 	}
 
 
 	public function actualizaEstandarDetalleModel($datosModel, $tabla){
-		$stmt=Conexion::conectar()->prepare("UPDATE cue_reactivosestandardetalle SET red_parametroesp=:desesp,red_parametroing=:desing,red_valormin=:valmin,red_valormax=:valmax,red_signouno=:siguno,red_signodos=:sigdos,red_ponderacion=:pond,red_syd=:sydata,red_lugarsyd=:sydludata,red_tipodato=:formato,red_clavecatalogo=:numcatalogo,red_grafica=:grafica,red_estandar=:estandar,red_calculoespecial=:cesp,red_tipocalculo=:tce,red_tipooperador=:posicionc,
-		red_tipografica=:tipo_grafica,red_indicador=:valindi,red_lugarindicador=:lugarindi,red_rangor=:rangor,red_rangoa=:rangoa,red_rangov=:rangov,red_metodopepsi=:anapepsi,red_refinternacinal=:refinter WHERE concat(sec_numseccion, r_numreactivo, re_numcomponente, re_numcaracteristica, re_numcomponente2, red_numcaracteristica2) =:nsec and ser_claveservicio=:idser");
+		$stmt=Conexion::conectar()->prepare("UPDATE cue_reactivosestandardetalle 
+SET red_parametroesp=:desesp,red_parametroing=:desing,red_valormin=:valmin,
+red_valormax=:valmax,red_signouno=:siguno,red_signodos=:sigdos,red_ponderacion=:pond,
+red_syd=:sydata,red_lugarsyd=:sydludata,red_tipodato=:formato,
+red_clavecatalogo=:numcatalogo,red_grafica=:grafica,red_estandar=:estandar,
+red_calculoespecial=:cesp,red_tipocalculo=:tce,red_tipooperador=:posicionc,
+		red_tipografica=:tipo_grafica,red_indicador=:valindi,red_lugarindicador=:lugarindi,
+red_rangor=:rangor,
+red_rangoa=:rangoa,red_rangov=:rangov,red_metodopepsi=:anapepsi,
+red_refinternacinal=:refinter,
+red_valorminmoderado=:valminmod,
+red_valormaxmoderado=:valmaxmod,red_signounomoderado=:sigunomod,
+red_signodosmoderado=:sigdosmod
+ WHERE concat(sec_numseccion, r_numreactivo, re_numcomponente,
+ re_numcaracteristica, re_numcomponente2, red_numcaracteristica2) =:nsec
+ and ser_claveservicio=:idser");
 
 		$stmt-> bindParam(":idser", $datosModel["idServicio"], PDO::PARAM_INT);
 		$stmt-> bindParam(":nsec", $datosModel["numsec"], PDO::PARAM_INT);	
 		$stmt-> bindParam(":desesp", $datosModel["desesp"], PDO::PARAM_STR);
 		$stmt-> bindParam(":desing", $datosModel["desing"], PDO::PARAM_STR);
 		$stmt-> bindParam(":estandar", $datosModel["estandar"], PDO::PARAM_STR);
-		$stmt-> bindParam(":valmin", $datosModel["valmin"], PDO::PARAM_INT);
-		$stmt-> bindParam(":valmax", $datosModel["valmax"], PDO::PARAM_INT);
-		$stmt-> bindParam(":siguno", $datosModel["siguno"], PDO::PARAM_INT);
-		$stmt-> bindParam(":sigdos", $datosModel["sigdos"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valmin", $datosModel["valmin"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valmax", $datosModel["valmax"], PDO::PARAM_STR);
+		$stmt-> bindParam(":siguno", $datosModel["siguno"], PDO::PARAM_STR);
+		$stmt-> bindParam(":sigdos", $datosModel["sigdos"], PDO::PARAM_STR);
 		$stmt-> bindParam(":pond", $datosModel["pondera"], PDO::PARAM_INT);
 		$stmt-> bindParam(":sydata", $datosModel["sydata"], PDO::PARAM_INT);
 		$stmt-> bindParam(":sydludata", $datosModel["lugarsyd"], PDO::PARAM_INT);
@@ -556,21 +604,27 @@ re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:numsec and ser_
 		$stmt-> bindParam(":tipo_grafica", $datosModel["tipo_grafica"], PDO::PARAM_STR);
 		$stmt-> bindParam(":numcatalogo", $datosModel["numcat"], PDO::PARAM_INT);
 		$stmt-> bindParam(":cesp", $datosModel["numcalesp"], PDO::PARAM_INT);
-		$stmt-> bindParam(":tce", $datosModel["tipocalesp"], PDO::PARAM_STR);
+		$stmt-> bindParam(":tce", $datosModel["tipocalesp"], PDO::PARAM_INT);
 		$stmt-> bindParam(":posicionc", $datosModel["posicionc"], PDO::PARAM_INT);		
 		$stmt-> bindParam(":valindi", $datosModel["indicador"], PDO::PARAM_INT);
 		$stmt-> bindParam(":lugarindi", $datosModel["lugarindi"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangor", $datosModel["rangor"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangoa", $datosModel["rangoa"], PDO::PARAM_INT);
-		$stmt-> bindParam(":rangov", $datosModel["rangov"], PDO::PARAM_INT);
+		$stmt-> bindParam(":rangor", $datosModel["rangor"], PDO::PARAM_STR);
+		$stmt-> bindParam(":rangoa", $datosModel["rangoa"], PDO::PARAM_STR);
+		$stmt-> bindParam(":rangov", $datosModel["rangov"], PDO::PARAM_STR);
 		$stmt-> bindParam(":anapepsi", $datosModel["anapepsi"], PDO::PARAM_STR);
 		$stmt-> bindParam(":refinter", $datosModel["refinter"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valminmod", $datosModel["valminmod"], PDO::PARAM_STR);
+		$stmt-> bindParam(":valmaxmod", $datosModel["valmaxmod"], PDO::PARAM_STR);
+		$stmt-> bindParam(":sigunomod", $datosModel["sigunomod"], PDO::PARAM_STR);
+		$stmt-> bindParam(":sigdosmod", $datosModel["sigdosmod"], PDO::PARAM_STR);
 		
 		IF($stmt-> execute()){
+		
 				return "success";
 			}
 			
 			else {
+
 
 				return "error";
 		
@@ -1104,7 +1158,7 @@ function consultaDetalleEstandarxval($vservicio,  $reporte,$caract3,$seccion,$co
         $stmt-> bindParam(":reactivo", $reactivo, PDO::PARAM_INT);
         $stmt-> bindParam(":opcion", $opcion, PDO::PARAM_INT);
         $stmt-> execute();
-    //  $stmt->debugDumpParams(); 
+     // $stmt->debugDumpParams(); 
         $result=$stmt->fetchAll();
        
         
@@ -1387,7 +1441,7 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 
 			//$stmt-> bindParam(":numren", $numren, PDO::PARAM_INT);
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
-			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
 			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
 			
 			$stmt-> execute();
@@ -1401,7 +1455,7 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 		$stmt=Conexion::conectar()->prepare("SELECT red_numcaracteristica2,red_parametroesp, red_tipodato, red_clavecatalogo FROM $tabla where ser_claveservicio=:idser and concat(sec_numseccion,'.', r_numreactivo,'.', re_numcomponente,'.', re_numcaracteristica,'.', re_numcomponente2) =:idsec order by red_numcaracteristica2");
 
 			$stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
-			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
 			
 			$stmt-> execute();
 			return $stmt->fetchall();
@@ -1458,7 +1512,7 @@ where red_grafica=-1 and re_tipoevaluacion <>0 and cue_reactivosestandardetalle.
 	    return $res;
 	}
 	
-	function ConsultaAgua($muestra) {
+	function ConsultaAgua($muestra,$servicio) {
 		
 		$sqlfq="SELECT ins_detalleestandar.ide_numrenglon, ins_detalleestandar.ide_numreporte,
 ins_detalleestandar.ide_claveservicio FROM
@@ -1466,16 +1520,17 @@ ins_detalleestandar Inner Join cue_secciones ON ins_detalleestandar.ide_claveser
 AND ins_detalleestandar.ide_numseccion = cue_secciones.sec_numseccion 
 WHERE
 cue_secciones.sec_indagua =  '1' AND
-ins_detalleestandar.ide_idmuestra =  :ntoma
+ins_detalleestandar.ide_idmuestra =  :ntoma and ide_claveservicio=:servicio
 GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numseccion, ins_detalleestandar.ide_idmuestra";
 		
 		$stmt = Conexion::conectar()-> prepare($sqlfq);
 		
 		$stmt->bindParam(":ntoma", $muestra, PDO::PARAM_INT);
+		$stmt->bindParam(":servicio", $servicio, PDO::PARAM_INT);
 		$stmt->execute();
 		
 		$res=$stmt->fetchAll();
-		
+//		$stmt->debugDumpParams();
 		
 		return $res;
 	}
@@ -1551,7 +1606,13 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 	}
 	
 	public function insertaRepEstandarDetalleToma($datosModel, $tabla){
-		$stmt=Conexion::conectar()->prepare("INSERT INTO ins_detalleestandar (ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon, ide_ponderacion, ide_aceptado, ide_numcolarc, ide_idmuestra) VALUES (:idser, :numrep, :numsec, :numreac, :numcom, :numcar, :numcom2, :numcar2, :valcom, :numren, :pondreal, :aceptado, :numcolarc,:ntoma)");
+		$stmt=Conexion::conectar()->prepare("INSERT INTO ins_detalleestandar
+ (ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, 
+ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_numrenglon,
+ ide_ponderacion, ide_aceptado, ide_numcolarc, ide_idmuestra) 
+VALUES (:idser, :numrep, :numsec, :numreac, :numcom,
+ :numcar, :numcom2, :numcar2, :valcom, :numren,
+ :pondreal, :aceptado, :numcolarc,:ntoma)");
 		
 		$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numrep", $datosModel["numrep"], PDO::PARAM_INT);
@@ -1561,7 +1622,7 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numcom2", $datosModel["numcom2"], PDO::PARAM_INT);
 		$stmt-> bindParam(":numcar2", $datosModel["numcar2"], PDO::PARAM_INT);
-		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_INT);
+		$stmt-> bindParam(":valcom", $datosModel["valcom"], PDO::PARAM_STR);
 		$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
 		$stmt-> bindParam(":pondreal", $datosModel["pondreal"], PDO::PARAM_INT);
 		$stmt-> bindParam(":aceptado", $datosModel["aceptado"], PDO::PARAM_INT);
@@ -1569,12 +1630,12 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		$stmt-> bindParam(":ntoma", $datosModel["ntoma"], PDO::PARAM_INT);
 		
 		IF($stmt-> execute()){
-	//	$stmt->debugDumpParams();
+		
 			return "success";
 		}
 		
 		else {
-			
+
 			return "error";
 			
 		};
@@ -1615,7 +1676,7 @@ GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numsecci
 		}
 		
 		else {
-			
+		
 			return "error";
 			
 		}
@@ -1639,6 +1700,169 @@ ins_detalleestandar.ide_claveservicio");
 		$stmt-> execute();
 	
 		return $stmt->fetchAll();
+	}
+	
+	public function eliminarEstandarMuestra($ntoma, $tabla){
+		$sqld="DELETE FROM ins_detalleestandar 
+WHERE ins_detalleestandar.ide_idmuestra =:ntoma";
+		try{
+		$stmt=Conexion::conectar()->prepare($sqld);
+
+$stmt-> bindParam(":ntoma", $ntoma, PDO::PARAM_INT);
+
+$stmt-> execute();
+		}catch(Exception $ex){
+			throw new Exception("Hubo un error al eliminar la toma");
+		}
+
+	}
+	//revisa si toda la seccion se acepta
+	
+	function cumplimientoSeccion($vservicio, $referencia, $reporte) {
+		
+		
+		$query = "SELECT sum(if(ide_aceptado<0,100,0))/sum(1) as aceptado,
+ide_valorreal,  ide_numcaracteristica3 FROM
+			ins_detalleestandar
+		       	   WHERE ins_detalleestandar.ide_numreporte =:reporte and ide_claveservicio=:vservicio
+			      and concat(ins_detalleestandar.ide_numseccion,'.',ide_numreactivo ,'.',
+                             ins_detalleestandar.ide_numcomponente )=:referencia";
+			
+			$query .= " group by ins_detalleestandar.ide_numseccion,ide_numreactivo ,ins_detalleestandar.ide_numcomponente;";
+			//echo "<br>".$query;
+			$stmt = Conexion::conectar()-> prepare($query);
+			
+			$stmt-> bindParam(":referencia", $referencia, PDO::PARAM_STR);
+			$stmt-> bindParam(":reporte",$reporte , PDO::PARAM_INT);
+			$stmt-> bindParam(":vservicio", $vservicio, PDO::PARAM_INT);
+			$stmt-> execute();
+		
+			$result=$stmt->fetchAll();
+		//	$stmt->debugDumpParams();
+			$res="";
+			foreach($result as $row_cal_b ) {
+				
+						
+			if ($row_cal_b ["aceptado"] == 100)
+							$res="palomita";
+					else
+						$res="tache";
+							
+			}
+			
+			$stmt->closeCursor();
+			return $res;
+	}
+	
+	public function consultaGraficaIndicador($servicio,$seccion,$filx,$fily,$filuni,$fmes_consulta,$mes_consulta_ant){
+		
+		$sqlt =" SELECT
+ SUM(
+    IF(re_tipoevaluacion=1,IF(ide_numrenglon=1,IF(ide_aceptado<0,1,0),0),IF(ide_aceptado<0,1,0))
+  ) /  SUM(IF(re_tipoevaluacion=1,IF( ide_numrenglon=1,1, 0),1)) * 100 AS porc,
+trim(cue_reactivosestandardetalle.red_parametroesp) red_parametroesp,trim(cue_reactivosestandardetalle.red_parametroing) red_parametroing,
+cue_reactivosestandardetalle.red_estandar,
+`red_rangor`,`red_rangoa`,`red_rangov`,
+concat(cue_reactivosestandardetalle.sec_numseccion,'.',
+cue_reactivosestandardetalle.r_numreactivo,'.',
+cue_reactivosestandardetalle.re_numcomponente,'.',
+cue_reactivosestandardetalle.re_numcaracteristica,'.',
+cue_reactivosestandardetalle.re_numcomponente2,'.',
+cue_reactivosestandardetalle.red_numcaracteristica2) as refer
+FROM
+ins_detalleestandar
+INNER JOIN cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion
+   AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica
+   AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
+Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandar.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandar.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandar.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandar.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandar.re_numcaracteristica
+
+INNER JOIN ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generales.i_claveservicio AND ins_detalleestandar.ide_numreporte = ins_generales.i_numreporte
+INNER JOIN ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
+WHERE ins_generales.i_claveservicio=$servicio  ";
+		if(isset($filuni["reg"])&&$filuni["reg"]!="")
+		{ $sqlt.=" and  une_cla_region=".$filuni["reg"];
+		$nivel=1;}
+		if(isset($filuni["uni"])&&$filuni["uni"]!="")
+		{$sqlt.=" and une_cla_pais=".$filuni["uni"];
+		$nivel=2;}
+		if(isset($filuni["zon"])&&$filuni["zon"]!="")
+		{ $sqlt.=" and une_cla_zona=".$filuni["zon"];
+		$nivel=3;}
+		
+		
+		$sqlt.=" and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <='$fmes_consulta'
+		
+		
+and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >='$mes_consulta_ant'
+
+ AND ide_valorreal<>''
+AND
+ins_detalleestandar.ide_numseccion=".$seccion."
+AND `red_indicador`=-1";
+		
+		if(isset($fily["cta"])&&$fily["cta"]!="")
+			$sqlt.=" and ca_unegocios.cue_clavecuenta=".$fily["cta"];
+			if(isset($filx["edo"])&&$filx["edo"]!="")
+			{  $sqlt.=" and ca_unegocios.une_cla_estado=".$filx["edo"];
+			$nivel=4;}
+			
+			if(isset($filx["ciu"])&&$filx["ciu"]!="")
+			{   $sqlt.=" and ca_unegocios.une_cla_ciudad=".$filx["ciu"];
+			$nivel=5;}
+			if(isset($filx["niv6"])&&$filx["niv6"]!="")
+			{   $sqlt.=" and ca_unegocios.une_cla_franquicia=".$filx["niv6"];
+			$nivel=6;}
+			if(isset($fily["fra"])&&$fily["fra"]!="")
+				$sqlt.=" and ca_unegocios.fc_idfranquiciacta=".$fily["fra"];
+				if(isset($fily["pv"])&&$fily["pv"]!="")
+					$sqlt.=" and ca_unegocios.une_id =".$fily["pv"];
+					$sqlt.=" GROUP BY
+cue_reactivosestandardetalle.sec_numseccion,
+cue_reactivosestandardetalle.r_numreactivo,
+cue_reactivosestandardetalle.re_numcomponente,
+cue_reactivosestandardetalle.re_numcaracteristica,
+cue_reactivosestandardetalle.re_numcomponente2,
+cue_reactivosestandardetalle.red_numcaracteristica2
+ORDER BY cue_reactivosestandardetalle.red_lugarindicador";
+					//echo $sqlt;
+					$result = Conexion::ejecutarQuerysp($sqlt);
+					return $result;
+	}
+	
+	public function consultaGraficaCumplimientotmp($listasec,$vservicio,$usuario,$fmes_consulta,$mes_consulta_ant,$mes_pivote){
+	    $sql_reporte_e = "SELECT
+sum(If(re_tipoevaluacion=1,If(ide_numrenglon=1,if(ide_aceptado<0,1,0),0),if(ide_aceptado<0,1,0))) as pasa,
+sum(if(re_tipoevaluacion=1,if( ide_numrenglon=1,1, 0),1)) as tot,
+cue_reactivosestandardetalle.red_estandar, red_parametroesp, red_parametroing,
+tmp_estadistica.usuario,concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) as refer,
+red_tipodato,red_valormin,red_clavecatalogo ,cue_reactivosestandardetalle.sec_numseccion seccion,
+  if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d')=:fmes_consulta,1,0) as mes,
+       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >=:mes_pivote
+ and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta,2,0 ) as 6mes,
+       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >:mes_consulta_ant 
+       and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta,3,0)  as 12mes
+        FROM
+ins_detalleestandar
+Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandar.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandar.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandar.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandar.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandar.re_numcaracteristica
+Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
+Inner Join tmp_estadistica ON ins_detalleestandar.ide_numreporte = tmp_estadistica.numreporte
+WHERE cue_reactivosestandar.re_tipoevaluacion > 0 AND ide_valorreal<>'' AND
+ins_detalleestandar.ide_claveservicio=:vserviciou AND
+cue_reactivosestandar.sec_numseccion  in (".substr($listasec,0,strlen($listasec)-1).")
+ and  `red_indicador`=-1 and tmp_estadistica.usuario=:usuario
+  GROUP BY
+	cue_reactivosestandardetalle.sec_numseccion,cue_reactivosestandardetalle.r_numreactivo,
+  cue_reactivosestandardetalle.re_numcomponente,cue_reactivosestandardetalle.re_numcaracteristica,
+  cue_reactivosestandardetalle.re_numcomponente2,cue_reactivosestandardetalle.red_numcaracteristica2, 
+mes, 6mes,12mes";
+            
+	    $parametros = array("vserviciou" => $vservicio, "usuario" => $usuario);
+               $parametros["mes_pivote"] = $mes_pivote;
+                $parametros["fmes_consulta"] = $fmes_consulta;
+        $parametros["mes_consulta_ant"] = $mes_consulta_ant;
+	    // echo "<br>***********************************************<br>";
+	    $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
+	    return $rs_sql_reporte_e;
 	}
 	
 }

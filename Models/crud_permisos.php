@@ -159,8 +159,11 @@ where men_superopcion='".$menu."'";
     public function getPermisosxgrupo($grupo){
     	$sql="select * from cnfg_menu
         inner join cnfg_permisos on cnfg_menu.men_claveopcion=cnfg_permisos.cpe_claveopcion
-where cnfg_permisos.cpe_grupo=:grupous and men_nivel=1
-order by cnfg_menu.men_claveopcion;";
+where cnfg_permisos.cpe_grupo=:grupous and men_nivel=1";
+    	if($grupo=="muh"||$grupo=="mui")
+    		$sql.=" order by men_orden";
+    	else 
+    		$sql.=" order by cnfg_menu.men_claveopcion;";
     	
     	
     	$con=Conexion::conectar();
@@ -181,9 +184,13 @@ FROM
 cnfg_permisos
 Inner Join cnfg_menu ON cnfg_permisos.cpe_claveopcion = cnfg_menu.men_claveopcion
 where
-cnfg_permisos.cpe_grupo=:grupous and cnfg_menu.men_superopcion=:superopcion";
+cnfg_permisos.cpe_grupo=:grupous and cnfg_menu.men_superopcion=:superopcion
+";
     	
-    	
+    	if($grupo=="muh"||$grupo=="mui")
+    		$sql_com.=" order by men_orden";
+    		else
+    			$sql_com.=" order by men_nombreopcion desc;";
     	
     	$con=Conexion::conectar();
     	$stmt=$con->prepare($sql_com);

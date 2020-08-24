@@ -7,7 +7,8 @@ class DatosUnegocio extends Conexion {
 
 	public function vistaUnegocioModel($init=false, $page_size=false, $cta, $tabla){
 		$stmt = Conexion::conectar()-> prepare("SELECT une_id, une_descripcion, une_idpepsi,
-une_dir_estado, une_dir_municipio, une_idcuenta,une_num_unico_distintivo FROM $tabla 
+une_dir_estado, une_dir_municipio, une_idcuenta,une_num_unico_distintivo, est_nombre FROM $tabla 
+inner join `ca_uneestados` ON `est_id`=`une_dir_idestado`
 where cue_clavecuenta=:cta order by une_dir_estado limit :init, :size  ");
 		
         $stmt->bindParam(":init", $init, PDO::PARAM_INT);
@@ -24,7 +25,8 @@ where cue_clavecuenta=:cta order by une_dir_estado limit :init, :size  ");
 	public function vistaFiltroUnegocioModel($cta, $datosbus,$estado,$ciudad, $tabla){
 
 		$sql="SELECT une_id, une_descripcion, une_idpepsi,
- une_idcuenta,une_num_unico_distintivo,une_dir_estado, une_dir_municipio FROM $tabla
+ une_idcuenta,une_num_unico_distintivo,une_dir_estado, une_dir_municipio,est_nombre FROM $tabla
+inner join `ca_uneestados` ON `est_id`=`une_dir_idestado`
 where cue_clavecuenta=:cta and une_descripcion
 LIKE :opbusqueda ";
 	
@@ -112,7 +114,14 @@ LIKE :opbusqueda ";
 
     public function UnegocioCompleta($iduneg, $tabla) {
 
-        $stmt = Conexion::conectar()->prepare("SELECT cue_clavecuenta, une_id, une_descripcion, une_idpepsi, une_idcuenta, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_estado, une_dir_cp, une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia, une_dir_idestado, fc_idfranquiciacta, une_num_unico_distintivo,`une_estatus`,`une_fechaestatus` FROM $tabla WHERE une_id=:iduneg");
+        $stmt = Conexion::conectar()->prepare("SELECT cue_clavecuenta, une_id, 
+une_descripcion, une_idpepsi, une_idcuenta, une_dir_calle, une_dir_numeroext,
+ une_dir_numeroint, une_dir_manzana, une_dir_lote, une_dir_colonia, une_dir_delegacion,
+ une_dir_municipio, une_dir_estado, une_dir_cp, une_dir_referencia, une_dir_telefono,
+une_dir_telefono2, une_dir_correoe, 
+une_cla_region, une_cla_pais, une_cla_zona, une_cla_estado, une_cla_ciudad, une_cla_franquicia
+, une_dir_idestado, fc_idfranquiciacta, une_num_unico_distintivo,`une_estatus`,une_numpunto,
+`une_fechaestatus` FROM $tabla WHERE une_id=:iduneg");
 
 
 
@@ -126,6 +135,28 @@ LIKE :opbusqueda ";
 
         return $stmt->fetch();
     }
+    
+    public function UnegocioCompletaxnumpunto($numpunto, $tabla) {
+    	
+    	$stmt = Conexion::conectar()->prepare("SELECT cue_clavecuenta, une_id, une_descripcion,
+ une_idpepsi, une_idcuenta, une_dir_calle, une_dir_numeroext, une_dir_numeroint, une_dir_manzana, une_dir_lote,
+ une_dir_colonia, une_dir_delegacion, une_dir_municipio, une_dir_estado, une_dir_cp, 
+une_dir_referencia, une_dir_telefono, une_cla_region, une_cla_pais, une_cla_zona, 
+une_cla_estado, une_cla_ciudad, une_cla_franquicia, une_dir_idestado, fc_idfranquiciacta,
+ une_num_unico_distintivo,`une_estatus`,`une_fechaestatus` FROM $tabla WHERE une_numpunto=:numpunto");
+    	
+    	
+    	
+    	$stmt->bindParam(":numpunto", $numpunto, PDO::PARAM_STR);
+    	
+    	
+    	
+    	$stmt->execute();
+    	
+    	
+    	
+    	return $stmt->fetch();
+    }
 
    
     public function actualizarUnegocio($datosModel, $tabla) {
@@ -135,63 +166,34 @@ LIKE :opbusqueda ";
 //procedimiento de insercion de  la cuenta	   
 
             $sSQL = "update $tabla
-
-   set 
-
+  set 
 cue_clavecuenta=:ncuenta,
-
 une_descripcion=:desuneg,
-
 une_idpepsi=:idpepsi,
-
 une_idcuenta= :idcta,
-
 une_num_unico_distintivo= :idnud,
-
 une_dir_calle= :calle,
-
 une_dir_numeroext= :numext,
-
 une_dir_numeroint= :numint,
-
 une_dir_manzana= :mz,
-
 une_dir_lote=:lt,
-
 une_dir_colonia= :col,
-
 une_dir_delegacion=:del,
-
 une_dir_municipio= :mun,
-
 une_dir_idestado=:edo,
-
 une_dir_cp= :cp,
-
 une_dir_referencia= :ref,
-
 une_dir_telefono= :tel,
-
 une_cla_region=:clanivel1,
-
 une_cla_pais=:clanivel2,
-
 une_cla_zona= :clanivel3,
-
 une_cla_estado=:clanivel4,
-
 une_cla_ciudad= :clanivel5,
-
 une_cla_franquicia= :clanivel6,
-
 une_dir_estado=upper(:nom_edo),
-
 fc_idfranquiciacta=:franqcuenta,
-
 une_numpunto= :numpun,
-
 une_estatus= :estatuscuenta,
-
 une_fechaestatus= :fecest where une_id=:numunineg";
 
             $stmt = Conexion::conectar()->prepare($sSQL);
@@ -306,7 +308,7 @@ ca_unegocios.une_descripcion, concat(une_dir_calle,' ',
 
    une_dir_municipio, une_idcuenta,une_id,cue_clavecuenta,fc_idfranquiciacta,
 
-    une_idpepsi
+    une_idpepsi,une_num_unico_distintivo
 
 FROM
 
@@ -321,7 +323,7 @@ where 1=1 ";
 
         if ($fil_idpepsi != "") {
 
-            $sql .= " and une_idpepsi='" . $fil_idpepsi . "'";
+            $sql .= " and une_num_unico_distintivo='" . $fil_idpepsi . "'";
         }
 
         if (isset($filx["pais"]) && $filx["pais"] != "") {
@@ -552,11 +554,11 @@ WHERE ca_cuentas.cue_tipomercado =:tipomer "
 
     public function unegocioxIdCuentaCuenta($idcta, $cta, $tabla) {
 
-        $sql = "SELECT une_id, une_descripcion FROM ca_unegocios Inner Join ca_cuentas ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
-
-WHERE ca_unegocios.une_idcuenta =:idcta 
-
+    	$sql = "SELECT une_id, une_descripcion FROM ca_unegocios 
+WHERE ca_unegocios.une_idcuenta =:idcta
+    			
 AND ca_unegocios.cue_clavecuenta =:cta";
+    	
 
 
 
@@ -564,11 +566,29 @@ AND ca_unegocios.cue_clavecuenta =:cta";
 
         $stmt->bindParam(":idcta", $idcta);
 
-        $stmt->bindParam(":cta", $cta);
+       $stmt->bindParam(":cta", $cta);
 
         $stmt->execute();
-
+//$stmt->debugDumpParams();die();
         return $stmt->fetchAll();
+    }
+    
+    
+    public function unegocioxNudCuenta($nud, $cta, $tabla) {
+    	
+    	$sql = "SELECT * FROM ca_unegocios
+WHERE ca_unegocios.une_num_unico_distintivo=:nud
+AND ca_unegocios.cue_clavecuenta =:cta";
+    	
+    	$stmt = Conexion::conectar()->prepare($sql);
+    	
+    	$stmt->bindParam(":nud", $nud);
+    	
+    	$stmt->bindParam(":cta", $cta);
+    	
+    	$stmt->execute();
+    //	$stmt->debugDumpParams();die();
+    	return $stmt->fetch();
     }
     
   
@@ -687,7 +707,13 @@ ca_unegocios.une_cla_pais=$aux2[2]";
 
         $numunineg += 1;
 
-
+       // calcula numero de punto general
+        // asigna nuevo numero de punto de venta
+        $sqlc="SELECT Max(ca_unegocios.une_numpunto) AS ulnum FROM ca_unegocios";
+        $rsm=Conexion::ejecutarQuerysp($sqlc);
+        foreach($rsm as $rowm){
+        	$npunto = $rowm["ulnum"] + 1;
+        }
 
 
 
@@ -718,7 +744,9 @@ cer_solicitud.sol_idcuenta,
 
 :npunto, 1, curdate(),'',''
 
- FROM cer_solicitud WHERE cer_solicitud.sol_claveservicio =:servicio AND cer_solicitud.sol_idsolicitud =:reporte";
+ FROM cer_solicitud 
+WHERE cer_solicitud.sol_claveservicio =:servicio 
+AND cer_solicitud.sol_idsolicitud =:reporte";
 
         $stmt = Conexion::conectar()->prepare($sqli);
 
@@ -726,7 +754,7 @@ cer_solicitud.sol_idcuenta,
 
         $stmt->bindParam(":numunineg", $numunineg, PDO::PARAM_INT);
 
-        $stmt->bindParam(":npunto", $numunineg, PDO::PARAM_INT);
+        $stmt->bindParam(":npunto", $npunto, PDO::PARAM_INT);
 
         $stmt->bindParam(":servicio", $servicio, PDO::PARAM_INT);
 
@@ -738,7 +766,7 @@ cer_solicitud.sol_idcuenta,
 
        // $stmt->debugDumpParams();
 
-
+        return $npunto;
 
         if (!$res)
             throw new Exception("Error al insertar solicitud");
@@ -864,6 +892,31 @@ WHERE ca_unegocios.cue_clavecuenta =:idcta and  fc_idfranquiciacta=:franqcuenta"
     	return $stmt->fetchAll();
     	
     }
+    
+    public function actualizarUnegocioContacto($uneid,$telefono1,$telefono2,$correo){
+    	$ssqe="UPDATE `ca_unegocios`
+SET 
+  `une_dir_telefono` =:telefono,
+  `une_dir_telefono2` =:telefono2,
+  `une_dir_correoe` =:correo
+ WHERE `une_id` =:une_id;";
+    	try{
+    	$stmt = Conexion::conectar()->prepare($ssqe);
+    	
+    	$stmt->bindParam(":telefono", $telefono1,PDO::PARAM_STR);
+    	$stmt->bindParam(":telefono2", $telefono2,PDO::PARAM_STR);
+    	$stmt->bindParam(":correo", $correo,PDO::PARAM_STR);
+    	$stmt->bindParam(":une_id", $uneid,PDO::PARAM_INT);
+    	$stmt->execute();
+    	
+    	}catch(Exception $ex){
+    		Utilerias::guardarError($ex);
+    		throw new Exception("Error al actualizar los datos de contacto");
+    	}
+    	
+    }
+    
+    
 
 }
 

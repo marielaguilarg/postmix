@@ -32,16 +32,20 @@ public function listaCuentasModel($tabla){
 
 	#registo franquicia
      public function registroFranquiciaModel($datosModel, $tabla){
-		 $stmt = Conexion::conectar()-> prepare("INSERT INTO $tabla (fc_idfranquiciacta, cue_clavecuenta, cf_descripcion) VALUES (:idfran, :idcuen, :descripcuen)");
+		 $stmt = Conexion::conectar()-> prepare("INSERT INTO $tabla 
+( cue_clavecuenta, cf_descripcion,cli_idcliente) VALUES ( :idcuen, :descripcuen,:cliente)");
 		 
-		 $stmt->bindParam(":idfran", $datosModel["idfran"], PDO::PARAM_INT);
+	//	 $stmt->bindParam(":idfran", $datosModel["idfran"], PDO::PARAM_INT);
 		 $stmt->bindParam(":idcuen", $datosModel["fracuen"], PDO::PARAM_INT);
 		 $stmt->bindParam(":descripcuen", $datosModel["franom"], PDO::PARAM_STR);
-
+		 $stmt->bindParam(":cliente", $datosModel["cliente"], PDO::PARAM_STR);
+		 
 		if($stmt-> execute()){
+		
 		return "success";
 		}
 		 else{
+		 
 			return "error";
 		 }
 	 }
@@ -179,7 +183,7 @@ ca_franquiciascuenta.cue_clavecuenta=:cuenta";
     $res->bindParam(":franq", $franq, PDO::PARAM_INT);
     $res->bindParam(":cliente", $cliente, PDO::PARAM_INT);
 	$res->execute();
-	//$res->debugDumpParams();
+	
 	$reg=$res->fetchAll();
     foreach ($reg as $row) {
 
@@ -249,7 +253,7 @@ ca_unegocios.une_cla_pais=$aux[2]";
                 $parametros=array("cliente"=>$cliente,
                    "opcionSeleccionadaCuenta"=>$cuenta);
               
-               $res= Conexion::ejecutarQury($sql_fran,$parametros);
+               $res= Conexion::ejecutarQuery($sql_fran,$parametros);
                return $res;
 
 }

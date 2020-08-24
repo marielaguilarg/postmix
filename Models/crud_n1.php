@@ -62,5 +62,76 @@ class Datosnuno extends Conexion{
             return $nombre;
 
           }
+          
+          public static function insertar($nombre,$idcliente,$tabla){
+          	try{
+          		
+          		$sSQL= "INSERT INTO `ca_nivel1`
+            ( `n1_nombre`,
+             `n1_idcliente`)
+VALUES ( :nombre,
+        :idcliente);";
+          		
+          		$stmt=Conexion::conectar()->prepare($sSQL);
+          		$stmt->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+          		$stmt->bindParam(":idcliente", $idcliente, PDO::PARAM_INT);
+          		
+          		$stmt-> execute();
+          		
+          	}catch(PDOException $ex){
+          		throw new Exception("Hubo un error al insertar el nombre");
+          	}
+          	
+          }
+          
+          
+          
+          
+          /**
+           * Update a row in ca_nivel1
+           * @param array data
+           */
+          function update($data,$tabla){
+          	
+          	$query = "UPDATE $tabla SET
+		
+		`n1_nombre` = :n1_nombre,
+		`n1_idcliente` = :n1_idcliente
+	WHERE `n1_id` = :n1_id ";
+          	
+          	$q = Conexion::conectar()->prepare($query);
+          	
+          	
+          	if ($q->execute(array(':n1_id' => $data['n1_id'], ':n1_nombre' => $data['n1_nombre'], ':n1_idcliente' => $data['n1_idcliente']))){
+          		
+          		return (1);
+          	}
+          	else{
+          		return(0);
+          	}
+          }
+          
+          
+          
+          /**
+           * Delete a row in ca_nivel1
+           * @param Int id
+           */
+          function del($id,$tabla){
+          	
+          	$query = "DELETE FROM $tabla WHERE n1_id = :id";
+          	$q = Conexion::conectar()->prepare($query);
+          	
+          	if ($q->execute(array(':id' => $id ))){
+          		return (1);
+          	}
+          	else{
+          		return(0);
+          	}
+          }
+          
+          
+          
+          
 
 }
