@@ -92,7 +92,7 @@ public function actualizatiporeacn3($datosModel, $datosservicio, $tiposec, $tabl
 rad_tiporeactivo=:tiposec where 
 concat(sec_numseccion,r_numreactivo,ra_numcomponente,ra_numcaracteristica,ra_numcomponente2,rad_numcaracteristica2)=:numsec and ser_claveservicio=:numser");
        
-     		$stmt-> bindParam(":numsec", $datosModeL, PDO::PARAM_INT);
+     		$stmt-> bindParam(":numsec", $datosModel, PDO::PARAM_INT);
 			$stmt-> bindParam(":numser", $datosservicio, PDO::PARAM_INT);
 			$stmt-> bindParam(":tiposec", $tiposec, PDO::PARAM_STR);
 
@@ -566,6 +566,29 @@ re_numcaracteristica,re_numcomponente2,red_numcaracteristica2) =:numsec and ser_
 	
 
 			
+	}
+	public function getEstDetalleModel( $servicio,$numsec){
+	    $stmt = Conexion::conectar()-> prepare("SELECT red_estandar, red_parametroesp, red_parametroing, red_valormin,
+red_valormax, red_signouno, red_signodos, red_ponderacion, red_syd, red_lugarsyd, red_tiporeactivo, red_grafica,
+ red_tipodato, red_clavecatalogo, red_calculoespecial, red_tipocalculo, red_tipooperador, red_posicioncalculo,
+red_tipografica, red_indicador, red_rangor, red_rangoa, red_rangov, red_metodopepsi, red_refinternacinal,
+red_lugarindicador, `red_valorminmoderado`,
+  `red_valormaxmoderado`,
+  `red_signounomoderado`,
+  `red_signodosmoderado`
+ FROM cue_reactivosestandardetalle
+where concat(sec_numseccion,'.',r_numreactivo,'.',re_numcomponente,'.',
+re_numcaracteristica,'.',re_numcomponente2,'.',red_numcaracteristica2) =:numsec and ser_claveservicio=:numser");
+	    
+	    $stmt-> bindParam(":numsec", $numsec, PDO::PARAM_STR);
+	    $stmt-> bindParam(":numser", $servicio, PDO::PARAM_INT);
+	    
+	    $stmt-> execute();
+	   // $stmt->debugDumpParams();
+	    return $stmt->fetch();
+	    
+	    
+	    
 	}
 
 
@@ -1342,7 +1365,7 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 			$stmt-> bindParam(":idsec", $idsec, PDO::PARAM_STR);
 			
 			$stmt-> execute();
-		
+//		$stmt->debugDumpParams();
 			return $stmt->fetchall();
 		
 			$stmt->close();
@@ -1366,12 +1389,13 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 		$stmt=Conexion::conectar()->prepare("SELECT ide_claveservicio, ide_numreporte, ide_numseccion, ide_numreactivo, ide_numcomponente, ide_numcaracteristica1, ide_numcaracteristica2, ide_numcaracteristica3, ide_valorreal, ide_ponderacion, ide_numrenglon, ide_comentario, ide_aceptado, ide_numcolarc FROM $tabla WHERE  ide_claveservicio =:idser AND concat(ide_numseccion ,'.', ide_numreactivo ,'.', ide_numcomponente ,'.', ide_numcaracteristica1 ,'.', ide_numcaracteristica2 )=:idsec AND ide_numreporte=:idrep AND ide_numrenglon =:numren AND ide_numcaracteristica3=:numcar");
 
 			$stmt-> bindParam(":idser", $datosModel["idser"], PDO::PARAM_INT);
-			$stmt-> bindParam(":idsec", $datosModel["idsec"], PDO::PARAM_INT);
+			$stmt-> bindParam(":idsec", $datosModel["idsec"], PDO::PARAM_STR);
 			$stmt-> bindParam(":idrep", $datosModel["idrep"], PDO::PARAM_INT);
 			$stmt-> bindParam(":numren", $datosModel["numren"], PDO::PARAM_INT);
 			$stmt-> bindParam(":numcar", $datosModel["numcar"], PDO::PARAM_INT);
 			
 			$stmt-> execute();
+                       // $stmt->debugDumpParams();
 			return $stmt->fetch();
 		
 			$stmt->close();
@@ -1471,9 +1495,10 @@ public function getReactivoEstandarn3($servicio, $referencia, $tabla){
 			$stmt-> bindParam(":idrep", $idrep, PDO::PARAM_INT);
 			
 			$stmt-> execute();
+                        
 			return $stmt->fetch();
 		
-			$stmt->close();
+			
 
 	}	
 	
@@ -1830,15 +1855,42 @@ ORDER BY cue_reactivosestandardetalle.red_lugarindicador";
 	}
 	
 	public function consultaGraficaCumplimientotmp($listasec,$vservicio,$usuario,$fmes_consulta,$mes_consulta_ant,$mes_pivote){
-	    $sql_reporte_e = "SELECT
+//	    $sql_reporte_e = "SELECT
+//sum(If(re_tipoevaluacion=1,If(ide_numrenglon=1,if(ide_aceptado<0,1,0),0),if(ide_aceptado<0,1,0))) as pasa,
+//sum(if(re_tipoevaluacion=1,if( ide_numrenglon=1,1, 0),1)) as tot,
+//cue_reactivosestandardetalle.red_estandar, red_parametroesp, red_parametroing,
+//tmp_estadistica.usuario,concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) as refer,
+//red_tipodato,red_valormin,red_clavecatalogo ,cue_reactivosestandardetalle.sec_numseccion seccion,
+//  if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d')=:fmes_consulta,1,0) as mes,
+//       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >=:mes_pivote 
+// and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta ,2,0 ) as 6mes,
+//       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >:mes_consulta_ant 
+//       and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta,3,0)  as 12mes
+//        FROM
+//ins_detalleestandar
+//Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandar.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandar.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandar.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandar.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandar.re_numcaracteristica
+//Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
+//Inner Join tmp_estadistica ON ins_detalleestandar.ide_numreporte = tmp_estadistica.numreporte
+//WHERE cue_reactivosestandar.re_tipoevaluacion > 0 AND ide_valorreal<>'' AND
+//ins_detalleestandar.ide_claveservicio=:vserviciou AND
+//cue_reactivosestandar.sec_numseccion  in (".substr($listasec,0,strlen($listasec)-1).")
+// and  `red_indicador`=-1 and tmp_estadistica.usuario=:usuario
+//  GROUP BY
+//	cue_reactivosestandardetalle.sec_numseccion,cue_reactivosestandardetalle.r_numreactivo,
+//  cue_reactivosestandardetalle.re_numcomponente,cue_reactivosestandardetalle.re_numcaracteristica,
+//  cue_reactivosestandardetalle.re_numcomponente2,cue_reactivosestandardetalle.red_numcaracteristica2, 
+//mes, 6mes,12mes";
+            
+               $sql_reporte_e = "SELECT
 sum(If(re_tipoevaluacion=1,If(ide_numrenglon=1,if(ide_aceptado<0,1,0),0),if(ide_aceptado<0,1,0))) as pasa,
 sum(if(re_tipoevaluacion=1,if( ide_numrenglon=1,1, 0),1)) as tot,
 cue_reactivosestandardetalle.red_estandar, red_parametroesp, red_parametroing,
-tmp_estadistica.usuario,concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) as refer,
+tmp_estadistica.usuario,
+concat(cue_reactivosestandardetalle.sec_numseccion,'.',cue_reactivosestandardetalle.r_numreactivo,'.',cue_reactivosestandardetalle.re_numcomponente,'.',cue_reactivosestandardetalle.re_numcaracteristica,'.',cue_reactivosestandardetalle.re_numcomponente2,'.',cue_reactivosestandardetalle.red_numcaracteristica2) as refer,
 red_tipodato,red_valormin,red_clavecatalogo ,cue_reactivosestandardetalle.sec_numseccion seccion,
   if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d')=:fmes_consulta,1,0) as mes,
-       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >=:mes_pivote
- and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta,2,0 ) as 6mes,
+       if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >=:mes_pivote 
+ and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta ,2,0 ) as 6mes,
        if(STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >:mes_consulta_ant 
        and STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:fmes_consulta,3,0)  as 12mes
         FROM
@@ -1846,15 +1898,21 @@ ins_detalleestandar
 Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandar.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandar.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandar.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandar.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandar.re_numcaracteristica
 Inner Join cue_reactivosestandardetalle ON ins_detalleestandar.ide_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND ins_detalleestandar.ide_numseccion = cue_reactivosestandardetalle.sec_numseccion AND ins_detalleestandar.ide_numreactivo = cue_reactivosestandardetalle.r_numreactivo AND ins_detalleestandar.ide_numcomponente = cue_reactivosestandardetalle.re_numcomponente AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re_numcaracteristica AND ins_detalleestandar.ide_numcaracteristica2 = cue_reactivosestandardetalle.re_numcomponente2 AND ins_detalleestandar.ide_numcaracteristica3 = cue_reactivosestandardetalle.red_numcaracteristica2
 Inner Join tmp_estadistica ON ins_detalleestandar.ide_numreporte = tmp_estadistica.numreporte
+INNER JOIN cnfg_graficaindicadores ON concat(cue_reactivosestandardetalle.sec_numseccion,'.',
+cue_reactivosestandardetalle.r_numreactivo,'.',
+cue_reactivosestandardetalle.re_numcomponente,'.',
+cue_reactivosestandardetalle.re_numcaracteristica,'.',
+cue_reactivosestandardetalle.re_numcomponente2,'.',
+cue_reactivosestandardetalle.red_numcaracteristica2) =
+    `cnfg_graficaindicadores`.`gri_reactivo`
 WHERE cue_reactivosestandar.re_tipoevaluacion > 0 AND ide_valorreal<>'' AND
-ins_detalleestandar.ide_claveservicio=:vserviciou AND
-cue_reactivosestandar.sec_numseccion  in (".substr($listasec,0,strlen($listasec)-1).")
- and  `red_indicador`=-1 and tmp_estadistica.usuario=:usuario
+ins_detalleestandar.ide_claveservicio=:vserviciou 
+ /*and  `red_indicador`=-1*/ and tmp_estadistica.usuario=:usuario
   GROUP BY
 	cue_reactivosestandardetalle.sec_numseccion,cue_reactivosestandardetalle.r_numreactivo,
   cue_reactivosestandardetalle.re_numcomponente,cue_reactivosestandardetalle.re_numcaracteristica,
   cue_reactivosestandardetalle.re_numcomponente2,cue_reactivosestandardetalle.red_numcaracteristica2, 
-mes, 6mes,12mes";
+mes, 6mes,12mes ORDER BY gri_orden";
             
 	    $parametros = array("vserviciou" => $vservicio, "usuario" => $usuario);
                $parametros["mes_pivote"] = $mes_pivote;

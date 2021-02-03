@@ -190,7 +190,7 @@ cnfg_permisos.cpe_grupo=:grupous and cnfg_menu.men_superopcion=:superopcion
     	if($grupo=="muh"||$grupo=="mui")
     		$sql_com.=" order by men_orden";
     		else
-    			$sql_com.=" order by men_nombreopcion desc;";
+    			$sql_com.=" order by men_orden asc;";
     	
     	$con=Conexion::conectar();
     	$stmt=$con->prepare($sql_com);

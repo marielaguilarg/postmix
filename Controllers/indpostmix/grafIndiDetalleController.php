@@ -1,12 +1,12 @@
 <?php
 
 
-class GraficaIndicadorv2Controller {
+class GrafIndiDetalleController {
 
     private $navegacion;
    
-    private $mes_indice;
-  
+    private $mes_indice_ini;
+      private $mes_indice_fin;
   
     private $lb_buscar;
     private $lb_indicadores;
@@ -20,7 +20,7 @@ class GraficaIndicadorv2Controller {
     private $cliente;
     private $opciones_anio;
     private $opciones_mes;
-    private $listaSecciones;
+
     private $listanivel2;
     private $listanivel3;
     private $listanivel4;
@@ -35,7 +35,11 @@ class GraficaIndicadorv2Controller {
     private $UrlCoberturaxCta;
     private $UrlIndicadores;
     private $titulos; //arreglo para los encabezados de las graficas
-    private $UrlIndicadoresDet;
+    private $reactivo;
+    private $nombreSeccion;
+    private $estandar;
+    public $nota;
+    public $colorhist;
 
     public function mostrarFiltros() {
         foreach ($_POST as $nombre_campo => $valor) {
@@ -47,6 +51,7 @@ class GraficaIndicadorv2Controller {
 
             eval($asignacion);
         }
+       
         $_SESSION["servicioind"] = 1;
         $_SESSION["clienteind"]=1;
         $_SESSION["idiomaus"]=1;
@@ -112,7 +117,7 @@ class GraficaIndicadorv2Controller {
                     $permiso = "F";
             }
         }
-
+     
 //echo $permiso;
 // si permiso=-1 no ver� nada
         if ($permiso == -1) {
@@ -147,13 +152,12 @@ class GraficaIndicadorv2Controller {
                  
                 }
                 else
-                {
-                    if($Nivel01=="")
-                        $gfiluni="1.1.5";
-                    else{
-                      $gfiluni=$Nivel01.".".$Nivel02.".".$Nivel03;
-                     $gfilx=$Nivel04.".".$Nivel05.".".$Nivel06;
-                    }
+                { //vengo de la seccion anterior
+                  
+                        $gfiluni=$filuni;
+                  
+                     $gfilx=$filx;
+                     $gfily=$fily;
                     
                 }
                 ////o vengo del menu
@@ -168,12 +172,12 @@ class GraficaIndicadorv2Controller {
             $this->filnivelcedis=$gfilx;
             $this->filcuenta=$gfily;
             
-            if($gfiluni=="1.1"||$gfiluni=="1.1.")
+              if($gfiluni=="1.1"||$gfiluni=="1.1.")
                 $gfiluni="1.1.5";
             $aux = explode(".", $gfilx);
             
             $this->filnivelreg = $gfiluni;
-          
+            
             $filx = array();
             
             $filx["reg"] = $aux[0];
@@ -270,9 +274,8 @@ class GraficaIndicadorv2Controller {
             	if ($VarNivel2 == 1||$VarNivel2 == 2) {
                                         
                          
-                          //  $RS_SQM_TE = Datosntres::vistantresModel($filx["uni"],"ca_nivel3");
-                              $RS_SQM_TE = Datosntres::vistatresModel($filx["uni"],5,"ca_nivel3");
-                           
+                           // $RS_SQM_TE = Datosntres::vistantresModel($filx["uni"],"ca_nivel3");
+                             $RS_SQM_TE = Datosntres::vistatresModel($filx["uni"],5,"ca_nivel3");
                             $this->listanivel3 = Utilerias::crearSelectCascada(Estructura::nombreNivel(3,$_SESSION["idiomaus"]),3, Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select3),"");
                           //   die( $this->listanivel3 )  ; 
                             $this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"disabled");
@@ -388,29 +391,12 @@ class GraficaIndicadorv2Controller {
             
          if ($fily["pv"] == "") //no muestro para usr cuenta con nivel 3
             $this->lb_buscar = $cad_buscapv;
-         else
-            $this->lb_buscar = '<div class="seleccionidioma" >';
-        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-         $cad_buscapv = ' <div class="seleccionidioma" >
- <a href="index.php?action=indindicadores&mes=' . $mes_asig . '&filx=' . $gfilx . '&fily=' . $gfily . '&filuni=' . $gfiluni . '" >' . T_("INDICADORES") . '</a><span > | </span>';
-        //s $cad_buscapv=''
-         $this->lb_indicadores = $cad_buscapv;
-
-      
-   
-//echo "views/modulos/indgeneragrafindic.php?sec=" . $seccion . "&mes=" . $mes_asig . "&filx=" . $gfilx . "&fily=" . $gfily . "&niv=" . $gnivel . "&filuni=" . $gfiluni;
-            //  "Controllers/indpostmix/indgeneragrafindicjson.php?sec=5&mes=5.2018&filx=&fily=&niv=4&filuni=1.1"
-                 // }//fin oermiso
-                 // else echo "no tiene permiso";
-         }//fin grupo
+            }
          }//fin oermiso 1
-       
-        $_SESSION["ffilx"] = $gfilx;
-        $_SESSION["ffily"] = $gfily;
     }//fin funcion
 
     
-    public function vistaGraficasIndicador(){
+    public function vistaGraficasIndDetalle(){
         
         foreach ($_POST as $nombre_campo => $valor) {
             $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
@@ -421,36 +407,31 @@ class GraficaIndicadorv2Controller {
             
             eval($asignacion);
         }
+         $this->colorhist=$color;
+      //   die($this->colorhist);
          //inicio titulos
-        $this->titulos=array("COBERTURA","TAMAÑO DE LA MUESTRA","BEBIDAS","AGUA",
-            "SERVICIO | RESPONSABILIDAD GEPP","OPERACION | RESPONSABILIDAD CLIENTE","INDICE DE HIGIENE | RESPONSABILIDAD GEPP","INDICE DE HIGIENE | RESPONSABILIDAD CLIENTE");
-       
+        $this->titulos=array("COMPARATIVO POR REGION","COMPARATIVO POR CUENTA","MONITOREO DE AVANCE DE INDICADORES");
+        $notas=array(
+            "8.0.2.0.0.6"=>"ADICION O FRACTURA DE PUENTES DE HIELO",
+            "8.0.1.0.0.9"=>"REEMPLAZO DE BIB'S",
+            "8.0.2.0.0.9"=>"REEMPLAZO DE TANQUE DE CO2 | <br> ADICION O FRACTURA DE PUENTES DE HIELO");
+        
         $navegacion=new Navegacion();
-        $navegacion->iniciar();
-        $navegacion->borrarRutaActual("graficaind2");
+      //  $navegacion->iniciar();
+        $navegacion->borrarRutaActual("graficadet");
         $rutaact = $_SERVER['REQUEST_URI'];
-        if (isset($mes_solo) && $mes_solo != "") {
+       
+       
+      //  $mes_asig_ini="7.2019";
+     
+       
+          if (isset($mes_solo_ini) && $mes_solo_ini != "") {
             
-            $this->mes_indice = $mes_asig = $mes_solo . "." . $anio;
-        } else { // si no hay mes x defecto es el anterior
-            $mes_asig = date("m.Y");
-            $aux = explode(".", $mes_asig);
-            
-            $solomes = $aux[0] - 1;
-            $soloanio = $aux[1];
-            
-            if ($solomes == 0) {
-                $solomes = 12;
-                $soloanio = $aux[1] - 1;
-            }
-            
-            $mes_asig = $solomes . "." . $soloanio;
-            $this->mes_indice = $mes_asig;
-        }
-      //  $mes_asig="7.2019";
-        $mes_consulta = $mes_asig;
-      
-        $aux = explode(".", $mes_asig);
+            $this->mes_indice_ini = $mes_asig_ini = $mes_solo_ini . "." . $anio_ini;
+        } else
+            $mes_asig_ini=$mes;
+     
+       $aux = explode(".", $mes_asig_ini);
       
     
         $mes = $aux[0];
@@ -465,144 +446,44 @@ class GraficaIndicadorv2Controller {
             $mes_pivote = ($aux[1] - 1) . "-" . $z . "-01";
             $mes_pivote = $z . "." . ($aux[1] - 1);
         }
-         
-      
-     
+      //     print_r($mes_pivote."--".$mes_asig_ini);
         // echo $rutaact;
-        $navegacion::agregarRuta("graficaind2", $rutaact, T_("GRAFICA"));
-        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
+       
+        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig_ini);
         
         $this->mostrarFiltros();
         /** variables de sesi�n para los filtros */
         /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-        $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
+      
         $_SESSION["fmes"] = $mes; /* indice de aignacion */
         
-        $_SESSION["fniv"] = $VarNivel2;  /* nivel de consulta */
-        $_SESSION["ffilx"] = $gfilx;
-        $_SESSION["ffily"] = $gfily;
-        $_SESSION["fref"] = null;
-        
-        
-        $this->mes_asig = $mesletra;
-        
-        //  $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
-       // $secciones = DatosEst::buscaSeccionesIndi2($this->servicio, $vidiomau);
-         $secciones=array("BEBIDAS"=>"E","AGUA"=>"E");
-        foreach ($secciones as $key) {
+        $_SESSION["fref"] = $ref;
+        if($ref==6){
+            $referencia=DatosSeccion::editaSeccionModel($ref,$this->servicio, "cue_secciones");
+         //   var_dump($referencia);
            
-            $setUrlDatos="indgeneragrafjsonv2.php?tipo=" . $key[0] . "&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
-            
-            // $seccion->generaTabla($key[0]);
-            $this->listaSecciones[] = $setUrlDatos;
-            
+            $this->nombreSeccion = $referencia["sec_descripcionesp"];
+            $this->estandar = "";
+           
+        }
+        else 
+        {$referencia = DatosEst::buscaIndicadores($ref, $vidiomau, $this->servicio);
+       
+        $this->nombreSeccion = $referencia[0][1];
+        $this->estandar = $referencia[0][2];
         }
         
+        $this->mes_asig = $mesletra;
+     
         
-        
-        
-       
         $this->periodo = $mesletra;
         //meto datos en la tabla temporal
        
-        $this->insertarReportesTemp($mes_consulta,$mes_pivote);
-         $this->UrlCobertura="indgeneragrafcoberturajson.php?tipo=Cob&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
-       $this->UrlIndicadores="indgeneragrafjsonv2.php?mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta.  "&filuni=" . $this->filnivelreg."&tipo=";
-       $this->UrlIndicadoresDet="mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta.  "&filuni=" . $this->filnivelreg."&ref=";
+          $this->reactivo=$ref;
+          $this->nota=$notas[$this->reactivo];
+       $this->UrlIndicadores="indgeneragrafjsonv2.php?mes=" .$mes_asig_ini  . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta.  "&filuni=" . $this->filnivelreg."&ref=".$this->reactivo."&tipo=";
+         $navegacion::agregarRuta("graficadet", $rutaact,    $this->nombreSeccion );
     }
-     public function vistaGraficasCobertura(){
-        
-        foreach ($_POST as $nombre_campo => $valor) {
-            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_POST, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
-            eval($asignacion);
-        }
-        foreach ($_GET as $nombre_campo => $valor) {
-            $asignacion = "\$" . $nombre_campo . "='" . filter_input(INPUT_GET, $nombre_campo, FILTER_SANITIZE_STRING) . "';";
-            
-            eval($asignacion);
-        }
-      
-        $navegacion=new Navegacion();
-       // $navegacion->iniciar();
-        $navegacion->borrarRutaActual("graficacob");
-        $rutaact = $_SERVER['REQUEST_URI'];
-        if (isset($mes_solo) && $mes_solo != "") {
-            
-            $this->mes_indice = $mes_asig = $mes_solo . "." . $anio;
-        } else { // si no hay mes x defecto es el anterior
-            $mes_asig = date("m.Y");
-            $aux = explode(".", $mes_asig);
-            
-            $solomes = $aux[0] - 1;
-            $soloanio = $aux[1];
-            
-            if ($solomes == 0) {
-                $solomes = 12;
-                $soloanio = $aux[1] - 1;
-            }
-            
-            $mes_asig = $solomes . "." . $soloanio;
-            $this->mes_indice = $mes_asig;
-        }
-      //  $mes_asig="7.2019";
-        $mes_consulta = $mes_asig;
-      
-        $aux = explode(".", $mes_asig);
-      
-    
-        $mes = $aux[0];
-        if ($mes!=1) { // calculo para EL AÑO
-            $z = 1;
-            
-            $mes_pivote = $aux[1] . "-" . $z . "-01";
-            $mes_pivote = $z . "." . $aux[1];
-        } else {
-           
-            $mes_pivote =$mes_asig;
-        }
-         
-      
-     
-        // echo $rutaact;
-        $navegacion::agregarRuta("graficacob", $rutaact, T_("GRAFICA COBERTURA"));
-        $mesletra = Utilerias::cambiaMesGIng($mes_pivote) . "-" . Utilerias::cambiaMesGIng($mes_asig);
-        
-        $this->mostrarFiltros();
-          $region="REGION";
-        IF(   $_SESSION["fniv"]==4)
-            $region="ESTADO";
-         //inicio titulos
-        $this->titulos=array("COBERTURA","TAMAÑO DE LA MUESTRA","AVANCE DE AUDITORIAS SOLICITADAS","TAMAÑO DE LA MUESTRA POR ".$region,
-            "COBERTURA DE AUDITORIAS POR CUENTA","TAMAÑO DE LA MUESTRA POR CUENTA");
-       
-        /** variables de sesi�n para los filtros */
-        /* 		echo '<script>alert("'.$gfilx.'")</script>';   */
-        $_SESSION["fper"] = null; /*             * variable para el periodo 6M, 12M */
-        $_SESSION["fmes"] = $mes; /* indice de aignacion */
-        
-      
-        $_SESSION["fref"] = null;
-        
-        
-        $this->mes_asig = $mesletra;
-        
-        //  $secciones = DatosEst::buscaSeccionesIndi($this->servicio, $vidiomau);
-       // $secciones = DatosEst::buscaSeccionesIndi2($this->servicio, $vidiomau);
-        
-        
-        
-        
-     //   die("yo".$_SESSION["fniv"]);
-       
-        $this->periodo = $mesletra;
-        //meto datos en la tabla temporal
-       
-        $this->insertarReportesTemp($mes_consulta,$mes_pivote);
-        $this->UrlCobertura="indgeneragrafcoberturajson.php?tipo=Cob&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
-        $this->UrlCoberturaxReg="indgeneragrafcoberturajson.php?tipo=CobxReg&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
-        $this->UrlCoberturaxCta="indgeneragrafcoberturajson.php?tipo=CobxCta&mes=" . $mes_asig . "&filx=" . $this->filnivelcedis . "&fily=" . $this->filcuenta .  "&filuni=" . $this->filnivelreg;
-    
-      }
 
     
   
@@ -669,149 +550,13 @@ class GraficaIndicadorv2Controller {
             }
         }
     }
-     public function insertarReportesTemp($fmes_consulta,$mes_consulta_ant)
-    {
-      
-        $usuario=$_SESSION["UsuarioInd"];
-        
-        
-        if ($this->filnivel == "") {
-            $this->filnivel = "1.1.5";
-        }
-        
-        $this->servicio = 1; // siempre es 1
-        $aux = explode(".", $this->filnivelreg);
-        
-        $filuni = array();
-        $filuni["reg"] = $aux[0];
-        $filuni["uni"] = $aux[1];
-        $filuni["zon"] = $aux[2];
-        $filx = array();
-         $aux = explode(".", $this->filnivelcedis);
-       
-        $filx["edo"] = $aux[0];
-        
-        $filx["ciu"] = $aux[1];
-        $filx["niv6"] = $aux[2];
-        $auxy = explode(".", $this->filcuenta);
-        
-        $fily = array();
-        
-        $fily["cta"] = $auxy[0];
-        $fily["fra"] = $auxy[1];
-        $fily["pv"] = $auxy[2];
-      
-      /*   * **************************************CONSULTA********************************
-         */
-        $i = 0;
-        
-        DatosTemporales::eliminarEstadistica($usuario);
-        
-        /* creo consulta  generica */
-        $sql_porcuenta = "insert into tmp_estadistica (usuario, numreporte,mes_asignacion) select :Usuario, ins_generales.i_numreporte, str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y')
-FROM
-  (
-    ins_generales
-    INNER JOIN ca_unegocios
-      ON  ins_generales.`i_unenumpunto` = ca_unegocios.une_id
-  )
-  INNER JOIN ca_cuentas
-    ON ca_cuentas.cue_id = ca_unegocios.cue_clavecuenta
-where cue_idcliente=:vclienteu and ins_generales.i_claveservicio=:vserviciou";
-        
-        $parametros=array("vserviciou" => $this->servicio, "Usuario" => $usuario,"vclienteu"=>1);
-       
-        if ($fily["cta"] != 0) {
-            $sql_porcuenta .= " AND ca_unegocios.cue_clavecuenta=:cuenta  ";
-            $parametros["cuenta"] = $fily["cta"];
-            $nivel=1;
-        }
-        
-        if ($fily["fra"] != 0) {
-            $sql_porcuenta .= " AND fc_idfranquiciacta=:franquiciacta";
-            $parametros["franquiciacta"] = $fily["fra"];
-            //busco nombre de la franquicia para guardarlo
-                $nivel=2;
-            $_SESSION["ffrancuenta"] = DatosFranquicia::nombreFranquicia($fily["cta"], $fily["fra"], $this->vclienteu, $this->vserviciou);
-        }
-        
-        if ($fily["pv"] != 0) {
-            $sql_porcuenta .= " and ins_generales.i_unenumpunto=:unidadnegocio";
-            $parametros["unidadnegocio"] = $fily["pv"];
-                $nivel=3;
-        }
-        // validamos los niveles de la estructura
-        
-        
-        if ($filuni["reg"] != 0) {
-            $sql_porcuenta.= " AND une_cla_region=:select1  ";
-            $parametros["select1"] = $filuni["reg"];
-                $nivel=1;
-            
-        }
-        if ($filuni["uni"] != 0) {
-            $sql_porcuenta.= " AND une_cla_pais=:select2  ";
-            $_SESSION["funidadneg"] =Datosndos::nombreNivel2( $filuni["uni"],"ca_nivel2");
-            $parametros["select2"] = $filuni["uni"];
-                $nivel=2;
-        }
-        if ($filuni["zon"] != 0) {
-            $sql_porcuenta.= " AND une_cla_zona=:select3  ";
-            $_SESSION["ffranquicia"] =Datosntres::nombreNivel3( $filuni["zon"],"ca_nivel3");
-            $parametros["select3"] = $filuni["zon"];
-                $nivel=3;
-        }
-        if ($filx["edo"] != 0) {
-            $sql_porcuenta.= " AND une_cla_estado=:select4  ";
-            $_SESSION["fregion"] =Datosncua::nombreNivel4( $filx["edo"] ,"ca_nivel4");
-            $parametros["select4"] = $filx["edo"] ;
-                $nivel=4;
-        }
-        if ($filx["ciu"]  != 0) {
-            $sql_porcuenta.= " AND une_cla_ciudad=:select5  ";
-            $_SESSION["fzona"] =Datosncin::nombreNivel5( $filx["ciu"] ,"ca_nivel5");
-            $parametros["select5"] = $filx["ciu"] ;
-                $nivel=5;
-        }
-        if ($filx["niv6"]  != 0) {
-            $sql_porcuenta.= " AND une_cla_franquicia=:select6  ";
-            $_SESSION["fcedis"] =Datosnsei::nombreNivel6( $filx["niv6"] ,"ca_nivel6");
-            $parametros["select6"] = $filx["niv6"] ;
-                $nivel=6;
-        }
-        
-      
-      //modificacion del filtro de fecha se usa mes de asignacion
-	
-		//$fechainicioc = mod_fecha($fechainicio);
-		$sql_porcuenta.= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')>=str_to_date(concat('01.',:fechaasig_i ),'%d.%m.%Y')";
-		$parametros["fechaasig_i"] = $mes_consulta_ant;
-	
-		//$fechfinc = mod_fecha($fechafin);
-		$sql_porcuenta.= " AND str_to_date(concat('01.',ins_generales.i_mesasignacion),'%d.%m.%Y')<=str_to_date(concat('01.',:fechaasig_fin ),'%d.%m.%Y')";
-		$parametros["fechaasig_fin"] = $fmes_consulta;
-	
-        //	echo $select6;
-      //  die($mes_consulta_ant."--".$fmes_consulta;)
-        ////inserta reportes en la tabla temporal tmp_estadistica
-        $rs_sql_us = Conexion::ejecutarInsert($sql_porcuenta,$parametros);
-        
-        //valido si hay mas de un reporte
-        $sqlt = "select * from tmp_estadistica WHERE tmp_estadistica.usuario = :Usuario";
-        //echo $sqlt;
-        $rs = Conexion::ejecutarQuery($sqlt,array("Usuario"=>$usuario));
-        $this->nivel=$nivel+1;
-        $num_reg = sizeof($rs);
-    }
-    
+   
 
     function getNavegacion() {
         return $this->navegacion;
     }
 
-    function getMes_indice() {
-        return $this->mes_indice;
-    }
+  
 
     function getLb_buscar() {
         return $this->lb_buscar;
@@ -891,10 +636,19 @@ where cue_idcliente=:vclienteu and ins_generales.i_claveservicio=:vserviciou";
     function getUrlIndicadores() {
         return $this->UrlIndicadores;
     }
-
-    function getUrlIndicadoresDet() {
-        return $this->UrlIndicadoresDet;
+ 
+    function getReactivo() {
+        return $this->reactivo;
     }
+
+    function getNombreSeccion() {
+        return $this->nombreSeccion;
+    }
+
+    function getEstandar() {
+        return $this->estandar;
+    }
+
 
 
 

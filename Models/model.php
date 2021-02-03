@@ -164,10 +164,12 @@ class EnlacesPaginas{
 		    $enlacesModel=="srespaldoimagenes"||
 		    $enlacesModel=="srestaurarimagen"||
 		    $enlacesModel=="seditasd"||
+                    $enlacesModel=="simportarpvasignados"||
 		    $enlacesModel == "indgraficaindicadorv2" ||
-                            $enlacesModel == "indgraficaindicadorv3" ||
-		    $enlacesModel == "indgraficacobertura" 
-			 
+                    $enlacesModel == "indgrafindicadordetalle" ||
+		    $enlacesModel == "indgraficacobertura" ||
+                    $enlacesModel == "indgraficacomparares" ||
+                    $enlacesModel=="sconfiguragrafica" 
 			 ){
 
 			$module ="views/modulos/cue_". $enlacesModel.".php";

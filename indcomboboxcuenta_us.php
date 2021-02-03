@@ -77,7 +77,7 @@ if(validaSelect2($selectDestinoCuenta))
                     if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
             $aux2=explode(".", $nivel);
        
-                    $consultaCuenta= DatosUnegocio::unegociosxNivel("","",array("pais"=>$aux2[1],"uni"=>$aux2[2],"zon"=>$aux2[3],"reg"=>$aux2[4],"ciu"=>$aux2[5],"niv6" =>$aux2[6]),array("cta"=>$aux[0],"fra"=>$franq));
+                    $consultaCuenta= DatosUnegocio::unegociosxNivel("","",array("pais"=>$aux2[1],"uni"=>$aux2[2],"zon"=>$aux2[3],"reg"=>$aux2[4],"ciu"=>$aux2[5],"niv6" =>$aux2[6]),array("cta"=>$aux[0],"fra"=>$franq),"","");
 
      }
 

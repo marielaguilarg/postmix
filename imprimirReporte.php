@@ -19,9 +19,20 @@ if($admin=="impcert"){
 }else
     if($admin=="impanag")
     {  require "Controllers/imprimirCertificadoController.php";
+
         $imp=new ImprimirCertificadoController();
         $imp->reporteAnalisis();
-}else   if($admin=="descarc")
+}else
+	if($admin=="impcerpm")
+	{  require "Controllers/imprimirCertificadoController.php";
+	try{
+	$imp=new ImprimirCertificadoController();
+	$imp->certificadoPostmix();
+	}catch(Exception $ex){
+		echo $ex->getMessage();
+	}
+}
+else   if($admin=="descarc")
 { 
     require "Models/crud_solicitudes.php";
     require "Controllers/certificacionController.php";
@@ -73,7 +84,9 @@ $imp->descargarArchivo();
 	include "Models/crud_catalogoDetalle.php";
 	include "Models/crud_muestras.php";
 	$recController=new RecepcionController();
+	
 	$recController->imprimir();
+//	$recController->imprimir();
 	
 }else if($admin=="impetiq")
 {
@@ -94,7 +107,18 @@ $imp->descargarArchivo();
 	$aguaController=new ArchivoAguaController();
 	$aguaController->generarArchivo();
 	
-}else
+}else if($admin=="repinsp")
+{
+	
+	
+	
+	
+	include "Controllers/reporteInspeccionController.php";
+	$repinspeccion=new ReporteInspeccion();
+	$repinspeccion->vistaReporte();
+	
+}
+else
     { 
        
         include "Controllers/indpostmix/postmix_excelController.php";

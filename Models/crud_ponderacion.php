@@ -630,9 +630,11 @@ WHERE `id_claveservicio` =:idser
 	}
 	
 	//llegan las secciones separadas por comas en listasec para usarse en en in
-	public function graficaCumplimiento($listasec,$vservicio,$usuario){
+	public function graficaCumplimiento($listasec,$vservicio,$usuario,$mesinicial,$mesfinal){
 	    $sql_reporte_e = "SELECT
 Sum(if(ins_detalle.id_aceptado=-1,1,0)) /(count(ins_detalle.id_noaplica))*100 AS nivaceptren,
+Sum(if(ins_detalle.id_aceptado=-1,1,0)) as pasa,
+ count(ins_detalle.id_noaplica) AS total,
 cue_reactivos.r_descripcionesp,
 cue_reactivos.r_descripcioning,concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) as ref
 FROM
@@ -643,9 +645,11 @@ where
 concat(ins_detalle.id_numseccion,'.',ins_detalle.id_numreactivo) in (".substr($listasec,0,strlen($listasec)-1).")
 and id_noaplica>-1 and tmp_estadistica.usuario=:usuario 
     and ins_detalle.id_claveservicio=:vserviciou
+    and  STR_TO_DATE(mes_asignacion,'%Y-%m-%d') >:mes_inicial 
+    and  STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:mes_final 
 group by ins_detalle.id_numseccion,
 ins_detalle.id_numreactivo;";
-        $parametros = array("vserviciou" => $vservicio, "usuario" => $usuario);
+	    $parametros = array("vserviciou" => $vservicio, "usuario" => $usuario,"mes_inicial"=>$mesinicial,"mes_final"=>$mesfinal);
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
 	    return $rs_sql_reporte_e;
 	    

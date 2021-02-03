@@ -42,26 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -124,15 +105,14 @@ desired effect
                 </p>
               </li>
               
-                <!-- /.row -->
-              </li>
+             
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
                   <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
                 </div>
                 <div class="pull-right">
-                  <a href=index.php?salir=1 class="btn btn-default btn-flat">Salir</a>
+                  <a href="index.php?salir=1" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -149,7 +129,8 @@ desired effect
  <!--- menu lateral -->
 
 <?php
-   include "modulos/enlaces.php"
+   include "modulos/enlaces.php";
+
 ?>
 <!--- fin menu lateral --->
   <!-- Content Wrapper. Contains page content -->
@@ -215,26 +196,27 @@ desired effect
 <script>
   $(function () {
     //Initialize Select2 Elements
-    $('.select2').select2()
+    $('.select2').select2();
 
     //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
     //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    $('#datemask2').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
     //Money Euro
-    $('[data-mask]').inputmask()
+    $('[data-mask]').inputmask();
       //Date picker
     //$('#datepicker').datepicker({
     //  autoclose: true
    // })
 
     $('#datepicker2').datepicker({
-      autoclose: true
-    })
+      autoclose: true,
+      format: 'dd/mm/yyyy' 
+    });
 
    $('#datepicker').datepicker({
        autoclose: true,
-       dateformat: 'mm/dd/yyyy' 
+       format: 'dd/mm/yyyy' 
    });
 
 

@@ -33,6 +33,7 @@ $VarNivel2=$varn;
 $nivel=$niv;
 $selectDestinoCuenta=$selectcuenta;
 $opcionSeleccionadaCuenta=$opcioncuenta;
+$sserv=1;
 if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuenta))
 {
 	$tabla=$listadoSelects[$selectDestinoCuenta];
@@ -88,7 +89,7 @@ if(validaSelect2($selectDestinoCuenta) && validaOpcion2($opcionSeleccionadaCuent
                     if ($_SESSION['GrupoUs'] == 'cli'||$_SESSION['GrupoUs'] == 'muf') {
             $aux2=explode(".", $nivel);
        
-                    $consultaCuenta= DatosUnegocio::unegociosxNivel("","",array("pais"=>$aux2[1],"uni"=>$aux2[2],"zon"=>$aux2[3],"reg"=>$aux2[4],"ciu"=>$aux2[5],"niv6" =>$aux2[6]),array("cta"=>$aux[0],"fra"=>$franq));
+                    $consultaCuenta= DatosUnegocio::unegociosxNivel("","",array("pais"=>$aux2[1],"uni"=>$aux2[2],"zon"=>$aux2[3],"reg"=>$aux2[4],"ciu"=>$aux2[5],"niv6" =>$aux2[6]),array("cta"=>$aux[0],"fra"=>$franq),"","");
 
      }
 

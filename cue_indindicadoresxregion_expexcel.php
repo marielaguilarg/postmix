@@ -37,15 +37,12 @@ $tabladin=new TablaDinamicaController();
 
 
 
-
  $cellIterator = $worksheet->getRowIterator()->current()->getCellIterator();
  $cellIterator->setIterateOnlyExistingCells(true);
-  /** @var PHPExcel_Cell $cell */
+ /** @var PHPExcel_Cell $cell */
  foreach ($cellIterator as $cell) {
  	$worksheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
  }
-
-
 
 
 $objWriter = PHPExcel_IOFactory::createWriter(   $workbook, 'Excel2007');

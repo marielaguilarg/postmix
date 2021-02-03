@@ -6,9 +6,20 @@ require_once "Models/conexion.php";
 class DatosCuenta extends Conexion{
 
     // vistaclientes
+	
+	public function vistaCuentas($tabla)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla ");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+	
+	
     public function vistaCuentasModel($tabla)
     {
-        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla");
+        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado FROM $tabla where cue_estatus=1");
 
         $stmt->execute();
 
@@ -59,7 +70,7 @@ class DatosCuenta extends Conexion{
     // edita servicio
     public function editarCuentaModel($datosModel, $tabla)
     {
-        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado, cue_siglas, cue_lugar, cue_idcliente FROM $tabla  WHERE  cue_id = :idc");
+        $stmt = Conexion::conectar()->prepare("SELECT cue_id, cue_descripcion, cue_tipomercado, cue_siglas, cue_lugar, cue_idcliente, cue_estatus FROM $tabla  WHERE  cue_id = :idc");
 
         $stmt->bindParam(":idc", $datosModel, PDO::PARAM_INT);
 
@@ -70,7 +81,7 @@ class DatosCuenta extends Conexion{
 
     public function actualizarCuentaModel($datosModel, $tabla)
     {
-        $stmt = Conexion::conectar()->prepare("	UPDATE $tabla SET  cue_descripcion= :cuedes, cue_tipomercado= :cuetipo, cue_siglas= :cuesiglas, cue_lugar= :cuelugar, cue_idcliente= :cuecli WHERE cue_id= :cue_id");
+        $stmt = Conexion::conectar()->prepare("	UPDATE $tabla SET  cue_descripcion= :cuedes, cue_tipomercado= :cuetipo, cue_siglas= :cuesiglas, cue_lugar= :cuelugar, cue_idcliente= :cuecli, cue_estatus= :cueest WHERE cue_id= :cue_id");
 
         $stmt->bindParam(":cuedes", $datosModel["cuedes"], PDO::PARAM_STR);
 
@@ -82,6 +93,8 @@ class DatosCuenta extends Conexion{
 
         $stmt->bindParam(":cuelugar", $datosModel["cuelugar"], PDO::PARAM_STR);
 
+        $stmt->bindParam(":cueest", $datosModel["cueest"], PDO::PARAM_STR);
+		
         $stmt->bindParam(":cue_id", $datosModel["id"], PDO::PARAM_INT);
 
         IF ($stmt->execute()) {

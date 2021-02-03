@@ -62,6 +62,7 @@ static function cambiaMesGIng($mesas) {
 		$mesasnum = substr ( $mesas, 0, 2 );
 		$peras = substr ( $mesas, 3, 4 );
 	}
+     //   die($mesasnum."---".$peras);
 	// cambia el mes
 	switch ($mesasnum) {
 		case 1 :
@@ -304,10 +305,12 @@ $float_redondeado=round($valor*1000)/1000;
 return $float_redondeado;
 }
 static function redondear2($valor,$cifras) {
+   
 	if($cifras==1)
 		$float_redondeado=round($valor*10)/10;
 	if($cifras==2)
 		$float_redondeado=round($valor*100)/100;
+		//echo "<br>".$float_redondeado;
 	return $float_redondeado;
 }
 
@@ -569,4 +572,91 @@ static function mensajeExito($mensaje){
 	
 
 }
+
+function comprimirImagen($nombrearchivo,$rtOriginal,$tipo,$ruta){
+	
+		
+		//Funciones optimizar imagenes
+		
+		//Ruta de la carpeta donde se guardarán las imagenes
+		$patch=$ruta;
+		
+		//Parámetros optimización, resolución máxima permitida
+		$max_ancho = 1080;
+		$max_alto = 700;
+		
+		//Si no, se generan nuevas imagenes optimizadas
+		ini_set("memory_limit","120M");
+		//$nombrearchivo=$_FILES['images']['name'];
+		
+		if($tipo=='image/jpeg'){
+			$original = imagecreatefromjpeg($rtOriginal);
+		}
+		else if($tipo=='image/png'){
+			$original = imagecreatefrompng($rtOriginal);
+		}
+		else if($tipo=='image/gif'){
+			$original = imagecreatefromgif($rtOriginal);
+		}
+		
+		
+		list($ancho,$alto)=getimagesize($rtOriginal);
+		
+		$x_ratio = $max_ancho / $ancho;
+		$y_ratio = $max_alto / $alto;
+	
+		
+		if( ($ancho <= $max_ancho) && ($alto <= $max_alto) ){
+			$ancho_final = $ancho;
+			$alto_final = $alto;
+		}
+		elseif (($x_ratio * $alto) < $max_alto){
+			$alto_final = ceil($x_ratio * $alto);
+			$ancho_final = $max_ancho;
+		}
+		else{
+			$ancho_final = ceil($y_ratio * $ancho);
+			$alto_final = $max_alto;
+		}
+		
+		$lienzo=imagecreatetruecolor($ancho_final,$alto_final);
+		
+		imagecopyresampled($lienzo,$original,0,0,0,0,$ancho_final, $alto_final,$ancho,$alto);
+		
+		imagedestroy($original);
+	
+	
+		$cal=8;
+		
+		if($tipo=='image/jpeg'){
+			imagejpeg($lienzo,$patch."/".$nombrearchivo);
+		}
+		else if($tipo=='image/png'){
+			imagepng($lienzo,$patch."/".$nombrearchivo);
+		}
+		else if($tipo=='image/gif'){
+			imagegif($lienzo,$patch."/".$nombrearchivo);
+		}
+	//	die("listo");
+	
+				
+	}
+			
+			public static function enviarPagina($enlace){
+				return  "
+             <script type='text/javascript'>
+               window.location='$enlace'
+                 </script>
+                   ";
+			}
+			
+			public static function guardarError($mensaje){
+			
+				date_default_timezone_set('America/Mexico_City');
+				$fecvis=date("Y-m-d H:i:s");
+		
+			error_log("\n".$fecvis.": ".$mensaje,3,getcwd()."/Archivos/errorespostmix.log");
+			}
+			
+		
 }

@@ -4,7 +4,7 @@ class CuentaController{
 
 	public function vistaCuentasController(){
 				
-		$respuesta =DatosCuenta::vistaCuentasModel("ca_cuentas");
+		$respuesta =DatosCuenta::vistaCuentas("ca_cuentas");
 		$i=$bac=1;
 		foreach($respuesta as $row => $item){
 
@@ -196,7 +196,24 @@ public function editarCuentaController(){
                 <div class="form-group col-md-6">
                   <label>LUGAR</label>
                 <input type="text" class="form-control" name="lugarcuen" value="'.$respuesta["cue_lugar"].'">
-                </div>';
+                </div>
+                <div class="form-group col-md-6">
+                <label >ESTATUS</label>
+               <select class="form-control" name="estatus" id="estatus" required>
+                ';
+                             
+                  if($respuesta['cue_estatus']==1){
+                    echo '<option value="'.$respuesta["cue_estatus"].'" selected="selected">Activado</option>';
+                    echo '<option value="2">Desactivado</option>';
+                  }else{
+                    echo '<option value="1">Activado</option>';   
+                    echo '<option value="'.$respuesta["cue_estatus"].'" selected="selected">Desactivado</option>';
+                  }  
+                
+                echo '</select>
+                </div>
+              
+                ';
 
                
 

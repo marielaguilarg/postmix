@@ -493,8 +493,9 @@ class ResumenResultadosController {
         $tiempo_fin = microtime(true);
       //  die("*************".$seccion2);
         //echo "a la mitad 2 " . ($tiempo_fin - $tiempo_inicio); 
+        //busca los datos de todos los reactivos
         $tabla = $this->ConsultaSeccion($usuario_act, $seccion2, '');
-        $this->lista_tablas[]=$this->creaTabla(3, $tabla);;
+        $this->lista_tablas[]=$this->creaTabla(3, $tabla);
         /*         * ************************buenos habitos *********************************** */
         $sec_condiciones = array('6', '7');
         $tabla="";
