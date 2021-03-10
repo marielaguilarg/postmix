@@ -68,23 +68,27 @@ class Graficajson {
             $seccion = array("8", "5","6");
             $this->consultarBDEstandar($seccion);
         }
+        //las secciones son ponderadas a menos que se indique lo contrario
         if ($this->tipo == "S") {
             $secciones = array(["2.10"],
                 ["2.11"],
                 ["2.8"],
                 ["2.8.1", "EV"],
                 ["3.11", ""],
+                ["3.13", ""],
                 ["3.15", ""],
                 ["3.8.1.0.0.1", "A"],
-                ["2.15"]
+                ["2.15"],
+                ["3.12", ""]
             );
             $this->consultarBDServicio($secciones);
         }
         if ($this->tipo == "O") {
             $secciones = array(["2.9"],
-                ["3.8.1.0.0.1", "A"],
+            /*    ["3.8.1.0.0.1", "A"],*/
                 ["2.7"],
                 ["2.6"],
+                ["3.20", ""],
                 ["3.23", ""],
                 ["3.19", ""]
             );
@@ -92,30 +96,36 @@ class Graficajson {
         }
         if ($this->tipo == "IC") {
             $secciones = array(["2.17"],
+                ["4.13"],
                 ["2.14"],
                 ["3.3"],
                 ["3.6", ""],
                 ["2.3"],
+                ["2.4"],
                 ["3.4"]
             );
             $this->consultarBDServicio($secciones);
         }
           if ($this->tipo == "IG") {
-            $secciones = array(["2.13"],
+            $secciones = array(
+                ["3.1", ""],
+                ["2.13"],
                
-                ["3.3"],
+               /* ["3.3"],
                  ["3.4"],
-                  ["3.6"],
+                  ["3.6"],*/
                 ["6,7", "V"],
                 ["3.9", ""],
                 ["4.3"],
                  ["4.4"],
                  ["4.7"],
                  ["4.12"],
+                ["4.16", ""],
+                ["4.10", ""],
             );
             $this->consultarBDServicio($secciones);
         }
-      $auxp = explode('.', $this->filperiodo);
+       $auxp = explode('.', $this->filperiodo);
        $mes = $auxp[0];
         if ($mes - 6 >= 0) { // calculo para los 6m
             $z = $mes - 6 + 1;
@@ -415,7 +425,7 @@ class Graficajson {
         }
         $fmes_consulta = $aux[1] . "-" . $aux[0] . "-01"; //fecha final
         $mes_consulta_ant = ($aux[1] - 1) . "-" . $aux[0] . "-01"; //fecha inicial
-        $result = DatosPond::graficaCumplimiento($listasecp, $this->servicio, $usuario,$mes_consulta_ant,$fmes_consulta);
+        $result = DatosPond::graficaCumplimientoMensual($listasecp, $this->servicio, $usuario,$fmes_consulta);
         $resultadosp=$resultadosa=$resultadosj=array();
         if (isset($result) && sizeof($result) > 0) { // si hay datos los despliegan
             if ($_SESSION["idiomaus"] == 2)
@@ -443,7 +453,7 @@ class Graficajson {
         if(!empty($listaseca)){
            //  echo "**********************";
             // die($listaseca);
-            $resultab = DatosAbierta::consultaGraficaCumplimientoCatalgo($usuario, $this->servicio,substr($listaseca,0,strlen($listaseca)-1),">25" ,$mes_consulta_ant,$fmes_consulta);
+            $resultab = DatosAbierta::consultaGraficaCumplimientoCatalgoMensual($usuario, $this->servicio,substr($listaseca,0,strlen($listaseca)-1),">25" ,$fmes_consulta);
             if ($_SESSION["idiomaus"] == 2)
                 $campo = "rad_descripcioning";
             else
@@ -462,7 +472,7 @@ class Graficajson {
           }
           
         if(!empty($seccionj)){
-            $resultj = DatosProducto::consultaGraficaCumplimiento($seccionj, $this->servicio, $usuario,$mes_consulta_ant,$fmes_consulta);
+            $resultj = DatosProducto::consultaGraficaCumplimientoMensual($seccionj, $this->servicio, $usuario,$fmes_consulta);
            // var_dump($resultj);
            
                if ($_SESSION["idiomaus"] == 2)
@@ -484,7 +494,7 @@ class Graficajson {
           if(!empty($seccionev)){
             
 
-              $resultadosev[$seccionev] =$this->consultarEstandarVariasSecc($seccionev, $usuario);
+              $resultadosev[$seccionev] =$this->consultarEstandarVariasSecc($seccionev, $usuario,$fmes_consulta);
         
         }
        //s var_dump( $resultadosev[$seccionev]);
@@ -515,7 +525,7 @@ class Graficajson {
 //         echo "</pre>";
     }
 
-    function consultarEstandarVariasSecc($seccion,$usuario){
+    function consultarEstandarVariasSecc($seccion,$usuario,$mesfinal){
        $reactivos = $this->ConsultaAtributos($seccion);
        //falta buscar el nombre
       $row= DatosEst::vistaNomSecEstandar($this->servicio,$seccion,"cue_reactivosestandar");
@@ -524,7 +534,7 @@ class Graficajson {
       
        //busca el cumplimiento de todos los reactivos  y los trae en un arreglo del tipo 
        //parametro, descripcion, estandar cumplimiento%, referencia de reactivo
-       $resultados= $this->cumplimientoEstandarVariosReactivos($reactivos, $usuario);
+      $resultados= $this->cumplimientoEstandarVariosReactivos($reactivos, $usuario,$mesfinal);
     
        //reviso cada
        //regreso el arreglo con la info
@@ -1493,7 +1503,7 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
         return $resultados;
     }
     
-     function cumplimientoEstandarVariosReactivos($referencia, $usuario) {
+    function cumplimientoEstandarVariosReactivos($referencia, $usuario, $mesfinal) {
     	foreach($referencia as $sec){
     		$listasec.="'".$sec."' ,";
     	}
@@ -1522,6 +1532,7 @@ AND ins_detalleestandar.ide_numcaracteristica1 = cue_reactivosestandardetalle.re
 Inner Join tmp_estadistica ON ins_detalleestandar.ide_numreporte = tmp_estadistica.numreporte
 WHERE cue_reactivosestandar.re_tipoevaluacion > 0 AND ide_valorreal<>'' AND
 ins_detalleestandar.ide_claveservicio=:vserviciou AND
+STR_TO_DATE(mes_asignacion,'%Y-%m-%d') =:mes_final and
 concat(cue_reactivosestandar.sec_numseccion,'.', ins_detalleestandar.ide_numreactivo,'.' ,ins_detalleestandar.ide_numcomponente,'.',ins_detalleestandar.ide_numcaracteristica3 ) 
 in (".substr($listasec,0,strlen($listasec)-1).")
   and tmp_estadistica.usuario=:usuario
@@ -1532,7 +1543,7 @@ cue_reactivosestandar.re_tipoevaluacion,
 ins_detalleestandar.ide_numreactivo,
 ins_detalleestandar.ide_numcomponente,
 tmp_estadistica.usuario";
-     $parametros = array("vserviciou" => $this->servicio, "usuario" => $usuario);
+        $parametros = array("vserviciou" => $this->servicio, "usuario" => $usuario, "mes_final"=> $mesfinal);
     //    echo "<br>***********************************************<br>";
         $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
 

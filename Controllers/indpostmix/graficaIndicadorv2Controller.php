@@ -36,6 +36,7 @@ class GraficaIndicadorv2Controller {
     private $UrlIndicadores;
     private $titulos; //arreglo para los encabezados de las graficas
     private $UrlIndicadoresDet;
+    public $mes_indice_letra;
 
     public function mostrarFiltros() {
         foreach ($_POST as $nombre_campo => $valor) {
@@ -503,6 +504,7 @@ class GraficaIndicadorv2Controller {
         
        
         $this->periodo = $mesletra;
+        $this->mes_indice_letra= Utilerias::cambiaMesGIng($mes_asig);
         //meto datos en la tabla temporal
        
         $this->insertarReportesTemp($mes_consulta,$mes_pivote);
