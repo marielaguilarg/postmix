@@ -19,6 +19,7 @@ class ImportadorUneAsigController {
     public function importar(){
           $anio=filter_input(INPUT_POST, "anio",FILTER_SANITIZE_STRING);
            $folder=getcwd().DIRECTORY_SEPARATOR."Archivos".DIRECTORY_SEPARATOR;
+       //$filename="temporalunegociosasignados.xlsx";
        $filename="temporalunegociosasignados.xlsx";
      try{
         if (filter_input(INPUT_GET, "adm",FILTER_SANITIZE_STRING)=="imp"){
@@ -35,12 +36,13 @@ class ImportadorUneAsigController {
                 '</div>';
       
         if($ext=='xlsx'){
-            if($_FILES["archivoimport"]["type"]!="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // el primero debe ser zip
-            {
-                //finalizo con
-              //  echo "--".$_FILES["userfile"]["type"][0];
-                $this->resultado=$msg2;
-            }
+             if($_FILES["archivoimport"]["type"]!="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") // el primero debe ser zip
+             {
+                 //finalizo con
+               //  echo "--".$_FILES["userfile"]["type"][0];
+                 $this->resultado=$msg2;
+                 throw new Exception($this->resultado);
+             }
         //    echo "subiendo ".$folder.$filename;
        if(move_uploaded_file($_FILES['archivoimport']['tmp_name'], $folder.$filename)){ // Finalmente sube el archivo
                       
