@@ -19,13 +19,15 @@ class ImportadorExcelController{
     }
     
     public function importar(){
-        $xlsx = new SimpleXLSX( $this->rutaArchivo."/".$this->nombreArchivo);
+        $xlsx = new SimpleXLSX( $this->rutaArchivo.$this->nombreArchivo);
+       // echo "****".$this->rutaArchivo.$this->nombreArchivo;
         $nuevorow=array();
-      
+      //  var_dump($xlsx);
+      //  die();
       
         foreach($xlsx->rows() as $ren){
-//            var_dump($ren);
-//            echo "<br>";
+//             var_dump($ren);
+//             echo "<br>";
             //me salto encabezados
             //para pasar solo las que tienen datos
             if($ren[0]!="")
@@ -39,6 +41,31 @@ class ImportadorExcelController{
          
 
 
+    }
+    public function importarCsv(){
+    
+    $fila = 0;
+    if (($gestor = fopen( $this->rutaArchivo.$this->nombreArchivo, "r")) !== FALSE) {
+        while (($datos = fgetcsv($gestor, ",")) !== FALSE) {
+            $numero = count($datos);
+          //   echo "<p> $numero de campos en la línea $fila: <br /></p>\n";
+          
+            for ($c=0; $c < $numero; $c++) {
+               // echo $datos[$c] . "<br />\n";
+                $nuevorow[$fila][]=$datos[$c];
+            }
+            $fila++;
+        }
+        fclose($gestor);
+    }
+  
+ 
+    unset($nuevorow[0]);
+   
+    //envio $xlsx->rows() directo a mi consulta
+    //inserto todo
+    //  echo "casi llego";
+    DatosUnegociosAsignados::insertarMultipleTemporal($nuevorow);
     }
     
 }
