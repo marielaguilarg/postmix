@@ -63,6 +63,7 @@ $graficaIndicador->vistaGraficasIndicador();
 <script type="text/javascript">
     var ismobile=0;
     var titulo="<?php echo $graficaIndicador->getPeriodo()."\u000A".$graficaIndicador->getLugar(); ?>";
+    var titulogh="<?php echo $graficaIndicador->mes_indice_letra."\u000A".$graficaIndicador->getLugar(); ?>";
 
     
 //        if( navigator.userAgent.match(/Android/i)
@@ -104,7 +105,7 @@ $graficaIndicador->vistaGraficasIndicador();
             	    ?>
            
         }
-    console.log("termine el movil");
+  
     }
 		
      );
@@ -126,10 +127,19 @@ $graficaIndicador->vistaGraficasIndicador();
     function graficasEstandar(urlDatos,container1, container2,urldetalle){
   	  var urldetalle="index.php?action=indgrafindicadordetalle"+urldetalle;
         anychart.data.loadJsonFile(urlDatos, function (data) {
+        	console.log("************");
+        	console.log(data);
+       
             if(data["error"])
             {
                 title = anychart.standalones.title();
-                title.text(data["error"]);   
+                title.text(data["error"]);  
+                title.container(stage);
+                title.draw();
+                title = anychart.standalones.title();
+                title.text(data["error"]);  
+                title.container(stage4);
+                title.draw();
             }else{
             // create data
                 databebida = data["8"];
@@ -183,7 +193,7 @@ $graficaIndicador->vistaGraficasIndicador();
               series.stroke(color);
             series.labels().fontWeight(600);
             series.labels().fontColor('black');
-            series.labels().format("{%value}%({%cumplen}/{%pruebas})");
+            series.labels().format("{%value}%   ({%cumplen}/{%pruebas})");
             series.labels().fontSize(9);
             series.labels().anchor('left-center');
             series.labels().position('right-center');
@@ -207,14 +217,14 @@ $graficaIndicador->vistaGraficasIndicador();
             if(ismobile)//para el mobil hago mas pequeños los titulos
                  xLabels.width(150);
             //            else
-            xLabels.width(325);
+            xLabels.width(335);
          
             xLabels.hAlign('end');
                xLabels.wordWrap("break-word");
             xLabels.wordBreak("normal");
             var title = chart.title();
           
-            header(title,titulosec,titulo);
+            header(title,titulosec,titulogh);
             chart.yScale().minimum(0);
             chart.yScale().maximum(250);
             chart.yAxis().labels().fontSize(10);
