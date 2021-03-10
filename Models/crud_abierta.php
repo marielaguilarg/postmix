@@ -898,5 +898,47 @@ ca_catalogosdetalle.cad_idopcion = ida_descripcionreal
        
         
     }
+    public function consultaGraficaCumplimientoCatalgoMensual($usuario,$servicio,$nsec,$estandar,$mesfinal){
+        $stmt=Conexion::conectar()->prepare("  SELECT
+  SUM(IF(`cad_descripcionesp`".$estandar.",1,0))/COUNT(`numreporte`)*100 AS nivaceptren,
+ SUM(IF(`cad_descripcionesp`".$estandar.",1,0)) as pasa
+,COUNT(`numreporte`) as total
+ , `cue_reactivosabiertosdetalle`.`rad_descripcionesp`
+    , `cue_reactivosabiertosdetalle`.`rad_descripcioning`
+    ,concat(`cue_reactivosabiertosdetalle`.`sec_numseccion`,'.'
+    ,r_numreactivo,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcomponente`,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcaracteristica`,'.'
+    , `cue_reactivosabiertosdetalle`.`ra_numcomponente2`,'.'
+    , `cue_reactivosabiertosdetalle`.`rad_numcaracteristica2`) as refer
+FROM
+    `ins_detalleabierta`
+    INNER JOIN `tmp_estadistica`
+        ON (`ins_detalleabierta`.`ida_numreporte` = `tmp_estadistica`.`numreporte`)
+   INNER JOIN `cue_reactivosabiertosdetalle`
+        ON (`ins_detalleabierta`.`ida_claveservicio` = `cue_reactivosabiertosdetalle`.`ser_claveservicio`) AND (`ins_detalleabierta`.`ida_numseccion` = `cue_reactivosabiertosdetalle`.`sec_numseccion`) AND (`ins_detalleabierta`.`ida_numreactivo` = `cue_reactivosabiertosdetalle`.`r_numreactivo`) AND (`ins_detalleabierta`.`ida_numcomponente` = `cue_reactivosabiertosdetalle`.`ra_numcomponente`) AND (`ins_detalleabierta`.`ida_numcaracteristica1` = `cue_reactivosabiertosdetalle`.`ra_numcaracteristica`) AND (`ins_detalleabierta`.`ida_numcaracteristica2` = `cue_reactivosabiertosdetalle`.`ra_numcomponente2`) AND (`ins_detalleabierta`.`ida_numcaracteristica3` = `cue_reactivosabiertosdetalle`.`rad_numcaracteristica2`)
+       inner join ca_catalogosdetalle
+on
+ca_catalogosdetalle.cad_idcatalogo = rad_clavecatalogo AND
+ca_catalogosdetalle.cad_idopcion = ida_descripcionreal
+        WHERE CONCAT(`ida_numseccion`,'.',`ida_numreactivo`,'.',`ida_numcomponente`,'.',
+`ida_numcaracteristica1`,'.',`ida_numcaracteristica2`,'.',`ida_numcaracteristica3`)=:seccion
+        AND `ida_claveservicio`=:servicio
+        AND `usuario`=:usuario   
+ and  STR_TO_DATE(mes_asignacion,'%Y-%m-%d') =:mes_final
+       GROUP BY ida_numcaracteristica3");
+        // die($nsec);
+        $stmt-> bindParam(":usuario", $usuario, PDO::PARAM_STR);
+        $stmt-> bindParam(":servicio", $servicio, PDO::PARAM_INT);
+        $stmt-> bindParam(":seccion", $nsec, PDO::PARAM_STR);
+        
+        $stmt-> bindParam(":mes_final", $mesfinal, PDO::PARAM_STR);
+        $stmt-> execute();
+        //         $stmt->debugDumpParams();
+        //         die();
+        return $stmt->fetchAll();
+        
+        
+    }
     
 }

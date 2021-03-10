@@ -343,6 +343,31 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
 	    $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
 	    return $rs_sql_reporte_e;
 	}
+	public function consultaGraficaCumplimientoMensual($listasec,$vservicio,$usuario,$mesfinal){
+	    
+	    $sql_reporte_e = "SELECT
+(((SUM(if(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0)))*100)/(SUM(`ins_detalleproducto`.`ip_numcajas`))) AS NIVELACEPTACION,
+sum(if(`ins_detalleproducto`.`ip_condicion`='V',`ins_detalleproducto`.`ip_numcajas`,0)) as pasa,
+SUM(`ins_detalleproducto`.`ip_numcajas`) as total,
+cue_secciones.sec_descripcionesp,
+cue_secciones.sec_descripcioning,ins_detalleproducto.ip_numseccion as secc
+FROM
+ins_detalleproducto
+Inner Join tmp_estadistica ON tmp_estadistica.numreporte = ins_detalleproducto.ip_numreporte
+Inner Join cue_secciones ON ins_detalleproducto.ip_claveservicio = cue_secciones.ser_claveservicio AND ins_detalleproducto.ip_numseccion = cue_secciones.sec_numseccion
+WHERE
+	 ins_detalleproducto.ip_numseccion in (".substr($listasec,0,strlen($listasec)-1).")
+AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)  and tmp_estadistica.usuario=:usuario
+    and ins_detalleproducto.ip_claveservicio=:vserviciou
+   
+  and  STR_TO_DATE(mes_asignacion,'%Y-%m-%d') <=:mes_final
+	     
+	     
+ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_numreporte` ASC";
+	    $parametros = array("vserviciou" => $vservicio,  "usuario" => $usuario,"mes_final"=> $mesfinal);
+	    $rs_sql_reporte_e = Conexion::ejecutarQuery($sql_reporte_e, $parametros);
+	    return $rs_sql_reporte_e;
+	}
 	
 
 }
