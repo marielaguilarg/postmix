@@ -178,11 +178,11 @@ $graficaIndicador->vistaGraficasIndDetalle();
                 title.enabled(true);
         
                 title.fontSize(14);
-                  var title = chart.legend().title();
-            title.enabled(true);
-            title.fontSize(12);
-            title.padding(5);
-            title.useHtml(true);
+                var title = chart.legend().title();
+          		title.enabled(true);
+          		title.fontSize(12);
+           		title.padding(5);
+            		title.useHtml(true);
           //  title.hAlign("left");
             title.text("<i style=\"color: #999; font-weight: 400; font-size: 11px;\">*AJUSTE: "+nota+"</i><br>");
           		/* layer_text = container.layer();
@@ -192,9 +192,9 @@ $graficaIndicador->vistaGraficasIndDetalle();
 	layer_text.text(20, 20, "Animals activitiy", {fontSize:20});
                 */ chart.labels(true);
                 
-                chart.labels().fontWeight(600);
+              //  chart.labels().fontWeight(600);
                 chart.labels().fontColor('black');
-                chart.labels().format("{%value}{decimalsCount:1}");
+                chart.labels().format("{%value}{decimalsCount:1}%");
                 chart.labels().fontSize(10);
                 chart.labels().position("center");
                // chart.labels().anchor("left");
@@ -361,6 +361,7 @@ $graficaIndicador->vistaGraficasIndDetalle();
     }
      function pdf2() {
         stage2.saveAsPdf();
+      //  anychart.exports.image('500', '200');
     }
 
     anychart.onDocumentReady(function () { 
