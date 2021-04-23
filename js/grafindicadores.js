@@ -73,7 +73,7 @@ function iconsLabelFormat(series1, series2, series3) {
 var i=0;
 function drawColumns12meses(dataBarras, j, container, paleta, titulosec, titulo) {
 
-
+	
 	var data = anychart.data.set(dataBarras);
 	var serieData1 = data.mapAs({ x: 0, value: 4, ref: 1, fill: 5, stroke: 5, pruebas: 12, cumplen: 13 });
 	var serieData2 = data.mapAs({ x: 0, value: 3, ref: 1, fill: 6, stroke: 6, pruebas: 10, cumplen: 11 });
@@ -99,11 +99,11 @@ function drawColumns12meses(dataBarras, j, container, paleta, titulosec, titulo)
 
 	chart.labels(true);
 
-	chart.labels().fontWeight(500);
+	//chart.labels().fontWeight(600);
 	chart.labels().fontColor('black');
-	chart.labels().format("{%value}{decimalsCount:1}\n");
+	chart.labels().format("{%value}{decimalsCount:1} %");
 
-	chart.labels().fontSize(9);
+	chart.labels().fontSize(10);
 	chart.labels().position("center");
     chart.labels().anchor("left");
     chart.labels().offsetY(-10);
@@ -231,7 +231,7 @@ function dibujarTabla(dataBarras,container,yini){
 }
 function dibujarlogogep(container, y2) {
 	var urllogog = "https://muesmerc.mx/postmixv3/img/gepp2020.jpg";
-console.log("poniendo logo");
+
 	if (ismobile) {
 		//alert(urllogog);
 		//alert(y2);
@@ -370,7 +370,7 @@ function generarEncabezadosAny2(data) {
 function generarTablaAny2( data) {
 	var i;
 	var j;
-	var titulos = ["", "%CUMPLEN", "RES. CUMPLEN", "NUM. PRUEBAS"];
+	var titulos = ["", "%CUMPLEN",  "NUM. PRUEBAS","RES. CUMPLEN"];
 	var subtitulos=["12m","6m","1m"];
 	//console.log(data.length);
 	//console.log(data);
