@@ -68,8 +68,10 @@ class GraficaIndicadorv2Controller {
         if(isset ($_SESSION['UsuarioInd']))
                   $Usuario = $_SESSION['UsuarioInd'];
         else{
-       //mandar al login
-          
+      
+       //     var_dump($_SESSION);
+                $_SESSION["UsuarioInd"]=$_SESSION['NombreUsuario'];
+                $Usuario = $_SESSION['UsuarioInd'];
         }
 
         //   include("MENindbarramenu.php");
@@ -121,9 +123,7 @@ class GraficaIndicadorv2Controller {
             $html->asignar('noveo_res', "table-row");
             $html->asignar('lb_Notiene', T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION"));
         } else {
-         
-// 
-
+        
             if ($grupo == "cue") {
 //                if ($gnivel == "")
 //                    $nivel = 2;
@@ -132,8 +132,8 @@ class GraficaIndicadorv2Controller {
 //                $reng = $permiso;
                 if ($Nivel03!= 0)
                     $gfily = $Nivel01. "." . $Nivel02 . "." . $Nivel03;
-                    else if ($Nivel02 != 0)
-                   $gfily = $Nivel01. "." . $Nivel02;
+                else if ($Nivel02 != 0)
+                    $gfily = $Nivel01. "." . $Nivel02;
                else
                    $gfily = $Nivel01;
                    $gfiluni = $this->crearReferenciaNivelUni($row_usuarios, $grupo);
@@ -165,7 +165,7 @@ class GraficaIndicadorv2Controller {
               
             }
                     
-          
+           // echo "*****".$gfilx."---".$gfily;
             $this->filnivelcedis=$gfilx;
             $this->filcuenta=$gfily;
             

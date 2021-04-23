@@ -25,14 +25,15 @@ class Graficajson {
     private $grupocolores;
     // array con los datos para json
     public function __construct() {
-        $this->colores=array("#7FFF00","#9ACD32","#FFA07A","#008080","#00FFFF","#778899","#4169E1","#20B2AA","#DCDCDC","#ADFF2F","#CD5C5C","#FF4500","#1E90FF");
+        $this->colores=array("#7FFF00","#9ACD32","#FFA07A","#008080","#00FFFF","#778899",
+            "#4169E1","#20B2AA","#DCDCDC","#ADFF2F","#CD5C5C","#FF4500","#1E90FF");
       $this->blue=array("#00CED1","#1E90FF","#B0C4DE","#7B68EE","#7FFFD4","#00BFFF","#20B2AA","#4169E1","#008080","#48D1CC","#00CED1","#1E90FF");
      
-       $this->grupocolores=array('#1382AC',
+      $this->grupocolores=array("#FFC000",'#1382AC',
            "#318B71",
              "#952B51",
-             "#FFC000",
-             "#9ACD32","#A0522D" ,"#C0C0C0","#87CEEB","#6A5ACD",'#8B4513',
+             
+             "#a6a6a6","#A0522D" ,"#C0C0C0","#87CEEB","#6A5ACD",'#8B4513',
            "#FA8072",
              "#F4A460",
              "#2E8B57",
@@ -60,7 +61,8 @@ class Graficajson {
         $this->servicio = 1;
     }
 
- /************** selecciona el tipo de consulta*********/
+ /**************funcion principal que  selecciona el tipo de consulta
+  * y genera el json*********/
 
     public function generarJSON() {
 
@@ -69,6 +71,8 @@ class Graficajson {
             $this->consultarBDEstandar($seccion);
         }
         //las secciones son ponderadas a menos que se indique lo contrario
+        //arreglo para agregar las secciones que aparecen en la barras horizontales
+        //se ponen de la forma seccion.reactivo, tiposeccion
         if ($this->tipo == "S") {
             $secciones = array(["2.10"],
                 ["2.11"],
@@ -247,7 +251,8 @@ class Graficajson {
 //                echo "*************************<br>";
               //  var_dump($matriz);
             $secc_ant = "";
-            $j =$k=$l= 0;
+            $j =$l= 0;
+            $k=1;
             foreach ($matriz as $key => $rowt) {
 
                 $secc_actual = $key;
@@ -281,11 +286,12 @@ class Graficajson {
                     
                 }else{
                         $this->chart[$rowt["sec"]][$j][$i + 1] = $this->grupocolores[$k];
+                      //  echo "<br>******".$rowt["sec"]."--".$this->grupocolores[$k]."--".$k;
                         $this->chart[$rowt["sec"]][$j][6] = $this->grupocolores[$k]." 0.7";
                         $this->chart[$rowt["sec"]][$j][7] = $this->grupocolores[$k++]." 0.4";
                 }    
                   
-                
+               
                 //}
                 $secc_ant = $secc_actual;
                 $j++;
@@ -293,7 +299,7 @@ class Graficajson {
             //busco la seccion 6 y 7 para ponerla con la 8
            
             $this->chart[8][$j] = $this->cumplimientoProducto($mes_consulta_ant, $mes_pivote, $fmes_consulta, $usuario);
-            
+           
 //             echo "*************************<pre>";
 //            print_r($this->chart); echo "</pre>";
 //            die();
@@ -542,13 +548,13 @@ class Graficajson {
     }
   
     /*****************
-     * Consulta para la graf de omparación por nivel
+     * Consulta para la graf de comparación por nivel
      * Llega la fecha de inicio y fecha de fin como mm.yyyy
      * referencia: 1.2.3 seccion y reactivo
      * filx y fily como arreglo para los niveles y cuenta
      */
       function compararxNivel( $referencia,$fecha_consulta_ini,$fecha_consulta_fin,$mes_pivote) {
-          
+          //para los usuarios que no tienen definido un nivel
         if ($this->filnivel == ""||$this->filnivel == "1.1."||$this->filnivel == "1.1....") {
             $this->filnivel = "1.1.5";
         }
@@ -931,19 +937,19 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
         if (isset($matriz["total"][3]["tot"]) && $matriz["total"][3]["tot"]!= 0)
               $val3=Utilerias::redondear2($matriz["total"][3]["acep"]/  $matriz["total"][3]["tot"]*100,1);
        
-             
+              $j =$k= 0;
         $this->chart[]=array("TOTAL","",$val1,
      
         $val2,
         $val3
-                ,  $this->colores[3],$this->colores[3]." 0.7",$this->colores[3]." 0.4",
+                ,  $this->colores[$k],$this->colores[$k]." 0.7",$this->colores[$k++]." 0.4",
             $matriz["total"][1]["tot"],$matriz["total"][1]["acep"],
             $matriz["total"][2]["tot"],$matriz["total"][2]["acep"],
            $matriz["total"][3]["tot"],$matriz["total"][3]["acep"],
             
             
         );
-            $j =$k= 0;
+           
             foreach ($matriz as $key => $rowt) {
                 if($key=="total") continue;
                $res= array($key,"");
@@ -967,6 +973,7 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
                  $res[$i+1]=$this->colores[$k];
                  $res[6]=$this->colores[$k]." 0.7";
                  $res[7]=$this->colores[$k++]." 0.4";
+              //   echo "<br>******".$rowt["sec"]."--".$this->colores[$k]."--".$k;
                 //    $this->chart[$rowt["sec"]][$j][$i + 1] = ;
                     
                  $this->chart[] =$res;
@@ -1491,10 +1498,10 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
                     $resultados[$i+$k]= $rowt[$i]["acep"];
                         
                 }
-                 $resultados[$i + 1] = $this->grupocolores[3];
+                 $resultados[$i + 1] = $this->grupocolores[0];
               
-                       $resultados[6] = $this->grupocolores[3]." 0.7";
-                       $resultados[7] = $this->grupocolores[3]." 0.4";
+                       $resultados[6] = $this->grupocolores[0]." 0.7";
+                       $resultados[7] = $this->grupocolores[0]." 0.4";
                     
               
             }
