@@ -21,7 +21,7 @@ $graficaIndicador->vistaGraficasIndicador();
     
      .containerbar {
         width: 100%;
-        height: 1100px;
+        height: 1200px;
         margin: 0;
         padding: 0;
     }
@@ -127,8 +127,7 @@ $graficaIndicador->vistaGraficasIndicador();
     function graficasEstandar(urlDatos,container1, container2,urldetalle){
   	  var urldetalle="index.php?action=indgrafindicadordetalle"+urldetalle;
         anychart.data.loadJsonFile(urlDatos, function (data) {
-        	console.log("************");
-        	console.log(data);
+       
        
             if(data["error"])
             {
@@ -190,11 +189,11 @@ $graficaIndicador->vistaGraficasIndicador();
             series.name("%Cumplimiento (Resultados que cumplen/Num. pruebas) ");
             series.labels(true);
             series.fill(color);
-              series.stroke(color);
-            series.labels().fontWeight(600);
+            series.stroke(color);
+            //series.labels().fontWeight(600);
             series.labels().fontColor('black');
             series.labels().format("{%value}%   ({%cumplen}/{%pruebas})");
-            series.labels().fontSize(9);
+            series.labels().fontSize(10);
             series.labels().anchor('left-center');
             series.labels().position('right-center');
             series.labels().offsetY(2);
