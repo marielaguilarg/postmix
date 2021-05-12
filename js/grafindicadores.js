@@ -103,7 +103,7 @@ function drawColumns12meses(dataBarras, j, container, paleta, titulosec, titulo)
 	chart.labels().fontColor('black');
 	chart.labels().format("{%value}{decimalsCount:1} %");
 
-	chart.labels().fontSize(10);
+	chart.labels().fontSize(12);
 	chart.labels().position("center");
     chart.labels().anchor("left");
     chart.labels().offsetY(-10);
