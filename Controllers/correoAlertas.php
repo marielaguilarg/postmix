@@ -129,7 +129,7 @@ font-size:14;
     }
     public function crearCorreo($tablas, $fecha){
         //$from="Pruebas";
-         $from="ALERTAS MUESMERC";
+        $from="Alertas Muesmerc";
         $fromadd="alertas.postmix@muesmerc.com.mx";
         //pass a5390lert
        // $fromadd="pruebascertificacion@muesmerc.mx";
