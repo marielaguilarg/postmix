@@ -760,7 +760,7 @@ function validar(){
                     <button   style="margin-left: 10px"><a href="index.php?action=rsn&sec='.$sec.'&ts=FG&sv='.$sv.'&pv='.$pv.'&idc='.$idc.'&nrep='.$nrep.'"> Finalizar </a></button>';
                   }
              }
-             if($sv!=5){
+             if($sv!=3&&$sv!=5){
              echo '<button type="button"  style="margin-left: 10px" onclick="window.open(\'imprimirReporte.php?admin=impcerpm&sv='.$sv.'&nrep='.$nrep.'\')" > Generar certificado </button>';
              }
 

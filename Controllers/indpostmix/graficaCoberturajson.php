@@ -136,6 +136,9 @@ ca_unegocios.une_cla_franquicia=508, 83, if(ca_unegocios.une_cla_ciudad=83,82, c
  FROM
 ins_generales
 INNER JOIN ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
+ INNER JOIN ca_nivel4 ON  ca_nivel4.n4_id=`une_cla_estado`
+       INNER JOIN ca_nivel5 ON  ca_nivel5.n5_id=ca_unegocios.une_cla_ciudad 
+          INNER JOIN ca_nivel6 ON ca_nivel6.n6_id=ca_unegocios.une_cla_franquicia  
  /*LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
 AND `ide_numreporte`=`i_numreporte`
 AND `ide_numseccion`=8
@@ -245,7 +248,7 @@ i_claveservicio =:servicio";
             //consulta para num. de inspecciones
             
          $sql_ins=" SELECT
- sum(IF(ide_numseccion IS NOT NULL,1,0) ) as tam_muestra,
+ sum(IF(i_numreporte IS NOT NULL,1,0) ) as tam_muestra,
  n4_nombre,n5_nombre,n6_nombre ,if(ca_unegocios.une_cla_franquicia=482 or
 ca_unegocios.une_cla_franquicia=491 or
 ca_unegocios.une_cla_franquicia=493 or
@@ -261,7 +264,7 @@ INNER JOIN ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
    INNER JOIN ca_nivel4 ON  ca_nivel4.n4_id=`une_cla_estado`
        INNER JOIN ca_nivel5 ON  ca_nivel5.n5_id=ca_unegocios.une_cla_ciudad 
           INNER JOIN ca_nivel6 ON ca_nivel6.n6_id=ca_unegocios.une_cla_franquicia  
- LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
+ /*LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
 AND `ide_numreporte`=`i_numreporte`
 AND `ide_numseccion`=8
  AND `ide_numreactivo`=0
@@ -269,7 +272,7 @@ AND `ide_numseccion`=8
   AND `ide_numcaracteristica1`=0
   AND `ide_numcaracteristica2`=0
   AND `ide_numcaracteristica3`=6
-  AND `ide_numrenglon`=1 AND i_finalizado=-1
+  AND `ide_numrenglon`=1 AND i_finalizado=-1*/
 where
 i_claveservicio =:servicio";
 
@@ -371,7 +374,7 @@ i_claveservicio =:servicio";
             //consulta para num. de inspecciones
             
          $sql_ins=" SELECT
- sum(IF(ide_numseccion IS NOT NULL,1,0) ) as tam_muestra,cue_id, cue_descripcion
+ sum(IF(i_numreporte IS NOT NULL,1,0) ) as tam_muestra,cue_id, cue_descripcion
   ,if(ca_unegocios.une_cla_franquicia=482 or
 ca_unegocios.une_cla_franquicia=491 or
 ca_unegocios.une_cla_franquicia=493 or
@@ -386,7 +389,10 @@ ins_generales
 INNER JOIN ca_unegocios ON ins_generales.i_unenumpunto = ca_unegocios.une_id
      INNER JOIN ca_cuentas ON 
           ca_unegocios.cue_clavecuenta = ca_cuentas.cue_id
- LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
+ INNER JOIN ca_nivel4 ON  ca_nivel4.n4_id=`une_cla_estado`
+       INNER JOIN ca_nivel5 ON  ca_nivel5.n5_id=ca_unegocios.une_cla_ciudad 
+          INNER JOIN ca_nivel6 ON ca_nivel6.n6_id=ca_unegocios.une_cla_franquicia  
+/* LEFT JOIN `ins_detalleestandar` ON  `i_claveservicio`=`ide_claveservicio` 
 AND `ide_numreporte`=`i_numreporte`
 AND `ide_numseccion`=8
  AND `ide_numreactivo`=0
@@ -394,7 +400,7 @@ AND `ide_numseccion`=8
   AND `ide_numcaracteristica1`=0
   AND `ide_numcaracteristica2`=0
   AND `ide_numcaracteristica3`=6
-  AND `ide_numrenglon`=1 AND i_finalizado=-1
+  AND `ide_numrenglon`=1 AND i_finalizado=-1*/
 where
 i_claveservicio =:servicio";
 

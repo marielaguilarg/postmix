@@ -675,6 +675,10 @@ public function editarPonderaComentController(){
 //          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==2)
 //           //  echo "encontre el registro";
 //             continue;
+         if($ser==1&&$sec=="3")
+             if($item["r_numreactivo"]==16||$item["r_numreactivo"]==17||$item["r_numreactivo"]==18||$item["r_numreactivo"]==21
+                 ||$item["r_numreactivo"]==22)
+             continue; 
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==5)
             continue;   
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==8)
@@ -682,9 +686,9 @@ public function editarPonderaComentController(){
             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==9)
             continue; 
-         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
-          //  echo "encontre el registro";
-            continue;
+//          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
+//           //  echo "encontre el registro";
+//             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==17)
             continue; 
           if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==18)
@@ -1022,9 +1026,9 @@ public function registraPonderada(){
             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==9)
             continue; 
-         if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
-          //  echo "encontre el registro";
-            continue;
+//          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==10)
+//           //  echo "encontre el registro";
+//             continue;
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==17)
             continue; 
           if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==18)
@@ -1038,7 +1042,10 @@ public function registraPonderada(){
          if($ser==1&&$sec=="4"&& $item["r_numreactivo"]==21)
             continue;
 
-
+         if($ser==1&&$sec=="3")
+           if($item["r_numreactivo"]==16||$item["r_numreactivo"]==17||$item["r_numreactivo"]==18||$item["r_numreactivo"]==21
+                    ||$item["r_numreactivo"]==22)
+                continue; 
 
 
 

@@ -510,18 +510,19 @@ class Graficajson {
        
         //acomodo arreglo
          foreach ($secciones as $opcion) {
-            if (!empty($opcion[1])&&$opcion[1]=="A")
+            
+             if (!empty($opcion[1])&&$opcion[1]=="A"&& !empty( $resultadosa[$opcion[0]]))
                 //busco en los abiertos 
                 $this->chart[] = $resultadosa[$opcion[0]];
              
             else
-           if (!empty($opcion[1])&&$opcion[1]=="V")
+                if (!empty($opcion[1])&&$opcion[1]=="V"&& !empty( $resultadosj[$opcion[0]]))
                   $this->chart[] = $resultadosj[$opcion[0]];
              
-            else  if (!empty($opcion[1])&&$opcion[1]=="EV")
+                  else  if (!empty($opcion[1])&&$opcion[1]=="EV"&& !empty( $resultadoev[$opcion[0]]))
                   $this->chart[] = $resultadosev[$opcion[0]];
              
-            else
+                  else if(!empty( $resultadosp[$opcion[0]]))
                    $this->chart[] = $resultadosp[$opcion[0]];
              
           
@@ -1020,7 +1021,7 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
         if ($this->filnivel == "") {
             $this->filnivel = "1.1";
         }
-        
+       // die($this->filnivel);
         $this->servicio = 1; // siempre es 1
         $aux = explode(".", $this->filnivel);
       
@@ -1030,7 +1031,7 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
      
         
        
-        $filx["edo"] = $aux[3];
+        $filx["reg"] = $aux[3];
         
         $filx["ciu"] = $aux[4];
         $filx["niv6"] = $aux[5];
@@ -1052,7 +1053,7 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
         $carac2 = $aux_sec[4];
         $carac3 = $aux_sec[5];
         
-        
+      //  die(var_dump($filx));
       //  $fecha_consulta_fin = $auxp[1] . "-" . $auxp[0] . "-01";
 
         // reviso el tipo de evaluacion
@@ -1186,7 +1187,7 @@ cue_secciones.sec_descripcioning,ins_detalleproducto.ip_numseccion as secc,
        if(str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') >:mes_consulta_ant
        and str_to_date(concat('01.',ins_generales.i_mesasignacion ),'%d.%m.%Y') <=:fmes_consulta,3,0)  as 12mes
    ";
-            if (isset($filx["edo"]) && $filx["edo"] != "") {
+            if (isset($filx["reg"]) && $filx["reg"] != "") {
                 $sql_reporte_e .= " ,ca_nivel5.n5_nombre ";
                 
             }
@@ -1238,11 +1239,12 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
                 $sql_reporte_e .= " and ca_unegocios.cue_clavecuenta=:cta";
                 $parametros["cta"] = $fily["cta"];
             }
-            if (isset($filx["edo"]) && $filx["edo"] != "") {
+            if (isset($filx["reg"]) && $filx["reg"] != "") {
                 $sql_reporte_e .= " and ca_unegocios.une_cla_estado=:reg";
-                $parametros["reg"] = $filx["edo"];
+                $parametros["reg"] = $filx["reg"];
                
             }
+            
             if (isset($filx["ciu"]) && $filx["ciu"] != "") {
                 $sql_reporte_e .= " and ca_unegocios.une_cla_ciudad=:ciu";
                 $parametros["ciu"] = $filx["ciu"];
@@ -1440,13 +1442,13 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
             foreach ($rs_sql_reporte_e as $row) {
 
                 $periodo = $acept = $acumtot = 0;
+                $nomseccion="jarabes";
 
-
-                if ($_SESSION["idiomaus"] == 2) {
+               /* if ($_SESSION["idiomaus"] == 2) {
                     $nomseccion = $row["sec_descripcioning"];
                 } else {
                     $nomseccion = $row["sec_descripcionesp"];
-                }
+                }*/
                 $estandar = $row["red_estandar"];
                 $matriz[$nomseccion]["datos"] =$row["secc"];
                 
@@ -1474,14 +1476,15 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
                     $matriz[$nomseccion][$periodo]["acep"] +=$acept;
                     $matriz[$nomseccion][$periodo]["tot"] +=$acumtot;
                 }
-              //  $matriz[$nomseccion]["sec"] = $row["seccion"];
-//   echo "<br>*************************<br>";
+        //        $matriz[$nomseccion]["sec"] = $row["seccion"];
+//  echo "<br>*************************<br>";
 //                var_dump($matriz);
                 //voy formando el arreglo de la forma [idicador][estandar][periodo][aceptados][total]
                 //$total_cuen[$cuenta][$periodo]["acep"]+=$acept;
                 //$total_cuen[$cuenta][$periodo]["tot"]+=$acumtot;
             }
           }
+      
             
            foreach ($matriz as $key => $rowt) {
                 $k=7;//auxiliar para guardar los totales
@@ -1502,11 +1505,12 @@ ORDER BY `ins_detalleproducto`.`ip_numseccion` ASC, `ins_detalleproducto`.`ip_nu
               
                        $resultados[6] = $this->grupocolores[0]." 0.7";
                        $resultados[7] = $this->grupocolores[0]." 0.4";
-                    
+//                        echo "<br>*************************<br>";
+//                        var_dump($resultados);
               
             }
      
-        
+       
         return $resultados;
     }
     
@@ -1602,7 +1606,8 @@ $parametros=array("vserviciou"=>$this->servicio,"referencia"=>$referencia);
     function historicoSemestralxIndicador($fecha_ini,$fecha_fin,$reactivo,$filx,$fily){
           $parametros=array("servicio"=>$this->servicio,"referencia"=>$reactivo);
           $aux = explode("-", $fecha_ini);
-          
+        //  var_dump($filx);
+        //  die();
           $mes = $aux[1] ;
           $soloanio = $aux[0];
           
@@ -1682,9 +1687,9 @@ WHERE
             $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
             $parametros["cta"] = $fily["cta"];
         }
-        if (isset($filx["reg"]) && $filx["reg"] != "") {
+        if (isset($filx["edo"]) && $filx["edo"] != "") {
             $sql .= " and ca_unegocios.une_cla_estado=:reg";
-            $parametros["reg"] = $filx["reg"];
+            $parametros["reg"] = $filx["edo"];
         }
         if (isset($filx["ciu"]) && $filx["ciu"] != "") {
             $sql .= " and ca_unegocios.une_cla_ciudad=:ciu";
@@ -1868,6 +1873,8 @@ AND (ins_detalleproducto.ip_sinetiqueta=0 or ip_sinetiqueta is null)
     
      function historicoMensualxIndicador($fecha_ini,$fecha_fin,$reactivo,$filx,$fily){
        // echo $fecha_ini."---".$fecha_fin;
+       //var_dump($filx);
+        // die();
          $parametros=array("servicio"=>$this->servicio,"referencia"=>$reactivo);
          $aux_sec = explode(".", $reactivo);
          $seccion = $aux_sec[0];
@@ -1911,9 +1918,9 @@ WHERE
             $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
             $parametros["cta"] = $fily["cta"];
         }
-        if (isset($filx["reg"]) && $filx["reg"] != "") {
+        if (isset($filx["edo"]) && $filx["edo"] != "") {
             $sql .= " and ca_unegocios.une_cla_estado=:reg";
-            $parametros["reg"] = $filx["reg"];
+            $parametros["reg"] = $filx["edo"];
         }
         if (isset($filx["ciu"]) && $filx["ciu"] != "") {
             $sql .= " and ca_unegocios.une_cla_ciudad=:ciu";
@@ -2041,7 +2048,8 @@ ORDER BY  anio_asig asc,  mes_asig asc";
     function historicoAnualxIndicador($fecha_ini,$fecha_fin,$reactivo,$filx,$fily){
        $parametros=array("servicio"=>$this->servicio,"referencia"=>$reactivo);
        $aux = explode("-", $fecha_ini);
-       
+     //  var_dump($filx);
+     //   die();
        $mes = $aux[1] ;
        $soloanio = $aux[0];
        
@@ -2114,9 +2122,9 @@ Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_
                     $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
                     $parametros["cta"] = $fily["cta"];
                 }
-                if (isset($filx["reg"]) && $filx["reg"] != "") {
+                if (isset($filx["edo"]) && $filx["edo"] != "") {
                     $sql .= " and ca_unegocios.une_cla_estado=:reg";
-                    $parametros["reg"] = $filx["reg"];
+                    $parametros["reg"] = $filx["edo"];
                 }
                 if (isset($filx["ciu"]) && $filx["ciu"] != "") {
                     $sql .= " and ca_unegocios.une_cla_ciudad=:ciu";
@@ -2472,9 +2480,11 @@ Inner Join cue_reactivosestandar ON ins_detalleestandar.ide_claveservicio = cue_
                        $sql1 .= " and ca_unegocios.cue_clavecuenta=:cta";
                     $parametros["cta"] = $fily["cta"];
                 }
-                if (isset($filx["reg"]) && $filx["reg"] != "") {
+            //    var_dump($filx);
+             //   die();
+                if (isset($filx["edo"]) && $filx["edo"] != "") {
                     $sql1 .= " and ca_unegocios.une_cla_estado=:reg";
-                    $parametros["reg"] = $filx["reg"];
+                    $parametros["reg"] = $filx["edo"];
                 }
                 if (isset($filx["ciu"]) && $filx["ciu"] != "") {
                     $sql1 .= " and ca_unegocios.une_cla_ciudad=:ciu";
@@ -2809,9 +2819,10 @@ Inner Join ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generale
                        $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
                     $parametros["cta"] = $fily["cta"];
                 }
-                if (isset($filx["reg"]) && $filx["reg"] != "") {
+             
+                if (isset($filx["edo"]) && $filx["edo"] != "") {
                     $sql .= " and ca_unegocios.une_cla_estado=:reg";
-                    $parametros["reg"] = $filx["reg"];
+                    $parametros["reg"] = $filx["edo"];
                 }
                 if (isset($filx["ciu"]) && $filx["ciu"] != "") {
                     $sql .= " and ca_unegocios.une_cla_ciudad=:ciu";
@@ -2892,9 +2903,10 @@ Inner Join ins_generales ON ins_detalleestandar.ide_claveservicio = ins_generale
                $sql .= " and ca_unegocios.cue_clavecuenta=:cta";
                $parametros["cta"] = $fily["cta"];
            }
-           if (isset($filx["reg"]) && $filx["reg"] != "") {
+        
+           if (isset($filx["edo"]) && $filx["edo"] != "") {
                $sql .= " and ca_unegocios.une_cla_estado=:reg";
-               $parametros["reg"] = $filx["reg"];
+               $parametros["reg"] = $filx["edo"];
            }
            if (isset($filx["ciu"]) && $filx["ciu"] != "") {
                $sql .= " and ca_unegocios.une_cla_ciudad=:ciu";

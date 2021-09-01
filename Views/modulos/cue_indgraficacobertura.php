@@ -83,7 +83,7 @@ console.log("todo bien hasta aqui");
             $tr.append($td);
             i++;
         }
- contents = [arre];
+ 		contents = [arre];
 		
         return $tr;
     }
@@ -427,7 +427,11 @@ k=15;
                 table.getRow(1).height(25);
                 table.getRow(2).height(25);
                 table.getRow(3).height(25);
-				table.fontSize(9);
+				table.fontSize(10);
+				table.getRow(0).fontSize(9);//titulo
+		
+				table.getCol(0).fontSize(9);
+				
                 table.contents(contents);
                 table.bounds("10%", "85%", "80%", "17%");
                 k=k+8;

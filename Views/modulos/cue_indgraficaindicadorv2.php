@@ -8,13 +8,13 @@ $graficaIndicador->vistaGraficasIndicador();
 ?><style>
     .container {
         width: 100%;
-        height: 570px;
+        height: 650px;
         margin: 0;
         padding: 0;
     }
      .containert {
         width: 100%;
-        height: 780px;
+        height: 650px;
         margin: 0;
         padding: 0;
     }
@@ -51,6 +51,7 @@ $graficaIndicador->vistaGraficasIndicador();
     }
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.7.1/css/anychart-ui.min.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.anychart.com/releases/8.6.0/fonts/css/anychart-font.min.css"/>
   <script src="https://cdn.anychart.com/releases/8.6.0/js/anychart-base.min.js" type="text/javascript"></script>
 <script src="https://cdn.anychart.com/releases/8.6.0/js/anychart-exports.min.js"></script>
 <script src="https://cdn.anychart.com/releases/8.6.0/js/anychart-data-adapter.min.js"></script>
@@ -193,7 +194,7 @@ $graficaIndicador->vistaGraficasIndicador();
             //series.labels().fontWeight(600);
             series.labels().fontColor('black');
             series.labels().format("{%value}%   ({%cumplen}/{%pruebas})");
-            series.labels().fontSize(10);
+            series.labels().fontSize(12);
             series.labels().anchor('left-center');
             series.labels().position('right-center');
             series.labels().offsetY(2);

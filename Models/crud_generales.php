@@ -511,6 +511,29 @@ WHERE i_claveservicio =:idser AND i_numreporte =:numrep");
 	
 }
 
+public function actualizarEstatusUsuarioAlerta($idser, $numrep, $usuario){
+    try{
+        
+        $stmt=Conexion::conectar()->prepare("INSERT INTO cer_usuariovioalerta
+(ua_usuario, ua_visto, ua_numreporte, ua_claveservicio)
+VALUES(:usuario, 1, :numrep, :idser); ");
+        
+        $stmt-> bindParam(":idser", $idser, PDO::PARAM_INT);
+        $stmt-> bindParam(":numrep", $numrep, PDO::PARAM_INT);
+        $stmt-> bindParam(":usuario", $usuario, PDO::PARAM_STR);
+        
+        $stmt-> execute();
+        
+        	//$stmt->debugDumpParams();
+        	//die();
+    }catch(PDOException $ex){
+        throw new Exception("Error al actualizar");
+    }
+    
+    
+    
+}
+
 }
 
 ?>

@@ -82,7 +82,12 @@ class consultaResController {
 			if (isset($_SESSION["f".$filtro]))
 				$_SESSION["f".$filtro]="";
 		}
-		
+	
+		$_SESSION["ffilx"]="";
+		$_SESSION["ffily"]="";
+		$_SESSION["ffiluni"]="";
+		$_SESSION["servicioind"]="";
+		$_SESSION["clienteind"]="";
 		
 		//echo $MiVar;
 		

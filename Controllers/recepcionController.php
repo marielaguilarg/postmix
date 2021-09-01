@@ -26,7 +26,7 @@ class RecepcionController {
 				break;
 			
 		}
-// 		$gpous=$_SESSION["GrupoUs"];
+ 		$gpous=$_SESSION["GrupoUs"];
 		
  		if(isset($_SESSION["NombreUsuario"]))
  			$recmues= $_SESSION["NombreUsuario"];
@@ -92,7 +92,7 @@ onclick=\"ajax_print('imprimirReporte.php?admin=recibomue&tipoimp=gen&ntoma=".$r
 					
 					
 					if ($gpous=="adm") {
-						if ($row["idrecdet"]==$row["rm_idrecepcionmuestra"]) {
+						if ($row["idrecdet"]==$row["rm_idrecepcionmuestra"]) { //si ya tiene detalle no se puede cancelar
 							$eliminar="";
 						} else {
 							$eliminar="<a href='index.php?action=listarecepcion&id=".$row['rm_idrecepcionmuestra']."&op=Trec&admin=borrar' onClick='return validar(this);'><i class='fa fa-remove fa-2x'></i></a></div></td>";

@@ -128,6 +128,14 @@ where ca_tipomercado.tm_clavetipo=:mercado";
 	$_SESSION["fcuenta"] = $cuenta;
 	$_SESSION["fpuntov"] = $unidadnegocio;
 	$_SESSION["fnumrep"] = $num_reg;
+	$gfiluni="1.".$clanivel2.".".$clanivel3;
+	$gfilx=$clanivel4.".".$clanivel5.".".$clanivel6;
+	$gfily = $cuenta. "." . $franquiciacta . "." . $unidadnegocio;
+	$_SESSION["ffilx"]=$gfilx;
+	$_SESSION["ffily"]=$gfily;
+	$_SESSION["ffiluni"]=$gfiluni;
+	$_SESSION["servicioind"]=$vserviciou;
+	$_SESSION["clienteind"]=$vclienteu;
 	}
 	//var_dump($_SESSION);
 	

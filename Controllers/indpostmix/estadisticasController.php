@@ -41,7 +41,7 @@ class EstadisticasController {
                 //error_log("variable $key_get viene desde $ _GET");
             }
         }
-     
+    
         if($admin!=1)
         { $this->busqueda=new GenerarBusquedaController;
         $this->busqueda->generarBusquedaRes();
@@ -67,7 +67,9 @@ class EstadisticasController {
 //  -----------------------------------
 
         $cuenta = $cta;
-     
+     //   var_dump($_SESSION);
+       
+    // die($filx);
         if (isset($filx)) {
             $auxx = explode(".", $filx);
             $auxy = explode(".", $fily);
@@ -87,9 +89,9 @@ class EstadisticasController {
 //         $filx["zon"] = $auxuni[2];
 
         if ($admin==1) {// vengo de consulta resultados
-//              var_dump($_SESSION);
-//              ();
+            
             $gfilx = $_SESSION["ffilx"];
+           
             $gfily = $_SESSION["ffily"];
             $gfiluni = $_SESSION["ffiluni"];
             $aux = explode(".", $gfilx);
@@ -109,11 +111,13 @@ class EstadisticasController {
             $cuenta = $auxy[0];
             if($cuenta==""){
             	$cuenta=$_SESSION["fcuenta"];
-            	$fily=$cta.".";
+           // 	$fily=$cta.".";
             }
             $franquiciacta = $auxy[1];
 
-
+            $filx=$gfilx;
+            $fily=$gfily;
+            $ptv=$auxy[12];
             //   $periodo = $_SESSION["fperiodo"];
         }
 
@@ -195,7 +199,7 @@ class EstadisticasController {
 //if ($numop != '') //si hay datos muestra la grafica
 //{
 
-  
+  /*el mes no es necesario*/
         $this->generarEstadisticas($tiposec, $numop, $mes, $filx, $fily,$ptv);
         
         

@@ -44,277 +44,277 @@ class ResumenResultadosController {
    
         $rescon=true;
         if($action=="indhistorialreportes")
-        	$rescon=true;
+         	$rescon=true;
         else
         if($action=="indindicadores")
-        {
-        
-        	$this->filtroPeriodo($mes_solo, $anio);
-        	//pongo los filtros
-        	$Usuario = $_SESSION['NombreUsuario'];
-        	$_SESSION["servicioind"] = 1;
-        	$_SESSION["clienteind"]=1;
-        	$_SESSION["idiomaus"]=1;
-        	$select2=$clanivel2;
-        	$select3=$clanivel3;
-        	$select4=$clanivel4;
-        	$select5=$clanivel5;
-        	$select6=$clanivel6;
-        	$grupo = $_SESSION["GrupoUs"];
-        	$vidiomau = $_SESSION["idiomaus"];
-        	if (isset($mes_solo) && $mes_solo != "") {
-        		
-        		$mes_asig = $mes_solo . "." . $anio;
-        		$_GET["mes"]=$mes_asig;
-        	} 
-        	$rs_usuarios = UsuarioModel::getUsuario($Usuario,"cnfg_usuarios");
-        	
-        	foreach ($rs_usuarios as $row_usuarios ) {
-        		//            $html->asignar('USUARIO', "<span class='TitPost'>" . $row_usuarios ["cus_nombreusuario"] . "</span>");
-        		$VarNivel2 = $row_usuarios ["cus_tipoconsulta"];
-        		$grupo = $row_usuarios ["cus_clavegrupo"];
-        		$Nivel01 = $row_usuarios ["cus_nivel1"];
-        		$Nivel02 = $row_usuarios ["cus_nivel2"];
-        		//                    echo "niv".$Nivel02;
-        		$Nivel03 = $row_usuarios ["cus_nivel3"];
-        		$Nivel04 = $row_usuarios ["cus_nivel4"];
-        		$Nivel05 = $row_usuarios ["cus_nivel5"];
-        		$Nivel06 = $row_usuarios ["cus_nivel6"];
-        		
-        	}
-        	
-        	if ($grupo == "cli" || $grupo == "cue") {
-        		
-        		if ($grupo == "cli") {
-        			if ($VarNivel2 >= 4)
-        				$permiso = $VarNivel2; //devuelvo nivel de consulta
-        				else if ($VarNivel2 < 4)
-        					$permiso = 0; //puede ver todos
-        		} else
-        			if ($grupo == "cue") {
-        				
-        				if ($Nivel01 > 0) { //es usuario de franquicia
-        					$permiso = "P"; //devuelvo cuenta y franquicia
-        					if ($Nivel03 > 0) //es usuario por p.v.
-        						$result = "PP";
-        				} else    //puede ver toda la cuenta
-        					$permiso = "F";
-        			}
-        	}
-        	
-        	
-        	// si permiso=-1 no ver� nada
-        	if ($permiso == -1) {
-        		$html->asignar('veo_res', "none");
-        		$html->asignar('noveo_res', "table-row");
-        		$html->asignar('lb_Notiene', T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION"));
-        	} else {
-        		
-        	
-        		
-        		if ($grupo == "cue") {
-                			if ($Nivel03!= 0)
-        				$gfily = $Nivel01. "." . $Nivel02 . "." . $Nivel03;
-        				else if ($Nivel02 != 0)
-        					$gfily = $Nivel01. "." . $Nivel02;
-        					else
-        						$gfily = $Nivel01;
-        				$gfiluni = GraficaIndicadorController::crearReferenciaNivelUni($row_usuarios, $grupo);
-        						// $gfily = UsuarioModel::buscarReferenciaNivel($Usuario,$grupo,$this->servicio,$this->cliente);
-        		
-        		}
-        		else {
-        			
-        			if(isset($filuni)&&$filuni!="") //vengo del menu lat es como iniciar y limpiear fil
-        			{
-        				$gfiluni=$filuni;
-        				
-        				
-        				if (isset($filx) && $filx != "") { //escogio filtro
-        					
-        					$gfilx = $filx;
-        					$_GET["filx"]=$gfilx;
-        					$filx=$gfilx;
-        					
-        					//  $html->asignar("refer",$gfilx);
-        				}
-        			}
-        			
-        			
-        			else  {
-        				//vengo del formulario
-        				$gfiluni="1.".$select2.".".$select3;
-        				$gfilx=$select4.".".$select5.".".$select6;
-        				$_GET["filuni"]=$gfiluni;
-        			$filuni=$gfiluni;
-        			$_GET["filx"]=$gfilx;
-        			$filx=$gfilx;
-        			}
-        			//                     if (($grupo == "cli" || $grupo == "muf") && $permiso > 3) {// si no tengo filtro
-        			//                         $gfilx =    $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
-        			//                     //    $refer = $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
-        			//                     }
-        			
-        		}
-        	
-        		
-        		$aux = explode(".", $gfilx);
-        		
-        		$this->opcionuni = $gfiluni;
-        		
-        		$filx = array();
-        		
-        		$filx["reg"] = $aux[0];
-        		
-        		$filx["ciu"] = $aux[1];
-        		$filx["niv6"] = $aux[2];
-        		$auxy = explode(".", $gfily);
-        		
-        		$fily = array();
-        		
-        		$fily["cta"] = $auxy[0];
-        		
-        		$fily["fra"] = $auxy[1];
-        		$fily["pv"] = $auxy[2];
-        		
-        		$auxuni = explode(".", $gfiluni);
-        		
-        		$filx["pais"] = $auxuni[0];
-        		$filx["uni"] = $auxuni[1];
-        		$filx["zon"] = $auxuni[2];
-        	
-        	if($VarNivel2=="")
-        		$VarNivel2=1;
-        		
-        		
-        		if($grupo!="cue"){
-        			//nivel uno por default
-        			
-        	
-        			if ($VarNivel2 == 1||$VarNivel2 == 2) {
-        				
-        				
-        				$RS_SQM_TE = Datosntres::vistantresModel($filx["uni"],"ca_nivel3");
-        				
-        				$this->listanivel3 = Utilerias::crearSelectCascada(Estructura::nombreNivel(3,$_SESSION["idiomaus"]),3, Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select3),"");
-        				//   die( $this->listanivel3 )  ;
-        				$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"disabled");
-        				
-        				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"disabled");
-        				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"disabled");
-        				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"] . "'>";
-        				
-        				
-        				if(isset($select3)&&$select3!=0){
-        					$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"");
-        					
-        				}
-        				if(isset($select4)&&$select4!=0){
-        					$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"");
-        					$this->listanivel5=Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5, $select4,$select5),"");
-        					
-        				}
-        				if(isset($select5)&&$select5!=0){
-        					$this->listanivel5=Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5, $select4,$select5),"");
-        					$this->listanivel6= Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6,  $select5,$select6),"");
-        					
-        				}
-        				
-        				if(isset($select6)&&$select6!=0){
-        					$this->listanivel6= Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6,  $select5,$select6),"");
-        				}
-        			}
-        			if ($VarNivel2 == 3) {
-        				$RS_SQM_TE = Datosncua::vistancuaModel($filx["zon"],"ca_nivel4");
-        				$this->listanivel4 = Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select4),"");
-        				
-        				/*                     * **************************************************** */
-        				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"disabled");
-        				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"disabled");
-        				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"]  . "'>";
-        				$this->listanivel3 = "<input type='hidden' name='clanivel3'  id='select3' value='" . $filx["zon"]  . "'>";
-        				
-        				if(isset($select4)&&$select4!=0){
-        					$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"");
-        				}
-        				if(isset($select5)&&$select5!=0){
-        					$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"");
-        					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"");
-        					
-        				}
-        				
-        				if(isset($select6)&&$select6!=0){
-        					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"");
-        				}
-        			}
-        			
-        			if ($VarNivel2==4) {
-        				/*                     * **NUEVO MODULO PHP** */
-        				
-        				$RS_SQM_TE = Datosncin::vistancinModel($filx["reg"],"ca_nivel5");
-        				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select5),"");
-        				
-        				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"disabled");
-        				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"]  . "'>";
-        				$this->listanivel3 = "<input type='hidden' name='clanivel3'  id='select3' value='" . $filx["zon"]  . "'>";
-        				$this->listanivel4 = "<input type='hidden' name='clanivel4' id='select4' value='" . $filx["reg"]  . "'>";
-        				
-        				if(isset($select5)&&$select5!=0){
-        					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
-        				}
-        				if(isset($select6)&&$select6!=0){
-        					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
-        				}
-        			}
-        			
-        			if ($VarNivel2== 5) {
-        				
-        				
-        				$RS_SQM_TE = Datosnsei::vistanseiModel($filx["ciu"],"ca_nivel6");
-        				$this->listanivel6 = Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select6),"");
-        				//    $this->listanivel1 = "<input type='hidden' name='clanivel1' value='" . $Nivel01 . "'>";
-        				$this->listanivel2= "<input type='hidden' name='clanivel2' value='" . $Nivel02 . "'>";
-        				$this->listanivel3= "<input type='hidden' name='clanivel3' value='" . $Nivel03 . "'>";
-        				$this->listanivel4 = "<input type='hidden' name='clanivel4' value='" . $Nivel04 . "'>";
-        				$this->listanivel5 = "<input type='hidden' name='clanivel5' value='" . $filx["ciu"]  . "'>";
-        				//      $this->listanivel6= "<input type='hidden' name='clanivel6' value='" . $Nivel06 . "'>";
-        				//           if(isset($select6)&&$select6!=0){
-        				//                  $this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
-        				//             }
-        				
-        			}
-        			if ($VarNivel2 == 6) {
-        				$this->listanivel2= "<input type='hidden' name='clanivel2' value='" . $Nivel02 . "'>";
-        				$this->listanivel3= "<input type='hidden' name='clanivel3' value='" . $Nivel03 . "'>";
-        				$this->listanivel4 = "<input type='hidden' name='clanivel4' value='" . $Nivel04 . "'>";
-        				$this->listanivel5 = "<input type='hidden' name='clanivel5' value='" . $Nivel05 . "'>";
-        				$this->listanivel6= "<input type='hidden' name='clanivel6' value='" . $Nivel06 . "'>";
-        				
-        				//             /*
-        				//                $RS_SQM_TE = Datosnsei::vistanseiOpcionModel($Nivel06,"ca_nivel6");
-        				//            $this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select6,$select6),"");
-        				//             /*                     * ******************************************************************* */
-        				
-        				
-        			}
-        		}
-        	
-        	
-        	$consutacontrl=new GenerarBusquedaController;
-        $rescon=$consutacontrl->generarBusquedaRes();
-        	}
-        }
+            {
+            
+            	$this->filtroPeriodo($mes_solo, $anio);
+            	//pongo los filtros
+            	$Usuario = $_SESSION['NombreUsuario'];
+            	$_SESSION["servicioind"] = 1;
+            	$_SESSION["clienteind"]=1;
+            	$_SESSION["idiomaus"]=1;
+            	$select2=$clanivel2;
+            	$select3=$clanivel3;
+            	$select4=$clanivel4;
+            	$select5=$clanivel5;
+            	$select6=$clanivel6;
+            	$grupo = $_SESSION["GrupoUs"];
+            	$vidiomau = $_SESSION["idiomaus"];
+            	if (isset($mes_solo) && $mes_solo != "") {
+            		
+            		$mes_asig = $mes_solo . "." . $anio;
+            		$_GET["mes"]=$mes_asig;
+            	} 
+            	$rs_usuarios = UsuarioModel::getUsuario($Usuario,"cnfg_usuarios");
+            	
+            	foreach ($rs_usuarios as $row_usuarios ) {
+            		//            $html->asignar('USUARIO', "<span class='TitPost'>" . $row_usuarios ["cus_nombreusuario"] . "</span>");
+            		$VarNivel2 = $row_usuarios ["cus_tipoconsulta"];
+            		$grupo = $row_usuarios ["cus_clavegrupo"];
+            		$Nivel01 = $row_usuarios ["cus_nivel1"];
+            		$Nivel02 = $row_usuarios ["cus_nivel2"];
+            		//                    echo "niv".$Nivel02;
+            		$Nivel03 = $row_usuarios ["cus_nivel3"];
+            		$Nivel04 = $row_usuarios ["cus_nivel4"];
+            		$Nivel05 = $row_usuarios ["cus_nivel5"];
+            		$Nivel06 = $row_usuarios ["cus_nivel6"];
+            		
+            	}
+            	
+            	if ($grupo == "cli" || $grupo == "cue") {
+            		
+            		if ($grupo == "cli") {
+            			if ($VarNivel2 >= 4)
+            				$permiso = $VarNivel2; //devuelvo nivel de consulta
+            				else if ($VarNivel2 < 4)
+            					$permiso = 0; //puede ver todos
+            		} else
+            			if ($grupo == "cue") {
+            				
+            				if ($Nivel01 > 0) { //es usuario de franquicia
+            					$permiso = "P"; //devuelvo cuenta y franquicia
+            					if ($Nivel03 > 0) //es usuario por p.v.
+            						$result = "PP";
+            				} else    //puede ver toda la cuenta
+            					$permiso = "F";
+            			}
+            	}
+            	
+            	
+            	// si permiso=-1 no ver� nada
+            	if ($permiso == -1) {
+            		$html->asignar('veo_res', "none");
+            		$html->asignar('noveo_res', "table-row");
+            		$html->asignar('lb_Notiene', T_("LO SENTIMOS, NO CUENTA CON PERMISO PARA VER ESTA INFORMACION"));
+            	} else {
+            		
+            	
+            		
+            		if ($grupo == "cue") {
+                    			if ($Nivel03!= 0)
+            				$gfily = $Nivel01. "." . $Nivel02 . "." . $Nivel03;
+            				else if ($Nivel02 != 0)
+            					$gfily = $Nivel01. "." . $Nivel02;
+            					else
+            						$gfily = $Nivel01;
+            				$gfiluni = GraficaIndicadorController::crearReferenciaNivelUni($row_usuarios, $grupo);
+            						// $gfily = UsuarioModel::buscarReferenciaNivel($Usuario,$grupo,$this->servicio,$this->cliente);
+            		
+            		}
+            		else {
+            			
+            			if(isset($filuni)&&$filuni!="") //vengo del menu lat es como iniciar y limpiear fil
+            			{
+            				$gfiluni=$filuni;
+            				
+            				
+            				if (isset($filx) && $filx != "") { //escogio filtro
+            					
+            					$gfilx = $filx;
+            					$_GET["filx"]=$gfilx;
+            					$filx=$gfilx;
+            					
+            					//  $html->asignar("refer",$gfilx);
+            				}
+            			}
+            			
+            			
+            			else  {
+            				//vengo del formulario
+            				$gfiluni="1.".$select2.".".$select3;
+            				$gfilx=$select4.".".$select5.".".$select6;
+            				$_GET["filuni"]=$gfiluni;
+            			$filuni=$gfiluni;
+            			$_GET["filx"]=$gfilx;
+            			$filx=$gfilx;
+            			}
+            			//                     if (($grupo == "cli" || $grupo == "muf") && $permiso > 3) {// si no tengo filtro
+            			//                         $gfilx =    $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
+            			//                     //    $refer = $row_usuarios["cus_nivel4"] . "." . $row_usuarios["cus_nivel5"] . "." . $row_usuarios["cus_nivel6"];
+            			//                     }
+            			
+            		}
+            	
+            		
+            		$aux = explode(".", $gfilx);
+            		
+            		$this->opcionuni = $gfiluni;
+            		
+            		$filx = array();
+            		
+            		$filx["reg"] = $aux[0];
+            		
+            		$filx["ciu"] = $aux[1];
+            		$filx["niv6"] = $aux[2];
+            		$auxy = explode(".", $gfily);
+            		
+            		$fily = array();
+            		
+            		$fily["cta"] = $auxy[0];
+            		
+            		$fily["fra"] = $auxy[1];
+            		$fily["pv"] = $auxy[2];
+            		
+            		$auxuni = explode(".", $gfiluni);
+            		
+            		$filx["pais"] = $auxuni[0];
+            		$filx["uni"] = $auxuni[1];
+            		$filx["zon"] = $auxuni[2];
+            	
+            	if($VarNivel2=="")
+            		$VarNivel2=1;
+            		
+            		
+            		if($grupo!="cue"){
+            			//nivel uno por default
+            			
+            	
+            			if ($VarNivel2 == 1||$VarNivel2 == 2) {
+            				
+            				
+            				$RS_SQM_TE = Datosntres::vistantresModel($filx["uni"],"ca_nivel3");
+            				
+            				$this->listanivel3 = Utilerias::crearSelectCascada(Estructura::nombreNivel(3,$_SESSION["idiomaus"]),3, Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select3),"");
+            				//   die( $this->listanivel3 )  ;
+            				$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"disabled");
+            				
+            				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"disabled");
+            				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"disabled");
+            				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"] . "'>";
+            				
+            				
+            				if(isset($select3)&&$select3!=0){
+            					$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"");
+            					
+            				}
+            				if(isset($select4)&&$select4!=0){
+            					$this->listanivel4=Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesNivel(4,  $select3,$select4),"");
+            					$this->listanivel5=Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5, $select4,$select5),"");
+            					
+            				}
+            				if(isset($select5)&&$select5!=0){
+            					$this->listanivel5=Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5, $select4,$select5),"");
+            					$this->listanivel6= Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6,  $select5,$select6),"");
+            					
+            				}
+            				
+            				if(isset($select6)&&$select6!=0){
+            					$this->listanivel6= Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6,  $select5,$select6),"");
+            				}
+            			}
+            			if ($VarNivel2 == 3) {
+            				$RS_SQM_TE = Datosncua::vistancuaModel($filx["zon"],"ca_nivel4");
+            				$this->listanivel4 = Utilerias::crearSelectCascada(Estructura::nombreNivel(4,$_SESSION["idiomaus"]),4,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select4),"");
+            				
+            				/*                     * **************************************************** */
+            				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"disabled");
+            				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"disabled");
+            				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"]  . "'>";
+            				$this->listanivel3 = "<input type='hidden' name='clanivel3'  id='select3' value='" . $filx["zon"]  . "'>";
+            				
+            				if(isset($select4)&&$select4!=0){
+            					$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"");
+            				}
+            				if(isset($select5)&&$select5!=0){
+            					$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesNivel(5,  $select4,$select5),"");
+            					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"");
+            					
+            				}
+            				
+            				if(isset($select6)&&$select6!=0){
+            					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5, $select6),"");
+            				}
+            			}
+            			
+            			if ($VarNivel2==4) {
+            				/*                     * **NUEVO MODULO PHP** */
+            				
+            				$RS_SQM_TE = Datosncin::vistancinModel($filx["reg"],"ca_nivel5");
+            				$this->listanivel5 = Utilerias::crearSelectCascada(Estructura::nombreNivel(5,$_SESSION["idiomaus"]),5,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select5),"");
+            				
+            				$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"disabled");
+            				$this->listanivel2 = "<input type='hidden' name='clanivel2' id='select2' value='" . $filx["uni"]  . "'>";
+            				$this->listanivel3 = "<input type='hidden' name='clanivel3'  id='select3' value='" . $filx["zon"]  . "'>";
+            				$this->listanivel4 = "<input type='hidden' name='clanivel4' id='select4' value='" . $filx["reg"]  . "'>";
+            				
+            				if(isset($select5)&&$select5!=0){
+            					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
+            				}
+            				if(isset($select6)&&$select6!=0){
+            					$this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
+            				}
+            			}
+            			
+            			if ($VarNivel2== 5) {
+            				
+            				
+            				$RS_SQM_TE = Datosnsei::vistanseiModel($filx["ciu"],"ca_nivel6");
+            				$this->listanivel6 = Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesSelCad( $RS_SQM_TE, $select6),"");
+            				//    $this->listanivel1 = "<input type='hidden' name='clanivel1' value='" . $Nivel01 . "'>";
+            				$this->listanivel2= "<input type='hidden' name='clanivel2' value='" . $Nivel02 . "'>";
+            				$this->listanivel3= "<input type='hidden' name='clanivel3' value='" . $Nivel03 . "'>";
+            				$this->listanivel4 = "<input type='hidden' name='clanivel4' value='" . $Nivel04 . "'>";
+            				$this->listanivel5 = "<input type='hidden' name='clanivel5' value='" . $filx["ciu"]  . "'>";
+            				//      $this->listanivel6= "<input type='hidden' name='clanivel6' value='" . $Nivel06 . "'>";
+            				//           if(isset($select6)&&$select6!=0){
+            				//                  $this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select5,$select6),"");
+            				//             }
+            				
+            			}
+            			if ($VarNivel2 == 6) {
+            				$this->listanivel2= "<input type='hidden' name='clanivel2' value='" . $Nivel02 . "'>";
+            				$this->listanivel3= "<input type='hidden' name='clanivel3' value='" . $Nivel03 . "'>";
+            				$this->listanivel4 = "<input type='hidden' name='clanivel4' value='" . $Nivel04 . "'>";
+            				$this->listanivel5 = "<input type='hidden' name='clanivel5' value='" . $Nivel05 . "'>";
+            				$this->listanivel6= "<input type='hidden' name='clanivel6' value='" . $Nivel06 . "'>";
+            				
+            				//             /*
+            				//                $RS_SQM_TE = Datosnsei::vistanseiOpcionModel($Nivel06,"ca_nivel6");
+            				//            $this->listanivel6 =Utilerias::crearSelectCascada(Estructura::nombreNivel(6,$_SESSION["idiomaus"]),6,Utilerias::crearOpcionesNivel(6, $select6,$select6),"");
+            				//             /*                     * ******************************************************************* */
+            				
+            				
+            			}
+            		}
+            	
+            	
+            	$consutacontrl=new GenerarBusquedaController;
+            $rescon=$consutacontrl->generarBusquedaRes();
+            	}
+            }
         else if($action=="resumenresultados")
         	if($admin==prin){
-        	$consutacontrl=new GeneraBusqResController();
-        	$rescon=$consutacontrl->generarBusquedaRes();
+         	$consutacontrl=new GeneraBusqResController();
+         	$rescon=$consutacontrl->generarBusquedaRes();
         }else $rescon=true;
      
         if($rescon==false){
         	echo "";
         	
         }
-     
+   
         $usuario_act = $_SESSION["NombreUsuario"];
 
         // genera info gr14fica
@@ -345,13 +345,13 @@ class ResumenResultadosController {
 
         if(isset($_SESSION["fperiodo"])){
         	        
-// recupero variables de sesion
-        $this->cuenta = $_SESSION["fcuenta"];
-        $num_reg = $_SESSION["fnumrep"];
-        $periodo = $_SESSION["fperiodo"];
+    // recupero variables de sesion
+            $this->cuenta = $_SESSION["fcuenta"];
+            $num_reg = $_SESSION["fnumrep"];
+            $periodo = $_SESSION["fperiodo"];
         }else
         {
-        	$_SESSION["fcuenta"]=$cuenta;
+            	$_SESSION["fcuenta"]=$cuenta;
         }
         $ancho1 = "58%";
         $ancho2 = "22%";
@@ -458,7 +458,9 @@ class ResumenResultadosController {
                     /*                     * ************************************************************************ */
                 }
             }
-   
+        //guardo las sesiones
+        
+      
              $mesasig = $mes;
         $aux = explode('.', $mes);
         $this->mes_asig = $mes;
@@ -509,6 +511,7 @@ class ResumenResultadosController {
         }catch(Exception $ex){
         	echo "Hubo un error al realizar la consulta, intente otra";
         }
+     
         if ($_GET["action"] == "indindicadores") {
         	Navegacion::iniciar();
             Navegacion::borrarRutaActual("a");

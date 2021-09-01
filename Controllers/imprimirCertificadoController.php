@@ -1702,12 +1702,12 @@ ORDER BY IF(id_numreactivo<3,id_numreactivo,if(id_numreactivo=4,5,4))";
 //            $pdf->multiCell(180,4,$row["ida_descripcionreal"], 0, 'C' , FALSE);
 //            $i=$i+21;
 //        }
-        $pdf->AddPage();
-        $i=50;
+     //   $pdf->AddPage();
+      //  $i=50;
         $pdf->SetFillColor(152,185,235);
-        $pdf->Rect(23,$i+18,180,8,F);
+        $pdf->Rect(23,$i+15,180,8,F);
         $pdf->SetFont('Arial','B',12);
-        $i=$i+20;
+        $i=$i+17;
         $pdf->SetY($i);
         $pdf->SetX(23);
         $pdf->Cell(75,4,utf8_decode('Dictamen del análisis'), 'N', 'L' , false);
@@ -1902,8 +1902,8 @@ ins_imagendetalle.id_imgclaveservicio =  $servicio AND ins_imagendetalle.id_imgn
                 // pagina 6
                 if ($Band==0) {
                     $pdf->AddPage();
-                    $pdf->SetFillColor(152,185,235);
-                    $pdf->Rect(10,44,200,200,F);
+                //    $pdf->SetFillColor(152,185,235);
+                //    $pdf->Rect(10,44,200,200,F);
                     $x=14;
                     $y=60;
                     $Band++;
@@ -1936,14 +1936,14 @@ ins_imagendetalle.id_imgclaveservicio =  $servicio AND ins_imagendetalle.id_imgn
         $pdf->Output();
     }
      
-    //para servicio de postmix
+    //para servicio de postmix ALERTAS
     public function certificadoPostmix(){
     	
     	
     	define('RAIZ',"fotografias");
     	$numrep=filter_input(INPUT_GET,"nrep",FILTER_SANITIZE_NUMBER_INT);
     	$ale=filter_input(INPUT_GET,"ale",FILTER_SANITIZE_NUMBER_INT); //indica si vengo de alertas
-    	
+    	$nvo=filter_input(INPUT_GET,"nvo",FILTER_SANITIZE_NUMBER_INT);//indica si es la 1 vez que se imprime
     	
     	$a=$reportSubtitle = iconv('UTF-8', 'windows-1252', "á");
     	$e=$reportSubtitle = iconv('UTF-8', 'windows-1252', "é");
@@ -1970,10 +1970,10 @@ ins_imagendetalle.id_imgclaveservicio =  $servicio AND ins_imagendetalle.id_imgn
     	$pdf->Rect(150,$j,50,0);
     	
     	$pdf->SetFont('Arial','',10);
-    	$j=90;
+    	$j=85;
     	$pdf->SetY($j);
     	$pdf->SetX(23);
-    	$pdf->multiCell(180,6,'Por medio del presente documento se emiten los resultados del an'.$a.'lisis fisicoqu'.$i.'micos y/o microbiol'.$o.'gicos de la muestra tomada del establecimiento, as'.$i.' como la validaci'.$o.'n de las condiciones del establecimiento para obtener la aprobaci'.$o.'n del servicio de distribuci'.$o.'n de productos PEPSI a trav'.$e.'s de un equipo post mix.', 0, 'L' , FALSE);
+    	$pdf->multiCell(180,6,utf8_decode('Por medio del presente documento se emiten los resultados del análisis fisicoquímico y/o microbiológico de la muestra tomada del establecimiento, así como la validación de las condiciones de almacenaje y tratamiento de agua del establecimiento para continuar con el servicio de distribución de productos PEPSI a través de un equipo postmix.'), 0, 'L' , FALSE);
     	   	
     	$j=114;
     	$pdf->SetFillColor(152,185,235);
@@ -2039,9 +2039,11 @@ ins_imagendetalle.id_imgclaveservicio =  $servicio AND ins_imagendetalle.id_imgn
     	$pdf->Cell(25,4,'Correo ', 0, 'R' , FALSE);
     	
     	$servicio=1;
-    	if($ale==1)
-   			DatosGenerales::actualizarEstatus($servicio, $numrep, 2);
-    	
+    	//die($ale."--".$nvo);
+    	if($ale==1&&$nvo==1)
+   			//DatosGenerales::actualizarEstatus($servicio, $numrep, 2);
+    	    DatosGenerales::actualizarEstatusUsuarioAlerta($servicio, $numrep, $_SESSION["NombreUsuario"]);
+   			
     	// Coloca Datos
     	$ssql="SELECT  ca_unegocios.cue_clavecuenta, ca_unegocios.une_id, ca_unegocios.une_descripcion,
 ca_unegocios.une_idpepsi, ca_unegocios.une_idcuenta, ca_unegocios.une_dir_calle, ca_unegocios.une_dir_numeroext,
@@ -2616,7 +2618,7 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
     	//condiciones de operacion
     	$pdf->AddPage();
     	
-    	$ycondi=90;
+    	$ycondi=55;
     	$pdf->SetFillColor(152,185,235);
     	$pdf->Rect(23,$ycondi-2,180,8,F);
     	$pdf->SetFont('Arial','B',12);
@@ -2628,7 +2630,7 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
     	
     	//para reactivo 1
     	$tache5="palomita";
-    	$i=$ycondi+20;
+    	$i=$ycondi+10;
     	$j=$i;
     	$pdf->SetFont('Arial','',10);
     	$pdf->SetY($j);
@@ -2714,14 +2716,14 @@ ORDER BY r_numreactivo ";
     	//     	$pdf->Image('img/'.$tache5.'.png' , 192 ,$i, 5 , 5,'PNG');
     	
     	
-    	$pdf->AddPage();
+  //  	$pdf->AddPage();
     
     	
-    	$i=60;
+   // 	$i=60;
     	$pdf->SetFillColor(152,185,235);
-    	$pdf->Rect(23,$i+18,180,8,F);
+    	$pdf->Rect(23,$i+15,180,8,F);
     	$pdf->SetFont('Arial','B',12);
-    	$i=$i+20;
+    	$i=$i+17;
     	$pdf->SetY($i);
     	$pdf->SetX(23);
     	$pdf->Cell(75,4,utf8_decode('Dictamen del análisis'), 'N', 'L' , false);
@@ -2806,7 +2808,7 @@ ORDER BY r_numreactivo ";
     	}
     	$i=$j;
     	}
-    	$i=$i+20;
+    	$i=$i+10;
     	
     	$pdf->SetFont('Arial','',10);
     	$pdf->SetY($i);
@@ -2814,7 +2816,7 @@ ORDER BY r_numreactivo ";
     	$pdf->multiCell(100,6,utf8_decode('Para cualquier aclaración quedo a sus ordenes. '), 0, 'L' , FALSE);
     	
     	
-    	$i=$i+20;
+    	$i=$i+15;
     	$pdf->SetFont('Arial','B',10);
     	$pdf->SetY($i);
     	$pdf->SetX(23);
@@ -2844,7 +2846,7 @@ Inner Join (select * from ca_catalogosdetalle where cad_idcatalogo=43) as b ON a
     	$pdf->SetY($i);
     	$pdf->SetX(95);
     	$pdf->SetFont('Arial','',8);
-    	$pdf->MultiCell(80,2,"Aseguramiento de calidad", 0 ,'L', FALSE);
+    	$pdf->MultiCell(80,2,"Especialista ADC Sr", 0 ,'L', FALSE);
     	
     	$i=$i+6;
     	
@@ -2857,8 +2859,9 @@ Inner Join (select * from ca_catalogosdetalle where cad_idcatalogo=43) as b ON a
     	
     	
     	$pdf->AddPage();
+    	$ycondi=52;
     	// SUBTITULOS
-    	$pdf->SetY(20);
+    	$pdf->SetY($ycondi);
     	$pdf->SetX(16);
     	$pdf->ChapterTitle('FOTOGRAFIAS');
     	
@@ -2872,7 +2875,7 @@ ins_imagendetalle.id_imgclaveservicio =:servicio   AND ins_imagendetalle.id_imgn
  AND ins_imagendetalle.id_imgnumseccion in (1,4)";
     	$rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$servicio,"numrep"=>$numrep));
     	$x=14;
-    	$y=42;
+    	$y=$ycondi+7;
     	$cont=0;
     	$Band=0;
     	
@@ -2910,7 +2913,7 @@ ins_imagendetalle.id_imgclaveservicio =:servicio   AND ins_imagendetalle.id_imgn
     				$pdf->SetFillColor(152,185,235);
     			//	$pdf->Rect(10,44,200,200,"F");
     				$x=14;
-    				$y=60;
+    				$y=70;
     				$Band++;
     			}
     			if (($cont==6) || ($cont==9)){
@@ -2938,7 +2941,1010 @@ ins_imagendetalle.id_imgclaveservicio =:servicio   AND ins_imagendetalle.id_imgn
     		$cont++;
     	}
     	
-    	$pdf->Output();
+    	  $pdf->Output();
+    }
+    
+    //para servicio de postmix
+    public function certificadoPostmixCadena($numrep){
+        
+        
+        define('RAIZ',"fotografias");
+       
+        
+        $a=$reportSubtitle = iconv('UTF-8', 'windows-1252', "á");
+        $e=$reportSubtitle = iconv('UTF-8', 'windows-1252', "é");
+        $i=$reportSubtitle = iconv('UTF-8', 'windows-1252', "í");
+        $o=$reportSubtitle = iconv('UTF-8', 'windows-1252', "ó");
+        $u=$reportSubtitle = iconv('UTF-8', 'windows-1252', "ú");
+        $n=utf8_decode("&ntilde;");
+        
+        
+        $pdf=new PDFAnalisisPost('p','mm','letter');
+        $pdf->AddPage();
+        
+        // RECUADRO GENERAL
+        $pdf->SetFillColor(152,185,235);
+        //**** ETIQUETAS
+        $pdf->SetFont('Arial','',8);
+        $j=78;
+        $pdf->SetY($j);
+        $pdf->SetX(172);
+        $pdf->Cell(25,4,'(Fecha de emisi'.$o.'n del reporte) ', 0 ,'R', TRUE);
+        
+        $pdf->SetLineWidth(0.4);   // ancho de linea
+        $pdf->SetFillColor(0,0,0);
+        $pdf->Rect(150,$j,50,0);
+        
+        $pdf->SetFont('Arial','',10);
+        $j=90;
+        $pdf->SetY($j);
+        $pdf->SetX(23);
+        $pdf->multiCell(180,6,'Por medio del presente documento se emiten los resultados del an'.$a.'lisis fisicoqu'.$i.'micos y/o microbiol'.$o.'gicos de la muestra tomada del establecimiento, as'.$i.' como la validaci'.$o.'n de las condiciones del establecimiento para obtener la aprobaci'.$o.'n del servicio de distribuci'.$o.'n de productos PEPSI a trav'.$e.'s de un equipo post mix.', 0, 'L' , FALSE);
+        
+        $j=114;
+        $pdf->SetFillColor(152,185,235);
+        // RECUADRO DOS
+        $pdf->Rect(23,$j-2,180,8,F);
+        $pdf->SetFont('Arial','B',12);
+        $pdf->SetY($j);
+        $pdf->SetX(23);
+        $pdf->Cell(75,4,'Informaci'.$o.'n de establecimiento', 'N', 'L' , false);
+        
+        $j=125;
+        $pdf->SetY($j);
+        $pdf->SetX(23);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(75,4,'Nombre del establecimiento', 0, 'L' , FALSE);
+        
+        $pdf->SetLineWidth(0.4);   // ancho de linea
+        $pdf->SetFillColor(0,0,0);
+        $j=129;
+        $pdf->Rect(83,$j,120,0);
+        $pdf->Rect(60,$j+8,143,0);
+        $pdf->Rect(60,$j+16,143,0);
+        $pdf->Rect(35,$j+24,30,0);
+        $pdf->Rect(85,$j+24,45,0);
+        $pdf->Rect(150,$j+24,54,0);
+        $pdf->Rect(54,$j+32,45,0);
+        $pdf->Rect(120,$j+32,45,0);
+        $pdf->Rect(45,$j+40,54,0);
+        $j=133;
+        $pdf->SetY($j);
+        $pdf->SetX(23);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'Direcci'.$o.'n ', 0, 'L' , FALSE);
+        
+        $pdf->SetY($j+17);
+        $pdf->SetX(23);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'C.P. ', 0, 'R' , FALSE);
+        $j=150;
+        $pdf->SetY($j);
+        $pdf->SetX(68);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'Ciudad', 0, 'R' , FALSE);
+        
+        $pdf->SetY($j);
+        $pdf->SetX(135);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'Estado', 0, 'R' , FALSE);
+        $saltolinea=8;
+        $j=$j+$saltolinea;
+        $pdf->SetY($j);
+        $pdf->SetX(23);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'Nombre contacto ', 0, 'R' , FALSE);
+        
+        $pdf->SetY($j);
+        $pdf->SetX(100);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,utf8_decode('Teléfonos'), 0, 'R' , FALSE);
+        $pdf->SetY($j+$saltolinea);
+        $pdf->SetX(23);
+        $pdf->SetFont('Arial','',10);
+        $pdf->Cell(25,4,'Correo ', 0, 'R' , FALSE);
+        
+        $servicio=1;
+        if($ale==1)
+            DatosGenerales::actualizarEstatus($servicio, $numrep, 2);
+            
+            // Coloca Datos
+            $ssql="SELECT  ca_unegocios.cue_clavecuenta, ca_unegocios.une_id, ca_unegocios.une_descripcion,
+ca_unegocios.une_idpepsi, ca_unegocios.une_idcuenta, ca_unegocios.une_dir_calle, ca_unegocios.une_dir_numeroext,
+ca_unegocios.une_dir_numeroint, ca_unegocios.une_dir_manzana, ca_unegocios.une_dir_lote, ca_unegocios.une_dir_colonia,
+ca_unegocios.une_dir_delegacion, ca_unegocios.une_dir_municipio, ca_unegocios.une_dir_estado, ca_unegocios.une_dir_cp,
+ca_unegocios.une_dir_referencia, ca_unegocios.une_dir_telefono, ins_generales.i_fechavisita, ins_generales.i_mesasignacion,
+ins_generales.i_horaentradavis, ins_generales.i_horasalidavis, ins_generales.i_responsablevis, ins_generales.i_puestoresponsablevis,
+ins_generales.i_numreporte,  ins_generales.i_fechafinalizado, ca_inspectores.ins_nombre,
+ IF(`mue_fechoranalisisFQ`
+    < `mue_fechoranalisisMB`,mue_fechoranalisisMB,mue_fechoranalisisFQ) as fechaemi,
+`une_dir_telefono`,`une_dir_telefono2`,`une_dir_correoe`,i_responsablevis
+ FROM ca_unegocios
+Inner Join ins_generales ON  ins_generales.i_unenumpunto = ca_unegocios.une_id
+Inner Join ca_inspectores ON ins_generales.i_claveinspector = ca_inspectores.ins_clave
+inner join aa_muestras on mue_numreporte=i_numreporte and mue_claveservicio=i_claveservicio
+WHERE ins_generales.i_claveservicio =  ".$servicio." AND ins_generales.i_numreporte = :numrep";
+            
+            $rs=Conexion::ejecutarQuery($ssql,array("numrep"=>$numrep));
+            //echo $treg;
+            foreach($rs as $row) {
+                $pdf->SetFont('Arial','',8);
+                $pdf->SetY(74);
+                $pdf->SetX(166);
+                $pdf->multiCell(60,4,Utilerias::formato_fecha($row["fechaemi"]), 0, 'L' , FALSE);
+                
+                $pdf->SetY(125);
+                $pdf->SetX(85);
+                $pdf->multiCell(140,4,$row["une_descripcion"], 0, 'L' , false);
+                
+                
+                $pdf->SetY(133);
+                $pdf->SetX(65);
+                $pdf->multiCell(160,4,utf8_decode($row["une_dir_calle"])." No. ".$row["une_dir_numeroext"]. " COLONIA ".$row["une_dir_colonia"], 0, 'L' , false);
+                
+                $pdf->SetY(150);
+                $pdf->SetX(45);
+                $pdf->multiCell(60,4,$row["une_dir_cp"], 0, 'L' , false);
+                $j=150;
+                $pdf->SetY($j);
+                $pdf->SetX(89);
+                $pdf->multiCell(60,4,$row["une_dir_municipio"], 0, 'L' , false);
+                
+                $pdf->SetY($j);
+                $pdf->SetX(155);
+                $pdf->multiCell(60,4,utf8_decode($row["une_dir_estado"]), 0, 'L' , false);
+                /**** datos contacto************/
+                $j=$j+$saltolinea;
+                $pdf->SetY($j);
+                $pdf->SetX(55);
+                $pdf->multiCell(60,4,utf8_decode($row["i_responsablevis"]), 0, 'L' , false);
+                
+                $pdf->SetY($j);
+                $pdf->SetX(121);
+                $pdf->multiCell(60,4,$row["une_dir_telefono"]." ".$row["une_dir_telefono2"], 0, 'L' , false);
+                $j=$j+$saltolinea;
+                $pdf->SetY($j);
+                $pdf->SetX(48);
+                $pdf->multiCell(60,4,$row["une_dir_correoe"], 0, 'L' , false);
+                
+                
+                
+                $pdf->SetY(198);
+                $pdf->SetX(110);
+                $pdf->multiCell(60,4,utf8_decode($row["ins_nombre"]), 0, 'L' , false);
+                
+            }
+            
+            
+            $i=180;
+            $pdf->SetFillColor(152,185,235);
+            $pdf->Rect(23,$i-2,180,8,F);
+            $pdf->SetFont('Arial','B',12);
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->Cell(75,4,'Informaci'.$o.'n de la visita', 'N', 'L' , false);
+            
+            $i=$i+11;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Fecha de la toma de muestra ', 0, 'L' , FALSE);
+            $pdf->Rect(90,$i+3,112,0);
+            $i=$i+8;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Nombre quien realiza el muestreo ', 0, 'L' , FALSE);
+            $pdf->Rect(90,$i+3,112,0);
+            $i=$i+8;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Laboratorio GEPP que realiza los an'.$a.'lisis ', 0, 'L' , FALSE);
+            $pdf->Rect(90,$i+3,112,0);
+            $i=$i+9;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Nombre de quien recibe la muestra ', 0, 'L' , FALSE);
+            $pdf->Rect(90,$i+3,112,0);
+            
+            
+            // datos de la muestra
+            $ssql1="SELECT ide_idmuestra, cad_descripcionesp, rm_fechahora, rm_personarecibe  FROM
+(SELECT ins_detalleestandar.ide_idmuestra FROM ins_detalleestandar Inner Join cue_secciones
+ON cue_secciones.ser_claveservicio = ins_detalleestandar.ide_claveservicio
+ AND cue_secciones.sec_numseccion = ins_detalleestandar.ide_numseccion
+WHERE ins_detalleestandar.ide_claveservicio =  $servicio AND ins_detalleestandar.ide_numreporte = :numrep AND cue_secciones.sec_indagua =  '1'
+GROUP BY ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte) AS A
+INNER JOIN (SELECT aa_recepcionmuestradetalle.mue_idmuestra, aa_recepcionmuestra.rm_embotelladora, aa_recepcionmuestra.rm_personarecibe, aa_recepcionmuestra.rm_fechahora,
+ca_catalogosdetalle.cad_descripcionesp FROM aa_recepcionmuestradetalle Inner Join aa_recepcionmuestra
+ON aa_recepcionmuestradetalle.rm_idrecepcionmuestra = aa_recepcionmuestra.rm_idrecepcionmuestra
+Inner Join ca_catalogosdetalle ON aa_recepcionmuestra.rm_embotelladora = ca_catalogosdetalle.cad_idopcion
+Inner Join ca_catalogos ON ca_catalogosdetalle.cad_idcatalogo = ca_catalogos.ca_idcatalogo
+WHERE ca_catalogos.ca_idcatalogo =  '43'
+GROUP BY aa_recepcionmuestradetalle.mue_idmuestra ) AS b ON  ide_idmuestra=mue_idmuestra";
+            $rs1=Conexion::ejecutarQuery($ssql1,array("numrep"=>$numrep));
+            $i=190;
+            //echo $treg;
+            foreach($rs1 as $row1) {
+                $pdf->SetFont('Arial','',8);
+                $pdf->SetY($i);
+                $pdf->SetX(110);
+                $pdf->multiCell(60,4,Utilerias::formato_fecha($row1["rm_fechahora"]), 0, 'L' , false);
+                $i=$i+16;
+                $pdf->SetFont('Arial','',8);
+                $pdf->SetY($i);
+                $pdf->SetX(110);
+                $pdf->multiCell(60,4,$row1["cad_descripcionesp"], 0, 'L' , false);
+                $i=$i+9;
+                $pdf->SetFont('Arial','',8);
+                $pdf->SetY($i);
+                $pdf->SetX(110);
+                $pdf->multiCell(60,4,utf8_decode($row1["rm_personarecibe"]), 0, 'L' , false);
+                
+            }
+            
+            //*** pagina dos
+            $pdf->AddPage();
+            $j=58;
+            $pdf->SetY($j); //antes 20
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Las condiciones con las que se recibe la muestra de agua para efectuar el an'.$a.'lisis es:', 0, 'L' , FALSE);
+            
+            $pdf->SetY($j+6);
+            $pdf->SetX(73);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Aceptable', 0, 'L' , FALSE);
+            
+            $pdf->SetY($j+6);
+            $pdf->SetX(123);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'No Aceptable', 0, 'L' , FALSE);
+            
+            
+            
+            $pdf->SetY($j+20);
+            $pdf->SetX(23);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Tipo de an'.$a.'lisis a realizar', 0, 'L' , FALSE);
+            
+            $pdf->SetY($j+26);
+            $pdf->SetX(73);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Fisicoquimicos', 0, 'L' , FALSE);
+            
+            
+            $pdf->SetY($j+26);
+            $pdf->SetX(123);
+            $pdf->SetFont('Arial','',10);
+            $pdf->Cell(25,4,'Microbiologicos', 0, 'L' , FALSE);
+            
+            $j=$j+42;
+            $pdf->SetFillColor(152,185,235);
+            $pdf->Rect(23,$j-2,180,8,F);
+            $pdf->SetFont('Arial','B',12);
+            $pdf->SetY($j);
+            $pdf->SetX(23);
+            $pdf->Cell(75,4,'Resultado de an'.$a.'lisis de agua', 'N', 'L' , false);
+            
+            //     	// RECUADRO GENERAL
+            //     	//$pdf->SetFillColor(152,185,235);
+            
+            //     	//**** ETIQUETAS
+            //     	$pdf->SetFont('Arial','B',8);
+            //     	$pdf->Rect(27,57,174,6,F);
+            //     	$pdf->SetY(58);
+            //     	$pdf->SetX(27);
+            //     	$pdf->multiCell(176,4,'ANALISIS FISICOQUIMICOS DE AGUA', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(27,63,58,6);
+            //     	$pdf->SetY(65);
+            //     	$pdf->SetX(27);
+            //     	$pdf->multiCell(58,4,'CARACTERISTICA', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(85,63,58,6);
+            //     	$pdf->SetY(65);
+            //     	$pdf->SetX(85);
+            //     	$pdf->multiCell(58,4,'ESPECIFICACION', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(143,63,58,6);
+            //     	$pdf->SetY(65);
+            //     	$pdf->SetX(144);
+            //     	$pdf->multiCell(58,4,'RESULTADO', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(27,143,174,6,F);
+            //     	$pdf->SetY(145);
+            //     	$pdf->SetX(27);
+            //     	$pdf->multiCell(176,4,'ANALISIS MICROBIOLOGICOS DE AGUA', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(27,149,58,6);
+            //     	$pdf->SetY(150);
+            //     	$pdf->SetX(27);
+            //     	$pdf->multiCell(58,4,'CARACTERISTICA', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(85,149,58,6);
+            //     	$pdf->SetY(150);
+            //     	$pdf->SetX(85);
+            //     	$pdf->multiCell(58,4,'ESPECIFICACION', 0, 'C' , FALSE);
+            
+            //     	$pdf->Rect(143,149,58,6);
+            //     	$pdf->SetY(150);
+            //     	$pdf->SetX(144);
+            //     	$pdf->multiCell(58,4,'RESULTADO', 0, 'C' , FALSE);
+            
+            //     	$pdf->SetFont('Arial','',8);
+            $y=111;
+            $pdf->SetFont('Arial','B',8);
+            $pdf->Rect(27,$y-2,174,6,F);
+            $pdf->SetY($y);
+            $pdf->SetX(27);
+            $pdf->multiCell(176,4,'ANALISIS FISICOQUIMICOS DE AGUA', 0, 'C' , FALSE);
+            $y+=8;
+            $pdf->Rect(27,$y-2,58,6);
+            $pdf->SetY($y);
+            $pdf->SetX(27);
+            $pdf->multiCell(58,4,'CARACTERISTICA', 0, 'C' , FALSE);
+            
+            $pdf->Rect(85,$y-2,58,6);
+            $pdf->SetY($y);
+            $pdf->SetX(85);
+            $pdf->multiCell(58,4,'ESPECIFICACION', 0, 'C' , FALSE);
+            
+            $pdf->Rect(143,$y-2,58,6);
+            $pdf->SetY($y);
+            $pdf->SetX(144);
+            $pdf->multiCell(58,4,'RESULTADO', 0, 'C' , FALSE);
+            $y=111-74+161;
+            $pdf->Rect(27,$y-2,174,6,F);
+            $pdf->SetY($y);
+            $pdf->SetX(27);
+            $pdf->multiCell(176,4,'ANALISIS MICROBIOLOGICOS DE AGUA', 0, 'C' , FALSE);
+            
+            $pdf->Rect(27,$y+5,58,6);
+            $pdf->SetY($y+7);
+            $pdf->SetX(27);
+            $pdf->multiCell(58,4,'CARACTERISTICA', 0, 'C' , FALSE);
+            
+            $pdf->Rect(85,$y+5,58,6);
+            $pdf->SetY($y+7);
+            $pdf->SetX(85);
+            $pdf->multiCell(58,4,'ESPECIFICACION', 0, 'C' , FALSE);
+            
+            $pdf->Rect(143,$y+5,58,6);
+            $pdf->SetY($y+7);
+            $pdf->SetX(144);
+            $pdf->multiCell(58,4,'RESULTADO', 0, 'C' , FALSE);
+            
+            $pdf->SetFont('Arial','',8);
+            $ssql4="SELECT ins_detalleestandar.ide_claveservicio, ins_detalleestandar.ide_numreporte, ins_detalleestandar.ide_numseccion,
+ins_detalleestandar.ide_valorreal, ins_detalleestandar.ide_idmuestra, cue_reactivosestandardetalle.red_estandar,
+ cue_reactivosestandardetalle.red_parametroesp, ins_detalleestandar.ide_numcaracteristica3,cue_reactivosestandardetalle.red_clavecatalogo,
+ cue_reactivosestandardetalle.red_tipodato, ins_detalleestandar.ide_aceptado FROM ins_detalleestandar
+Inner Join cue_reactivosestandardetalle ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio
+AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo
+ AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente
+AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1
+AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2 AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3
+Inner Join cue_secciones ON cue_secciones.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio
+AND cue_secciones.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion
+ WHERE
+ins_detalleestandar.ide_claveservicio = ".$servicio." AND ins_detalleestandar.ide_numreporte =:numrep AND
+cue_secciones.sec_indagua =  '1' AND ins_detalleestandar.ide_numrenglon =  '1'
+and (ins_detalleestandar.ide_numcaracteristica3<>14 and ins_detalleestandar.ide_numcaracteristica3<>20
+and ins_detalleestandar.ide_numcaracteristica3<>21 and ins_detalleestandar.ide_numcaracteristica3<>15)
+ORDER BY if(ins_detalleestandar.ide_numcaracteristica3=2,1, if(ins_detalleestandar.ide_numcaracteristica3=1,2,
+if(ins_detalleestandar.ide_numcaracteristica3=12,7,  if(ins_detalleestandar.ide_numcaracteristica3=4,11,
+if(ins_detalleestandar.ide_numcaracteristica3=5,5,  if(ins_detalleestandar.ide_numcaracteristica3=9,4,
+if(ins_detalleestandar.ide_numcaracteristica3=6,6, if(ins_detalleestandar.ide_numcaracteristica3=13,8,
+ if(ins_detalleestandar.ide_numcaracteristica3=19,10, ins_detalleestandar.ide_numcaracteristica3))))))))) ASC";
+            $rs4=Conexion::ejecutarQuery($ssql4,array("numrep"=>$numrep));
+            
+            $num_reg = sizeof($rs4);
+            if ($num_reg>0){
+                // condiciones de la muestra
+                //     		$pdf->Image('img/palomita.png' , 64 ,25, 5 , 5,'PNG');
+                //     	//	$pdf->Image('img/palomita.png' , 49 ,46, 5 , 5,'PNG');
+                //     		$pdf->Image('img/palomita.png' , 115 ,25, 5 , 5,'PNG');
+                $pdf->Image('img/palomita.png' , 65 ,63, 5 , 5,'PNG');
+                $pdf->Image('img/palomita.png' , 65 ,83, 5 , 5,'PNG');
+                $pdf->Image('img/palomita.png' , 115 ,83, 5 , 5,'PNG');
+                $i=123;
+                $j=124;
+                $x=1;
+                $valreal="";
+                // coloca nombre y estandar
+                for ($x=1; $x<14; $x++){
+                    switch($x) {
+                        case '1':
+                            $concepto="OLOR";
+                            $standar="SIN OLOR";
+                            $numop=2;
+                            break;
+                        case '2':
+                            $concepto="SABOR";
+                            $standar="SIN SABOR EXTRANO";
+                            $numop=1;
+                            break;
+                        case '3':
+                            $concepto="COLOR";
+                            $standar="SIN COLOR";
+                            $numop=3;
+                            break;
+                        case '4':
+                            $concepto="SOLIDOS DISUELTOS TOTALES";
+                            $standar="<=750 mg/L";
+                            $numop=9;
+                            break;
+                        case '5':
+                            $concepto="ALCALINIDAD";
+                            $standar="<=175 mg/L CaCO3";
+                            $numop=5;
+                            break;
+                        case '6':
+                            $concepto="DUREZA";
+                            $standar="<=225 mg/L CaCO3 ";
+                            $numop=6;
+                            break;
+                        case '7':
+                            $concepto="HIERRO";
+                            $standar="<=0.1 mg/L";
+                            $numop=12;
+                            break;
+                        case '8':
+                            $concepto="MANGANESO";
+                            $standar="<=0.05 mg/L ";
+                            $numop=13;
+                            break;
+                        case '9':
+                            $concepto="CLORO TOTAL";
+                            $standar="<=0.5 mg/L";
+                            $numop=8;
+                            break;
+                        case '10':
+                            $concepto="TURBIDEZ";
+                            $standar="<=1 NTU ";
+                            $numop=19;
+                            break;
+                        case '11':
+                            $concepto="PH";
+                            $standar="6.5 - 8.5 ";
+                            $numop=4;
+                            break;
+                        case '12':
+                            $concepto="COLIFORMES TOTALES";
+                            $standar="0 UFC/100ml ";
+                            $numop=17;
+                            break;
+                        case '13':
+                            $concepto="E COLI";
+                            $standar="0 UFC/100ml ";
+                            $numop=18;
+                            break;
+                    }
+                    $pdf->Rect(27,$i,58,6);
+                    $pdf->SetY($j);
+                    $pdf->SetX(29);
+                    $pdf->multiCell(58,4,$concepto, 0, 'C' , FALSE);
+                    
+                    $pdf->Rect(85,$i,58,6);
+                    $pdf->SetY($j);
+                    $pdf->SetX(89);
+                    $pdf->multiCell(58,4,$standar, 0, 'C' , FALSE);
+                    $pdf->Rect(143,$i,58,6);
+                    
+                    // busca valor real
+                    //     			if ($x==6) {
+                    //     				$sql5="SELECT SUM(ins_detalleestandar.ide_valorreal) AS VALTOT
+                    // FROM ins_detalleestandar Inner Join cue_reactivosestandardetalle ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1 AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2 AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3
+                    // Inner Join cue_secciones ON cue_secciones.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND cue_secciones.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion
+                    // WHERE  ins_detalleestandar.ide_claveservicio =  ".$servicio." AND ins_detalleestandar.ide_numreporte =:numrep AND
+                    // cue_secciones.sec_indagua =  '1' AND ins_detalleestandar.ide_numrenglon =  '1'
+                    // and (ins_detalleestandar.ide_numcaracteristica3=6 OR ins_detalleestandar.ide_numcaracteristica3=5)";
+                    //     				$rs5=Conexion::ejecutarQuery($sql5,array("numrep"=>$numrep));
+                    //     				$num_reg = sizeof($rs5);
+                    //     				if ($num_reg>0){
+                    //     					foreach($rs5 as $row5) {
+                    //     						$valreal=round($row5["VALTOT"],3);
+                    
+                    //     					}
+                    //     					if ($valreal>400) {
+                    //     						$pdf->SetTextColor(255, 0,0);
+                    //     					}
+                    //     				} else {
+                    //     					$valreal="*";
+                    //     				}
+                    //     			} else {
+                    
+                    $sql5="SELECT ins_detalleestandar.ide_valorreal,  ins_detalleestandar.ide_numcaracteristica3,
+cue_reactivosestandardetalle.red_clavecatalogo, cue_reactivosestandardetalle.red_tipodato,
+ ins_detalleestandar.ide_aceptado
+FROM ins_detalleestandar Inner Join cue_reactivosestandardetalle ON cue_reactivosestandardetalle.ser_claveservicio = ins_detalleestandar.ide_claveservicio
+ AND cue_reactivosestandardetalle.sec_numseccion = ins_detalleestandar.ide_numseccion
+AND cue_reactivosestandardetalle.r_numreactivo = ins_detalleestandar.ide_numreactivo AND cue_reactivosestandardetalle.re_numcomponente = ins_detalleestandar.ide_numcomponente
+AND cue_reactivosestandardetalle.re_numcaracteristica = ins_detalleestandar.ide_numcaracteristica1 AND cue_reactivosestandardetalle.re_numcomponente2 = ins_detalleestandar.ide_numcaracteristica2
+AND cue_reactivosestandardetalle.red_numcaracteristica2 = ins_detalleestandar.ide_numcaracteristica3
+Inner Join cue_secciones ON cue_secciones.ser_claveservicio = cue_reactivosestandardetalle.ser_claveservicio AND cue_secciones.sec_numseccion = cue_reactivosestandardetalle.sec_numseccion
+WHERE  ins_detalleestandar.ide_claveservicio =  ".$servicio." AND ins_detalleestandar.ide_numreporte =:numrep AND
+cue_secciones.sec_indagua =  '1' AND ins_detalleestandar.ide_numrenglon =  '1'
+and ins_detalleestandar.ide_numcaracteristica3=$numop";
+                    $rs5=Conexion::ejecutarQuery($sql5,array("numrep"=>$numrep));
+                    $num_reg = sizeof($rs5);
+                    if ($num_reg>0){
+                        foreach($rs5 as $row5) {
+                            $tipocat=$row5["red_tipodato"];
+                            switch ($tipocat) {
+                                case "C" :
+                                    $valop=round($row5["ide_valorreal"],1);
+                                    $numcat=$row5["red_clavecatalogo"];
+                                    // busca el valor en el catalogo
+                                    $sqlcat="SELECT * FROM ca_catalogosdetalle WHERE ca_catalogosdetalle.cad_idcatalogo =  '".$numcat."' AND
+	ca_catalogosdetalle.cad_idopcion =  '".$valop."';";
+                                    $valreal=DatosCatalogoDetalle::getCatalogoDetalle("ca_catalogosdetalle",$numcat,$valop);
+                                    $valreal=utf8_decode($valreal);
+                                    break;
+                                case "N" :
+                                    if (($row5["ide_numcaracteristica3"]==17) || ($row5["ide_numcaracteristica3"]==18)) {
+                                        //echo "entre a validacion 17 y 18";
+                                        if (round($row5["ide_valorreal"],3)>=100){
+                                            //			$pdf->SetTextColor(255, 0,0);
+                                            $valreal="Incontables";
+                                        } else {
+                                            $valreal=round($row5["ide_valorreal"],3);
+                                        }  // fin de mayor a 100
+                                    } else {
+                                        $valreal=round($row5["ide_valorreal"],3);
+                                    }// fin de caracteristica 17 y 18
+                                    break;
+                            } // switch
+                            $pdf->Rect(143,$i,58,6);
+                            if ($row5["ide_aceptado"]) {
+                                $pdf->SetTextColor(0, 0,0);
+                            }else{
+                                $pdf->SetTextColor(255, 0,0);
+                            }
+                        }
+                    }else{ //band=0
+                        $valreal="*";
+                    } // si hay registro
+                    //	}
+                    //$pdf->SetTextColor(0, 0,0);
+                    //$pdf->Rect(143,$i,58,6);
+                    $pdf->SetY($j);
+                    $pdf->SetX(145);
+                    $pdf->multiCell(58,4,$valreal, 0, 'C' , FALSE);
+                    $pdf->SetTextColor(0, 0,0);
+                    if ($x==11) {
+                        $i=$i+26;
+                        $j=$j+26;
+                    } else {
+                        $i=$i+6;
+                        $j=$j+6;
+                    }
+                    
+                } // fin del for
+                $pdf->SetTextColor(0, 0,0);
+            } else {
+                // agrega tabla vacia
+                $i=69;
+                $j=70;
+                for ($x=1; $x<14; $x++){
+                    switch($x) {
+                        case '1':
+                            $concepto="OLOR";
+                            $standar="SIN OLOR";
+                            break;
+                        case '2':
+                            $concepto="SABOR";
+                            $standar="SIN SABOR EXTRANO";
+                            break;
+                        case '3':
+                            $concepto="COLOR";
+                            $standar="SIN COLOR";
+                            break;
+                        case '4':
+                            $concepto="SOLIDOS DISUELTOS TOTALES";
+                            $standar="<=750 mg/L";
+                            break;
+                        case '5':
+                            $concepto="ALCALINIDAD";
+                            $standar="<=175 mg/L CaCO3";
+                            break;
+                        case '6':
+                            $concepto="DUREZA";
+                            $standar="<=225 mg/L CaCO3 ";
+                            break;
+                        case '7':
+                            $concepto="HIERRO";
+                            $standar="<=0.1 mg/L";
+                            break;
+                        case '8':
+                            $concepto="MANGANESO";
+                            $standar="<=0.05 mg/L ";
+                            break;
+                        case '9':
+                            $concepto="CLORO TOTAL";
+                            $standar="<=0.5 mg/L";
+                            break;
+                        case '10':
+                            $concepto="TURBIDEZ";
+                            $standar="<=1 NTU ";
+                            break;
+                        case '11':
+                            $concepto="PH";
+                            $standar="6.5 - 8.5 ";
+                            break;
+                        case '12':
+                            $concepto="COLIFORMES TOTALES";
+                            $standar="0 UFC/100ml ";
+                            break;
+                        case '13':
+                            $concepto="E COLI";
+                            $standar="0 UFC/100ml ";
+                            break;
+                    }
+                    $pdf->Rect(27,$i,58,6);
+                    $pdf->SetY($j);
+                    $pdf->SetX(29);
+                    $pdf->multiCell(58,4,$concepto, 0, 'C' , FALSE);
+                    
+                    $pdf->Rect(85,$i,58,6);
+                    $pdf->SetY($j);
+                    $pdf->SetX(89);
+                    $pdf->multiCell(58,4,$standar, 0, 'C' , FALSE);
+                    $pdf->Rect(143,$i,58,6);
+                    
+                    $pdf->SetY($j);
+                    $pdf->SetX(145);
+                    $pdf->multiCell(58,4," * ", 0, 'C' , FALSE);
+                    if ($x==11) {
+                        $i=$i+26;
+                        $j=$j+26;
+                    } else {
+                        $i=$i+6;
+                        $j=$j+6;
+                    }
+                } // for
+            }  //if sin registros
+            //     	$pdf->SetY(208);
+            //     	$pdf->SetX(27);
+            //     	$pdf->multiCell(176,4,'OBSERVACIONES:', 'N', 'L' , FALSE);
+            
+            //     	$pdf->SetY(222);
+            //     	$pdf->SetX(30);
+            //     	$pdf->multiCell(60,4,'* NO SE REALIZA ANALISIS', 0, 'L' , FALSE);
+            
+            //     	$pdf->SetY(222);
+            //     	$pdf->SetX(80);
+            //     	$pdf->multiCell(60,4,'** NO APLICA', 0, 'L' , FALSE);
+            
+            //condiciones de operacion
+            $pdf->AddPage();
+            
+            $ycondi=90;
+            $pdf->SetFillColor(152,185,235);
+            $pdf->Rect(23,$ycondi-2,180,8,F);
+            $pdf->SetFont('Arial','B',12);
+            $pdf->SetY($ycondi);
+            $pdf->SetX(23);
+            $pdf->Cell(75,4,'Condiciones de operaci'.$o.'n', 'N', 'L' , false);
+            
+            //   $pdf->Image('img/muesmerc_logo.png' , 162 ,188, 40 , 13,'PNG');
+            
+            //para reactivo 1
+            $tache5="palomita";
+            $i=$ycondi+20;
+            $j=$i;
+            $pdf->SetFont('Arial','',10);
+            $pdf->SetY($j);
+            $pdf->SetX(23);
+            $pdf->MultiCell(150,4,utf8_decode("Los resultados de los análisis fisicoquímicos y microbiológicos de la muestra de agua recolectada cumplen con los estándares de pepsico para la elaboración de bebidas postmix"), 0 ,'L', FALSE);
+            $pdf->SetY($j+3);
+            $pdf->SetX(192);
+            
+            $res=DatosEst::cumplimientoSeccion($servicio,"5.0.2",$numrep);
+            if($res!="")
+            {//	throw new Exception("No hay información suficiente para generar el certificado, verifique el reporte");
+                $tache5=$res;
+                
+                $pdf->Image('img/'.$res.'.png' , 192 ,$i, 5 , 5,'PNG');
+            }
+            $i=$i+14;
+            $j=$j+14;
+            
+            //paara secciones 2,3,4
+            $ssql="SELECT IF(r_numreactivo=7,1,r_numreactivo) r_numreactivo ,ins_detalle.id_claveservicio, ins_detalle.id_numreporte,
+ ins_detalle.id_numseccion, ins_detalle.id_numreactivo, ins_detalle.id_aceptado,
+ins_detalle.id_noaplica, r.r_descripcionesp from
+(  SELECT
+   *
+FROM
+    `cue_reactivos`
+    WHERE ser_claveservicio =:servicio AND sec_numseccion =  '4' AND
+ r_numreactivo IN(3,7,22,23)) AS r
+    LEFT  JOIN `ins_detalle`
+        ON (r.`ser_claveservicio` = `ins_detalle`.`id_claveservicio`)
+        AND (r.`sec_numseccion` = `ins_detalle`.`id_numseccion`)
+        AND (r.`r_numreactivo` = `ins_detalle`.`id_numreactivo`) AND ins_detalle.id_numreporte =:numrep
+ GROUP BY     r.`ser_claveservicio`
+    ,r.`sec_numseccion`,r_numreactivo
+ORDER BY r_numreactivo ";
+            $rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$servicio,"numrep"=>$numrep));
+            
+            $x=1;
+            $pdf->SetFont('Arial','',10);
+            $reactivoscondicionados=array();
+            $tache6="";
+            foreach($rs as $row) {
+                //		$pdf->Rect(15,$i,175,10,F);
+                //		$pdf->Rect(195,$i+2,12,6,F);
+                $pdf->SetFont('Arial','',10);
+                $pdf->SetY($j);
+                $pdf->SetX(23);
+                $pdf->MultiCell(150,4,$this->mayusminus($row["r_descripcionesp"]), 0 ,'L', FALSE);
+                $pdf->SetY($j+3);
+                $pdf->SetX(192);
+                
+                if ($row["id_noaplica"]) {
+                    $pdf->SetX(178);
+                    $resas="N/A";
+                    $pdf->SetFont('Arial','',9);
+                    $resas="NO VERIFICADO";
+                    $pdf->MultiCell(30,2,$resas, 0 ,'L', FALSE);
+                    $reactivoscondicionados[]=$row["r_descripcionesp"];
+                    $tache6="N/A";
+                } else if ($row["id_aceptado"]) {
+                    
+                    $pdf->Image('img/palomita.png' , 192 ,$i, 5 , 5,'PNG');
+                } else {
+                    $pdf->SetTextColor(255, 0,0);
+                    if($row["id_numreactivo"]!=3)
+                        $tache5="tache";
+                        $pdf->Image('img/tache.png' , 192 ,$i, 5 , 5,'PNG');
+                }
+                
+                $i=$i+15;
+                $j=$j+15;
+                $x++;
+                $pdf->SetTextColor(0, 0,0);
+            }
+            //reactivo 5
+            //     	$pdf->SetY($j);
+            //     	$pdf->SetX(23);
+            //     	$pdf->MultiCell(150,4,"SE RECOMIENDA LA INSTALACION DEL SISTEMA POST MIX EN LAS CONDICIONES ACTUALES DEL ESTABLECIMIENTO", 0 ,'L', FALSE);
+            //     	$pdf->SetY($j+3);
+            //     	$pdf->SetX(192);
+            
+            
+            //     	$pdf->Image('img/'.$tache5.'.png' , 192 ,$i, 5 , 5,'PNG');
+            
+            
+            $pdf->AddPage();
+            
+            
+            $i=60;
+            $pdf->SetFillColor(152,185,235);
+            $pdf->Rect(23,$i+18,180,8,F);
+            $pdf->SetFont('Arial','B',12);
+            $i=$i+20;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->Cell(75,4,utf8_decode('Dictamen del análisis'), 'N', 'L' , false);
+            
+            $i=$i+10;
+            $pdf->SetFont('Arial','',10);
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            //$pdf->multiCell(180,6,'Conforme a los resultados de los an'.$a.'lisis realizados, se determina que el agua ', 0, 'L' , FALSE);
+            $pdf->multiCell(180,6,'Conforme a las condiciones de operaci'.$o.'n y los resultados'.
+                ' del an'.$a.'lisis del agua se recomienda continuar la operaci'.$o.'n del'.
+                ' sistema POSTMIX en las condiciones actuales del establecimiento  ', 0, 'L' , FALSE);
+            
+            $x=0;
+            if($tache5=="tache"){
+                $pdf->SetTextColor(255, 0,0);
+                $resas="NO";
+                
+            }else if($tache6=="N/A"){
+                //	$pdf->SetX(159);
+                $pdf->SetTextColor(255, 0,0);
+                $resas="CONDICIONADO";
+                //mostrar los no verificados
+                //	$i=$i-10;
+                $x=-5;
+            }else if ($tache5=="palomita") {
+                $resas="SI";
+                
+            }
+            
+            
+            $pdf->SetY($i+8);
+            $pdf->SetX(162+$x);
+            $pdf->SetFont('Arial','',10);
+            $pdf->MultiCell(80,2,$resas, 0 ,'L', FALSE);
+            $pdf->SetTextColor(0, 0,0);
+            
+            
+            //     	$pdf->SetFont('Arial','',10);
+            //     	$pdf->SetY($i);
+            //     	$pdf->SetX(186);
+            //     	$pdf->multiCell(20,6,'con las ', 0, 'L' , FALSE);
+            
+            $i=$i+11;
+            $pdf->Rect(153,$i,34,0);
+            $i=$i+2;
+            $pdf->SetY($i);
+            $pdf->SetX(157);
+            $pdf->SetFont('Arial','',8);
+            $pdf->MultiCell(80,2,"Si/No/Condicionado", 0 ,'L', FALSE);
+            
+            //$i=$i+3;
+            $pdf->SetFont('Arial','',10);
+            //     	$pdf->SetY($i);
+            //     	$pdf->SetX(23);
+            //     	$pdf->multiCell(100,6,'especificaciones establecidas por PEPSICO. ', 0, 'L' , FALSE);
+            
+            if($resas=="CONDICIONADO")
+            {	$i=$i+7;
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->multiCell(120,6,utf8_decode('CONDICIONADO A REVISAR RECTIVO(S) SIN VERIFICACION:'), 0, 'L' , FALSE);
+            
+            
+            $j=$i;
+            foreach($reactivoscondicionados as $descripcion){
+                
+                $j=$j+12;
+                $pdf->SetFont('Arial','',10);
+                $pdf->SetY($j);
+                $pdf->SetX(23);
+                $pdf->MultiCell(150,4,$this->mayusminus($descripcion), 0 ,'L', FALSE);
+                
+                $pdf->SetY($j+3);
+                
+                $pdf->SetX(175);
+                $pdf->SetFont('Arial','',9);
+                $resas="NO VERIFICADO";
+                $pdf->MultiCell(30,2,$resas, 0 ,'L', FALSE);
+                
+                
+            }
+            $i=$j;
+            }
+            $i=$i+20;
+            
+            $pdf->SetFont('Arial','',10);
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->multiCell(100,6,utf8_decode('Para cualquier aclaración quedo a sus ordenes. '), 0, 'L' , FALSE);
+            
+            
+            $i=$i+20;
+            $pdf->SetFont('Arial','B',10);
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->multiCell(180,6,'ATENTAMENTE', 0, 'C' , FALSE);
+            
+            
+            // registra analista de calidad
+            $i=$i+10;
+            $ssql6="select rm_embotelladora, cad_otro from
+(select rm_embotelladora from aa_muestras
+inner join aa_recepcionmuestradetalle on aa_muestras.mue_idmuestra=aa_recepcionmuestradetalle.mue_idmuestra
+inner join aa_recepcionmuestra on aa_recepcionmuestra.rm_idrecepcionmuestra=aa_recepcionmuestradetalle.rm_idrecepcionmuestra
+where aa_muestras.mue_numreporte=:numrep and aa_muestras.mue_claveservicio=".$servicio."
+group by rm_embotelladora) as a
+Inner Join (select * from ca_catalogosdetalle where cad_idcatalogo=43) as b ON a.rm_embotelladora = b.cad_idopcion";
+            //$rs6=Conexion::ejecutarQuery($ssql6,Array("numrep"=>$numrep));
+            //	foreach($rs6 as $row6) {
+            $pdf->SetFont('Arial','',10);
+            $pdf->SetY($i+15);
+            $pdf->SetX(72);
+            //	$pdf->multiCell(80,4,utf8_decode($row6["cad_otro"]), 0, 'C' , FALSE);
+            $pdf->multiCell(80,4,"PEDRO ORTEGA", 0, 'C' , FALSE);
+            //}
+            $i=$i+20;
+            $pdf->Rect(82,$i,60,0);
+            $i=$i+1;
+            $pdf->SetY($i);
+            $pdf->SetX(95);
+            $pdf->SetFont('Arial','',8);
+            $pdf->MultiCell(80,2,"Aseguramiento de calidad", 0 ,'L', FALSE);
+            
+            $i=$i+6;
+            
+            $pdf->SetFont('Arial','',6);
+            $pdf->SetY($i);
+            $pdf->SetX(23);
+            $pdf->multiCell(200,6,'Los resultados que contiene este documento, solo corresponde a la muestra recibida, la informaci'.$o.'n es propiedad de GEPP y no debe ser usada con fines ajenos al proposito destinado.  ', 0, 'L' , FALSE);
+            
+            // pagina de imagenes
+            
+            
+            $pdf->AddPage();
+            // SUBTITULOS
+            $pdf->SetY(20);
+            $pdf->SetX(16);
+            $pdf->ChapterTitle('FOTOGRAFIAS');
+            
+            
+            
+            // RECUADRO GENERAL
+            
+            $pdf->SetFont('Arial','',8);
+            $ssql="SELECT ins_imagendetalle.id_ruta, ins_imagendetalle.id_descripcion FROM ins_imagendetalle WHERE
+ins_imagendetalle.id_imgclaveservicio =:servicio   AND ins_imagendetalle.id_imgnumreporte =:numrep
+ AND ins_imagendetalle.id_imgnumseccion in (1,4)";
+            $rs=Conexion::ejecutarQuery($ssql,array("servicio"=>$servicio,"numrep"=>$numrep));
+            $x=14;
+            $y=42;
+            $cont=0;
+            $Band=0;
+            
+            // $rs=null;
+            foreach($rs as $row) {
+                $ee = RAIZ."/".$row[0];
+                
+                if ($cont<6) {
+                    
+                    if (($cont==0) || ($cont==3)){
+                        $pdf->Image($ee,$x,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                        
+                    }
+                    else if (($cont==1) || ($cont==4) ){
+                        $pdf->Image($ee,$x+66,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x+66);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                    }
+                    else if (($cont==2) || ($cont==5) ){
+                        $pdf->Image($ee,$x+132,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x+132);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                        $y=$y+90;
+                    }
+                    // $cont++;
+                } else if ($cont>=6 && $cont<12) {
+                    // pagina 6
+                    if ($Band==0) {
+                        $pdf->AddPage();
+                        $pdf->SetFillColor(152,185,235);
+                        //	$pdf->Rect(10,44,200,200,"F");
+                        $x=14;
+                        $y=60;
+                        $Band++;
+                    }
+                    if (($cont==6) || ($cont==9)){
+                        $pdf->Image($ee,$x,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                        
+                    }
+                    else if (($cont==7) || ($cont==10) ){
+                        $pdf->Image($ee,$x+66,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x+66);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                    }
+                    else if (($cont==8) || ($cont==11) ){
+                        $pdf->Image($ee,$x+132,$y,60,70);
+                        $pdf->SetY($y+71);
+                        $pdf->SetX($x+132);
+                        $pdf->multiCell(60,4,$row["id_descripcion"], 0, 'C' , FALSE);
+                        $y=$y+90;
+                    }
+                    
+                }
+                $cont++;
+            }
+            
+            $pdf->Output();
     }
     
     public function mayusminus($cadena){
@@ -3002,22 +4008,22 @@ class PDFAnalisisPost extends FPDF
 	function Header()
 	{
 		// Logo
-		if ($this->PageNo() != 5&& $this->PageNo() != 6){
+		//if ($this->PageNo() != 5&& $this->PageNo() != 6){
 		// SUBTITULOS
 		$this->Image('img/gepp.png' , 23 ,18, 40 , 15,'PNG');
 		$this->Image('img/logo_mues2019.jpg' ,155,18, 46 , 21,'JPG');
 		$j=36;
 		$this->SetY($j);
 		$this->SetX(16);
-		$this->ChapterTitle('POST MIX');
+		$this->ChapterTitle('AUDITORIA POSTMIX');
 		$j=$j+6;
 		$this->SetY($j);
 		$this->SetX(16);
-		$this->ChapterTitle('ANALISIS DE LIBERACION DE AGUA');
+		$this->ChapterTitle('ALERTA POR CALIDAD DE AGUA');
 		$this->SetLineWidth(0.4);   // ancho de linea
 		$this->SetFillColor(0,0,0);
 		$this->Rect(23,$j+6,180,1);
-		}
+	//	}
 	}
 	function ChapterTitle($label)
 	{
@@ -3043,7 +4049,7 @@ class PDFAnalisis extends FPDF
     function Header()
     {
         // Logo
-    	if ($this->PageNo() != 6&& $this->PageNo() != 7){
+  //  	if ($this->PageNo() != 6&& $this->PageNo() != 7){
         $this->SetFont('Arial','B',14);
         // Movernos a la posicion
         $this->SetY(27);
@@ -3063,8 +4069,8 @@ class PDFAnalisis extends FPDF
         
         $this->SetY(28);
         $this->SetX(16);
-        $this->ChapterTitle('ANALISIS DE LIBERACION DE AGUA');
-    	}
+        $this->ChapterTitle('Y ANALISIS DE CALIDAD DE AGUA');
+    //	}
     }
     
     // Pie de página

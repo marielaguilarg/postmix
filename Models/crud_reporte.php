@@ -99,6 +99,19 @@ VALUES (:claveservicio,
 		
 	}
 	
+	public function getDescripcionGeneralPV($numser, $tabla){
+	    $stmt = Conexion::conectar()-> prepare("SELECT max(i_numreporte) AS numrep
+				 FROM $tabla WHERE i_claveservicio=:numser");
+	    
+	    $stmt-> bindParam(":numser", $numser, PDO::PARAM_INT);
+	    $stmt-> execute();
+	    
+	    return $stmt->fetch();
+	    
+	    
+	}
+	
+	
 
 
 }

@@ -1423,7 +1423,7 @@ window.location.replace('index.php?action=listasolicitudes&sv=".$servicio."');</
           			/*	echo '<script>alert("'.$gpo.'")</script>';   */
           	}
           	$sv=1;
-          	$parametros=array("servicio"=>$sv);
+          	$parametros=array("servicio"=>$sv,"usuario"=>$user);
           	$sql_sol="SELECT   `ins_generales`.`i_numreporte`
    
     , `ins_generales`.`i_claveservicio`
@@ -1431,7 +1431,10 @@ window.location.replace('index.php?action=listasolicitudes&sv=".$servicio."');</
     , `ins_generales`.`i_fechafinalizado`
     , `ca_unegocios`.`cue_clavecuenta`
     , `ca_unegocios`.`une_descripcion`,une_idcuenta, une_num_unico_distintivo,
-    IF(IFNULL( i_estatusreporte,0)<2 and i_fechafinalizado>'2019-11-01','NUEVO','') estatus,
+   IF(IFNULL( i_estatusreporte, 0)<2
+and i_fechafinalizado>'2019-11-01' and cu.ua_visto is null,'NUEVO',
+
+'') estatus,
 COUNT(i_numreporte) AS total, IF(`mue_fechoranalisisFQ`
     < `mue_fechoranalisisMB`,mue_fechoranalisisMB,mue_fechoranalisisFQ) AS fechaemi
 FROM  ins_generales 
@@ -1473,6 +1476,9 @@ cer_solicitud.sol_numpunto = :Nivel03";
           			}
           			$sql_sol=$sql_sol." 
   INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+left join cer_usuariovioalerta cu  on 
+cu.ua_claveservicio =i_claveservicio and cu.ua_numreporte =i_numreporte
+and cu.ua_usuario =:usuario
 WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio 
 GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;";
           		} else if ($gpo=='muf') {
@@ -1526,12 +1532,18 @@ GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fec
           			}
           			$sql_sol=$sql_sol."
   INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+left join cer_usuariovioalerta cu  on 
+cu.ua_claveservicio =i_claveservicio and cu.ua_numreporte =i_numreporte
+and cu.ua_usuario =:usuario
 WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio
 GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;";
           		} else {
           			
           			$sql_sol.="
   INNER JOIN aa_muestras ON mue_numreporte=i_numreporte AND mue_claveservicio=i_claveservicio
+left join cer_usuariovioalerta cu  on 
+cu.ua_claveservicio =i_claveservicio and cu.ua_numreporte =i_numreporte
+and cu.ua_usuario =:usuario
 WHERE (ins_generales.i_finalizado=1 OR ins_generales.i_finalizado=-1) AND i_claveservicio=:servicio 
 GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fechaemi DESC;
 ";
@@ -1550,7 +1562,7 @@ GROUP BY ide_numreporte  HAVING total>1 AND fechaemi>'2018-01-01'   ORDER BY fec
           	$reportes['idcuen']=  $row_rs_sql_sol ["une_num_unico_distintivo"]  ;
           	$reportes['Punto']=  $row_rs_sql_sol ["une_descripcion"]  ;
           	$reportes['fechater']=  Utilerias::formato_fecha($row_rs_sql_sol ["fechaemi"]) ;
-          	$reportes['estatus']= "<span  class='label label-success'>" .$row_rs_sql_sol ["estatus"]."</span>" ;
+          	$reportes['estatus']= "<span id='labelnuevo_".$row_rs_sql_sol ["i_numreporte"]."' class='label label-success '>" .$row_rs_sql_sol ["estatus"]."</span>" ;
           	$reportes[ 'Nrep']=  $row_rs_sql_sol ["i_numreporte"]  ;
           	//  echo "<br>".$row_rs_sql_sol ["sol_numrep"] ;
           
@@ -1634,7 +1646,7 @@ ORDER BY r_numreactivo
           	$reportes[ 'resul']=  $resas;
           	
           
-            $impreaa="javascript:imprimirANA(".$row_rs_sql_sol["i_numreporte"].");";
+          	$impreaa="javascript:imprimirANA(".$row_rs_sql_sol["i_numreporte"].",'".	$row_rs_sql_sol ["estatus"]."');";
           	$reportes[ 'impanag']= $impreaa;
           			// $html->asignar('impres',"<td width='246' class='$color' ><div align='center'><a href='javascript:imprimirCER(".$row_rs_sql_sol["sol_numrep"].");'><img src='../img/print_gold.png' alt='Imprimir' width='28' height='33' border='0' /></a></div>");
           	$this->listaSolicitudes[]=$reportes;
@@ -1655,7 +1667,7 @@ ORDER BY r_numreactivo
        	//reviso el origen de la muestra si es de valvula postmix será moderado
        	// sino continuo con la revisión
        	$idsec=2;
-       	$muestra=DatosMuestra::vistaMuestrasRep($idsec, $reporte, $idser, $tabla);
+       	$muestra=DatosMuestra::vistaMuestrasRep($idsec, $reporte, $idser, "");
        	foreach ($muestra as $key => $rownr) {
        		$origen =$rownr["mue_origenmuestra"]; 
        	}
