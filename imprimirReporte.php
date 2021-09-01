@@ -23,7 +23,7 @@ if($admin=="impcert"){
         $imp=new ImprimirCertificadoController();
         $imp->reporteAnalisis();
 }else
-	if($admin=="impcerpm")
+	if($admin=="impcerpm") /***imrpimir alerta**/
 	{  require "Controllers/imprimirCertificadoController.php";
 	try{
 	$imp=new ImprimirCertificadoController();

@@ -195,11 +195,11 @@ $graficaIndicador->vistaGraficasIndDetalle();
               //  chart.labels().fontWeight(600);
                 chart.labels().fontColor('black');
                 chart.labels().format("{%value}{decimalsCount:1}%");
-                chart.labels().fontSize(10);
+                chart.labels().fontSize(12);
                 chart.labels().position("center");
                // chart.labels().anchor("left");
               
-                chart.tooltip().format("{%seriesName}: {%value}%\nNum. pruebas: {%pruebas} \nResultados que cumplen: {%cumplen}");
+                chart.tooltip().format("{%seriesName}: {%value}{decimalsCount:1}%\nNum. pruebas: {%pruebas} \nResultados que cumplen: {%cumplen}");
                 noDataLabel = chart.noData().label().enabled(true);
         
                 noDataLabel.text("Por el momento no hay información. Intente otra consulta");
@@ -299,7 +299,8 @@ $graficaIndicador->vistaGraficasIndDetalle();
 //            title.padding(5);
 //            title.text(subtitulo);
             chart.legend().enabled(true);
-            chart.tooltip().format("{%seriesName}: {%value}%");
+           
+            chart.tooltip().format("{%seriesName}: {%value}{decimalsCount:1}%");
             noDataLabel = chart.noData().label().enabled(true);
            
             noDataLabel.text("Por el momento no hay información. Intente otra consulta");

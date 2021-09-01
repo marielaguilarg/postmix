@@ -87,17 +87,20 @@ searching:false,
 } );
 
 
-function imprimirANA(nsec){
+function imprimirANA(nsec,esnuevo){
 
 //'var mform = document.form1;
 
 //var nsec=document.getElementById(numsecc).value;
-
+	var nuevo=0;
 	// window.open('MEZprincipal.php?op=anaFQ&admin=imp&ntoma='+mform.numsecc.value);
-
-	 window.open('imprimirReporte.php?admin=impcerpm&ale=1&sv=1&nrep='+nsec);
-	 //refresco para actualizar estatus
-	 setTimeout( window.location.href="index.php?action=listaalertas", 5000); 	 
+	 if(esnuevo=='NUEVO')
+		 nuevo="&nvo=1";
+	 window.open('imprimirReporte.php?admin=impcerpm&ale=1'+nuevo+'&sv=1&nrep='+nsec);
+	 if(esnuevo=='NUEVO')
+	 //refresco para actualizar estatus si era nuevo
+	 //setTimeout( window.location.href="index.php?action=listaalertas", 5000); 
+	 $("#labelnuevo_"+nsec).hide("slow");;	 
 		
 
 }
@@ -164,7 +167,7 @@ $certificacionController->vistaListaAlertas();
 
             <div class="box-header">
 
-              <h3 class="box-title">CERTIFICADOS</h3>
+              <h3 class="box-title">ALERTAS</h3>
 
             </div>
 

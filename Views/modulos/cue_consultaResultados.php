@@ -129,7 +129,7 @@ cta:"1"
          <div class="form-group ">
         <label><?php echo T_("PUNTO DE VENTA")?>:</label>
        <div>
-  <?php
+  <?php 
            echo $consultaResCon->getOPUNEGOCIO() 
             ?>
        
@@ -180,8 +180,10 @@ cta:"1"
           <div class="col-md-4">
     <label>AL INDICE DE :</label></div>
        <div class="col-md-4">
+       
    <select class="form-control"   id="fechafin" name="fechafin" >
-      <?php echo $consultaResCon->getMeses_opt()?>
+      <?php 
+      echo $consultaResCon->getMeses_opt()?>
       
 	</select></div>
        <div class="col-md-4">
@@ -226,6 +228,7 @@ cta:"1"
       <?php   echo $consultaResCon->getListanivel6() ?>
       
       </div></div>
+   
     <div class="col-md-12 form-group">
     
     <button type="submit" class="btn btn-info btn-flat pull-right"><i class="fa fa-search"></i><?php echo T_("BUSCAR")?></button>
@@ -240,7 +243,7 @@ cta:"1"
 </section>
 <!-- /.content -->
 <!-- /.content-wrapper -->
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+
    <script src="js/jquery.cascading-drop-down.js"></script>
     <script>
     $('.cascada').ssdCascadingDropDown({

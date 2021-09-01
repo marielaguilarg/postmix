@@ -31,34 +31,37 @@ asignados,
 numeroequipos) VALUES ".$args;
       
             $params = array();
-foreach($rows as $row)
-{
-    $i=1;
-   foreach($row as $value)
-   {
-       if($i>6)
-           break;
-       if($value=="")
-               $value=null;
-      $params[] = $value;
-      $i++;
-   }
-}
+          //  var_dump( $rows);
+        foreach($rows as $row)
+        {
+            $i=1;
+           foreach($row as $value)
+           {
+               if($i>6)
+                   break;
+               if($value=="")
+                   $value=null;
+              $params[] = $value;
+              $i++;
+           }
+        }
         $stmt = Conexion::conectar()->prepare($sqq);
       
-        //  var_dump($params);
+         // var_dump($params);
            
         
-            if(!$stmt->execute($params))
-            {     
-              //  $stmt->debugDumpParams();
-                Utilerias::guardarError("Error al insertar datos >>".$stmt->errorInfo()[2]);
-       //  var_dump($stmt->errorInfo());
-         //       die();
-                throw new Exception("Error al insertar datos ");
+        if(!$stmt->execute($params))
+        {     
+           // $stmt->debugDumpParams();
+            Utilerias::guardarError("Error al insertar datos >>".$stmt->errorInfo()[2]);
+            //Utilerias::guardarError( $stmt->debugDumpParams());
             
-            }
-            
+   //  var_dump($stmt->errorInfo());
+     //       die();
+            throw new Exception("Error al insertar datos ");
+        
+        }
+        
         }catch(PDOException $es){
             Utilerias::guardarError("Error al insertar datos >>".$es->getMessage());
             
@@ -77,8 +80,10 @@ set  tmp_unegociosasignados.n4_id=ca_nivel4.n4_id;
 update tmp_unegociosasignados
 inner join ca_nivel4 on tmp_unegociosasignados.n4_id=ca_nivel4.n4_id
 and n4_idn3=5
+inner join ca_nivel5 on ca_nivel5.n5_idn4=ca_nivel4.n4_id
 inner join ca_nivel6 on ca_nivel6.n6_nombre=tmp_unegociosasignados.ciudad
-set n5_id=ca_nivel6.n6_idn5;
+and ca_nivel5.n5_id=ca_nivel6.n6_idn5
+set tmp_unegociosasignados.n5_id=ca_nivel6.n6_idn5;
 
 
 update tmp_unegociosasignados as x

@@ -112,7 +112,7 @@ function drawColumns12meses(dataBarras, j, container, paleta, titulosec, titulo)
 
 	// chart.animation(true);
 	chart.legend().enabled(true);
-	chart.tooltip().format("{%seriesName}: {%value}%\nNum. pruebas: {%pruebas} \nResultados que cumplen: {%cumplen}");
+	chart.tooltip().format("{%seriesName}: {%value}{decimalsCount:1}%\nNum. pruebas: {%pruebas} \nResultados que cumplen: {%cumplen}");
 	//   chart.tooltip().format("{%seriesName}: {%value}%");
 	noDataLabel = chart.noData().label().enabled(true);
 
@@ -164,11 +164,7 @@ function drawColumns12meses(dataBarras, j, container, paleta, titulosec, titulo)
 		
 	}else
 	if(numcols>4){
-		//		//divido el arreglo y hago 2 tablas
-		//		for(i=4;i<numcols;i++){
-		//			data2.push(dataBarras[i]);
-		//		}
-		console.log(j);
+		
 		//para ubicarla en la pantalla
 		chart.bounds("10%", j + "%", "80%", "51%");
 		chart.container(container);
@@ -415,8 +411,11 @@ function generarTablaAny2( data) {
 	
 		while (j >1) {
 			
-			if(data[i][j])
-			arre[k] = data[i][j];
+			if(data[i][j]){
+				
+			
+				arre[k] = parseFloat(data[i][j]).toFixed(1);
+			}
 			else
 			 arre[k]=0;
 			k++;
@@ -581,7 +580,11 @@ function generarTablaR1R2(data) {
 	table.getRow(1).height(25);
 	table.getRow(2).height(25);
 	table.getRow(3).height(25);
-	table.fontSize(9);
+	table.fontSize(10);
+	table.getRow(0).fontSize(9);//titulo
+	table.getRow(1).fontSize(9);//titulo
+	table.getCol(0).fontSize(9);
+	
 	table.contents(contents);
 	return table;
 
@@ -590,6 +593,7 @@ function generarTablaR1R2(data) {
 function generarTablaResultados(funcion) {
 	//lleno tabla
 	var table = anychart.standalones.table();
+	
 	contents = new Array();
 //	generarEncabezados(dataBarras);
 //	console.log(dataBarras);
@@ -601,13 +605,17 @@ table.rowEvenFill('#FFFFFF');
    // .hAlign("right");
 	table.getRow(0).height(25).fontWeight(600);//titulo
 	table.getCol(0).width(100).fontWeight(600);
+	
 	//table.getCell(0,1).colSpan(3);  // span 2 cells 
 	//table.getCell(0,8).fontWeight(800);
 	
 	table.getRow(1).height(25);
 	table.getRow(2).height(25);
 	table.getRow(3).height(25);
-	table.fontSize(8);
+	table.fontSize(10);
+	table.getCol(0).fontSize(9);
+	table.getRow(0).fontSize(9);
+	table.getRow(1).fontSize(9);
 	table.contents(contents);
 	return table;
 }

@@ -25,7 +25,7 @@ RANGOS PARA GRAFICA DE FRECUENCIAS</h1>
 <div class="row">
 <div class="col-md-12">
     
-<a  class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=sconfiguragrafica" <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
+<a  class="btn btn-default pull-right" style="margin-right: 18px" href="index.php?action=sconfiguragrafica"> <i class="fa fa-plus-circle" aria-hidden="true"></i>  Nuevo  </a>
        </div>
    </div>
 </section>
