@@ -208,6 +208,8 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
            $this->infoGeneral->nud=$row["une_num_unico_distintivo"];
            $this->infoGeneral->cargo=$row["i_puestoresponsablevis"];
            $this->infoGeneral->estado=$row["n5_nombre"];
+           $this->infoGeneral->mail=$row["une_dir_correoe"];
+           
                      
          }
          $this->llenarResultados();
@@ -225,28 +227,40 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
 <tr><th colspan="6">INFORMACION GENERAL DEL ESTABLECIMIENTO</th></tr></thead>
                         
                             <tbody >
-                            <tr><td class="titulo2" >NUD</td>
-                            <td style="width:18%">'. $this->infoGeneral->nud.'</td>
-                            <td class="titulo2">PUNTO DE VENTA</td>
-                            <td colspan="3">'. $this->infoGeneral->pv.'</td>
+
+                            <tr>
+<td class="titulo2" style="width:25%">PUNTO DE VENTA</td>
+                            <td colspan="" style="width:25%">'. $this->infoGeneral->pv.'</td>
+<td class="titulo2" >NUD</td>
+                            <td >'. $this->infoGeneral->nud.'</td>
+                            <td class="titulo2" >NUM. REPORTE</td>
+                            <td >'. $this->numrep.'</td>
+                            
+    
                             </tr>
                             <tr>
                             <td class="titulo2">DOMICILIO</td>
-                            <td colspan="3">'. $this->infoGeneral->direccion.'</td>
+                            <td colspan="2">'. $this->infoGeneral->direccion.'</td>
                             <td class="titulo2">ESTADO</td>
                            
-                            <td>'. $this->infoGeneral->estado.'</td>
+                            <td colspan="2">'. $this->infoGeneral->estado.'</td>
                             <tr><td class="titulo2">CIUDAD</td>
                             <td>'. $this->infoGeneral->ciudad.'</td>
                             <td class="titulo2">REGION</td>
                             <td>'. $this->infoGeneral->region.'</td>
                             <td class="titulo2">ENCARGADO</td>
-                            <td>'. $this->infoGeneral->encargado.'</td></tr>
+                            <td colspan="2">'. $this->infoGeneral->encargado.'</td></tr>
                             <tr>
                             <td class="titulo2">CARGO</td>
                             <td>'. $this->infoGeneral->cargo.'</td>
                             <td class="titulo2">TEL. DE CONTACTO</td>
-                            <td colspan="3">'. $this->infoGeneral->telefono.'</td>
+                            <td colspan="4">'. $this->infoGeneral->telefono.'</td>
+                            </tr>
+ <tr>
+                            <td class="titulo2">&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td class="titulo2">MAIL CONTACTO</td>
+                            <td colspan="4">'. $this->infoGeneral->mail.'</td>
                             </tr>
                             <tr><td colspan="6" class="titulo1" >ALERTA DE CALIDAD DE AGUA</td>';
          if( $this->infoGeneral->resultados["fq"]!=''){
@@ -254,7 +268,7 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
  <td class="titulo2">DESVIACION</td>
                         <td>FISICOQUIMICA</td>
  <td class="titulo2">PARAMETRO(S)</td>
-                        <td colspan="3">'.$this->infoGeneral->resultados["fq"].'</td>
+                        <td colspan="4">'.$this->infoGeneral->resultados["fq"].'</td>
                       </tr>';
          }
          if( $this->infoGeneral->resultados["mb"]!=''){
@@ -262,7 +276,7 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
 <td class="titulo2">DESVIACION</td>
                         <td>MICROBIOLOGICA</td>
  <td class="titulo2">PARAMETRO(S)</td>
-                        <td colspan="3">'.$this->infoGeneral->resultados["mb"].'</td>
+                        <td colspan="4">'.$this->infoGeneral->resultados["mb"].'</td>
                       </tr>';
          }
             
@@ -288,6 +302,7 @@ and ins_detalleestandar.ide_numcaracteristica3=$numop";
         public $estado;
         public $encargado;
         public $resultados;
+        public $mail;
         
     }
 

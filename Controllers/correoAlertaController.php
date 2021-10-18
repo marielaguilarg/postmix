@@ -1,4 +1,5 @@
 <?php
+//error_reporting(E_ALL);
 //include_once '../../Models/conexion.php';
 include_once './Models/crud_estandar.php';
 include_once './Models/crud_muestras.php';
@@ -26,18 +27,18 @@ class CorreoAlertaController{
     
     public function definirHoras(){
         $mifecha = new DateTime();
-      //  $prueba="2021-03-01";
-       // $mifecha = new DateTime("2021-03-01 16:00:00");
+        //para prueba$prueba="2021-09-17";
+       //para pruebas $mifecha = new DateTime("2021-09-17 16:00:00");
         
         $ahora=strtotime(date("Y-m-d H:00:00"));
         $hora=strtotime(date("H:i:s"));
         $lasnueve=strtotime(date("Y-m-d 9:00:00"));
         $lascuatro=strtotime(date("Y-m-d 16:00:00"));
       
-       // $ahora=strtotime(date($prueba." 16:00:00"));
+       //ára ´prueba  $ahora=strtotime(date($prueba." 16:00:00"));
       
-      //  $lasnueve=strtotime(date($prueba." 9:00:00"));
-       // $lascuatro=strtotime(date($prueba." 16:00:00"));
+      //para prueba   $lasnueve=strtotime(date($prueba." 9:00:00"));
+      //para prueba   $lascuatro=strtotime(date($prueba." 16:00:00"));
         
       //  echo $ahora;
       //  echo "<br>".$hora;
@@ -48,25 +49,65 @@ class CorreoAlertaController{
             $mifecha->modify('-17 hours'); 
             $this->fechaini=$mifecha->format('Y-m-d H:00:00');
             $this->fechafin=date("Y-m-d H:00:00");
-         //   $this->fechafin=date($prueba." 9:00:00");
-          //  echo $mifecha->format('d-m-Y H:i:s');
+          //para pruebas  $this->fechafin=date($prueba." 9:00:00");
+           // echo $mifecha->format('d-m-Y H:i:s');
             
         }
         else if($ahora>=$lascuatro){
            
             $this->fechaini=date("Y-m-d 9:00:00");
-           // $this->fechaini=date($prueba." 9:00:00");
+         //para pruebas  $this->fechaini=date($prueba." 9:00:00");
            
             $this->fechafin=$mifecha->format('Y-m-d 16:00:00');
         }
         
     }
     
+    public function definirHorasprueba(){
+        $mifecha = new DateTime();
+        $prueba="2021-02-25";
+        $mifecha = new DateTime("2021-09-17 16:00:00");
+        
+        $ahora=strtotime(date("Y-m-d H:00:00"));
+        $hora=strtotime(date("H:i:s"));
+        $lasnueve=strtotime(date("Y-m-d 9:00:00"));
+        $lascuatro=strtotime(date("Y-m-d 16:00:00"));
+        
+    $ahora=strtotime(date($prueba." 16:00:00"));
+        
+         $lasnueve=strtotime(date($prueba." 9:00:00"));
+        $lascuatro=strtotime(date($prueba." 16:00:00"));
+        
+        //  echo $ahora;
+        //  echo "<br>".$hora;
+        //  echo "<br>".$lasnueve;
+        //  echo "<br>".$lascuatro;
+        //  echo "***".$mifecha->format('d-m-Y H:i:s');
+        if($ahora>=$lasnueve&&$ahora<$lascuatro){
+            $mifecha->modify('-17 hours');
+            $this->fechaini=$mifecha->format('Y-m-d H:00:00');
+            $this->fechafin=date("Y-m-d H:00:00");
+           $this->fechafin=date($prueba." 9:00:00");
+            // echo $mifecha->format('d-m-Y H:i:s');
+            
+        }
+        else if($ahora>=$lascuatro){
+            
+            $this->fechaini=date("Y-m-d 9:00:00");
+             $this->fechaini=date($prueba." 9:00:00");
+            
+            $this->fechafin=$mifecha->format('Y-m-d 16:00:00');
+        }
+        
+    }
+    
+    
     
     public function consultarReportesxFinalizados(){
-        /*********aqui falta filtrar por fecha y hora ***/
+        /*********filtrar por fecha y hora ***/
         
        $this->definirHoras();
+      // $this->definirHorasprueba();
         $parametros=array("servicio"=>$this->sv);
         $sql_sol="SELECT   `ins_generales`.`i_numreporte`
             
@@ -97,7 +138,13 @@ ORDER BY fechaemi DESC;";
         $parametros["fechaini"]=$this->fechaini;
         $parametros["fechafin"]=$this->fechafin;
         $rs_sql_sol = $this->bd->ejecutarQuery($sql_sol,$parametros);
-        Utilerias::guardarError("correoAlertaController: Sql= ".$sql_sol." parametros=".$this->fechaini."-".$this->fechafin);
+        //var_dump($parametros);
+        foreach ($parametros as $value) {
+            Utilerias::guardarError("correoAlertaController: params".$value);
+        }
+        echo "correoAlertaController: Sql= ".$sql_sol." parametros=".$parametros["fechaini"]."-".$parametros["fechafin"]."sv-".$parametros["servicio"];
+        
+        Utilerias::guardarError("correoAlertaController: Sql= ".$sql_sol." parametros=".$parametros["fechaini"]."-".$parametros["fechafin"]."sv-".$parametros["servicio"]);
         return $rs_sql_sol;
     }
     
@@ -108,13 +155,14 @@ ORDER BY fechaemi DESC;";
         $contl=1;
        
            
-        
+        Utilerias::guardarError("correoAlertaController: tamaño lista fin ".sizeof($rs_sql_sol));
+        //para cada reporte
         foreach($rs_sql_sol as $row_rs_sql_sol ) {
             
             $reportes=array();
             
              $reportes[ 'Nrep']=  $row_rs_sql_sol ["i_numreporte"]  ;
-            //  echo "<br>".$row_rs_sql_sol ["sol_numrep"] ;
+         
             
             //busco el dictamen en la seccion 5
             $ssql="SELECT  r_numreactivo ,ins_detalle.id_claveservicio, ins_detalle.id_numreporte,
@@ -181,7 +229,7 @@ AND  id_noaplica<>-1 AND
                     
                     
                 }else
-                {$resas="APROBADO";
+                {$resas="APROBADO"; //ni es alerta
                 continue;
                 }
             }
@@ -203,6 +251,7 @@ AND  id_noaplica<>-1 AND
             $contl++;
         } //finalizo de revisar cada reporte
    
+       // var_dump($this->listaSolicitudes);
     }
     
     //ya que tengo los reportes pinto la alerta
@@ -239,11 +288,12 @@ AND  id_noaplica<>-1 AND
         $fecha=$dia." de ".$mesletras;
         if($this->listaSolicitudes&&sizeof($this->listaSolicitudes)>0) //hay alertas
         {
+            Utilerias::guardarError("correoAlertaController: tamaño lista solicitudes ".sizeof($this->listaSolicitudes));
             $correo=new CorreoAlertas();
             $correo->crearCorreo( $this->crearTablas(), $fecha);
             $correo->enviar();
             
-            error_log("Se envio el correo de alerta exitosamente");
+             Utilerias::guardarError("correoAlertaController: Se envio el correo de alerta exitosamente");
             
             
         }

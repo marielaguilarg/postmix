@@ -1,23 +1,27 @@
 <?php
 
 
-
+//error_reporting(E_ALL);
 
 include 'enviadorcorreo.php';
 
 class CorreoAlertas extends EnviadorCorreo
 {
-    
-    private  $edestinatario="patitoeu@gmail.com";
-    private $destinatario="Marisol Vega";
-    private $cc="patitoeu@hotmail.com";
+    public $listaCorreos;
+   
+    public $listacc;
+    private  $edestinatario;
+   // private  $edestinatario="nubrane@yahoo.com";
+    private $destinatario;
+   // private $cc=;
+    private $cco="patitoeu@hotmail.com";
     private $subject="Envio de alertas de muesmerc";
     private $urllogo="https://muesmerc.mx/postmixv3/img/logo_mues2020.png";
   
     public function crearCuerpo($tablas,$fecha){
         $inicio="<br>Estimado usuario.<br>
             
-MUESMERC, desea comunicarle que el d&iacute;a de hoy <span id='fecha'>".$fecha."</span> se ha(n) generado la(s) siguiente(s) alertas por desviaci&oacute;n en la calidad de agua para el/los siguientes puntos de venta";
+MUESMERC le informa que el d&iacute;a de hoy <span id='fecha'>".$fecha."</span>  se han generado las siguientes alertas por desviaci&oacute;n en la calidad de agua para los siguientes puntos de venta.";
         
         $pie="Recuerde que puede descargar y compartir los documentos en PDF de estas alertas, desde nuestro sitio web, accediendo a la siguiente liga: <a href='https://muesmerc.mx/postmixv3/'>www.muesmerc.mx/postmixv3/</a>
        <br>   
@@ -64,15 +68,23 @@ font-weight: bold;
 font-size:18;
 
 }
+.tablaDatos {
+
+ 
+text-align: center;
+font-size:11;
+}
 .tablaDatos, .tablaDatos thead,.tablaDatos td {
 
  margin-top:10px;
 	border: 1px solid black;
  border-collapse: collapse; 
+text-align: center;
 }
 .titulo2{
  background-color:#E0E8F5;
 width:15%;
+font-weight: bold;
 
 }
 .titulo1{
@@ -127,17 +139,43 @@ font-size:14;
         $message .= "</body></html>";
         return $message;
     }
+    public function agregarCorreos(){
+        //buscar la direccion a la que se enviará x región
+        //un inner join del reporte y los correos por region
+        $this->listaCorreos["correo"]="victor.palomino@muesmerc.com.mx";
+        $this->listaCorreos["nombre"]="Victor Palomino";
+        $this->listacc[0]["correo"]="pedro.ortega@gepp.com";
+        $this->listacc[0]["nombre"]="Pedro Ortega";
+        $this->listacc[2]["correo"]="sinuhe.cardenas@muesmerc.com.mx";
+        $this->listacc[2]["nombre"]="Sinuhe Cardenas";
+        $this->listacc[1]["correo"]="memurillo@muesmerc.com.mx";
+        $this->listacc[1]["nombre"]="Eduardo Murillo";
+        
+    }
+    
     public function crearCorreo($tablas, $fecha){
         //$from="Pruebas";
         $from="Alertas Muesmerc";
         $fromadd="alertas.postmix@muesmerc.com.mx";
+        $this->agregarCorreos();
+        $this->edestinatario=$this->listaCorreos["correo"];
+        $this->destinatario=$this->listaCorreos["nombre"];
         //pass a5390lert
        // $fromadd="pruebascertificacion@muesmerc.mx";
         //Recipients
         $this->mail->setFrom($fromadd, $from);
         $this->mail->addAddress($this->edestinatario, $this->destinatario);     //Add a recipient
-        //Name is optional
-        $this->mail->addCC($this->cc);
+        if(isset($this->listacc)&&sizeof($this->listacc)>0){
+            
+            foreach($this->listacc as $cc){
+                $this->mail->addCC($cc["correo"],$cc["nombre"]);
+                echo "agregando a ".$cc["correo"];
+            }
+        }
+        else
+            $this->mail->addCC($this->cc,$this->ccNombre);
+            if(isset($this->cco)&&$this->cco!=null)
+                $this->mail->addBCC($this->cco,"Marisol");
         
         $this->mail->isHTML(true);                                  //Set email format to HTML
         $this->mail->Subject = $this->subject;
