@@ -1664,14 +1664,14 @@ ORDER BY r_numreactivo
         */
        public function tipoAlerta($idser ,$reporte){
        	
-       	//reviso el origen de la muestra si es de valvula postmix será moderado
+       	//reviso el origen de la muestra si es diferente del 9 será moderado
        	// sino continuo con la revisión
        	$idsec=2;
        	$muestra=DatosMuestra::vistaMuestrasRep($idsec, $reporte, $idser, "");
        	foreach ($muestra as $key => $rownr) {
        		$origen =$rownr["mue_origenmuestra"]; 
        	}
-       	if($origen==4){
+       	if($origen!=9){
        		return "MODERADO"; //SINO
        	}
        		//reviso resultados microbiologia
